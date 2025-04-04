@@ -21,3 +21,17 @@ def Rotate(angle, x0=0, y0=0):
             [0, 0, 1],
         ]
     )
+
+
+def ScaleXY(scale_x, scale_y, x0=0, y0=0):
+    return Matrix(
+        [
+            [scale_x, 0, x0 * (1 - scale_x)],
+            [0, scale_y, y0 * (1 - scale_y)],
+            [0, 0, 1],
+        ]
+    )
+
+
+def Scale(scale, x0=0, y0=0):
+    return ScaleXY(scale, scale, x0, y0)

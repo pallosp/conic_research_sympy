@@ -5,6 +5,8 @@ from sympy import simplify
 from lib.circle import Circle
 from lib.central_conic import ConicCenter
 from lib.transform import Rotate
+from lib.transform import Scale
+from lib.transform import ScaleXY
 from lib.transform import TransformConic
 from lib.transform import Translate
 
@@ -46,3 +48,17 @@ class TestRotate:
         rotation = Rotate(theta, x0, y0)
         rotation_sequence = Translate(x0, y0) * Rotate(theta) * Translate(-x0, -y0)
         assert simplify(rotation) == simplify(rotation_sequence)
+
+
+class TestScale:
+    def test_scaling_around_point(self):
+        x0, y0, s = symbols("x0,y0,s")
+        scaling = Scale(s, x0, y0)
+        scaling_sequence = Translate(x0, y0) * Scale(s) * Translate(-x0, -y0)
+        assert simplify(scaling) == simplify(scaling_sequence)
+
+    def test_scaling_unevenly_around_point(self):
+        x0, y0, sx, sy = symbols("x0,y0,sx,sy")
+        scaling = ScaleXY(sx, sy, x0, y0)
+        scaling_sequence = Translate(x0, y0) * ScaleXY(sx, sy) * Translate(-x0, -y0)
+        assert simplify(scaling) == simplify(scaling_sequence)
