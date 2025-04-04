@@ -3,15 +3,15 @@ from sympy import Matrix
 from sympy import sin
 
 
-def TransformConic(conic, matrix):
-    return matrix.adjugate().T * conic * matrix.adjugate()
+def TransformConic(conic: Matrix, transformation: Matrix) -> Matrix:
+    return transformation.adjugate().T * conic * transformation.adjugate()
 
 
-def Translate(dx, dy):
+def Translate(dx, dy) -> Matrix:
     return Matrix([[1, 0, dx], [0, 1, dy], [0, 0, 1]])
 
 
-def Rotate(angle, x0=0, y0=0):
+def Rotate(angle, x0=0, y0=0) -> Matrix:
     cos_angle = cos(angle)
     sin_angle = sin(angle)
     return Matrix(
@@ -23,7 +23,7 @@ def Rotate(angle, x0=0, y0=0):
     )
 
 
-def ScaleXY(scale_x, scale_y, x0=0, y0=0):
+def ScaleXY(scale_x, scale_y, x0=0, y0=0) -> Matrix:
     return Matrix(
         [
             [scale_x, 0, x0 * (1 - scale_x)],
@@ -33,5 +33,5 @@ def ScaleXY(scale_x, scale_y, x0=0, y0=0):
     )
 
 
-def Scale(scale, x0=0, y0=0):
+def Scale(scale, x0=0, y0=0) -> Matrix:
     return ScaleXY(scale, scale, x0, y0)
