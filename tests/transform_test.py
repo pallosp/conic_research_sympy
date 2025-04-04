@@ -4,6 +4,7 @@ from sympy import simplify
 
 from lib.circle import Circle
 from lib.central_conic import ConicCenter
+from lib.transform import Rotate
 from lib.transform import TransformConic
 from lib.transform import Translate
 
@@ -30,3 +31,18 @@ class TestTranslate:
         new_center_x, new_center_y = ConicCenter(new_conic)
         assert dx == simplify(new_center_x - center_x)
         assert dy == simplify(new_center_y - center_y)
+
+
+class TestRotate:
+    def test_rotate_circle_around_center(self):
+        x, y, r, theta = symbols("x,y,r,theta")
+        circle = Circle(x, y, r)
+        rotation = Rotate(theta, x, y)
+        new_circle = TransformConic(circle, rotation)
+        assert circle == simplify(new_circle)
+
+    def test_rotation_around_point(self):
+        x0, y0, theta = symbols("x0,y0,theta")
+        rotation = Rotate(theta, x0, y0)
+        rotation_sequence = Translate(x0, y0) * Rotate(theta) * Translate(-x0, -y0)
+        assert simplify(rotation) == simplify(rotation_sequence)
