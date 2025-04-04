@@ -9,3 +9,7 @@ def Circle(x, y, r_square):
             [x, y, r_square - x * x - y * y],
         ]
     )
+
+
+def UnitCircle():
+    return Circle(0, 0, 1)
