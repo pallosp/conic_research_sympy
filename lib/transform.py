@@ -1,6 +1,4 @@
-from sympy import cos
-from sympy import Matrix
-from sympy import sin
+from sympy import cos, Matrix, sin
 
 
 def TransformConic(conic: Matrix, transformation: Matrix) -> Matrix:

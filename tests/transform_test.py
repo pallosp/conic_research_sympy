@@ -1,14 +1,8 @@
-from sympy import Matrix
-from sympy import symbols
-from sympy import simplify
+from sympy import Matrix, simplify, symbols
 
 from lib.circle import Circle
 from lib.central_conic import ConicCenter
-from lib.transform import Rotate
-from lib.transform import Scale
-from lib.transform import ScaleXY
-from lib.transform import TransformConic
-from lib.transform import Translate
+from lib.transform import Rotate, Scale, ScaleXY, TransformConic, Translate
 
 a, b, c, d, e, f = symbols("a,b,c,d,e,f")
 conic = Matrix([[a, b, d], [b, c, e], [d, e, f]])
