@@ -1,6 +1,6 @@
-from sympy import Matrix
+from sympy import Matrix, sqrt
 
-from lib.matrix import IsScalarMultiple
+from lib.matrix import IsScalarMultiple, MaxEigenvalue, MinEigenvalue
 
 
 class TestIsScalarMultiple:
@@ -15,3 +15,10 @@ class TestIsScalarMultiple:
         assert IsScalarMultiple(Matrix([[1, 2], [3, 4]]), Matrix([[2, 4], [6, 8]]))
         assert IsScalarMultiple(Matrix([[1, 2], [3, 4]]), Matrix([[0, 0], [0, 0]]))
         assert not IsScalarMultiple(Matrix([[1, 2], [3, 4]]), Matrix([[1, 1], [1, 1]]))
+
+
+class TestEigenvalues:
+    def test_eigenvalues(self):
+        matrix = Matrix([[1, 2], [2, 3]])
+        assert MaxEigenvalue(matrix) == 2 + sqrt(5)
+        assert MinEigenvalue(matrix) == 2 - sqrt(5)
