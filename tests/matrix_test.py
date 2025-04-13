@@ -7,6 +7,7 @@ from lib.matrix import (
     MinEigenvalue,
     NonZeroCol,
     NonZeroRow,
+    QuadraticForm,
 )
 
 
@@ -36,6 +37,12 @@ class TestConicMatrix:
         assert ConicMatrix(1, 2, 3, 4, 5, 6) == Matrix(
             [[1, 2, 4], [2, 3, 5], [4, 5, 6]]
         )
+
+
+class TestQuadraticForm:
+    def test_quadratic_form(self):
+        # https://www.wolframalpha.com/input?i={{1,2}}*{{1,2},{3,4}}*{{1},{2}}
+        assert QuadraticForm(Matrix([[1, 2], [3, 4]]), Matrix([1, 2])) == 27
 
 
 class TestNonZeroRowOrColumn:
