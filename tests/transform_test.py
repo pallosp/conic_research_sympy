@@ -2,10 +2,10 @@ from sympy import Matrix, simplify, symbols
 
 from lib.circle import Circle
 from lib.central_conic import ConicCenter
+from lib.matrix import ConicMatrix
 from lib.transform import Rotate, Scale, ScaleXY, TransformConic, Translate
 
-a, b, c, d, e, f = symbols("a,b,c,d,e,f")
-conic = Matrix([[a, b, d], [b, c, e], [d, e, f]])
+conic = ConicMatrix(*symbols("a,b,c,d,e,f"))
 
 
 class TestTranslate:

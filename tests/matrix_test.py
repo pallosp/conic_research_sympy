@@ -1,6 +1,6 @@
 from sympy import Matrix, sqrt
 
-from lib.matrix import IsScalarMultiple, MaxEigenvalue, MinEigenvalue
+from lib.matrix import ConicMatrix, IsScalarMultiple, MaxEigenvalue, MinEigenvalue
 
 
 class TestIsScalarMultiple:
@@ -22,3 +22,10 @@ class TestEigenvalues:
         matrix = Matrix([[1, 2], [2, 3]])
         assert MaxEigenvalue(matrix) == 2 + sqrt(5)
         assert MinEigenvalue(matrix) == 2 - sqrt(5)
+
+
+class TestConicMatrix:
+    def test_conic_matrix(self):
+        assert ConicMatrix(1, 2, 3, 4, 5, 6) == Matrix(
+            [[1, 2, 4], [2, 3, 5], [4, 5, 6]]
+        )

@@ -1,14 +1,8 @@
-from sympy import Matrix
+from lib.matrix import ConicMatrix
 
 
 def Circle(x, y, r):
-    return Matrix(
-        [
-            [-1, 0, x],
-            [0, -1, y],
-            [x, y, r * r - x * x - y * y],
-        ]
-    )
+    return ConicMatrix(-1, 0, -1, x, y, r * r - x * x - y * y)
 
 
 def UnitCircle():

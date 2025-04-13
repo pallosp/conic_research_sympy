@@ -22,3 +22,15 @@ def MinEigenvalue(symmetric_matrix2x2: Matrix):
     a, b, b2, c = symmetric_matrix2x2
     assert b == b2
     return (a + c) / 2 - sqrt((a - c) ** 2 + 4 * b**2) / 2
+
+
+def ConicMatrix(a, b, c, d, e, f):
+    """3x3 symmetric matrix from the conic equation
+
+            [a b d] [x]
+    [x y 1] [b c e] [y] = 0
+            [d e f] [1]
+
+    Expanded form: ax² + 2bxy + cy² + 2dx + 2ey + f = 0
+    """
+    return Matrix([[a, b, d], [b, c, e], [d, e, f]])
