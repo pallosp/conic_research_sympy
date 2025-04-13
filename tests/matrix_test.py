@@ -1,6 +1,13 @@
-from sympy import Matrix, sqrt
+from sympy import Matrix, nan, sqrt, symbols
 
-from lib.matrix import ConicMatrix, IsScalarMultiple, MaxEigenvalue, MinEigenvalue
+from lib.matrix import (
+    ConicMatrix,
+    IsScalarMultiple,
+    MaxEigenvalue,
+    MinEigenvalue,
+    NonZeroCol,
+    NonZeroRow,
+)
 
 
 class TestIsScalarMultiple:
@@ -29,3 +36,20 @@ class TestConicMatrix:
         assert ConicMatrix(1, 2, 3, 4, 5, 6) == Matrix(
             [[1, 2, 4], [2, 3, 5], [4, 5, 6]]
         )
+
+
+class TestNonZeroRowOrColumn:
+    def test_non_zero_row_numeric(self):
+        assert NonZeroRow(Matrix([[1, 2], [3, 4]])) == Matrix([1, 2]).T
+        assert NonZeroRow(Matrix([[0, 0], [0, 1]])) == Matrix([0, 1]).T
+        assert NonZeroRow(Matrix([[0, 0], [0, 0]])) == nan
+
+    def test_non_zero_column_numeric(self):
+        assert NonZeroCol(Matrix([[1, 2], [3, 4]])) == Matrix([1, 3])
+        assert NonZeroCol(Matrix([[0, 1], [0, 2]])) == Matrix([1, 2])
+        assert NonZeroCol(Matrix([[0, 0], [0, 0]])) == nan
+
+    def test_non_zero_row_symbolic(self):
+        x = symbols("x")
+        assert NonZeroRow(Matrix([[0, 0], [x, 0]])) == Matrix([x, 0]).T
+        assert NonZeroRow(Matrix([[x - x, 0], [1, 0]])) == Matrix([1, 0]).T

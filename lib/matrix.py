@@ -1,4 +1,4 @@
-from sympy import expand, Matrix, sqrt
+from sympy import expand, Matrix, Not, Or, Piecewise, sqrt
 
 
 def IsScalarMultiple(m1: Matrix, m2: Matrix) -> bool:
@@ -53,4 +53,24 @@ def SkewMatrix(vector3: Matrix):
             [z, 0, -x],
             [-y, x, 0],
         ]
+    )
+
+
+def NonZeroRow(matrix: Matrix):
+    """First non-zero row of the matrix or nan in case of zero matrix."""
+    return Piecewise(
+        *(
+            (matrix.row(i), Or(*(Not(e.equals(0)) for e in matrix.row(i))))
+            for i in range(matrix.rows)
+        )
+    )
+
+
+def NonZeroCol(matrix: Matrix):
+    """First non-zero column of the matrix or nan in case of zero matrix."""
+    return Piecewise(
+        *(
+            (matrix.col(i), Or(*(Not(e.equals(0)) for e in matrix.col(i))))
+            for i in range(matrix.cols)
+        )
     )
