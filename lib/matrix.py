@@ -34,3 +34,23 @@ def ConicMatrix(a, b, c, d, e, f):
     Expanded form: ax² + 2bxy + cy² + 2dx + 2ey + f = 0
     """
     return Matrix([[a, b, d], [b, c, e], [d, e, f]])
+
+
+def QuadraticForm(sym_matrix_3x3: Matrix, vector3: Matrix):
+    """Quadratic form for a 3x3 symmetric matrix and a 3d column vector.
+
+    Formula: vᵀ·M·v
+    """
+    return vector3.T * sym_matrix_3x3 * vector3
+
+
+def SkewMatrix(vector3: Matrix):
+    """Skew-symmetric matrix for a 3d vector."""
+    x, y, z = vector3
+    return Matrix(
+        [
+            [0, -z, y],
+            [z, 0, -x],
+            [-y, x, 0],
+        ]
+    )
