@@ -1,6 +1,7 @@
-from sympy import Matrix, nan, Piecewise, sqrt
+from sympy import Matrix, nan, Piecewise, sqrt, Tuple
 
-from lib.matrix import NonZeroCol, NonZeroRow, SkewMatrix
+
+from lib.matrix import NonZeroCross, SkewMatrix
 
 
 def ConicXLine(conic: Matrix, line: Matrix):
@@ -19,5 +20,7 @@ def ConicXLine(conic: Matrix, line: Matrix):
     if alpha == nan:
         return nan
     intersections = m + alpha * skew_matrix
-    col, row = NonZeroCol(intersections), NonZeroRow(intersections)
-    return (col, row.T) if col != nan and row != nan else nan
+    points = NonZeroCross(intersections)
+    if type(points) == Tuple:
+        return (points[0], points[1].T)
+    return points

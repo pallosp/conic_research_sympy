@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
-from sympy import expand, factor, pprint, simplify, symbols, Matrix
-from sympy.solvers import solve
+from sympy import pprint, symbols
 
 from lib.intersection import ConicXLine
 from lib.line import IDEAL_LINE
-from lib.matrix import ConicMatrix, QuadraticForm
+from lib.matrix import ConicMatrix
 
 print("\nIdeal points on a conic:")
 
@@ -21,8 +20,7 @@ for a_assumption in [{"zero": True}, {"nonzero": True}]:
             d, e, f = symbols("d,e,f")
             conic = ConicMatrix(a, b, c, d, e, f)
             ideal_points = ConicXLine(conic, IDEAL_LINE)
-            ideal_points_str = "{0},{1}".format(*ideal_points)
-            if ideal_points_str not in solutions:
-                solutions.add(ideal_points_str)
+            if str(ideal_points) not in solutions:
+                solutions.add(str(ideal_points))
                 print()
                 pprint(ideal_points)
