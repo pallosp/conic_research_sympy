@@ -1,24 +1,43 @@
-from sympy import simplify, symbols
+from sympy import simplify, symbols, factor
 
 from lib.central_conic import AxisLengths, ConicCenter
 from lib.circle import UnitCircle
 from lib.ellipse import Ellipse
+from lib.matrix import IsScalarMultiple
+from lib.point import ORIGIN
 
 
 class TestEllipseFromParams:
     def test_unit_circle_ellipse(self):
-        assert Ellipse(0, 0, 1, 1) == UnitCircle()
+        assert Ellipse(ORIGIN, 1, 1) == UnitCircle()
 
     def test_center(self):
-        x, y, r1, r2, angle = symbols("x,y,r1,r2,angle")
-        ellipse = Ellipse(x, y, r1, r2, angle)
-        center_x, center_y = ConicCenter(ellipse)
-        assert x == simplify(center_x)
-        assert y == simplify(center_y)
+        center = symbols("x,y")
+        r1, r2 = symbols("r1,r2")
+        r1_direction = symbols("r1_x,r1_y")
+        ellipse = Ellipse(center, r1, r2, r1_direction=r1_direction)
+        assert center == factor(ConicCenter(ellipse))
 
-    def test_axis_lengths(self):
+    def test_axis_direction_vector_length_invariance(self):
+        center = symbols("x,y")
+        r1, r2, r1_dir_x, r1_dir_y = symbols("r1,r2,r1_dir_x,r1_dir_y")
+        conic1 = Ellipse(center, r1, r2, r1_direction=(r1_dir_x, r1_dir_y))
+        conic2 = Ellipse(center, r1, r2, r1_direction=(r1_dir_x * -2, r1_dir_y * -2))
+        assert IsScalarMultiple(conic1, conic2)
+
+    def test_axis_lengths_circle(self):
+        center = symbols("x,y")
+        r = symbols("r", nonnegative=True)
+        circle = Ellipse(center, r, r)
+        assert AxisLengths(circle) == (r, r)
+
+    def test_axis_lengths_numeric(self):
+        ellipse = Ellipse((1, 2), 3, 4, r1_direction=(5, 6))
+        assert AxisLengths(ellipse) == (3, 4)
+
+    def test_axis_lengths_general_case(self):
         x, y, angle = symbols("x,y,angle")
         r_min, r_diff = symbols("r_min,r_diff", nonnegative=True)
-        ellipse = Ellipse(x, y, r_min, r_min + r_diff, angle)
-        axes = [simplify(len) for len in AxisLengths(ellipse)]
-        assert [r_min, r_min + r_diff] == axes or [r_min + r_diff, r_min] == axes
+        ellipse = Ellipse((x, y), r_min, r_min + r_diff, r1_angle=angle)
+        axes = tuple(simplify(len) for len in AxisLengths(ellipse))
+        assert (r_min, r_min + r_diff) == axes or (r_min + r_diff, r_min) == axes
