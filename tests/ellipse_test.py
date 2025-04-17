@@ -36,8 +36,8 @@ class TestEllipseFromParams:
         assert AxisLengths(ellipse) == (3, 4)
 
     def test_axis_lengths_general_case(self):
-        x, y, angle = symbols("x,y,angle")
-        r_min, r_diff = symbols("r_min,r_diff", nonnegative=True)
-        ellipse = Ellipse((x, y), r_min, r_min + r_diff, r1_angle=angle)
-        axes = tuple(simplify(len) for len in AxisLengths(ellipse))
+        center = symbols("x,y")
+        r_min, r_diff = symbols("r_min,r_diff", positive=True)
+        ellipse = Ellipse(center, r_min, r_min + r_diff, r1_direction=(73, -25))
+        axes = tuple(factor(simplify(len)) for len in AxisLengths(ellipse))
         assert (r_min, r_min + r_diff) == axes or (r_min + r_diff, r_min) == axes
