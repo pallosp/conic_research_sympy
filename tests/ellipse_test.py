@@ -1,4 +1,4 @@
-from sympy import simplify, symbols, factor
+from sympy import factor, pi, simplify, symbols
 
 from lib.central_conic import AxisLengths, ConicCenter
 from lib.circle import UnitCircle
@@ -33,6 +33,8 @@ class TestEllipseFromParams:
 
     def test_axis_lengths_numeric(self):
         ellipse = Ellipse((1, 2), 3, 4, r1_direction=(5, 6))
+        assert AxisLengths(ellipse) == (3, 4)
+        ellipse = Ellipse((1, 2), 3, 4, r1_angle=pi / 6)
         assert AxisLengths(ellipse) == (3, 4)
 
     def test_axis_lengths_general_case(self):
