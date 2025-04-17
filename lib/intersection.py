@@ -21,6 +21,6 @@ def ConicXLine(conic: Matrix, line: Matrix):
         return nan
     intersections = m + alpha * skew_matrix
     points = NonZeroCross(intersections)
-    if points is Tuple:
+    if isinstance(points, Tuple):
         return (points[0], points[1].T)
     return points
