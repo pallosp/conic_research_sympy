@@ -1,4 +1,4 @@
-from sympy import cos, Matrix, sin
+from sympy import cos, sin
 
 from lib.matrix import ConicMatrix
 

@@ -1,4 +1,4 @@
-from sympy import Matrix, simplify, symbols
+from sympy import simplify, symbols
 
 from lib.circle import Circle
 from lib.central_conic import ConicCenter

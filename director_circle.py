@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sympy import expand, factor, Matrix, pprint, simplify, sqrt, symbols
+from sympy import expand, factor, pprint, simplify, sqrt, symbols
 
 from lib.circle import Circle
 from lib.central_conic import ConicCenter, SemiMajorAxis, SemiMinorAxis

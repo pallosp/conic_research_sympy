@@ -1,6 +1,4 @@
-import random
-
-from sympy import Matrix, simplify, symbols
+from sympy import simplify, symbols
 
 from lib.central_conic import AxisLengths, ConicCenter
 from lib.circle import UnitCircle
@@ -22,5 +20,5 @@ class TestEllipseFromParams:
         x, y, angle = symbols("x,y,angle")
         r_min, r_diff = symbols("r_min,r_diff", nonnegative=True)
         ellipse = Ellipse(x, y, r_min, r_min + r_diff, angle)
-        axes = [simplify(l) for l in AxisLengths(ellipse)]
+        axes = [simplify(len) for len in AxisLengths(ellipse)]
         assert [r_min, r_min + r_diff] == axes or [r_min + r_diff, r_min] == axes
