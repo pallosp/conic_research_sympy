@@ -4,6 +4,11 @@ from sympy import Matrix, nan, Piecewise, sqrt, Tuple
 from lib.matrix import NonZeroCross, SkewMatrix
 
 
+def LineXLine(line1: Matrix, line2: Matrix):
+    """Intersects two lines."""
+    return line1.cross(line2)
+
+
 def ConicXLine(conic: Matrix, line: Matrix):
     """Intersects a conic with a line. Returns two points or NaN.
 

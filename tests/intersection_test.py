@@ -1,9 +1,17 @@
-from sympy import Matrix, nan
+from sympy import Matrix, nan, symbols
 
 from lib.degenerate_conic import LinePair
-from lib.intersection import ConicXLine
-from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS
+from lib.intersection import ConicXLine, LineXLine
+from lib.line import HorizontalLine, IDEAL_LINE, VerticalLine, X_AXIS, Y_AXIS
 from lib.matrix import ConicMatrix, IsScalarMultiple, QuadraticForm
+
+
+class TestLineXLine:
+    def test_horizonal_x_vertical(self):
+        x, y = symbols("x,y")
+        line1 = VerticalLine(x)
+        line2 = HorizontalLine(y)
+        assert IsScalarMultiple(LineXLine(line1, line2), Matrix([x, y, 1]))
 
 
 class TestConicXLine:
@@ -17,8 +25,8 @@ class TestConicXLine:
     def test_x_y_axes_conic(self):
         conic = LinePair(X_AXIS, Y_AXIS)
         p1, p2 = ConicXLine(conic, IDEAL_LINE)
-        assert IsScalarMultiple(p1, Matrix([1, 0, 0]))
-        assert IsScalarMultiple(p2, Matrix([0, 1, 0]))
+        assert IsScalarMultiple(p1, Matrix([0, 1, 0]))
+        assert IsScalarMultiple(p2, Matrix([1, 0, 0]))
 
     def test_x_axis_plus_ideal_line_conic(self):
         conic = LinePair(X_AXIS, IDEAL_LINE)
@@ -29,8 +37,8 @@ class TestConicXLine:
     def test_y_axis_plus_ideal_line_conic(self):
         conic = LinePair(Y_AXIS, IDEAL_LINE)
         p1, p2 = ConicXLine(conic, X_AXIS)
-        assert IsScalarMultiple(p1, Matrix([0, 0, 1]))
-        assert IsScalarMultiple(p2, Matrix([1, 0, 0]))
+        assert IsScalarMultiple(p1, Matrix([1, 0, 0]))
+        assert IsScalarMultiple(p2, Matrix([0, 0, 1]))
 
     def test_double_x_axis_conic(self):
         conic = LinePair(X_AXIS, X_AXIS)
