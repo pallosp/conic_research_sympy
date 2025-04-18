@@ -9,12 +9,12 @@ from lib.matrix import ConicMatrix
 
 conic = ConicMatrix(*symbols("a,b,c,d,e,f"))
 
-center_x, center_y = ConicCenter(conic)
+center = ConicCenter(conic)
 radius_square = SemiMajorAxis(conic) ** 2 + SemiMinorAxis(conic) ** 2
 radius_square = factor(expand(simplify(radius_square)))
 radius = sqrt(radius_square)
 
-director_circle = simplify(Circle(center_x, center_y, radius))
+director_circle = simplify(Circle(center, radius))
 
 print("\nDirector circle radius:")
 pprint(radius)

@@ -2,17 +2,16 @@
 
 from sympy import expand, factor, pprint, simplify, symbols
 
-from lib.circle import UnitCircle
+from lib.circle import UNIT_CIRCLE
 from lib.transform import Rotate, ScaleXY, TransformConic, Translate
 
 
 cx, cy, r1, r2, angle = symbols("cx,cy,r1,r2,θ")
-unit_circle = UnitCircle()
 scaling = ScaleXY(r1, r2)
 rotation = Rotate(angle)
 translation = Translate(cx, cy)
 transformation = translation * rotation * scaling
-ellipse = TransformConic(unit_circle, transformation)
+ellipse = TransformConic(UNIT_CIRCLE, transformation)
 
 a, b, c = symbols("a,b,c")
 for i in (2, 5, 6, 7, 8):

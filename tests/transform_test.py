@@ -13,7 +13,7 @@ class TestTranslate:
         x, y, r = symbols("x,y,r")
         dx, dy = symbols("dx,dy")
         transformation = Translate(dx, dy)
-        circle = Circle(x, y, r)
+        circle = Circle((x, y), r)
         new_circle = TransformConic(circle, transformation)
         new_center_x, new_center_y = ConicCenter(new_circle)
         assert new_center_x == x + dx
@@ -32,7 +32,7 @@ class TestTranslate:
 class TestRotate:
     def test_rotate_circle_around_center(self):
         x, y, r, theta = symbols("x,y,r,theta")
-        circle = Circle(x, y, r)
+        circle = Circle((x, y), r)
         rotation = Rotate(theta, x, y)
         new_circle = TransformConic(circle, rotation)
         assert circle == simplify(new_circle)

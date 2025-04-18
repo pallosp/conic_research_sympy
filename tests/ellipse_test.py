@@ -1,7 +1,7 @@
 from sympy import factor, pi, simplify, symbols
 
 from lib.central_conic import AxisLengths, ConicCenter
-from lib.circle import UnitCircle
+from lib.circle import UNIT_CIRCLE
 from lib.ellipse import Ellipse
 from lib.matrix import IsScalarMultiple
 from lib.point import ORIGIN
@@ -9,7 +9,7 @@ from lib.point import ORIGIN
 
 class TestEllipseFromParams:
     def test_unit_circle_ellipse(self):
-        assert Ellipse(ORIGIN, 1, 1) == UnitCircle()
+        assert Ellipse(ORIGIN, 1, 1) == UNIT_CIRCLE
 
     def test_center(self):
         center = symbols("x,y")
