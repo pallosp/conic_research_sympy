@@ -6,7 +6,11 @@ from lib.intersection import ConicXLine
 from lib.line import IDEAL_LINE
 from lib.matrix import ConicMatrix
 
-print("\nIdeal points on a conic:")
+print("\nIdeal points on a conic:\n")
+
+pprint(ConicXLine(ConicMatrix(*symbols("a,b,c,d,e,f")), IDEAL_LINE))
+
+print("\nPotential formulae based on the coefficients' signs:\n")
 
 solutions = set()
 for a_assumption in [{"zero": True}, {"nonzero": True}]:
