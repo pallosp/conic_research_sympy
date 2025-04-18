@@ -4,9 +4,9 @@ from sympy import MatAdd, MatMul, Matrix, pprint, symbols
 
 from lib.distance import PointLineDistance, PointPointDistance
 
-# eccentricity = |distance(p, focus) / distance(p, directrix)|
 
 print("\nConic equation from focus, directrix and eccentricity:\n")
+# eccentricity = |distance(p, focus) / distance(p, directrix)|
 
 directrix = Matrix(symbols("a,b,c"))
 a, b, _ = directrix
@@ -18,6 +18,7 @@ distance_from_directrix = PointLineDistance(point_on_conic, directrix)
 conic_eq = (eccentricity * distance_from_directrix) ** 2 - distance_from_focus**2
 conic_eq = (conic_eq * (a * a + b * b)).simplify()
 pprint(conic_eq)
+
 
 print("\nExpanded to matrix:\n")
 
@@ -32,15 +33,17 @@ conic_matrix = Matrix(
 )
 pprint(conic_matrix)
 
+
 print("\nAs a sum of two matrices:\n")
 
 ecc_square = eccentricity**2
 ecc_matrix = conic_matrix.copy()
 for i in range(len(ecc_matrix)):
     ecc_matrix[i] = ecc_matrix[i].collect(eccentricity).coeff(ecc_square)
-const_matrix = conic_matrix - ecc_square * ecc_matrix
-for i in range(len(const_matrix)):
-    const_matrix[i] = const_matrix[i].factor()
 
-conic_eq = MatAdd(MatMul(ecc_matrix, ecc_square), const_matrix)
+remainder = conic_matrix - ecc_square * ecc_matrix
+for i in range(len(remainder)):
+    remainder[i] = (remainder[i] / (a * a + b * b)).factor()
+
+conic_eq = MatAdd(MatMul(ecc_matrix, ecc_square), MatMul(remainder, a * a + b * b))
 pprint(conic_eq)
