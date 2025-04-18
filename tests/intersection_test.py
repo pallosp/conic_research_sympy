@@ -4,6 +4,7 @@ from lib.degenerate_conic import LinePair
 from lib.intersection import ConicXLine, LineXLine
 from lib.line import HorizontalLine, IDEAL_LINE, VerticalLine, X_AXIS, Y_AXIS
 from lib.matrix import ConicMatrix, IsScalarMultiple, QuadraticForm
+from lib.point import IdealPoint, ORIGIN
 
 
 class TestLineXLine:
@@ -25,20 +26,20 @@ class TestConicXLine:
     def test_x_y_axes_conic(self):
         conic = LinePair(X_AXIS, Y_AXIS)
         p1, p2 = ConicXLine(conic, IDEAL_LINE)
-        assert IsScalarMultiple(p1, Matrix([0, 1, 0]))
-        assert IsScalarMultiple(p2, Matrix([1, 0, 0]))
+        assert IsScalarMultiple(p1, IdealPoint(0, 1))
+        assert IsScalarMultiple(p2, IdealPoint(1, 0))
 
     def test_x_axis_plus_ideal_line_conic(self):
         conic = LinePair(X_AXIS, IDEAL_LINE)
         p1, p2 = ConicXLine(conic, Y_AXIS)
-        assert IsScalarMultiple(p1, Matrix([0, 1, 0]))
-        assert IsScalarMultiple(p2, Matrix([0, 0, 1]))
+        assert IsScalarMultiple(p1, IdealPoint(0, 1))
+        assert IsScalarMultiple(p2, ORIGIN)
 
     def test_y_axis_plus_ideal_line_conic(self):
         conic = LinePair(Y_AXIS, IDEAL_LINE)
         p1, p2 = ConicXLine(conic, X_AXIS)
-        assert IsScalarMultiple(p1, Matrix([1, 0, 0]))
-        assert IsScalarMultiple(p2, Matrix([0, 0, 1]))
+        assert IsScalarMultiple(p1, IdealPoint(1, 0))
+        assert IsScalarMultiple(p2, ORIGIN)
 
     def test_double_x_axis_conic(self):
         conic = LinePair(X_AXIS, X_AXIS)
