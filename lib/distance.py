@@ -1,14 +1,14 @@
 from sympy import sqrt
 
-from lib.point import PointToXY, PointToXYZ
+from lib.point import PointToXY, PointToVec3
 
 
 def PointPointDistance(point1, point2):
     """Signed distance between two points.
 
     Infinity if one of them is an ideal point, NaN if both."""
-    x1, y1, z1 = PointToXYZ(point1)
-    x2, y2, z2 = PointToXYZ(point2)
+    x1, y1, z1 = PointToVec3(point1)
+    x2, y2, z2 = PointToVec3(point2)
     return sqrt((x2 * z1 - x1 * z2) ** 2 + (y2 * z1 - y1 * z2) ** 2) / (z1 * z2)
 
 
