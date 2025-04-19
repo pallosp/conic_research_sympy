@@ -12,7 +12,13 @@ def ConicFromFocusAndDirectrix(focus: Matrix, directrix: Matrix, eccentricity):
 
 
 def Eccentricity(conic: Matrix):
-    """Source: https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients"""
+    """Eccentricity of the conic section.
+
+    The result is ambiguous in case of degenerate conics: evaluate
+    (Eccentricity(conic), Eccentricity(-conic)) to get both values.
+
+    Source: https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients
+    """
     a, b, c = conic[0], conic[1], conic[4]
     s = sqrt(((a - c) ** 2 + 4 * b**2).factor())
     det_sign = Piecewise((1, conic.det() >= 0), (-1, True))
