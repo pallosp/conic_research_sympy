@@ -5,6 +5,10 @@ def TransformConic(conic: Matrix, transformation: Matrix) -> Matrix:
     return transformation.adjugate().T * conic * transformation.adjugate()
 
 
+def TransformLine(line: Matrix, transformation: Matrix) -> Matrix:
+    return transformation.adjugate().T * line
+
+
 def Translate(dx, dy) -> Matrix:
     return Matrix([[1, 0, dx], [0, 1, dy], [0, 0, 1]])
 

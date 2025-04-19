@@ -1,9 +1,17 @@
-from sympy import simplify, symbols
+from sympy import pi, simplify, symbols
 
 from lib.circle import Circle
 from lib.central_conic import ConicCenter
-from lib.matrix import ConicMatrix
-from lib.transform import Rotate, Scale, ScaleXY, TransformConic, Translate
+from lib.line import HorizontalLine, LineBetween, X_AXIS
+from lib.matrix import ConicMatrix, IsScalarMultiple
+from lib.transform import (
+    Rotate,
+    Scale,
+    ScaleXY,
+    TransformConic,
+    TransformLine,
+    Translate,
+)
 
 conic = ConicMatrix(*symbols("a,b,c,d,e,f"))
 
@@ -56,3 +64,13 @@ class TestScale:
         scaling = ScaleXY(sx, sy, x0, y0)
         scaling_sequence = Translate(x0, y0) * ScaleXY(sx, sy) * Translate(-x0, -y0)
         assert simplify(scaling) == simplify(scaling_sequence)
+
+
+class TestTransformLine:
+    def test_rotate_line(self):
+        rotated = TransformLine(X_AXIS, Rotate(pi / 4))
+        assert IsScalarMultiple(rotated, LineBetween((0, 0), (1, 1)))
+
+    def test_translate_line(self):
+        translated = TransformLine(X_AXIS, Translate(1, 2))
+        assert translated == HorizontalLine(2)
