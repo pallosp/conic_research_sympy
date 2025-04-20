@@ -41,7 +41,7 @@ def QuadraticForm(sym_matrix: Matrix, vector: Matrix):
 
     Formula: vᵀ·M·v
     """
-    return (vector.T * sym_matrix * vector)[0]
+    return vector.dot(vector.T * sym_matrix)
 
 
 def SkewMatrix(vector3: Matrix):
