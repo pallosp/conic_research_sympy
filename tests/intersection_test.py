@@ -1,10 +1,11 @@
-from sympy import Matrix, nan, symbols
+from sympy import I, Matrix, nan, sqrt, symbols
 
+from lib.circle import UNIT_CIRCLE
 from lib.degenerate_conic import LinePair
 from lib.intersection import ConicXLine, LineXLine
 from lib.line import HorizontalLine, IDEAL_LINE, VerticalLine, X_AXIS, Y_AXIS
 from lib.matrix import ConicMatrix, IsScalarMultiple, QuadraticForm
-from lib.point import IdealPoint, ORIGIN
+from lib.point import IdealPoint, ORIGIN, PointToXY
 
 
 class TestLineXLine:
@@ -57,3 +58,13 @@ class TestConicXLine:
     def test_zero_conic(self):
         zero_conic = Matrix.zeros(3, 3)
         assert ConicXLine(zero_conic, Matrix([1, 2, 3])) == nan
+
+    def test_double_intersection(self):
+        intersections = ConicXLine(UNIT_CIRCLE, HorizontalLine(1))
+        assert IsScalarMultiple(intersections[0], Matrix([0, 1, 1]))
+        assert IsScalarMultiple(intersections[1], Matrix([0, 1, 1]))
+
+    def test_complex_intersection(self):
+        intersections = ConicXLine(UNIT_CIRCLE, HorizontalLine(2))
+        intersections = sorted((PointToXY(i) for i in intersections), key=str)
+        assert intersections == sorted([(-sqrt(3) * I, 2), (sqrt(3) * I, 2)], key=str)
