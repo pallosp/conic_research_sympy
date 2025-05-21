@@ -1,10 +1,22 @@
 from sympy import Matrix, Rational, symbols
+from sympy.abc import x, y
 
-from lib.conic import ConicFromFocusAndDirectrix, ConicThroughPoints, Eccentricity
+from lib.conic import (
+    ConicFromFocusAndDirectrix,
+    ConicFromPoly,
+    ConicThroughPoints,
+    Eccentricity,
+)
 from lib.degenerate_conic import LinePair
 from lib.line import X_AXIS, Y_AXIS
 from lib.matrix import IsScalarMultiple, QuadraticForm
 from lib.point import PointToVec3
+
+
+def test_ConicFromPoly():
+    poly = (x + 2) * (3 * y - 4) + x**2
+    point = Matrix([x, y, 1])
+    assert poly.equals(QuadraticForm(ConicFromPoly(poly), point))
 
 
 class TestConicThroughPoints:

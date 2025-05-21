@@ -1,6 +1,17 @@
-from sympy import Matrix, Piecewise, sqrt
+from sympy import abc, Matrix, Piecewise, Poly, sqrt
 
 from lib.point import PointToVec3, PointToXY
+
+
+def ConicFromPoly(poly, x=abc.x, y=abc.y) -> Matrix:
+    poly = Poly(poly, x, y)
+    a = poly.coeff_monomial(x * x)
+    b = poly.coeff_monomial(x * y) / 2
+    c = poly.coeff_monomial(y * y)
+    d = poly.coeff_monomial(x) / 2
+    e = poly.coeff_monomial(y) / 2
+    f = poly.coeff_monomial(1)
+    return Matrix([[a, b, d], [b, c, e], [d, e, f]])
 
 
 def ConicThroughPoints(p1, p2, p3, p4, p5) -> Matrix:
