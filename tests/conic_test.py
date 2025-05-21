@@ -1,16 +1,18 @@
-from sympy import Matrix, Rational, symbols
+from sympy import I, Matrix, Rational, symbols
 from sympy.abc import x, y
 
+from lib.circle import UNIT_CIRCLE
 from lib.conic import (
     ConicFromFocusAndDirectrix,
     ConicFromPoly,
     ConicThroughPoints,
     Eccentricity,
+    IdealPoints,
 )
 from lib.degenerate_conic import LinePair
 from lib.line import X_AXIS, Y_AXIS
 from lib.matrix import IsScalarMultiple, QuadraticForm
-from lib.point import PointToVec3
+from lib.point import IdealPoint, PointToVec3
 
 
 def test_ConicFromPoly():
@@ -52,3 +54,44 @@ class TestEccentricity:
         conic = LinePair(X_AXIS, Matrix([24, 7, 0]))
         ecc1, ecc2 = Eccentricity(conic), Eccentricity(-conic)
         assert sorted([ecc1, ecc2]) == [Rational(5, 4), Rational(5, 3)]
+
+
+class TestIdealPoints:
+    def test_xy_hyperbola(self):
+        hyperbola = ConicFromPoly(x * y)
+        ideal_points = IdealPoints(hyperbola)
+        ideal_x = IdealPoint(1, 0)
+        ideal_y = IdealPoint(0, 1)
+        assert (
+            IsScalarMultiple(ideal_points[0], ideal_x)
+            and IsScalarMultiple(ideal_points[1], ideal_y)
+            or IsScalarMultiple(ideal_points[0], ideal_y)
+            and IsScalarMultiple(ideal_points[1], ideal_x)
+        )
+
+    def test_unit_hyperbola(self):
+        hyperbola = ConicFromPoly(x * x - y * y - 1)
+        ideal_points = IdealPoints(hyperbola)
+        ideal1 = IdealPoint(1, 1)
+        ideal2 = IdealPoint(1, -1)
+        assert (
+            IsScalarMultiple(ideal_points[0], ideal1)
+            and IsScalarMultiple(ideal_points[1], ideal2)
+            or IsScalarMultiple(ideal_points[0], ideal2)
+            and IsScalarMultiple(ideal_points[1], ideal1)
+        )
+
+    def test_parabola(self):
+        parabola = ConicFromPoly(x * x - y)
+        ideal_points = IdealPoints(parabola)
+        assert IsScalarMultiple(ideal_points[0], IdealPoint(0, 1))
+        assert IsScalarMultiple(ideal_points[1], IdealPoint(0, 1))
+
+    def test_circle(self):
+        ideal_points = IdealPoints(UNIT_CIRCLE)
+        assert (
+            IsScalarMultiple(ideal_points[0], IdealPoint(1, I))
+            and IsScalarMultiple(ideal_points[1], IdealPoint(1, -I))
+            or IsScalarMultiple(ideal_points[0], IdealPoint(1, -I))
+            and IsScalarMultiple(ideal_points[1], IdealPoint(1, I))
+        )

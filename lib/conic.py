@@ -1,5 +1,6 @@
-from sympy import abc, Matrix, Piecewise, Poly, sqrt
+from sympy import abc, Function, Matrix, Piecewise, Poly, sqrt, Tuple
 
+from lib.matrix import NonZeroCross
 from lib.point import PointToVec3, PointToXY
 
 
@@ -56,3 +57,14 @@ def Eccentricity(conic: Matrix):
     s = sqrt(((a - c) ** 2 + 4 * b**2).factor())
     det_sign = Piecewise((1, conic.det() >= 0), (-1, True))
     return sqrt(2 * s / (s - det_sign * (a + c)))
+
+
+class IdealPoints(Function):
+    @classmethod
+    def eval(cls, conic: Matrix):
+        a, b, c = conic[0], conic[1], conic[4]
+        disc = sqrt(b * b - a * c)
+        cross = NonZeroCross(Matrix([[c, -b - disc, 0], [-b + disc, a, 0], [0, 0, 0]]))
+        if isinstance(cross, Tuple):
+            return (cross[0], cross[1].T)
+        return None
