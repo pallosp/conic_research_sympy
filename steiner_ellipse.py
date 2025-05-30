@@ -137,9 +137,15 @@ col_y_options = [
     Matrix([y1, y2, y3]),
     Matrix([y2 - y3, y3 - y1, y1 - y2]),
 ]
-col_xy_options = [
-    Matrix([x1 * y2 - x2 * y1, x2 * y3 - x3 * y2, x3 * y1 - x1 * y3]),
-]
+col_xy_asymmetric = Matrix([x1 * y2 - x2 * y1, x2 * y3 - x3 * y2, x3 * y1 - x1 * y3])
+col_xy_symmetric = Matrix(
+    [
+        x1 * (y2 - y3) - y1 * (x2 - x3),
+        x2 * (y3 - y1) - y2 * (x3 - x1),
+        x3 * (y1 - y2) - y3 * (x1 - x2),
+    ]
+)
+
 
 print("\nElements of the Steiner ellipse matrix:")
 
@@ -158,6 +164,8 @@ pprint(PolyAsDeterminant(d, col_y_options, col_y_options, col_x_options))
 print("\ne = determinant of\n")
 pprint(PolyAsDeterminant(e, col_x_options, col_x_options, col_y_options))
 
-# TODO: Can it be made more symmetric / more consistent with the other elements?
+print("\nf = determinant of\n")
+pprint(PolyAsDeterminant(f, col_x_options, [col_xy_symmetric], col_y_options))
+
 print("\nf = 2 * determinant of\n")
-pprint(PolyAsDeterminant(f / 2, col_x_options, col_xy_options, col_y_options))
+pprint(PolyAsDeterminant(f / 2, col_x_options, [col_xy_asymmetric], col_y_options))
