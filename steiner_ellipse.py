@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 
-# Algorithm to construct an ellipse matrix from its center and 3 perimeter
-# points.
+# Algorithm to construct a conic matrix from its center and 3 perimeter points.
 #
-# A special is the Steiner ellipse, when the ellipse's center coincides
+# A special is the Steiner ellipse, when the conic's center coincides
 # with the centroid of the triangle around the perimeter points.
 
 from sympy import symbols, Matrix
@@ -14,10 +13,10 @@ from lib.transform import TransformConic, Translate
 
 # Simplification WLOG: let the center point be at (0, 0).
 #
-# Equation of such ellipses:
+# Equation of such conics:
 #   a⋅x² + b⋅x⋅y + c⋅y² = 1
 #
-# The ellipse goes through (xᵢ,yᵢ) =>
+# The conic goes through (xᵢ,yᵢ) =>
 #   Ɐi a⋅xᵢ² + b⋅xᵢ⋅yᵢ + c⋅yᵢ² = 1
 #
 # This linear equation system in matrix form:
@@ -33,7 +32,7 @@ from lib.transform import TransformConic, Translate
 #   b = det M₂ / det M
 #   c = det M₃ / det M
 #
-# Ellipse formula:
+# Conic formula:
 #
 #   det M₁⋅x² + det M₂⋅x⋅y + det M₃⋅y² - det M = 0
 #
@@ -60,7 +59,7 @@ m1[:, 0] = Matrix([1, 1, 1])
 m2[:, 1] = Matrix([1, 1, 1])
 m3[:, 2] = Matrix([1, 1, 1])
 
-ellipse = Matrix(
+conic = Matrix(
     [
         [m1.det(), m2.det() / 2, 0],
         [m2.det() / 2, m3.det(), 0],
@@ -68,14 +67,14 @@ ellipse = Matrix(
     ]
 )
 
-assert ConicCenter(ellipse) == (0, 0)
-assert QuadraticForm(ellipse, Matrix([x1, y1, 1])).equals(0)
-assert QuadraticForm(ellipse, Matrix([x2, y2, 1])).equals(0)
-assert QuadraticForm(ellipse, Matrix([x3, y3, 1])).equals(0)
+assert ConicCenter(conic) == (0, 0)
+assert QuadraticForm(conic, Matrix([x1, y1, 1])).equals(0)
+assert QuadraticForm(conic, Matrix([x2, y2, 1])).equals(0)
+assert QuadraticForm(conic, Matrix([x3, y3, 1])).equals(0)
 
 # Generalization for arbitrary center point (xc, yc)
 #
-#   1. Substitute xᵢ with xᵢ-xc and yᵢ with yᵢ-yc in the ellipse matrix.
+#   1. Substitute xᵢ with xᵢ-xc and yᵢ with yᵢ-yc in the conic matrix.
 #   2. Translate the result back with (xc, yc).
 #
 # The translation modifies the matrix elements as follows:
@@ -85,9 +84,6 @@ assert QuadraticForm(ellipse, Matrix([x3, y3, 1])).equals(0)
 #   [a b 0]    [a           b           -a⋅xc-b⋅yc           ]
 #   [b c 0] -> [b           c           -b⋅xc-c⋅yc           ]
 #   [0 0 f]    [-a⋅xc-b⋅yc  -b⋅xc-c⋅yc  f-a⋅xc²+b⋅xc⋅yc+c⋅yc²]
-#
-# The Steiner ellipse is a special case when xc = (x₁+x₂+x₃)/3 and
-# yc = (y₁+y₂+y₃)/3.
 #
 # I couldn't find a way to express the last row and column of the matrix with a
 # reasonably simple formula.
@@ -105,7 +101,22 @@ substitutions = {
     y3: y3 - yc,
 }
 
-ellipse = TransformConic(ellipse.subs(substitutions), Translate(xc, yc))
+conic = TransformConic(conic.subs(substitutions), Translate(xc, yc))
 
-assert ConicCenter(ellipse)[0].equals(xc)
-assert QuadraticForm(ellipse, Matrix([x1, y1, 1])).equals(0)
+assert ConicCenter(conic)[0].equals(xc)
+assert QuadraticForm(conic, Matrix([x1, y1, 1])).equals(0)
+
+# The Steiner ellipse is a special case when xc = (x₁+x₂+x₃)/3 and
+# yc = (y₁+y₂+y₃)/3.
+
+steiner = conic.subs({xc: (x1 + x2 + x3) / 3, yc: (y1 + y2 + y3) / 3})
+
+# Simpify with the common factor in the matrix elements
+steiner /= Matrix([[x1, x2, x3], [y1, y2, y3], [1, 1, 1]]).det() / -18
+
+a, _, _, b, c, _, d, e, f = steiner
+assert a.equals((y1 - y2) ** 2 + (y2 - y3) ** 2 + (y3 - y1) ** 2)
+assert b.equals(-(x1 - x2) * (y1 - y2) - (x2 - x3) * (y2 - y3) - (x3 - x1) * (y3 - y1))
+assert c.equals((x1 - x2) ** 2 + (x2 - x3) ** 2 + (x3 - x1) ** 2)
+
+# TODO: How to simplify d, e, and f?
