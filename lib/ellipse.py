@@ -1,10 +1,10 @@
-from sympy import cos, sin
+from sympy import Matrix, cos, sin
 
 from lib.matrix import ConicMatrix
 from lib.point import PointToXY
 
 
-def Ellipse(center, r1, r2, *, r1_angle=None, r1_direction=None):
+def Ellipse(center, r1, r2, *, r1_angle=None, r1_direction=None) -> Matrix:
     """Source: ellipse_from_params.py"""
     assert r1_angle is None or r1_direction is None
     center_x, center_y = PointToXY(center)
@@ -17,4 +17,35 @@ def Ellipse(center, r1, r2, *, r1_angle=None, r1_direction=None):
     d = -a * center_x - b * center_y
     e = -b * center_x - c * center_y
     f = (r1**2 * r2**2) * (axis_dir_x**2 + axis_dir_y**2) - d * center_x - e * center_y
+    return ConicMatrix(a, b, c, d, e, f)
+
+
+def SteinerEllipse(point1, point2, point3) -> Matrix:
+    """Computes the Steiner ellipse for the given points.
+
+    The ellipse goes through the three points and is centered at the triangle's
+    centroid.
+    """
+    x1, y1 = PointToXY(point1)
+    x2, y2 = PointToXY(point2)
+    x3, y3 = PointToXY(point3)
+    x_row = [x1, x2, x3]
+    y_row = [y1, y2, y3]
+    dx_row = [x2 - x3, x3 - x1, x1 - x2]
+    dy_row = [y2 - y3, y3 - y1, y1 - y2]
+    a = Matrix([dy_row, y_row, [1, 1, 1]]).det()
+    b = Matrix([x_row, dy_row, [1, 1, 1]]).det()
+    c = Matrix([dx_row, x_row, [1, 1, 1]]).det()
+    d = Matrix([y_row, dy_row, x_row]).det()
+    e = Matrix([x_row, dx_row, y_row]).det()
+    f = (
+        Matrix(
+            [
+                x_row,
+                [x1 * y2 - x2 * y1, x2 * y3 - x3 * y2, x3 * y1 - x1 * y3],
+                y_row,
+            ]
+        ).det()
+        * 2
+    )
     return ConicMatrix(a, b, c, d, e, f)
