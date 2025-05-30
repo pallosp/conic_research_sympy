@@ -21,3 +21,14 @@ def PointToVec3(point):
     if point is Matrix:
         return point
     return Matrix(point)
+
+
+def Centroid(*points):
+    n = len(points)
+    assert n > 0
+    cx, cy = 0, 0
+    for p in points:
+        x, y = PointToXY(p)
+        cx += x
+        cy += y
+    return (cx / n, cy / n)
