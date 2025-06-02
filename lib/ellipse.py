@@ -21,7 +21,7 @@ def Ellipse(center, r1, r2, *, r1_angle=None, r1_direction=None) -> Matrix:
 
 
 def SteinerEllipse(point1, point2, point3) -> Matrix:
-    """Computes the Steiner ellipse for the given points.
+    """Computes the Steiner circumellipse for the given points.
 
     The ellipse goes through the three points and is centered at the triangle's
     centroid.
@@ -47,5 +47,36 @@ def SteinerEllipse(point1, point2, point3) -> Matrix:
             ]
         ).det()
         * 2
+    )
+    return ConicMatrix(a, b, c, d, e, f)
+
+
+def SteinerInellipse(point1, point2, point3) -> Matrix:
+    """Computes the Steiner inellipse for the given points.
+
+    The ellipse is centered at the triangle's centroid, and is tangent to the
+    triangle's sides at their midpoints.
+    """
+    x1, y1 = PointToXY(point1)
+    x2, y2 = PointToXY(point2)
+    x3, y3 = PointToXY(point3)
+    x_row = [x1, x2, x3]
+    y_row = [y1, y2, y3]
+    dx_row = [x2 - x3, x3 - x1, x1 - x2]
+    dy_row = [y2 - y3, y3 - y1, y1 - y2]
+    a = Matrix([dy_row, y_row, [1, 1, 1]]).det()
+    b = Matrix([x_row, dy_row, [1, 1, 1]]).det()
+    c = Matrix([dx_row, x_row, [1, 1, 1]]).det()
+    d = Matrix([y_row, dy_row, x_row]).det()
+    e = Matrix([x_row, dx_row, y_row]).det()
+    f = (
+        Matrix(
+            [
+                [x2 + x3, x3 + x1, x1 + x2],
+                [x2 * y3 - x3 * y2, x3 * y1 - x1 * y3, x1 * y2 - x2 * y1],
+                [y2 + y3, y3 + y1, y1 + y2],
+            ]
+        ).det()
+        / 2
     )
     return ConicMatrix(a, b, c, d, e, f)

@@ -2,7 +2,7 @@ from sympy import factor, pi, simplify, symbols
 
 from lib.central_conic import AxisLengths, ConicCenter
 from lib.circle import UNIT_CIRCLE
-from lib.ellipse import Ellipse, SteinerEllipse
+from lib.ellipse import Ellipse, SteinerEllipse, SteinerInellipse
 from lib.matrix import IsScalarMultiple, QuadraticForm
 from lib.point import ORIGIN, Centroid, PointToVec3
 
@@ -46,7 +46,7 @@ class TestEllipseFromParams:
 
 
 class TestSteinerEllipse:
-    def test_general_case(self):
+    def test_circumellipse(self):
         p1 = (4, 1)
         p2 = (7, 3)
         p3 = (5, 5)
@@ -54,4 +54,14 @@ class TestSteinerEllipse:
         assert QuadraticForm(ellipse, PointToVec3(p1)).equals(0)
         assert QuadraticForm(ellipse, PointToVec3(p2)).equals(0)
         assert QuadraticForm(ellipse, PointToVec3(p3)).equals(0)
+        assert ConicCenter(ellipse) == Centroid(p1, p2, p3)
+
+    def test_inellipse(self):
+        p1 = (4, 1)
+        p2 = (7, 3)
+        p3 = (5, 5)
+        ellipse = SteinerInellipse(p1, p2, p3)
+        assert QuadraticForm(ellipse, PointToVec3(Centroid(p2, p3))).equals(0)
+        assert QuadraticForm(ellipse, PointToVec3(Centroid(p3, p1))).equals(0)
+        assert QuadraticForm(ellipse, PointToVec3(Centroid(p1, p2))).equals(0)
         assert ConicCenter(ellipse) == Centroid(p1, p2, p3)
