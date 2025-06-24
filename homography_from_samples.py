@@ -25,28 +25,47 @@ u0, v0, u1, v1, u2, v2, u3, v3 = symbols("u0,v0,u1,v1,u2,v2,u3,v3")
 #
 # linear equation system where m is a 8x8 matrix below.
 
-m = Matrix(
-    [
-        [x0, y0, 1, 0, 0, 0, -u0 * x0, -u0 * y0],
-        [0, 0, 0, x0, y0, 1, -v0 * x0, -v0 * y0],
-        [x1, y1, 1, 0, 0, 0, -u1 * x1, -u1 * y1],
-        [0, 0, 0, x1, y1, 1, -v1 * x1, -v1 * y1],
-        [x2, y2, 1, 0, 0, 0, -u2 * x2, -u2 * y2],
-        [0, 0, 0, x2, y2, 1, -v2 * x2, -v2 * y2],
-        [x3, y3, 1, 0, 0, 0, -u3 * x3, -u3 * y3],
-        [0, 0, 0, x3, y3, 1, -v3 * x3, -v3 * y3],
-    ]
-)
-uv = Matrix([u0, v0, u1, v1, u2, v2, u3, v3])
+
+def GetTransform(*mappings):
+    (
+        ((x0, y0), (u0, v0)),
+        ((x1, y1), (u1, v1)),
+        ((x2, y2), (u2, v2)),
+        ((x3, y3), (u3, v3)),
+    ) = mappings
+    m = Matrix(
+        [
+            [x0, y0, 1, 0, 0, 0, -u0 * x0, -u0 * y0],
+            [0, 0, 0, x0, y0, 1, -v0 * x0, -v0 * y0],
+            [x1, y1, 1, 0, 0, 0, -u1 * x1, -u1 * y1],
+            [0, 0, 0, x1, y1, 1, -v1 * x1, -v1 * y1],
+            [x2, y2, 1, 0, 0, 0, -u2 * x2, -u2 * y2],
+            [0, 0, 0, x2, y2, 1, -v2 * x2, -v2 * y2],
+            [x3, y3, 1, 0, 0, 0, -u3 * x3, -u3 * y3],
+            [0, 0, 0, x3, y3, 1, -v3 * x3, -v3 * y3],
+        ]
+    )
+    uv = Matrix([u0, v0, u1, v1, u2, v2, u3, v3])
+    coefficients = list(m.inv() * uv) + [sympify(1)]
+    for i in range(len(coefficients)):
+        coefficients[i] = coefficients[i].factor()
+    return Matrix(3, 3, coefficients)
+
+
+################################################################################
 
 # The general solution is quite big. Solve it for the special case where
 # (xᵢ,yᵢ) = (±1, ±1)
 
-map = {x0: 1, y0: 1, x1: -1, y1: 1, x2: -1, y2: -1, x3: 1, y3: -1}
-coefficients = list(m.subs(map).inv() * uv) + [sympify(1)]
-for i in range(len(coefficients)):
-    coefficients[i] = coefficients[i].factor()
-transform = Matrix(3, 3, coefficients)
+print("\nTransformation to map the (±1, ±1) square to the (uᵢ,vᵢ) quadrilateral.")
+
+mappings = [
+    ((1, 1), (u0, v0)),
+    ((-1, 1), (u1, v1)),
+    ((-1, -1), (u2, v2)),
+    ((1, -1), (u3, v3)),
+]
+transform = GetTransform(*mappings)
 
 # Sanity checks
 
@@ -58,12 +77,26 @@ assert rot90 == Matrix([[0, -1, 0], [1, 0, 0], [0, 0, 1]])
 
 # The transformation matrix
 
+print("Elements of the normalized transformation matrix:\n")
+
 transform *= transform[0].as_numer_denom()[1]
-print("\nElements of the transformation matrix:\n")
 for el in transform:
     pprint(el)
 
-# Another interesting case is when the source points are (±1, 0) and (0, ±1),
-# although the solution is less symmetric.
-#
-# map = {x0: 1, y0: 0, x1: 0, y1: 1, x2: -1, y2: 0, x3: 0, y3: -1}
+################################################################################
+
+print("\nTransformation to map the |x|+|y|=1 square to the (uᵢ,vᵢ) quadrilateral.")
+
+mappings = [
+    ((1, 0), (u0, v0)),
+    ((0, 1), (u1, v1)),
+    ((-1, 0), (u2, v2)),
+    ((0, -1), (u3, v3)),
+]
+transform = GetTransform(*mappings)
+
+print("Elements of the normalized transformation matrix:\n")
+
+transform *= transform[0].as_numer_denom()[1]
+for el in transform:
+    pprint(el)
