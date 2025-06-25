@@ -7,10 +7,11 @@ a, b, c = symbols("a,b,c", real=True)
 parabola = Matrix([[a, b], [b, c]])
 axis_dirs = [simplify(r[2][0]) for r in parabola.eigenvects()]
 
-# Simplify using the fact that a*c - b*b = 0
+# Simplify the vector elements using the fact that a*c-b*b = 0
 axis_dirs = [dir.subs(b**2, a * c) for dir in axis_dirs]
 
-# For simplify the sqrt subexpressions
+# The sqrt subexpressions are full squares. Manually factor them so that sympy
+# can figure out how to simplify them.
 for i, dir in enumerate(axis_dirs):
     for coord in dir:
         for atom in coord.atoms(Pow):
