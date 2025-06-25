@@ -22,6 +22,9 @@ def PointAtAngle(polar: Matrix, theta) -> Matrix:
 
 
 def ConicFromPolarMatrix(polar: Matrix) -> Matrix:
-    """Transforms a conic from polar to quadratic form."""
+    """Transforms a conic from polar to quadratic form.
+
+    Algorithm: TransformConic(UNIT_CIRCLE, polar)
+    """
     polar_adjugate = polar.adjugate()
     return polar_adjugate.T * UNIT_CIRCLE * polar_adjugate
