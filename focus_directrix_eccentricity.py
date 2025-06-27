@@ -1,7 +1,20 @@
 #!/usr/bin/env python
 
 from textwrap import indent
-from sympy import Eq, Matrix, Piecewise, Pow, factor, pretty, sign, symbols
+from sympy import (
+    Eq,
+    Matrix,
+    Piecewise,
+    Pow,
+    atan2,
+    cos,
+    factor,
+    pretty,
+    sign,
+    sin,
+    solve,
+    symbols,
+)
 
 from lib.conic import ConicFromFocusAndDirectrix
 
@@ -72,6 +85,10 @@ def Sub(eq0, eq1):
     return Eq(eq0.lhs - eq1.lhs, eq0.rhs - eq1.rhs)
 
 
+def Mul(eq, factor):
+    return Eq(eq.lhs * factor, eq.rhs * factor)
+
+
 def Div(eq, denom):
     return Eq(eq.lhs / denom, eq.rhs / denom)
 
@@ -108,3 +125,28 @@ pprint_indented(lambda_eq)
 ecc_square_eq = Swap(Div(eigenvalue_diff_eq, L))
 print()
 pprint_indented(ecc_square_eq)
+
+print("\nDirectrix normal vector a.k.a. focal axis direction:\n")
+
+aa_eq = Eq(a**2, solve(coeff_eq[0], a**2)[0])
+bb_eq = Eq(b**2, solve(coeff_eq[2], b**2)[0])
+ab_eq = Swap(Div(coeff_eq[1], ecc**2 * L))
+pprint_indented(aa_eq)
+pprint_indented(bb_eq)
+pprint_indented(ab_eq)
+
+print("\nAs a² + b² = 1, substitute a = cos(θ), b = sin(θ)\n")
+
+theta = symbols("theta")
+pprint_indented(Sub(aa_eq, bb_eq))
+pprint_indented(Sub(aa_eq, bb_eq).subs({a: cos(theta), b: sin(theta)}))
+cos2_eq = Sub(aa_eq, bb_eq).subs({a: cos(theta), b: sin(theta)}).simplify()
+pprint_indented(cos2_eq)
+pprint_indented(Mul(ab_eq, 2))
+pprint_indented(Mul(ab_eq, 2).subs({a: cos(theta), b: sin(theta)}))
+sin2_eq = Mul(ab_eq, 2).subs({a: cos(theta), b: sin(theta)}).simplify()
+pprint_indented(sin2_eq)
+theta_eq = Eq(theta, atan2(sin2_eq.rhs, cos2_eq.rhs) / 2)
+pprint_indented(theta_eq)
+pprint_indented(theta_eq.subs(ecc**2 * L, sign(ecc**2 * L)))
+pprint_indented(theta_eq.subs(ecc**2 * L, 1 / sign(det)))
