@@ -47,3 +47,20 @@ for i in range(len(remainder)):
 
 conic_eq = MatAdd(MatMul(ecc_matrix, ecc_square), MatMul(remainder, a * a + b * b))
 pprint(conic_eq)
+
+
+print("\nDeterminant of the conic matrix above:\n")
+
+pprint(conic_matrix.det().factor())
+
+
+print("\nThe determinant is positive if")
+print()
+print("  • eccentricity > 0 (not a circle)")
+print("  • a²+b² > 0 (the directrix is a real line)")
+print("  • ax+by+c ≠ 0 (the focus is not on the directix)")
+
+
+print("\nIts discriminant:\n")
+
+pprint(conic_matrix[:2, :2].det().factor())
