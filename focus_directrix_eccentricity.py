@@ -48,7 +48,7 @@ coeff_eq = [
 for eq in coeff_eq:
     print_indented(eq)
 
-print("\nNormalize the directrix so that a² + b² = 1:\n")
+print("\nSince a² + b² = 1:\n")
 
 for i in range(len(coeff_eq)):
     coeff_eq[i] = coeff_eq[i].subs(a * a + b * b, 1)
@@ -56,7 +56,7 @@ for i in range(len(coeff_eq)):
 
 print("\nDeterminant of the conic matrix:\n")
 
-det = symbols("det")
+det = symbols("det", nonzero=True)
 det_eq = Eq(det, conic.det().factor().subs(a * a + b * b, 1))
 print_indented(det_eq)
 
@@ -65,15 +65,16 @@ print("Note that the formula breaks down for circles.\n")
 
 print("Calculate the eigenvalues of the top left submatrix.\n")
 
-p, q, r = symbols("p,q,r")
-sorted_eigenvalues = [
-    v.subs({p: conic[0], q: conic[3], r: conic[4]})
-    .replace(Pow, lambda base, exp: Pow(base.factor(), exp))
+min_eigen_abc, max_eigen_abc = Matrix([[A, B], [B, C]]).eigenvals()
+min_eigen_fde, max_eigen_fde = (
+    e.subs([(eq.lhs, eq.rhs) for eq in coeff_eq])
     .factor()
-    .subs(a * a + b * b, 1)
+    .replace(Pow, lambda base, exp: Pow(base.factor(), exp))
+    .subs(b * b, 1 - a * a)
+    .factor()
     .collect(ecc)
-    for v in Matrix([[p, q], [q, r]]).eigenvals()
-]
+    for e in [min_eigen_abc, max_eigen_abc]
+)
 
 
 def Add(*eqs):
@@ -102,8 +103,8 @@ def Swap(eq):
 
 
 min_eigen, max_eigen = symbols("min_eigen,max_eigen")
-eigenvalue_min_eq = Eq(min_eigen, sorted_eigenvalues[0])
-eigenvalue_max_eq = Eq(max_eigen, sorted_eigenvalues[1])
+eigenvalue_min_eq = Eq(min_eigen, min_eigen_fde)
+eigenvalue_max_eq = Eq(max_eigen, max_eigen_fde)
 eigenvalue_sum_eq = factor(Add(eigenvalue_min_eq, eigenvalue_max_eq))
 eigenvalue_diff_eq = factor(Sub(eigenvalue_max_eq, eigenvalue_min_eq))
 
@@ -128,8 +129,15 @@ println_indented(lambda_eq)
 lambda_eq_piecewise = Eq(L, Piecewise((-min_eigen, det > 0), (-max_eigen, True)))
 println_indented(lambda_eq_piecewise)
 
+eigen_to_abc = {min_eigen: min_eigen_abc, max_eigen: max_eigen_abc}
+lambda_eq_abc = factor(lambda_eq.subs(eigen_to_abc))
+println_indented(lambda_eq_abc)
+
 ecc_square_eq = Swap(Div(eigenvalue_diff_eq, L))
 println_indented(ecc_square_eq)
+
+ecc_square_eq_abc = ecc_square_eq.subs(L, lambda_eq_abc.rhs).subs(eigen_to_abc)
+println_indented(ecc_square_eq_abc)
 
 print("Directrix normal vector a.k.a. focal axis direction:\n")
 
