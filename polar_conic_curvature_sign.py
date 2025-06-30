@@ -11,8 +11,10 @@ a, b, c, d, e, f, g, h, i, theta = symbols("a,b,c,d,e,f,g,h,i,theta")
 polar_matrix = Matrix([[a, b, c], [d, e, f], [g, h, i]])
 x, y, z = PointAtAngle(polar_matrix, theta)
 
+# According to https://en.wikipedia.org/wiki/Curvature
 # curvature = (x'y'' - y'x'') / (x'² + y'²)^(3/2)
-# The conic has positive curvature at α iff x'y'' - y'x'' > 0
+
+# The conic has positive curvature at θ iff x'y'' - y'x'' > 0
 
 xd = diff(x / z, theta)
 xdd = diff(xd, theta)
