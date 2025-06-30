@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 
-from sympy import MatAdd, MatMul, Matrix, pprint, symbols
+from sympy import Eq, MatAdd, MatMul, Matrix, pprint, symbols
 
 from lib.distance import PointLineDistance, PointPointDistance
 
 
 print("\nConic equation from focus, directrix and eccentricity:\n")
+
 # eccentricity = |distance(p, focus) / distance(p, directrix)|
 
 directrix = Matrix(symbols("a,b,c"))
@@ -13,11 +14,14 @@ a, b, _ = directrix
 focus = symbols("fx,fy")
 eccentricity = symbols("e")
 point_on_conic = symbols("x,y")
+
 distance_from_focus = PointPointDistance(point_on_conic, focus)
 distance_from_directrix = PointLineDistance(point_on_conic, directrix)
+
 conic_eq = (eccentricity * distance_from_directrix) ** 2 - distance_from_focus**2
 conic_eq = (conic_eq * (a * a + b * b)).simplify()
-pprint(conic_eq)
+
+pprint(Eq(conic_eq, 0))
 
 
 print("\nExpanded to matrix:\n")
