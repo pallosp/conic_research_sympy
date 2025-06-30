@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sympy import expand, factor, pprint, simplify, sqrt, symbols
+from sympy import pprint, simplify, sqrt, symbols
 
 from lib.circle import Circle
 from lib.central_conic import ConicCenter, SemiMajorAxis, SemiMinorAxis
@@ -11,14 +11,14 @@ conic = ConicMatrix(*symbols("a,b,c,d,e,f"))
 
 center = ConicCenter(conic)
 radius_square = SemiMajorAxis(conic) ** 2 + SemiMinorAxis(conic) ** 2
-radius_square = factor(expand(simplify(radius_square)))
-radius = sqrt(radius_square)
-
-director_circle = simplify(Circle(center, radius))
+radius = sqrt(radius_square.simplify().factor())
 
 print("\nDirector circle radius:")
-pprint(radius)
+det = symbols("det")
+pprint(radius.subs(conic.det(), det))
+
 print("\nDirector circle matrix:")
+director_circle = simplify(Circle(center, radius))
 pprint(director_circle)
 
 print("\nDirector circle matrix in adjugate form:")
