@@ -1,6 +1,6 @@
 from sympy import abc, Function, Matrix, Piecewise, Poly, sqrt, Tuple
 
-from lib.matrix import NonZeroCross
+from lib.matrix import NonZeroCross, SkewMatrix
 from lib.point import PointToVec3, PointToXY
 
 
@@ -58,6 +58,33 @@ def Eccentricity(conic: Matrix):
     s = sqrt(((a - c) ** 2 + 4 * b**2).factor())
     det_sign = Piecewise((1, conic.det() >= 0), (-1, True))
     return sqrt(2 * s / (s - det_sign * (a + c)))
+
+
+class SplitToLines(Function):
+    @classmethod
+    def eval(cls, conic: Matrix):
+        """Splits a degenerate conic into two lines.
+
+        In case of point conics the lines will be complex conjugates.
+
+        Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 11.1
+        """
+        adj = conic.adjugate()
+        A, C, F = adj.diagonal()
+
+        if A.is_nonzero:
+            conic = conic + SkewMatrix(adj.col(0) / sqrt(-A))
+        elif C.is_nonzero:
+            conic = conic + SkewMatrix(adj.col(1) / sqrt(-C))
+        elif F.is_nonzero:
+            conic = conic + SkewMatrix(adj.col(2) / sqrt(-F))
+        elif not (A.is_zero and C.is_zero and F.is_zero):
+            return None
+
+        cross = NonZeroCross(conic)
+        if isinstance(cross, Tuple):
+            return (cross[0], cross[1].T)
+        return None
 
 
 class IdealPoints(Function):
