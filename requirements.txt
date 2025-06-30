@@ -1,4 +1,4 @@
 pre-commit
 pytest
 ruff
-sympy==1.13.3
+sympy==1.14
