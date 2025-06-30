@@ -15,6 +15,25 @@ from lib.matrix import IsScalarMultiple, QuadraticForm
 from lib.point import IdealPoint, PointToVec3
 
 
+def AreProjectiveSetsEqual(set1, set2):
+    """Compares two sets of projective points or lines for equality."""
+    if len(set1) != len(set2):
+        return False
+
+    remaining = list(set2)
+
+    for v1 in set1:
+        found = False
+        for v2 in remaining:
+            if IsScalarMultiple(v1, v2):
+                remaining.remove(v2)
+                found = True
+                break
+        if not found:
+            return False
+    return True
+
+
 def test_ConicFromPoly():
     poly = (x + 2) * (3 * y - 4) + x**2
     point = Matrix([x, y, 1])
@@ -76,24 +95,14 @@ class TestIdealPoints:
         ideal_points = IdealPoints(hyperbola)
         ideal_x = IdealPoint(1, 0)
         ideal_y = IdealPoint(0, 1)
-        assert (
-            IsScalarMultiple(ideal_points[0], ideal_x)
-            and IsScalarMultiple(ideal_points[1], ideal_y)
-            or IsScalarMultiple(ideal_points[0], ideal_y)
-            and IsScalarMultiple(ideal_points[1], ideal_x)
-        )
+        assert AreProjectiveSetsEqual(ideal_points, [ideal_x, ideal_y])
 
     def test_unit_hyperbola(self):
         hyperbola = ConicFromPoly(x * x - y * y - 1)
         ideal_points = IdealPoints(hyperbola)
         ideal1 = IdealPoint(1, 1)
         ideal2 = IdealPoint(1, -1)
-        assert (
-            IsScalarMultiple(ideal_points[0], ideal1)
-            and IsScalarMultiple(ideal_points[1], ideal2)
-            or IsScalarMultiple(ideal_points[0], ideal2)
-            and IsScalarMultiple(ideal_points[1], ideal1)
-        )
+        assert AreProjectiveSetsEqual(ideal_points, [ideal1, ideal2])
 
     def test_parabola(self):
         parabola = ConicFromPoly(x * x - y)
@@ -103,9 +112,6 @@ class TestIdealPoints:
 
     def test_circle(self):
         ideal_points = IdealPoints(UNIT_CIRCLE)
-        assert (
-            IsScalarMultiple(ideal_points[0], IdealPoint(1, I))
-            and IsScalarMultiple(ideal_points[1], IdealPoint(1, -I))
-            or IsScalarMultiple(ideal_points[0], IdealPoint(1, -I))
-            and IsScalarMultiple(ideal_points[1], IdealPoint(1, I))
+        assert AreProjectiveSetsEqual(
+            ideal_points, [IdealPoint(1, I), IdealPoint(1, -I)]
         )
