@@ -1,7 +1,7 @@
-from sympy import I, Matrix, Rational, symbols
+from sympy import I, Matrix, Rational, sqrt, symbols
 from sympy.abc import x, y
 
-from lib.circle import UNIT_CIRCLE
+from lib.circle import UNIT_CIRCLE, Circle
 from lib.conic import (
     ConicFromFocusAndDirectrix,
     ConicFromPoly,
@@ -49,6 +49,20 @@ class TestEccentricity:
         a, b, c, fx, fy, e = symbols("a,b,c,fx,fy,e", nonnegative=True)
         conic = ConicFromFocusAndDirectrix((fx, fy), Matrix([a, b, c]), e)
         assert e == Eccentricity(conic).simplify()
+
+    def test_circle(self):
+        assert Eccentricity(Circle((1, 2), 3)) == 0
+        assert Eccentricity(Circle((1, 2), 3) * -2) == 0
+
+    def test_parabola(self):
+        parabola = ConicFromPoly(x * x - y)
+        assert Eccentricity(parabola) == 1
+        assert Eccentricity(parabola * -2) == 1
+
+    def test_rectangular_hyperbola(self):
+        hyperbola = ConicFromPoly(x * y - 5)
+        assert Eccentricity(hyperbola) == sqrt(2)
+        assert Eccentricity(hyperbola * -2) == sqrt(2)
 
     def test_degenerate_conic(self):
         conic = LinePair(X_AXIS, Matrix([24, 7, 0]))

@@ -52,6 +52,7 @@ def Eccentricity(conic: Matrix):
     (Eccentricity(conic), Eccentricity(-conic)) to get both values.
 
     Source: https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients
+    Own research: focus_directrix_eccentricity.py
     """
     a, b, c = conic[0], conic[1], conic[4]
     s = sqrt(((a - c) ** 2 + 4 * b**2).factor())
