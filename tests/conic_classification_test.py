@@ -3,7 +3,7 @@ from sympy.abc import x, y
 
 from lib.circle import UNIT_CIRCLE, Circle
 from lib.conic import ConicFromPoly
-from lib.conic_classification import IsCircular, IsParabola
+from lib.conic_classification import IsCircular, IsHyperbola, IsParabola
 from lib.degenerate_conic import LinePair
 from lib.ellipse import Ellipse
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine
@@ -18,6 +18,17 @@ class TestIsParabola:
 
     def test_symbolic(self):
         assert IsParabola(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
+
+
+class TestIsHyperbola:
+    def test_numeric(self):
+        assert IsHyperbola(ConicFromPoly(x * y - 1))
+        assert IsHyperbola(ConicFromPoly(x * x - y * y - 1))
+        assert not IsHyperbola(ConicFromPoly(x * x - y * y))
+        assert not IsHyperbola(UNIT_CIRCLE)
+
+    def test_symbolic(self):
+        assert IsHyperbola(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
 
 
 class TestIsCircular:

@@ -6,6 +6,10 @@ def IsParabola(conic: Matrix) -> bool:
     return fuzzy_and([conic.det().is_nonzero, conic[:2, :2].det().is_zero])
 
 
+def IsHyperbola(conic: Matrix) -> bool:
+    return fuzzy_and([conic.det().is_nonzero, conic[:2, :2].det() < 0])
+
+
 def IsCircular(conic: Matrix) -> bool:
     """Whether there is a single center point around which the conic is
     invariant under all rotations.
