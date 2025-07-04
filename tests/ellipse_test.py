@@ -3,7 +3,7 @@ from sympy import factor, pi, simplify, symbols
 from lib.central_conic import AxisLengths, ConicCenter
 from lib.circle import UNIT_CIRCLE
 from lib.ellipse import Ellipse, SteinerEllipse, SteinerInellipse
-from lib.matrix import IsScalarMultiple, QuadraticForm
+from lib.matrix import IsNonZeroMultiple, QuadraticForm
 from lib.point import ORIGIN, Centroid, PointToVec3
 
 
@@ -23,7 +23,7 @@ class TestEllipseFromParams:
         r1, r2, r1_dir_x, r1_dir_y = symbols("r1,r2,r1_dir_x,r1_dir_y")
         conic1 = Ellipse(center, r1, r2, r1_direction=(r1_dir_x, r1_dir_y))
         conic2 = Ellipse(center, r1, r2, r1_direction=(r1_dir_x * -2, r1_dir_y * -2))
-        assert IsScalarMultiple(conic1, conic2)
+        assert IsNonZeroMultiple(conic1, conic2)
 
     def test_axis_lengths_circle(self):
         center = symbols("x,y")

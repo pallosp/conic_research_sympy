@@ -2,7 +2,7 @@ from sympy import Function, Matrix, nan, sqrt, symbols
 
 from lib.matrix import (
     ConicMatrix,
-    IsScalarMultiple,
+    IsNonZeroMultiple,
     MaxEigenvalue,
     MinEigenvalue,
     NonZeroCross,
@@ -12,28 +12,35 @@ from lib.matrix import (
 
 class TestIsScalarMultiple:
     def test_vectors(self):
-        assert IsScalarMultiple(Matrix([2]), Matrix([3]))
-        assert IsScalarMultiple(Matrix([1, 2]), Matrix([-2, -4]))
-        assert IsScalarMultiple(Matrix([1, 2]), Matrix([0, 0]))
-        assert not IsScalarMultiple(Matrix([1, 2]), Matrix([2, 1]))
+        assert IsNonZeroMultiple(Matrix([2]), Matrix([3]))
+        assert IsNonZeroMultiple(Matrix([1, 2]), Matrix([-2, -4]))
+        assert IsNonZeroMultiple(Matrix([0, 0]), Matrix([0, 0]))
+        assert not IsNonZeroMultiple(Matrix([1, 2]), Matrix([0, 0]))
+        assert not IsNonZeroMultiple(Matrix([1, 2]), Matrix([2, 1]))
 
     def test_matrices(self):
-        assert not IsScalarMultiple(Matrix([[1, 2]]), Matrix([[1], [2]]))
-        assert IsScalarMultiple(Matrix([[1, 2], [3, 4]]), Matrix([[2, 4], [6, 8]]))
-        assert IsScalarMultiple(Matrix([[1, 2], [3, 4]]), Matrix([[0, 0], [0, 0]]))
-        assert not IsScalarMultiple(Matrix([[1, 2], [3, 4]]), Matrix([[1, 1], [1, 1]]))
+        assert not IsNonZeroMultiple(Matrix([[1, 2]]), Matrix([[1], [2]]))
+        assert IsNonZeroMultiple(Matrix([[1, 2], [3, 4]]), Matrix([[2, 4], [6, 8]]))
+        assert not IsNonZeroMultiple(Matrix([[1, 2], [3, 4]]), Matrix([[0, 0], [0, 0]]))
+        assert not IsNonZeroMultiple(Matrix([[1, 2], [3, 4]]), Matrix([[1, 1], [1, 1]]))
 
     def test_lists(self):
-        assert IsScalarMultiple([1, 2], [2, 4])
-        assert IsScalarMultiple([1, 2], [0, 0])
-        assert not IsScalarMultiple([1, 2], [2, 3])
+        assert not IsNonZeroMultiple([1], [2, 3])
+        assert IsNonZeroMultiple([0, 0], [0, 0])
+        assert IsNonZeroMultiple([1, 2], [2, 4])
+        assert not IsNonZeroMultiple([1, 2], [0, 0])
+        assert not IsNonZeroMultiple([1, 2], [2, 3])
 
     def test_matrix_vs_list(self):
-        assert IsScalarMultiple(Matrix([1, 2]), [2, 4])
-        assert IsScalarMultiple([1, 2], Matrix([2, 4]))
-        assert not IsScalarMultiple(Matrix([1, 2]).T, [2, 4])
-        assert not IsScalarMultiple(Matrix([1, 2]), [2, 3])
-        assert not IsScalarMultiple([1, 2], Matrix([2, 3]))
+        assert IsNonZeroMultiple(Matrix([1, 2]), [2, 4])
+        assert IsNonZeroMultiple([1, 2], Matrix([2, 4]))
+        assert not IsNonZeroMultiple(Matrix([1, 2]).T, [2, 4])
+        assert not IsNonZeroMultiple(Matrix([1, 2]), [2, 3])
+        assert not IsNonZeroMultiple([1, 2], Matrix([2, 3]))
+
+    def test_symbolic(self):
+        x = symbols("x")
+        assert IsNonZeroMultiple([x, 1], [-x, -1])
 
 
 class TestEigenvalues:

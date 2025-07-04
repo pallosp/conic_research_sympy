@@ -1,17 +1,17 @@
 from sympy import Matrix, pi, sqrt
 
 from lib.ellipse import Ellipse
-from lib.matrix import IsScalarMultiple
+from lib.matrix import IsNonZeroMultiple
 from lib.circle import UNIT_CIRCLE, Circle, CircleRadius, DirectorCircle
 
 
 def test_unit_circle():
-    assert IsScalarMultiple(UNIT_CIRCLE, Matrix.diag([1, 1, -1]))
+    assert IsNonZeroMultiple(UNIT_CIRCLE, Matrix.diag([1, 1, -1]))
 
 
 def test_circle():
     circle = Circle((1, 2), 3)
-    assert IsScalarMultiple(circle, Matrix([[-1, 0, 1], [0, -1, 2], [1, 2, 4]]))
+    assert IsNonZeroMultiple(circle, Matrix([[-1, 0, 1], [0, -1, 2], [1, 2, 4]]))
 
 
 def test_circle_radius():

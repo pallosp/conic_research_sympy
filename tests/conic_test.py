@@ -12,7 +12,7 @@ from lib.conic import (
 )
 from lib.degenerate_conic import LinePair
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine, VerticalLine
-from lib.matrix import IsScalarMultiple, QuadraticForm
+from lib.matrix import IsNonZeroMultiple, QuadraticForm
 from lib.point import IdealPoint, PointToVec3
 
 
@@ -26,7 +26,7 @@ def AreProjectiveSetsEqual(set1, set2):
     for v1 in set1:
         found = False
         for v2 in remaining:
-            if IsScalarMultiple(v1, v2):
+            if IsNonZeroMultiple(v1, v2):
                 remaining.remove(v2)
                 found = True
                 break
@@ -51,7 +51,7 @@ class TestConicThroughPoints:
     def test_line_pair(self):
         p1, p2, p3, p4, p5 = (0, 0), (1, 0), (0, 1), (-1, 0), (0, -1)
         conic = ConicThroughPoints(p1, p2, p3, p4, p5)
-        assert IsScalarMultiple(conic, LinePair(X_AXIS, Y_AXIS))
+        assert IsNonZeroMultiple(conic, LinePair(X_AXIS, Y_AXIS))
 
     def four_collinear_points(self):
         p1, p2, p3, p4, p5 = (0, 0), (1, 0), (2, 0), (3, 0), (0, 1)
@@ -141,8 +141,8 @@ class TestIdealPoints:
     def test_parabola(self):
         parabola = ConicFromPoly(x * x - y)
         ideal_points = IdealPoints(parabola)
-        assert IsScalarMultiple(ideal_points[0], IdealPoint(0, 1))
-        assert IsScalarMultiple(ideal_points[1], IdealPoint(0, 1))
+        assert IsNonZeroMultiple(ideal_points[0], IdealPoint(0, 1))
+        assert IsNonZeroMultiple(ideal_points[1], IdealPoint(0, 1))
 
     def test_circle(self):
         ideal_points = IdealPoints(UNIT_CIRCLE)

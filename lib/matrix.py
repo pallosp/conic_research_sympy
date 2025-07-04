@@ -1,8 +1,8 @@
 from sympy import Function, Matrix, nan, sqrt
 
 
-def IsScalarMultiple(m1: Matrix | list, m2: Matrix | list) -> bool:
-    """Tells whether two matrices are scalar multiples of each other.
+def IsNonZeroMultiple(m1: Matrix | list, m2: Matrix | list) -> bool:
+    """Tells whether two matrices are non-zero scalar multiples of each other.
 
     Treats lists as column vectors.
     """
@@ -11,6 +11,8 @@ def IsScalarMultiple(m1: Matrix | list, m2: Matrix | list) -> bool:
     if not isinstance(m2, Matrix):
         m2 = Matrix(m2)
     if m1.shape != m2.shape:
+        return False
+    if m1.is_zero_matrix != m2.is_zero_matrix:
         return False
     v1 = m1.reshape(len(m1), 1)
     v2 = m2.reshape(len(m2), 1)

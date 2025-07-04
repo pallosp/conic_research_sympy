@@ -3,7 +3,7 @@ from sympy import pi, simplify, symbols
 from lib.circle import Circle
 from lib.central_conic import ConicCenter
 from lib.line import HorizontalLine, LineBetween, X_AXIS
-from lib.matrix import ConicMatrix, IsScalarMultiple
+from lib.matrix import ConicMatrix, IsNonZeroMultiple
 from lib.transform import (
     Rotate,
     Scale,
@@ -69,7 +69,7 @@ class TestScale:
 class TestTransformLine:
     def test_rotate_line(self):
         rotated = TransformLine(X_AXIS, Rotate(pi / 4))
-        assert IsScalarMultiple(rotated, LineBetween((0, 0), (1, 1)))
+        assert IsNonZeroMultiple(rotated, LineBetween((0, 0), (1, 1)))
 
     def test_translate_line(self):
         translated = TransformLine(X_AXIS, Translate(1, 2))
