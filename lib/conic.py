@@ -1,4 +1,4 @@
-from sympy import abc, Function, Matrix, Piecewise, Poly, sqrt, Tuple
+from sympy import Function, I, Matrix, Piecewise, Poly, Tuple, abc, sqrt
 
 from lib.matrix import NonZeroCross, SkewMatrix
 from lib.point import PointToVec3, PointToXY
@@ -58,6 +58,19 @@ def Eccentricity(conic: Matrix):
     s = sqrt(((a - c) ** 2 + 4 * b**2).factor())
     det_sign = Piecewise((1, conic.det() >= 0), (-1, True))
     return sqrt(2 * s / (s - det_sign * (a + c)))
+
+
+def AxisDirection(conic: Matrix) -> Matrix:
+    """Returns the direction of the major axis of the conic section,
+    namely the ideal point in that direction.
+
+    The result is ambiguous in case of degenerate conics: evaluate
+    (AxisDirection(conic), AxisDirection(-conic)) to get both values.
+    """
+    a, b, c = conic[0], conic[3], conic[4]
+    sign = Piecewise((1, conic.det() >= 0), (-1, True))
+    x, y = sqrt(sign * (a - c) / 2 + sign * b * I).simplify().as_real_imag()
+    return Matrix([x, y, 0])
 
 
 class SplitToLines(Function):

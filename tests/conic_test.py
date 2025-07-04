@@ -3,6 +3,7 @@ from sympy.abc import x, y
 
 from lib.circle import UNIT_CIRCLE, Circle
 from lib.conic import (
+    AxisDirection,
     ConicFromFocusAndDirectrix,
     ConicFromPoly,
     ConicThroughPoints,
@@ -11,6 +12,7 @@ from lib.conic import (
     SplitToLines,
 )
 from lib.degenerate_conic import LinePair
+from lib.ellipse import Ellipse
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine, VerticalLine
 from lib.matrix import IsNonZeroMultiple, QuadraticForm
 from lib.point import IdealPoint, PointToVec3
@@ -88,6 +90,27 @@ class TestEccentricity:
         conic = LinePair(X_AXIS, Matrix([24, 7, 0]))
         ecc1, ecc2 = Eccentricity(conic), Eccentricity(-conic)
         assert sorted([ecc1, ecc2]) == [Rational(5, 4), Rational(5, 3)]
+
+
+class TestAxisDirection:
+    def test_circle(self):
+        assert AxisDirection(UNIT_CIRCLE).is_zero_matrix
+
+    def test_ellipse(self):
+        ellipse = Ellipse((6, 5), 4, 3, r1_direction=(2, 1))
+        assert IsNonZeroMultiple(AxisDirection(ellipse), (2, 1, 0))
+        assert IsNonZeroMultiple(AxisDirection(-ellipse), (2, 1, 0))
+
+    def test_hyperbola(self):
+        hyperbola = ConicFromPoly(x * y - 1)
+        assert IsNonZeroMultiple(AxisDirection(hyperbola), (1, 1, 0))
+        assert IsNonZeroMultiple(AxisDirection(-hyperbola), (1, 1, 0))
+
+    def test_degenerate_conic(self):
+        conic = LinePair(X_AXIS, Y_AXIS)
+        dir1 = AxisDirection(conic)
+        dir2 = AxisDirection(-conic)
+        assert AreProjectiveSetsEqual([dir1, dir2], [[1, 1, 0], [1, -1, 0]])
 
 
 class TestSplitToLines:
