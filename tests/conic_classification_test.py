@@ -3,10 +3,21 @@ from sympy.abc import x, y
 
 from lib.circle import UNIT_CIRCLE, Circle
 from lib.conic import ConicFromPoly
-from lib.conic_classification import IsCircular
+from lib.conic_classification import IsCircular, IsParabola
 from lib.degenerate_conic import LinePair
 from lib.ellipse import Ellipse
-from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS
+from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine
+from lib.matrix import ConicMatrix
+
+
+class TestIsParabola:
+    def test_numeric(self):
+        assert IsParabola(ConicFromPoly(x * x - y))
+        assert not IsParabola(LinePair(X_AXIS, HorizontalLine(1)))
+        assert not IsParabola(UNIT_CIRCLE)
+
+    def test_symbolic(self):
+        assert IsParabola(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
 
 
 class TestIsCircular:
