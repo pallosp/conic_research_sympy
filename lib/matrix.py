@@ -1,13 +1,20 @@
-from sympy import expand, Function, Matrix, nan, sqrt
+from sympy import Function, Matrix, nan, sqrt
 
 
-def IsScalarMultiple(m1: Matrix, m2: Matrix) -> bool:
-    """Tells whether two matrices are scalar multiples of each other."""
+def IsScalarMultiple(m1: Matrix | list, m2: Matrix | list) -> bool:
+    """Tells whether two matrices are scalar multiples of each other.
+
+    Treats lists as column vectors.
+    """
+    if not isinstance(m1, Matrix):
+        m1 = Matrix(m1)
+    if not isinstance(m2, Matrix):
+        m2 = Matrix(m2)
     if m1.shape != m2.shape:
         return False
-    v1 = Matrix(list(m1))
-    v2 = Matrix(list(m2))
-    return expand(v1.dot(v1) * v2.dot(v2) - v1.dot(v2) ** 2) == 0
+    v1 = m1.reshape(len(m1), 1)
+    v2 = m2.reshape(len(m2), 1)
+    return (v1.dot(v1) * v2.dot(v2) - v1.dot(v2) ** 2).equals(0)
 
 
 def MaxEigenvalue(symmetric_matrix2x2: Matrix):

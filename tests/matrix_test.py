@@ -23,6 +23,18 @@ class TestIsScalarMultiple:
         assert IsScalarMultiple(Matrix([[1, 2], [3, 4]]), Matrix([[0, 0], [0, 0]]))
         assert not IsScalarMultiple(Matrix([[1, 2], [3, 4]]), Matrix([[1, 1], [1, 1]]))
 
+    def test_lists(self):
+        assert IsScalarMultiple([1, 2], [2, 4])
+        assert IsScalarMultiple([1, 2], [0, 0])
+        assert not IsScalarMultiple([1, 2], [2, 3])
+
+    def test_matrix_vs_list(self):
+        assert IsScalarMultiple(Matrix([1, 2]), [2, 4])
+        assert IsScalarMultiple([1, 2], Matrix([2, 4]))
+        assert not IsScalarMultiple(Matrix([1, 2]).T, [2, 4])
+        assert not IsScalarMultiple(Matrix([1, 2]), [2, 3])
+        assert not IsScalarMultiple([1, 2], Matrix([2, 3]))
+
 
 class TestEigenvalues:
     def test_eigenvalues(self):
