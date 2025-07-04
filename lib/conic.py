@@ -88,6 +88,12 @@ class SplitToLines(Function):
 
 
 class IdealPoints(Function):
+    """Computes the ideal points of a conic section.
+
+    Always returns two points. For parabolas these are the same point.
+    For ellipses these are the complex conjugates of each other.
+    """
+
     @classmethod
     def eval(cls, conic: Matrix):
         a, b, c = conic[0], conic[1], conic[4]
