@@ -61,14 +61,15 @@ def Eccentricity(conic: Matrix):
 
 
 class SplitToLines(Function):
+    """Splits a degenerate conic into two lines.
+
+    In case of point conics the lines will be complex conjugates.
+
+    Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 11.1
+    """
+
     @classmethod
     def eval(cls, conic: Matrix):
-        """Splits a degenerate conic into two lines.
-
-        In case of point conics the lines will be complex conjugates.
-
-        Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 11.1
-        """
         adj = conic.adjugate()
         A, C, F = adj.diagonal()
 
