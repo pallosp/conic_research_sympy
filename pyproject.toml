@@ -17,4 +17,10 @@ dev = [
 ]
 
 [tool.ruff]
-select = ["E501"]  # check line length
+select = [
+  "E501",  # line length
+  "T201",  # print statements
+]
+
+[tool.ruff.per-file-ignores]
+"src/research/*.py" = ["T201"]   
