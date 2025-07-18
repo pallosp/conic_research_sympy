@@ -1,6 +1,8 @@
 from sympy import Eq, Matrix
 from sympy.core.logic import fuzzy_and
 
+from src.lib.matrix import IsDefinite
+
 
 def IsDegenerate(conic: Matrix) -> bool | None:
     return conic.det().is_zero
@@ -13,6 +15,10 @@ def IsNonDegenerate(conic: Matrix) -> bool | None:
 def IsFiniteConic(conic: Matrix) -> bool | None:
     """Whether all points on the conic are finite."""
     return conic[:2, :2].det().factor().is_positive
+
+
+def IsComplexEllipse(conic: Matrix) -> bool | None:
+    return IsDefinite(conic)
 
 
 def IsParabola(conic: Matrix) -> bool | None:

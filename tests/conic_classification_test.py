@@ -5,6 +5,7 @@ from lib.circle import UNIT_CIRCLE, Circle
 from lib.conic import ConicFromPoly
 from lib.conic_classification import (
     IsCircular,
+    IsComplexEllipse,
     IsDegenerate,
     IsFiniteConic,
     IsHyperbola,
@@ -66,6 +67,26 @@ class TestIsFiniteConic:
         line1 = Matrix(symbols("a,b,c", real=True))
         line2 = Matrix(symbols("d,e,f", real=True))
         assert IsFiniteConic(LinePair(line1, line2)) is False
+
+
+class TestIsComplexEllipse:
+    def test_numeric_ellipse(self):
+        assert IsComplexEllipse(Ellipse((1, 2), 3, 4)) is False
+        assert IsComplexEllipse(Ellipse((1, 2), 3 * I, 4 * I)) is True
+
+    def test_symbolic_ellipse(self):
+        center = symbols("x,y")
+        r = symbols("r1,r2", positive=True)
+        imag_r = [r[0] * I, r[1] * I]
+        dir = symbols("dx,dy", positive=True)
+        assert IsComplexEllipse(Ellipse(center, *r)) is False
+        assert IsComplexEllipse(Ellipse(center, *r, r1_direction=dir)) is False
+        assert IsComplexEllipse(Ellipse(center, *imag_r)) is True
+        assert IsComplexEllipse(Ellipse(center, *imag_r, r1_direction=dir)) is True
+
+    def test_symbolic_point(self):
+        point = Circle(symbols("x,y"), 0)
+        assert IsComplexEllipse(point) is False
 
 
 class TestIsParabola:
