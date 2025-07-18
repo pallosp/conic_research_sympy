@@ -10,6 +10,11 @@ def IsNonDegenerate(conic: Matrix) -> bool | None:
     return conic.det().is_nonzero
 
 
+def IsFiniteConic(conic: Matrix) -> bool | None:
+    """Whether all points on the conic are finite."""
+    return conic[:2, :2].det().factor().is_positive
+
+
 def IsParabola(conic: Matrix) -> bool | None:
     return fuzzy_and([IsNonDegenerate(conic), conic[:2, :2].det().is_zero])
 

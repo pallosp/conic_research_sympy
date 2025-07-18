@@ -3,7 +3,13 @@ from sympy.abc import x, y
 
 from lib.circle import UNIT_CIRCLE, Circle
 from lib.conic import ConicFromPoly
-from lib.conic_classification import IsCircular, IsDegenerate, IsHyperbola, IsParabola
+from lib.conic_classification import (
+    IsCircular,
+    IsDegenerate,
+    IsFiniteConic,
+    IsHyperbola,
+    IsParabola,
+)
 from lib.degenerate_conic import LinePair
 from lib.ellipse import Ellipse
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine
@@ -22,6 +28,44 @@ class TestIsDegenerate:
         assert IsDegenerate(line_pair)
         point = Circle(symbols("x,y"), 0)
         assert IsDegenerate(point)
+
+
+class TestIsFiniteConic:
+    def test_numeric_point(self):
+        assert IsFiniteConic(Circle((1, 2), 0))
+
+    def test_numeric_circle(self):
+        assert IsFiniteConic(UNIT_CIRCLE)
+        assert IsFiniteConic(Circle((1, 2), 3))
+
+    def test_numeric_parabola(self):
+        assert IsFiniteConic(ConicFromPoly(x * x - y)) is False
+
+    def test_numeric_hyperbola(self):
+        assert IsFiniteConic(ConicFromPoly(x * y - 1)) is False
+
+    def test_numeric_line_pair(self):
+        assert IsFiniteConic(LinePair(X_AXIS, Y_AXIS)) is False
+
+    def test_symbolic_conic(self):
+        assert IsFiniteConic(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
+
+    def test_symbolic_circle(self):
+        circle = Circle(symbols("x,y"), symbols("r", positive=True))
+        assert IsFiniteConic(circle)
+
+    def test_symbolic_complex_ellipse(self):
+        complex_ellipse = Matrix.diag(symbols("a,c,f", positive=True))
+        assert IsFiniteConic(complex_ellipse)
+
+    def test_symbolic_point(self):
+        point = Circle(symbols("x,y"), 0)
+        assert IsFiniteConic(point)
+
+    def test_symbolic_line_pair(self):
+        line1 = Matrix(symbols("a,b,c", real=True))
+        line2 = Matrix(symbols("d,e,f", real=True))
+        assert IsFiniteConic(LinePair(line1, line2)) is False
 
 
 class TestIsParabola:
