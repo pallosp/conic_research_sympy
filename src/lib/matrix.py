@@ -83,31 +83,15 @@ def IsDefinite(symmetric_matrix: Matrix) -> bool:
     """Checks if a symmetric matrix is positive or negative definite."""
     assert symmetric_matrix.is_symmetric()
 
-    e0 = symmetric_matrix[0]
-    positive = None
-    if e0.is_positive:
-        positive = True
-    elif e0.is_zero:
-        return False
-    elif e0.is_negative:
-        positive = False
-    else:
-        return None
+    if symmetric_matrix[0].is_negative:
+        symmetric_matrix = -symmetric_matrix
 
-    for i in range(2, symmetric_matrix.rows + 1):
+    for i in range(1, symmetric_matrix.rows + 1):
         minor_det = symmetric_matrix[:i, :i].det()
-        must_be_positive = i % 2 == 0 or positive
-        if must_be_positive:
-            if minor_det.is_positive:
-                continue
-            if minor_det.is_nonpositive:
-                return False
-            return None
-        else:
-            if minor_det.is_negative:
-                continue
-            if minor_det.is_nonnegative:
-                return False
-            return None
+        if minor_det.is_positive:
+            continue
+        if minor_det.is_nonpositive:
+            return False
+        return None
 
     return True
