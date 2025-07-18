@@ -2,15 +2,23 @@ from sympy import Eq, Matrix
 from sympy.core.logic import fuzzy_and
 
 
-def IsParabola(conic: Matrix) -> bool:
-    return fuzzy_and([conic.det().is_nonzero, conic[:2, :2].det().is_zero])
+def IsDegenerate(conic: Matrix) -> bool | None:
+    return conic.det().is_zero
 
 
-def IsHyperbola(conic: Matrix) -> bool:
-    return fuzzy_and([conic.det().is_nonzero, conic[:2, :2].det() < 0])
+def IsNonDegenerate(conic: Matrix) -> bool | None:
+    return conic.det().is_nonzero
 
 
-def IsCircular(conic: Matrix) -> bool:
+def IsParabola(conic: Matrix) -> bool | None:
+    return fuzzy_and([IsNonDegenerate(conic), conic[:2, :2].det().is_zero])
+
+
+def IsHyperbola(conic: Matrix) -> bool | None:
+    return fuzzy_and([IsNonDegenerate(conic), conic[:2, :2].det() < 0])
+
+
+def IsCircular(conic: Matrix) -> bool | None:
     """Whether there is a single center point around which the conic is
     invariant under all rotations.
 

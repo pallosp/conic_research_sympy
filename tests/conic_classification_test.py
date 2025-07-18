@@ -1,13 +1,27 @@
-from sympy import I, pi, symbols
+from sympy import I, Matrix, pi, symbols
 from sympy.abc import x, y
 
 from lib.circle import UNIT_CIRCLE, Circle
 from lib.conic import ConicFromPoly
-from lib.conic_classification import IsCircular, IsHyperbola, IsParabola
+from lib.conic_classification import IsCircular, IsDegenerate, IsHyperbola, IsParabola
 from lib.degenerate_conic import LinePair
 from lib.ellipse import Ellipse
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine
 from lib.matrix import ConicMatrix
+
+
+class TestIsDegenerate:
+    def test_numeric(self):
+        assert IsDegenerate(Circle((1, 2), 0))
+        assert IsDegenerate(UNIT_CIRCLE) is False
+
+    def test_symbolic(self):
+        assert IsDegenerate(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
+        assert IsDegenerate(Matrix.diag(symbols("a,c,f", positive=True))) is False
+        line_pair = LinePair(Matrix(symbols("a,b,c")), Matrix(symbols("d,e,f")))
+        assert IsDegenerate(line_pair)
+        point = Circle(symbols("x,y"), 0)
+        assert IsDegenerate(point)
 
 
 class TestIsParabola:
