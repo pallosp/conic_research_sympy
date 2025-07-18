@@ -1,7 +1,10 @@
+import pytest
+
 from sympy import Function, Matrix, nan, sqrt, symbols
 
 from lib.matrix import (
     ConicMatrix,
+    IsDefinite,
     IsNonZeroMultiple,
     MaxEigenvalue,
     MinEigenvalue,
@@ -84,3 +87,43 @@ class TestNonZeroCross:
         x = symbols("x", nonnegative=True)
         assert NonZeroCross(Matrix([[x - x, 0], [1, 0]]))[1] == Matrix([1, 0]).T
         assert NonZeroCross(Matrix([[0, 0], [x + 1, 0]]))[0] == Matrix([0, x + 1])
+
+
+class TestIsDefinite:
+    def test_non_square(self):
+        with pytest.raises(AssertionError):
+            IsDefinite(Matrix([1, 2]))
+
+    def test_non_symmetric(self):
+        with pytest.raises(AssertionError):
+            IsDefinite(Matrix([[1, 2], [3, 4]]))
+
+    def test_1x1_numeric(self):
+        assert IsDefinite(Matrix([1]))
+        assert IsDefinite(Matrix([-1]))
+        assert IsDefinite(Matrix([0])) is False
+
+    def test_1x1_symbolic(self):
+        assert IsDefinite(Matrix([symbols("x", positive=True)]))
+        assert IsDefinite(Matrix([symbols("x")])) is None
+
+    def test_2x2_numeric(self):
+        assert IsDefinite(Matrix.eye(2))
+        assert IsDefinite(-Matrix.eye(2))
+        assert IsDefinite(Matrix([[2, 1], [1, 2]]))
+        assert IsDefinite(Matrix([[1, 2], [2, 1]])) is False
+        assert IsDefinite(Matrix([[2, 1], [1, 0]])) is False
+        assert IsDefinite(Matrix([[-2, 1], [1, -2]]))
+
+    def test_2x2_symbolic(self):
+        x = symbols("x", positive=True)
+        assert IsDefinite(Matrix([[x, 0], [0, x]]))
+        assert IsDefinite(Matrix([[x, 1], [1, x]])) is None
+        assert IsDefinite(Matrix([[x, 1], [1, 0]])) is False
+
+    def test_3x3_symbolic(self):
+        x, y, z = symbols("x y z", positive=True)
+        assert IsDefinite(Matrix.diag([x, y, z]))
+        assert IsDefinite(Matrix.diag([-x, -y, -z]))
+        assert IsDefinite(Matrix.diag([x, y, -z])) is False
+        assert IsDefinite(Matrix.diag([x, y, 0])) is False
