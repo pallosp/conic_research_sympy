@@ -20,7 +20,11 @@ dev = [
 select = [
   "E501",  # line length
   "T201",  # print statements
+  "TID251",  # banned API usage
 ]
 
 [tool.ruff.per-file-ignores]
-"src/research/*.py" = ["T201"]   
+"src/research/*.py" = ["T201", "TID251"]   
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"sympy.pprint".msg = "Do not use sympy.pprint outside src/research"
