@@ -1,2 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "conic_research_sympy"
+version = "0.0.1"
+dependencies = [
+    "sympy==1.14"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pre-commit",
+    "pytest",
+    "ruff"
+]
+
 [tool.ruff]
 select = ["E501"]  # check line length

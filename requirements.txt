@@ -1,4 +1,0 @@
-pre-commit
-pytest
-ruff
-sympy==1.14
