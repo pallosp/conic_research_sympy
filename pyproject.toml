@@ -1,0 +1,2 @@
+[tool.ruff]
+select = ["E501"]  # check line length
