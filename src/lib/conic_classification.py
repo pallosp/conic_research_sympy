@@ -60,3 +60,17 @@ def IsLinePair(conic: Matrix) -> bool | None:
             fuzzy_not(conic.is_zero_matrix),
         ]
     )
+
+
+def IsDoubleLine(conic: Matrix) -> bool | None:
+    """Whether the conic consists of two coincident projective lines."""
+    # The conic represents a double line iff its matrix has rank 1.
+    #
+    # A matrix has rank ≤ 1 iff the cross product of every pair of columns is
+    # zero, or equivalently its adjugate is the zero matrix.
+    return fuzzy_and(
+        [
+            conic.adjugate().is_zero_matrix,
+            fuzzy_not(conic.is_zero_matrix),
+        ]
+    )

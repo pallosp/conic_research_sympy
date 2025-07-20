@@ -7,6 +7,7 @@ from lib.conic_classification import (
     IsCircular,
     IsComplexEllipse,
     IsDegenerate,
+    IsDoubleLine,
     IsEllipse,
     IsFiniteConic,
     IsHyperbola,
@@ -214,3 +215,27 @@ class TestIsLinePair:
 
     def test_symbolic_point(self):
         assert IsLinePair(Circle(symbols("x,y"), 0)) is False
+
+
+class TestIsDoubleLine:
+    def test_zero_matrix(self):
+        assert IsDoubleLine(Matrix.zeros(3, 3)) is False
+
+    def test_numeric_line_pair(self):
+        assert IsDoubleLine(LinePair(X_AXIS, X_AXIS)) is True
+        assert IsDoubleLine(LinePair(X_AXIS, Y_AXIS)) is False
+        assert IsDoubleLine(LinePair(X_AXIS, HorizontalLine(1))) is False
+        assert IsDoubleLine(LinePair(X_AXIS, IDEAL_LINE)) is False
+        assert IsDoubleLine(LinePair(IDEAL_LINE, IDEAL_LINE)) is True
+
+    def test_symbolic_line_pair(self):
+        line_or_zeros = Matrix(symbols("a,b,c", real=True))
+        real_line1 = Matrix(symbols("d,e,f", positive=True))
+        real_line2 = Matrix(symbols("g,h,i", positive=True))
+        assert IsDoubleLine(LinePair(real_line1, real_line1)) is True
+        assert IsDoubleLine(LinePair(line_or_zeros, line_or_zeros)) is None
+        assert IsDoubleLine(LinePair(real_line1, real_line2)) is None
+        assert IsDoubleLine(LinePair(real_line1, IDEAL_LINE)) is False
+
+    def test_symbolic_point(self):
+        assert IsDoubleLine(Circle(symbols("x,y", real=True), 0)) is False
