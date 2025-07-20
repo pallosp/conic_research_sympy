@@ -1,5 +1,5 @@
 from sympy import Eq, Matrix
-from sympy.core.logic import fuzzy_and
+from sympy.core.logic import fuzzy_and, fuzzy_not
 
 from src.lib.matrix import IsDefinite
 
@@ -18,7 +18,19 @@ def IsFiniteConic(conic: Matrix) -> bool | None:
 
 
 def IsComplexEllipse(conic: Matrix) -> bool | None:
+    """Whether the conic is an ellipse with a real center and imaginary radii."""
     return IsDefinite(conic)
+
+
+def IsEllipse(conic: Matrix) -> bool | None:
+    """Whether the conic is an ellipse with real radii."""
+    return fuzzy_and(
+        [
+            IsNonDegenerate(conic),
+            conic[:2, :2].det().is_positive,
+            fuzzy_not(IsDefinite(conic)),
+        ]
+    )
 
 
 def IsParabola(conic: Matrix) -> bool | None:

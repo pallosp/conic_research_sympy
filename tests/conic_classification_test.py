@@ -1,12 +1,13 @@
 from sympy import I, Matrix, pi, symbols
 from sympy.abc import x, y
 
-from lib.circle import UNIT_CIRCLE, Circle
+from lib.circle import COMPLEX_UNIT_CIRCLE, UNIT_CIRCLE, Circle
 from lib.conic import ConicFromPoly
 from lib.conic_classification import (
     IsCircular,
     IsComplexEllipse,
     IsDegenerate,
+    IsEllipse,
     IsFiniteConic,
     IsHyperbola,
     IsParabola,
@@ -69,7 +70,40 @@ class TestIsFiniteConic:
         assert IsFiniteConic(LinePair(line1, line2)) is False
 
 
+class TestIsEllipse:
+    def test_numeric_circle(self):
+        assert IsEllipse(UNIT_CIRCLE)
+        assert IsEllipse(-UNIT_CIRCLE)
+        assert not IsEllipse(Circle((1, 2), 0))
+
+    def test_numeric_ellipse(self):
+        assert IsEllipse(Ellipse((1, 2), 3, 4))
+
+    def test_numeric_hyperbola(self):
+        assert not IsEllipse(ConicFromPoly(x * y - 1))
+
+    def test_numeric_point(self):
+        assert not IsEllipse(Circle((1, 2), 0))
+
+    def test_complex_circle(self):
+        assert not IsEllipse(COMPLEX_UNIT_CIRCLE)
+
+    def test_undecidable(self):
+        assert IsEllipse(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
+
+    def test_symbolic_ellipse(self):
+        center = symbols("x,y")
+        assert IsEllipse(Ellipse(center, *symbols("r1,r2", positive=True))) is True
+        assert IsEllipse(Ellipse(center, *symbols("r1,r2"))) is None
+        assert IsEllipse(COMPLEX_UNIT_CIRCLE) is False
+        assert IsEllipse(-COMPLEX_UNIT_CIRCLE) is False
+
+
 class TestIsComplexEllipse:
+    def test_complex_unit_circle(self):
+        assert IsComplexEllipse(COMPLEX_UNIT_CIRCLE)
+        assert IsComplexEllipse(-COMPLEX_UNIT_CIRCLE)
+
     def test_numeric_ellipse(self):
         assert IsComplexEllipse(Ellipse((1, 2), 3, 4)) is False
         assert IsComplexEllipse(Ellipse((1, 2), 3 * I, 4 * I)) is True

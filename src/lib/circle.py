@@ -31,3 +31,4 @@ def DirectorCircle(conic):
 
 
 UNIT_CIRCLE = Circle(ORIGIN, 1)
+COMPLEX_UNIT_CIRCLE = Matrix.eye(3)
