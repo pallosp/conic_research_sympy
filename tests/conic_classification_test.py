@@ -145,11 +145,10 @@ class TestIsHyperbola:
     def test_unspecified(self):
         assert IsHyperbola(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
 
-    def test_symbolic_ellipse_of_parabola(self):
+    def test_symbolic_ellipse_or_parabola(self):
         focus = (0, 0)
         # Real line not going through the focus
         directrix = Matrix(symbols("a,b,c", positive=True))
-
         circle = ConicFromFocusAndDirectrix(focus, directrix, 0)
         assert IsHyperbola(circle) is False
         ellipse = ConicFromFocusAndDirectrix(focus, directrix, Rational(1, 2))
