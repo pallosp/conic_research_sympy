@@ -49,3 +49,14 @@ def IsCircular(conic: Matrix) -> bool | None:
     Double ideal lines are not considered circular.
     """
     return fuzzy_and([conic[0].is_nonzero, conic[3].is_zero, Eq(conic[0], conic[4])])
+
+
+def IsLinePair(conic: Matrix) -> bool | None:
+    """Whether the conic is the union of two projective lines."""
+    return fuzzy_and(
+        [
+            IsDegenerate(conic),
+            fuzzy_not(IsFiniteConic(conic)),
+            fuzzy_not(conic.is_zero_matrix),
+        ]
+    )

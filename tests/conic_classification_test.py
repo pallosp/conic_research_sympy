@@ -10,6 +10,7 @@ from lib.conic_classification import (
     IsEllipse,
     IsFiniteConic,
     IsHyperbola,
+    IsLinePair,
     IsParabola,
 )
 from lib.degenerate_conic import LinePair
@@ -177,3 +178,39 @@ class TestIsCircular:
         assert IsCircular(ConicFromPoly(pos1 * x**2 + pos1 * y**2)) is True
         assert IsCircular(ConicFromPoly(pos1 * x**2 + neg * y**2)) is False
         assert IsCircular(ConicFromPoly(pos1 * x**2 + pos2 * y**2)) is None
+
+
+class TestIsLinePair:
+    def test_zero_matrix(self):
+        assert IsLinePair(Matrix.zeros(3, 3)) is False
+
+    def test_numeric_line_pair(self):
+        assert IsLinePair(LinePair(X_AXIS, X_AXIS))
+        assert IsLinePair(LinePair(X_AXIS, Y_AXIS))
+        assert IsLinePair(LinePair(X_AXIS, HorizontalLine(1)))
+        assert IsLinePair(LinePair(X_AXIS, IDEAL_LINE))
+        assert IsLinePair(LinePair(IDEAL_LINE, IDEAL_LINE))
+        assert IsLinePair(ConicFromPoly(x * x - y * y))
+
+    def test_numeric_hyperbola(self):
+        assert not IsLinePair(ConicFromPoly(x * y - 1))
+
+    def test_numeric_parabola(self):
+        assert not IsLinePair(ConicFromPoly(x * x - y))
+
+    def test_numeric_circle(self):
+        assert not IsLinePair(UNIT_CIRCLE)
+
+    def test_undecidable(self):
+        assert IsLinePair(ConicMatrix(*symbols("a,b,c,d,e,f", positive=True))) is None
+
+    def test_symbolic_line_pair(self):
+        line_or_zero_vector = Matrix(symbols("a,b,c", real=True))
+        line1 = Matrix(symbols("d,e,f", positive=True))
+        line2 = Matrix(symbols("g,h,i", positive=True))
+        assert IsLinePair(LinePair(line_or_zero_vector, line1)) is None
+        assert IsLinePair(LinePair(line1, line1)) is True
+        assert IsLinePair(LinePair(line1, line2)) is True
+
+    def test_symbolic_point(self):
+        assert IsLinePair(Circle(symbols("x,y"), 0)) is False
