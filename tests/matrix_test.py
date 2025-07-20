@@ -91,12 +91,10 @@ class TestNonZeroCross:
 
 class TestIsDefinite:
     def test_non_square(self):
-        with pytest.raises(AssertionError):
-            IsDefinite(Matrix([1, 2]))
+        assert IsDefinite(Matrix([1, 2])) is False
 
     def test_non_symmetric(self):
-        with pytest.raises(AssertionError):
-            IsDefinite(Matrix([[1, 2], [3, 4]]))
+        assert IsDefinite(Matrix([[1, 2], [3, 4]])) is False
 
     def test_1x1_numeric(self):
         assert IsDefinite(Matrix([1]))

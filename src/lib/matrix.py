@@ -79,15 +79,17 @@ class NonZeroCross(Function):
             return nan
 
 
-def IsDefinite(symmetric_matrix: Matrix) -> bool:
-    """Checks if a symmetric matrix is positive or negative definite."""
-    assert symmetric_matrix.is_symmetric()
+def IsDefinite(real_matrix: Matrix) -> bool:
+    """Checks if a real matrix is either positive or negative definite."""
+    # Non-square or non-symmetric matrices are not definite
+    if not real_matrix.is_symmetric():
+        return False
 
-    if symmetric_matrix[0].is_negative:
-        symmetric_matrix = -symmetric_matrix
+    if real_matrix[0].is_negative:
+        real_matrix = -real_matrix
 
-    for i in range(1, symmetric_matrix.rows + 1):
-        minor_det = symmetric_matrix[:i, :i].det()
+    for i in range(1, real_matrix.rows + 1):
+        minor_det = real_matrix[:i, :i].det()
         if minor_det.is_positive:
             continue
         if minor_det.is_nonpositive:
