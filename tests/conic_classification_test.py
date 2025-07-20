@@ -1,8 +1,8 @@
-from sympy import I, Matrix, pi, symbols
+from sympy import I, Matrix, Rational, pi, symbols
 from sympy.abc import x, y
 
 from lib.circle import COMPLEX_UNIT_CIRCLE, UNIT_CIRCLE, Circle
-from lib.conic import ConicFromPoly
+from lib.conic import ConicFromFocusAndDirectrix, ConicFromPoly
 from lib.conic_classification import (
     IsCircular,
     IsComplexEllipse,
@@ -142,8 +142,29 @@ class TestIsHyperbola:
         assert IsHyperbola(ConicFromPoly(x * x - y * y)) is False
         assert IsHyperbola(UNIT_CIRCLE) is False
 
-    def test_symbolic(self):
+    def test_unspecified(self):
         assert IsHyperbola(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
+
+    def test_symbolic_ellipse_of_parabola(self):
+        focus = (0, 0)
+        # Real line not going through the focus
+        directrix = Matrix(symbols("a,b,c", positive=True))
+
+        circle = ConicFromFocusAndDirectrix(focus, directrix, 0)
+        assert IsHyperbola(circle) is False
+        ellipse = ConicFromFocusAndDirectrix(focus, directrix, Rational(1, 2))
+        assert IsHyperbola(ellipse) is False
+        parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
+        assert IsHyperbola(parabola) is False
+
+    def test_symbolic_hyperbola(self):
+        focus = (0, 0)
+        # Real line not going through the focus
+        directrix = Matrix(symbols("a,b,c", positive=True))
+        # Eccentricity greater than 1
+        eccentricity = symbols("e", positive=True) + 1
+        hyperbola = ConicFromFocusAndDirectrix(focus, directrix, eccentricity)
+        assert IsHyperbola(hyperbola) is True
 
 
 class TestIsCircular:
