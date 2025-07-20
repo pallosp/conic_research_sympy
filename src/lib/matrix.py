@@ -82,6 +82,12 @@ class NonZeroCross(Function):
 
 def IsDefinite(matrix: Matrix) -> bool:
     """Checks if a real matrix is either positive or negative definite."""
+    # The alternative algorithm,
+    #
+    #   fuzzy_or([matrix.is_positive_definite, matrix.is_negative_definite])
+    #
+    # would be able to prove definiteness or non-definiteness in fewer cases.
+
     # Non-square or non-symmetric matrices are not definite
     if not matrix.is_symmetric():
         return False
