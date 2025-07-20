@@ -38,7 +38,7 @@ def IsParabola(conic: Matrix) -> bool | None:
 
 
 def IsHyperbola(conic: Matrix) -> bool | None:
-    return fuzzy_and([IsNonDegenerate(conic), conic[:2, :2].det() < 0])
+    return fuzzy_and([IsNonDegenerate(conic), conic[:2, :2].det().is_negative])
 
 
 def IsCircular(conic: Matrix) -> bool | None:
