@@ -5,10 +5,20 @@ from lib.matrix import IsDefinite
 
 
 def IsDegenerate(conic: Matrix) -> bool | None:
+    """Whether the conic is degenerate.
+
+    Degenerate conics consist of a single projective point or a pair of
+    projective lines. The zero matrix is also considered degenerate.
+    """
     return conic.det().is_zero
 
 
 def IsNonDegenerate(conic: Matrix) -> bool | None:
+    """Whether the conic is non-degenerate.
+
+    Non-degenerate conics include real or complex ellipses, parabolas and
+    hyperbolas.
+    """
     return conic.det().is_nonzero
 
 
