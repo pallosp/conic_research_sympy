@@ -22,25 +22,25 @@ from lib.matrix import ConicMatrix
 
 class TestIsDegenerate:
     def test_numeric(self):
-        assert IsDegenerate(Circle((1, 2), 0))
+        assert IsDegenerate(Circle((1, 2), 0)) is True
         assert IsDegenerate(UNIT_CIRCLE) is False
 
     def test_symbolic(self):
         assert IsDegenerate(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
         assert IsDegenerate(Matrix.diag(symbols("a,c,f", positive=True))) is False
         line_pair = LinePair(Matrix(symbols("a,b,c")), Matrix(symbols("d,e,f")))
-        assert IsDegenerate(line_pair)
+        assert IsDegenerate(line_pair) is True
         point = Circle(symbols("x,y"), 0)
-        assert IsDegenerate(point)
+        assert IsDegenerate(point) is True
 
 
 class TestIsFiniteConic:
     def test_numeric_point(self):
-        assert IsFiniteConic(Circle((1, 2), 0))
+        assert IsFiniteConic(Circle((1, 2), 0)) is True
 
     def test_numeric_circle(self):
-        assert IsFiniteConic(UNIT_CIRCLE)
-        assert IsFiniteConic(Circle((1, 2), 3))
+        assert IsFiniteConic(UNIT_CIRCLE) is True
+        assert IsFiniteConic(Circle((1, 2), 3)) is True
 
     def test_numeric_parabola(self):
         assert IsFiniteConic(ConicFromPoly(x * x - y)) is False
@@ -56,15 +56,15 @@ class TestIsFiniteConic:
 
     def test_symbolic_circle(self):
         circle = Circle(symbols("x,y"), symbols("r", positive=True))
-        assert IsFiniteConic(circle)
+        assert IsFiniteConic(circle) is True
 
     def test_symbolic_complex_ellipse(self):
         complex_ellipse = Matrix.diag(symbols("a,c,f", positive=True))
-        assert IsFiniteConic(complex_ellipse)
+        assert IsFiniteConic(complex_ellipse) is True
 
     def test_symbolic_point(self):
         point = Circle(symbols("x,y"), 0)
-        assert IsFiniteConic(point)
+        assert IsFiniteConic(point) is True
 
     def test_symbolic_line_pair(self):
         line1 = Matrix(symbols("a,b,c", real=True))
@@ -74,21 +74,21 @@ class TestIsFiniteConic:
 
 class TestIsEllipse:
     def test_numeric_circle(self):
-        assert IsEllipse(UNIT_CIRCLE)
-        assert IsEllipse(-UNIT_CIRCLE)
-        assert not IsEllipse(Circle((1, 2), 0))
+        assert IsEllipse(UNIT_CIRCLE) is True
+        assert IsEllipse(-UNIT_CIRCLE) is True
+        assert IsEllipse(Circle((1, 2), 0)) is False
 
     def test_numeric_ellipse(self):
-        assert IsEllipse(Ellipse((1, 2), 3, 4))
+        assert IsEllipse(Ellipse((1, 2), 3, 4)) is True
 
     def test_numeric_hyperbola(self):
-        assert not IsEllipse(ConicFromPoly(x * y - 1))
+        assert IsEllipse(ConicFromPoly(x * y - 1)) is False
 
     def test_numeric_point(self):
-        assert not IsEllipse(Circle((1, 2), 0))
+        assert IsEllipse(Circle((1, 2), 0)) is False
 
     def test_complex_circle(self):
-        assert not IsEllipse(COMPLEX_UNIT_CIRCLE)
+        assert IsEllipse(COMPLEX_UNIT_CIRCLE) is False
 
     def test_undecidable(self):
         assert IsEllipse(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
@@ -128,8 +128,8 @@ class TestIsComplexEllipse:
 class TestIsParabola:
     def test_numeric(self):
         assert IsParabola(ConicFromPoly(x * x - y))
-        assert not IsParabola(LinePair(X_AXIS, HorizontalLine(1)))
-        assert not IsParabola(UNIT_CIRCLE)
+        assert IsParabola(LinePair(X_AXIS, HorizontalLine(1))) is False
+        assert IsParabola(UNIT_CIRCLE) is False
 
     def test_symbolic(self):
         assert IsParabola(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
@@ -137,10 +137,10 @@ class TestIsParabola:
 
 class TestIsHyperbola:
     def test_numeric(self):
-        assert IsHyperbola(ConicFromPoly(x * y - 1))
-        assert IsHyperbola(ConicFromPoly(x * x - y * y - 1))
-        assert not IsHyperbola(ConicFromPoly(x * x - y * y))
-        assert not IsHyperbola(UNIT_CIRCLE)
+        assert IsHyperbola(ConicFromPoly(x * y - 1)) is True
+        assert IsHyperbola(ConicFromPoly(x * x - y * y - 1)) is True
+        assert IsHyperbola(ConicFromPoly(x * x - y * y)) is False
+        assert IsHyperbola(UNIT_CIRCLE) is False
 
     def test_symbolic(self):
         assert IsHyperbola(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
@@ -148,32 +148,32 @@ class TestIsHyperbola:
 
 class TestIsCircular:
     def test_circle(self):
-        assert IsCircular(UNIT_CIRCLE)
-        assert IsCircular(Circle((1, 2), 3))
+        assert IsCircular(UNIT_CIRCLE) is True
+        assert IsCircular(Circle((1, 2), 3)) is True
 
     def test_point(self):
-        assert IsCircular(Circle((1, 2), 0))
+        assert IsCircular(Circle((1, 2), 0)) is True
 
     def test_complex_circle(self):
-        assert IsCircular(Circle((1, 2), I))
+        assert IsCircular(Circle((1, 2), I)) is True
 
     def test_ellipse(self):
-        assert IsCircular(Ellipse((0, 0), 1, 1))
-        assert IsCircular(Ellipse((0, 0), 1, 1, r1_angle=pi / 4))
-        assert not IsCircular(Ellipse((0, 0), 1, 2))
+        assert IsCircular(Ellipse((0, 0), 1, 1)) is True
+        assert IsCircular(Ellipse((0, 0), 1, 1, r1_angle=pi / 4)) is True
+        assert IsCircular(Ellipse((0, 0), 1, 2)) is False
 
     def test_hyperbola(self):
-        assert not IsCircular(ConicFromPoly(x * y - 1))
+        assert IsCircular(ConicFromPoly(x * y - 1)) is False
 
     def test_lines(self):
-        assert not IsCircular(LinePair(IDEAL_LINE, IDEAL_LINE))
-        assert not IsCircular(LinePair(IDEAL_LINE, X_AXIS))
-        assert not IsCircular(LinePair(X_AXIS, X_AXIS))
-        assert not IsCircular(LinePair(X_AXIS, Y_AXIS))
+        assert IsCircular(LinePair(IDEAL_LINE, IDEAL_LINE)) is False
+        assert IsCircular(LinePair(IDEAL_LINE, X_AXIS)) is False
+        assert IsCircular(LinePair(X_AXIS, X_AXIS)) is False
+        assert IsCircular(LinePair(X_AXIS, Y_AXIS)) is False
 
     def test_symbolic_conic(self):
         r = symbols("r")
-        assert IsCircular(Circle((0, 0), r))
+        assert IsCircular(Circle((0, 0), r)) is True
         pos1, pos2 = symbols("pos1,pos2", positive=True)
         neg = symbols("neg", negative=True)
         assert IsCircular(ConicFromPoly(pos1 * x**2 + pos1 * y**2)) is True
@@ -186,21 +186,21 @@ class TestIsLinePair:
         assert IsLinePair(Matrix.zeros(3, 3)) is False
 
     def test_numeric_line_pair(self):
-        assert IsLinePair(LinePair(X_AXIS, X_AXIS))
-        assert IsLinePair(LinePair(X_AXIS, Y_AXIS))
-        assert IsLinePair(LinePair(X_AXIS, HorizontalLine(1)))
-        assert IsLinePair(LinePair(X_AXIS, IDEAL_LINE))
-        assert IsLinePair(LinePair(IDEAL_LINE, IDEAL_LINE))
-        assert IsLinePair(ConicFromPoly(x * x - y * y))
+        assert IsLinePair(LinePair(X_AXIS, X_AXIS)) is True
+        assert IsLinePair(LinePair(X_AXIS, Y_AXIS)) is True
+        assert IsLinePair(LinePair(X_AXIS, HorizontalLine(1))) is True
+        assert IsLinePair(LinePair(X_AXIS, IDEAL_LINE)) is True
+        assert IsLinePair(LinePair(IDEAL_LINE, IDEAL_LINE)) is True
+        assert IsLinePair(ConicFromPoly(x * x - y * y)) is True
 
     def test_numeric_hyperbola(self):
-        assert not IsLinePair(ConicFromPoly(x * y - 1))
+        assert IsLinePair(ConicFromPoly(x * y - 1)) is False
 
     def test_numeric_parabola(self):
-        assert not IsLinePair(ConicFromPoly(x * x - y))
+        assert IsLinePair(ConicFromPoly(x * x - y)) is False
 
     def test_numeric_circle(self):
-        assert not IsLinePair(UNIT_CIRCLE)
+        assert IsLinePair(UNIT_CIRCLE) is False
 
     def test_undecidable(self):
         assert IsLinePair(ConicMatrix(*symbols("a,b,c,d,e,f", positive=True))) is None
