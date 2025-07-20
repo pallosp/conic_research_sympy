@@ -1,4 +1,5 @@
 from sympy import Function, Matrix, nan, sqrt
+from sympy.core.logic import fuzzy_and
 
 
 def IsNonZeroMultiple(m1: Matrix | list, m2: Matrix | list) -> bool:
@@ -79,21 +80,21 @@ class NonZeroCross(Function):
             return nan
 
 
-def IsDefinite(real_matrix: Matrix) -> bool:
+def IsDefinite(matrix: Matrix) -> bool:
     """Checks if a real matrix is either positive or negative definite."""
     # Non-square or non-symmetric matrices are not definite
-    if not real_matrix.is_symmetric():
+    if not matrix.is_symmetric():
         return False
 
-    if real_matrix[0].is_negative:
-        real_matrix = -real_matrix
+    if matrix[0].is_negative:
+        matrix = -matrix
 
-    for i in range(1, real_matrix.rows + 1):
-        minor_det = real_matrix[:i, :i].det()
-        if minor_det.is_positive:
-            continue
-        if minor_det.is_nonpositive:
-            return False
-        return None
+    # Take a quick look at the diagonal to potentially prove non-definiteness
+    has_ge_0_diag_el = any(e.is_nonnegative for e in matrix.diagonal())
+    has_le_0_diag_el = any(e.is_nonpositive for e in matrix.diagonal())
+    if has_ge_0_diag_el and has_le_0_diag_el:
+        return False
 
-    return True
+    # A matrix is positive definite iff all leading principal minors > 0
+    size = matrix.rows
+    return fuzzy_and(matrix[:i, :i].det().is_positive for i in range(1, size + 1))

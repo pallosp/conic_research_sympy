@@ -1,5 +1,3 @@
-import pytest
-
 from sympy import Function, Matrix, nan, sqrt, symbols
 
 from lib.matrix import (
@@ -118,10 +116,24 @@ class TestIsDefinite:
         assert IsDefinite(Matrix([[x, 0], [0, x]]))
         assert IsDefinite(Matrix([[x, 1], [1, x]])) is None
         assert IsDefinite(Matrix([[x, 1], [1, 0]])) is False
+        assert IsDefinite(Matrix([[1, x], [x, -1]])) is False
 
-    def test_3x3_symbolic(self):
+    def test_3x3_diagonal_symbolic(self):
         x, y, z = symbols("x y z", positive=True)
         assert IsDefinite(Matrix.diag([x, y, z]))
         assert IsDefinite(Matrix.diag([-x, -y, -z]))
         assert IsDefinite(Matrix.diag([x, y, -z])) is False
         assert IsDefinite(Matrix.diag([x, y, 0])) is False
+
+        r = symbols("r", real=True)
+        assert IsDefinite(Matrix.diag([r, 1, -1])) is False
+        assert IsDefinite(Matrix.diag([r, -1, -1])) is None  # definite iff r<0
+
+        n = symbols("n", negative=True)
+        assert IsDefinite(Matrix.diag([n, -1, -1])) is True
+
+    def test_3x3_symbolic(self):
+        a, b, c, d, e, f = symbols("a b c d e f")
+        assert IsDefinite(Matrix([[a, b, d], [b, c, e], [d, e, f]])) is None
+        assert IsDefinite(Matrix([[a, b, d], [b, c, e], [d, e, 0]])) is False
+        assert IsDefinite(Matrix([[0, b, d], [b, c, e], [d, e, f]])) is False
