@@ -1,7 +1,7 @@
 from sympy import Eq, Matrix
 from sympy.core.logic import fuzzy_and, fuzzy_not
 
-from src.lib.matrix import IsDefinite
+from lib.matrix import IsDefinite
 
 
 def IsDegenerate(conic: Matrix) -> bool | None:
