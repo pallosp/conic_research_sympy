@@ -1,7 +1,19 @@
 import pytest
-from sympy import Rational
+from sympy import Matrix, Rational, symbols
 
-from lib.point import Centroid
+from lib.line import IDEAL_LINE
+from lib.point import Centroid, IdealPointOnLine
+
+
+class TestIdealPointOnLine:
+    def test_symbolic(self):
+        line = Matrix(symbols("a b c"))
+        point = IdealPointOnLine(line)
+        assert point[2] == 0  # point should be an ideal point
+        assert line.dot(point) == 0  # point should be on the line
+
+    def test_ideal_line(self):
+        assert IdealPointOnLine(IDEAL_LINE) == Matrix([0, 0, 0])
 
 
 class TestCentroid:

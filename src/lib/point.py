@@ -3,8 +3,19 @@ from sympy import Matrix, sympify
 ORIGIN = Matrix([0, 0, 1])
 
 
-def IdealPoint(x, y):
+def IdealPoint(x, y) -> Matrix:
     return Matrix([x, y, 0])
+
+
+def IdealPointOnLine(line: Matrix) -> Matrix:
+    """Coordinates of the ideal point on the line.
+
+    The first two coordinates specify the line's direction. The third one is
+    always zero.
+
+    If the line is the ideal line, returns a zero vector.
+    """
+    return Matrix([line[1], -line[0], 0])
 
 
 def PointToXY(point):
@@ -15,7 +26,7 @@ def PointToXY(point):
     return (x / z, y / z)
 
 
-def PointToVec3(point):
+def PointToVec3(point) -> Matrix:
     assert len(point) in (2, 3)
     if len(point) == 2:
         return Matrix([point[0], point[1], 1])
