@@ -411,25 +411,29 @@ Constructs a conic section from two projective lines.
 #### PointPointDistance
 
 ```python
-def PointPointDistance(point1, point2)
+def PointPointDistance(point1: Matrix | Sequence[Expr],
+                       point2: Matrix | Sequence[Expr]) -> Expr
 ```
 
-Signed distance between two points.
+Computes the signed distance between two points.
 
-Infinity if one of them is an ideal point, NaN if both.
+Special cases:
+ - the distance between Euclidean and ideal points is infinity
+ - the distance between two ideal points is `nan`
 
 <a id="distance.PointLineDistance"></a>
 
 #### PointLineDistance
 
 ```python
-def PointLineDistance(point, line)
+def PointLineDistance(point: Matrix | Sequence[Expr], line: Matrix) -> Expr
 ```
 
-Signed distance between a point and a line.
+Computes the signed distance between a point and a line.
 
-Infinity for an Euclidean point and an ideal line.
-NaN for ideal points.
+Special cases:
+ - the distance between Euclidean points and an ideal lines is infinity
+ - the distance between ideal points and an any projective lines is `nan`
 
 <a id="conic_classification"></a>
 
