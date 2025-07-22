@@ -1,3 +1,4 @@
+from typing import Sequence
 from sympy import I, Matrix, Poly, Rational, sqrt, symbols
 from sympy.abc import x, y
 
@@ -18,7 +19,10 @@ from lib.matrix import IsNonZeroMultiple, QuadraticForm
 from lib.point import IdealPoint, PointToVec3
 
 
-def AreProjectiveSetsEqual(set1, set2):
+def AreProjectiveSetsEqual(
+    set1: Sequence[Matrix],
+    set2: Sequence[Matrix],
+) -> bool:
     """Compares two sets of projective points or lines for equality."""
     if len(set1) != len(set2):
         return False
