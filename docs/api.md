@@ -125,7 +125,10 @@ Checks if a real matrix is either positive or negative definite.
 #### ConicFromCenterAndPoints
 
 ```python
-def ConicFromCenterAndPoints(center, p1, p2, p3) -> Matrix
+def ConicFromCenterAndPoints(center: Matrix | Sequence[Expr],
+                             p1: Matrix | Sequence[Expr],
+                             p2: Matrix | Sequence[Expr],
+                             p3: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 Computes the conic section with the given center and perimeter points.
@@ -142,7 +145,7 @@ May return
 #### ConicCenter
 
 ```python
-def ConicCenter(conic: Matrix)
+def ConicCenter(conic: Matrix) -> Tuple[Expr, Expr]
 ```
 
 Computes the center point of a conic.
@@ -154,7 +157,7 @@ Formula: ChatGPT
 #### SemiAxisLengths
 
 ```python
-def SemiAxisLengths(conic: Matrix)
+def SemiAxisLengths(conic: Matrix) -> Tuple[Expr, Expr]
 ```
 
 Computes the semi-axis lengths of a conic.
