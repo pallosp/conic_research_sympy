@@ -17,6 +17,12 @@
   * [CircleRadius](#circle.CircleRadius)
   * [DirectorCircle](#circle.DirectorCircle)
 * [line](#line)
+  * [HorizontalLine](#line.HorizontalLine)
+  * [VerticalLine](#line.VerticalLine)
+  * [LineBetween](#line.LineBetween)
+  * [ParallelLine](#line.ParallelLine)
+  * [PerpendicularLine](#line.PerpendicularLine)
+  * [PerpendicularBisector](#line.PerpendicularBisector)
   * [AreParallel](#line.AreParallel)
   * [ArePerpendicular](#line.ArePerpendicular)
 * [conic](#conic)
@@ -242,12 +248,76 @@ Formula: `research/director_circle.py`
 
 # line
 
+<a id="line.HorizontalLine"></a>
+
+#### HorizontalLine
+
+```python
+def HorizontalLine(y: Expr) -> Matrix
+```
+
+Constructs a horizontal line with the given y-coordinate.
+
+<a id="line.VerticalLine"></a>
+
+#### VerticalLine
+
+```python
+def VerticalLine(x: Expr) -> Matrix
+```
+
+Constructs a vertical line with the given x-coordinate.
+
+<a id="line.LineBetween"></a>
+
+#### LineBetween
+
+```python
+def LineBetween(point1: Matrix | Sequence[Expr],
+                point2: Matrix | Sequence[Expr]) -> Matrix
+```
+
+Connects two projective points with a line.
+
+<a id="line.ParallelLine"></a>
+
+#### ParallelLine
+
+```python
+def ParallelLine(withLine: Matrix,
+                 throughPoint: Matrix | Sequence[Expr]) -> Matrix
+```
+
+Constructs a line through a point parallel to a line.
+
+<a id="line.PerpendicularLine"></a>
+
+#### PerpendicularLine
+
+```python
+def PerpendicularLine(toLine: Matrix,
+                      throughPoint: Matrix | Sequence[Expr]) -> Matrix
+```
+
+Constructs a line through a point perpendicular to a line.
+
+<a id="line.PerpendicularBisector"></a>
+
+#### PerpendicularBisector
+
+```python
+def PerpendicularBisector(point1: Matrix | Sequence[Expr],
+                          point2: Matrix | Sequence[Expr]) -> Matrix
+```
+
+Constructs the perpendicular bisector of two points.
+
 <a id="line.AreParallel"></a>
 
 #### AreParallel
 
 ```python
-def AreParallel(line1, line2)
+def AreParallel(line1: Matrix, line2: Matrix) -> bool | None
 ```
 
 Tells whether line1 and line2 are parallel.
@@ -260,7 +330,7 @@ Considers the ideal line parallel to everything.
 #### ArePerpendicular
 
 ```python
-def ArePerpendicular(line1, line2)
+def ArePerpendicular(line1: Matrix, line2: Matrix) -> bool | None
 ```
 
 Tells whether line1 and line2 are perpendicular.
@@ -732,10 +802,19 @@ coincide.
 #### ConicXLine
 
 ```python
-def ConicXLine(conic: Matrix, line: Matrix)
+def ConicXLine(
+    conic: Matrix, line: Matrix
+) -> Tuple[Matrix | Sequence[Expr], Matrix | Sequence[Expr]] | NaN
 ```
 
-Intersects a conic with a line. Returns two points or NaN.
+Intersects a conic with a line. Returns two points.
+
+Special cases:
+ - The intersection points coincide if the line is tangent to the conic.
+ - They are complex conjugates if the line doesn't intersect the conic at
+   a real point.
+ - Returns an unevaluated `sympy.Function` for symbolic conics.
+ - Returns None if the conic contains the entire line.
 
 Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 11.3
 
