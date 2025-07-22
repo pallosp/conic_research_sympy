@@ -20,6 +20,7 @@
   * [AreParallel](#line.AreParallel)
   * [ArePerpendicular](#line.ArePerpendicular)
 * [conic](#conic)
+  * [ConicFromPoly](#conic.ConicFromPoly)
   * [ConicThroughPoints](#conic.ConicThroughPoints)
   * [ConicFromFocusAndDirectrix](#conic.ConicFromFocusAndDirectrix)
   * [Eccentricity](#conic.Eccentricity)
@@ -268,6 +269,29 @@ Considers the ideal line perpendicular to everything.
 <a id="conic"></a>
 
 # conic
+
+<a id="conic.ConicFromPoly"></a>
+
+#### ConicFromPoly
+
+```python
+def ConicFromPoly(poly: Expr | Poly,
+                  x: Symbol = abc.x,
+                  y: Symbol = abc.y) -> Matrix
+```
+
+Constructs the 3×3 symmetric matrix representation of a conic section
+from a two-variable quadratic polynomial in the form of
+```
+ax² + bxy + cy² + dx + ey + f
+```
+
+The resulting matrix is:
+```
+[a, b/2, d/2]
+[b/2, c, e/2]
+[d/2, e/2, f]
+```
 
 <a id="conic.ConicThroughPoints"></a>
 

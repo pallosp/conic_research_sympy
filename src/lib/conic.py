@@ -1,10 +1,28 @@
-from sympy import Function, I, Matrix, Piecewise, Poly, Tuple, abc, sqrt
+from sympy import Expr, Function, I, Matrix, Piecewise, Poly, Symbol, Tuple, abc, sqrt
 
 from lib.matrix import NonZeroCross, SkewMatrix
 from lib.point import PointToVec3, PointToXY
 
 
-def ConicFromPoly(poly, x=abc.x, y=abc.y) -> Matrix:
+def ConicFromPoly(
+    poly: Expr | Poly,
+    x: Symbol = abc.x,
+    y: Symbol = abc.y,
+) -> Matrix:
+    """
+    Constructs the 3×3 symmetric matrix representation of a conic section
+    from a two-variable quadratic polynomial in the form of
+    ```
+    ax² + bxy + cy² + dx + ey + f
+    ```
+
+    The resulting matrix is:
+    ```
+    [a, b/2, d/2]
+    [b/2, c, e/2]
+    [d/2, e/2, f]
+    ```
+    """
     poly = Poly(poly, x, y)
     a = poly.coeff_monomial(x * x)
     b = poly.coeff_monomial(x * y) / 2
