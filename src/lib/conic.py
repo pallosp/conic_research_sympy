@@ -53,9 +53,12 @@ def ConicThroughPoints(p1, p2, p3, p4, p5) -> Matrix:
 
 
 def ConicFromFocusAndDirectrix(
-    focus: Matrix, directrix: Matrix, eccentricity
+    focus: Matrix, directrix: Matrix, eccentricity: Expr
 ) -> Matrix:
-    """Source: conic_from_focus_and_directrix.py"""
+    """Constructs a conic from its focus, directrix and eccentricity.
+
+    Formula: `research/conic_from_focus_and_directrix.py`
+    """
     fx, fy = PointToXY(focus)
     m1 = directrix * directrix.T
     m2 = Matrix([[-1, 0, fx], [0, -1, fy], [fx, fy, -(fx**2) - fy**2]])

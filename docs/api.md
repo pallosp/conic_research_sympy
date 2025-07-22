@@ -315,10 +315,12 @@ Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 10.1
 
 ```python
 def ConicFromFocusAndDirectrix(focus: Matrix, directrix: Matrix,
-                               eccentricity) -> Matrix
+                               eccentricity: Expr) -> Matrix
 ```
 
-Source: conic_from_focus_and_directrix.py
+Constructs a conic from its focus, directrix and eccentricity.
+
+Formula: `research/conic_from_focus_and_directrix.py`
 
 <a id="conic.Eccentricity"></a>
 
