@@ -24,11 +24,11 @@ class TestPointLineDistance:
         assert PointLineDistance((1, 2), VerticalLine(4)) == 3
         assert PointLineDistance((5, 6), VerticalLine(4)) == -1
 
-    def test_ideal_point(self):
+    def test_ideal_point_real_line(self):
         assert PointLineDistance(IdealPoint(1, 2), X_AXIS) == nan
 
-    def test_ideal_line(self):
+    def test_real_point_ideal_line(self):
         assert PointLineDistance((1, 2), IDEAL_LINE).is_infinite
 
-    def test_ideal_point_and_line(self):
+    def test_ideal_point_ideal_line(self):
         assert PointLineDistance(IdealPoint(1, 2), IDEAL_LINE) == nan
