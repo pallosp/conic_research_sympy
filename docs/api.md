@@ -58,6 +58,13 @@
   * [PointToXY](#point.PointToXY)
   * [PointToVec3](#point.PointToVec3)
   * [Centroid](#point.Centroid)
+* [transform](#transform)
+  * [TransformConic](#transform.TransformConic)
+  * [TransformLine](#transform.TransformLine)
+  * [Translate](#transform.Translate)
+  * [Rotate](#transform.Rotate)
+  * [ScaleXY](#transform.ScaleXY)
+  * [Scale](#transform.Scale)
 * [polar\_conic](#polar_conic)
   * [PointAtAngle](#polar_conic.PointAtAngle)
   * [ConicFromPolarMatrix](#polar_conic.ConicFromPolarMatrix)
@@ -741,6 +748,75 @@ def Centroid(*points: Sequence[Expr]) -> Tuple[Expr, Expr]
 ```
 
 Computes the centroid of a set of points.
+
+<a id="transform"></a>
+
+# transform
+
+<a id="transform.TransformConic"></a>
+
+#### TransformConic
+
+```python
+def TransformConic(conic: Matrix, transformation: Matrix) -> Matrix
+```
+
+Applies a projective transformation on a conic.
+
+<a id="transform.TransformLine"></a>
+
+#### TransformLine
+
+```python
+def TransformLine(line: Matrix, transformation: Matrix) -> Matrix
+```
+
+Applies a projective transformation on a projective line.
+
+<a id="transform.Translate"></a>
+
+#### Translate
+
+```python
+def Translate(dx: Expr, dy: Expr) -> Matrix
+```
+
+Computes the transformation matrix for a 2d translation.
+
+<a id="transform.Rotate"></a>
+
+#### Rotate
+
+```python
+def Rotate(angle: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix
+```
+
+Computes the transformation matrix for a rotation around a point.
+
+<a id="transform.ScaleXY"></a>
+
+#### ScaleXY
+
+```python
+def ScaleXY(scale_x: Expr,
+            scale_y: Expr,
+            x0: Expr = 0,
+            y0: Expr = 0) -> Matrix
+```
+
+Computes the projective transformation matrix for scaling along the x-
+and y-axes.
+
+<a id="transform.Scale"></a>
+
+#### Scale
+
+```python
+def Scale(scale: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix
+```
+
+Computes the projective transformation matrix for a uniform scaling
+transformation.
 
 <a id="polar_conic"></a>
 
