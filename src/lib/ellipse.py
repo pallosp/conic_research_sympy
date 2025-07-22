@@ -1,11 +1,23 @@
-from sympy import Matrix, cos, sin
+from typing import Sequence
+from sympy import Expr, Matrix, cos, sin
 
 from lib.matrix import ConicMatrix
 from lib.point import PointToXY
 
 
-def Ellipse(center, r1, r2, *, r1_angle=None, r1_direction=None) -> Matrix:
-    """Source: ellipse_from_params.py"""
+def Ellipse(
+    center: Matrix | Sequence[Expr],
+    r1: Expr,
+    r2: Expr,
+    *,
+    r1_angle: Expr = None,
+    r1_direction: Expr = None
+) -> Matrix:
+    """Constructs an ellipse from its center, radii and the rotation angle of
+    the first radius.
+
+    Formula: `research/ellipse_from_params.py`
+    """
     assert r1_angle is None or r1_direction is None
     center_x, center_y = PointToXY(center)
     axis_dir_x, axis_dir_y = (
@@ -20,11 +32,18 @@ def Ellipse(center, r1, r2, *, r1_angle=None, r1_direction=None) -> Matrix:
     return ConicMatrix(a, b, c, d, e, f)
 
 
-def SteinerEllipse(point1, point2, point3) -> Matrix:
-    """Computes the Steiner circumellipse for the given points.
+def SteinerEllipse(
+    point1: Matrix | Sequence[Expr],
+    point2: Matrix | Sequence[Expr],
+    point3: Matrix | Sequence[Expr],
+) -> Matrix:
+    """Constructs the Steiner circumellipse for the given points.
 
     The ellipse goes through the three points and is centered at the triangle's
     centroid.
+
+    Definition: https://en.wikipedia.org/wiki/Steiner_ellipse<br>
+    Formula: `research/steiner_ellipse.py`
     """
     x1, y1 = PointToXY(point1)
     x2, y2 = PointToXY(point2)
@@ -51,11 +70,18 @@ def SteinerEllipse(point1, point2, point3) -> Matrix:
     return ConicMatrix(a, b, c, d, e, f)
 
 
-def SteinerInellipse(point1, point2, point3) -> Matrix:
+def SteinerInellipse(
+    point1: Matrix | Sequence[Expr],
+    point2: Matrix | Sequence[Expr],
+    point3: Matrix | Sequence[Expr],
+) -> Matrix:
     """Computes the Steiner inellipse for the given points.
 
     The ellipse is centered at the triangle's centroid, and is tangent to the
     triangle's sides at their midpoints.
+
+    Definition: https://en.wikipedia.org/wiki/Steiner_inellipse<br>
+    Formula: `research/steiner_ellipse.py`
     """
     x1, y1 = PointToXY(point1)
     x2, y2 = PointToXY(point2)
