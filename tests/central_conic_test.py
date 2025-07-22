@@ -63,7 +63,7 @@ class TestConicCenter:
         assert (x, y) == ConicCenter(circle)
 
 
-class TestAxes:
+class TestSemiAxisLengths:
     def test_circle_radius(self):
         center = symbols("x,y")
         r = symbols("r", nonnegative=True)
@@ -71,9 +71,23 @@ class TestAxes:
         assert r == SemiMajorAxis(circle)
         assert r == SemiMinorAxis(circle)
 
-    def test_ellipse_axes(self):
+    def test_ellipse(self):
         ellipse = TransformConic(UNIT_CIRCLE, ScaleXY(2, 3))
         assert SemiMajorAxis(ellipse) == 3
         assert SemiMajorAxis(ellipse * -1) == 3
         assert SemiMinorAxis(ellipse) == 2
         assert SemiMinorAxis(ellipse * -1) == 2
+
+    def test_parabola(self):
+        parabola = ConicFromPoly(x * x - y)
+        assert SemiMajorAxis(parabola).is_infinite
+        assert SemiMinorAxis(parabola).is_infinite
+
+    def test_line_pair(self):
+        line1 = Matrix(symbols("a b c"))
+        line2 = Matrix(symbols("d e f"))
+        assert SemiMajorAxis(LinePair(line1, line2)) == 0
+
+    def test_real_point_conic(self):
+        point = Circle(symbols("x y"), 0)
+        assert SemiMajorAxis(point) == 0

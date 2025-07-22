@@ -1,6 +1,6 @@
 from sympy import factor, pi, simplify, symbols
 
-from lib.central_conic import AxisLengths, ConicCenter
+from lib.central_conic import SemiAxisLengths, ConicCenter
 from lib.circle import UNIT_CIRCLE
 from lib.ellipse import Ellipse, SteinerEllipse, SteinerInellipse
 from lib.matrix import IsNonZeroMultiple, QuadraticForm
@@ -29,19 +29,19 @@ class TestEllipseFromParams:
         center = symbols("x,y")
         r = symbols("r", nonnegative=True)
         circle = Ellipse(center, r, r)
-        assert AxisLengths(circle) == (r, r)
+        assert SemiAxisLengths(circle) == (r, r)
 
     def test_axis_lengths_numeric(self):
         ellipse = Ellipse((1, 2), 3, 4, r1_direction=(5, 6))
-        assert AxisLengths(ellipse) == (3, 4)
+        assert SemiAxisLengths(ellipse) == (3, 4)
         ellipse = Ellipse((1, 2), 3, 4, r1_angle=pi / 6)
-        assert AxisLengths(ellipse) == (3, 4)
+        assert SemiAxisLengths(ellipse) == (3, 4)
 
     def test_axis_lengths_general_case(self):
         center = symbols("x,y")
         r_min, r_diff = symbols("r_min,r_diff", positive=True)
         ellipse = Ellipse(center, r_min, r_min + r_diff, r1_direction=(73, -25))
-        axes = tuple(factor(simplify(len)) for len in AxisLengths(ellipse))
+        axes = tuple(factor(simplify(len)) for len in SemiAxisLengths(ellipse))
         assert (r_min, r_min + r_diff) == axes or (r_min + r_diff, r_min) == axes
 
 

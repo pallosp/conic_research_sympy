@@ -1,4 +1,4 @@
-from sympy import Matrix, Piecewise, sqrt
+from sympy import Expr, Matrix, Piecewise, sqrt
 
 from lib.matrix import ConicMatrix, MaxEigenvalue, MinEigenvalue
 from lib.point import PointToXY
@@ -12,7 +12,7 @@ def ConicFromCenterAndPoints(center, p1, p2, p3) -> Matrix:
      - a hyperbola;
      - a parallel line pair;
      - zero matrix if the solution is ambiguous, which happens when some of the
-       (center, pᵢ, pⱼ) triples are collinear.
+       (`center`, `pᵢ`, `pⱼ`) triples are collinear.
     """
     x, y = PointToXY(center)
     x1, y1 = PointToXY(p1)
@@ -41,13 +41,18 @@ def ConicFromCenterAndPoints(center, p1, p2, p3) -> Matrix:
 
 
 def ConicCenter(conic: Matrix):
-    """Source: ChatGPT"""
+    """Computes the center point of a conic.
+
+    Formula: ChatGPT"""
     x, y, z = conic.row(0).cross(conic.row(1))
     return (x / z, y / z)
 
 
-def AxisLengths(conic: Matrix):
-    """Source: ChatGPT"""
+def SemiAxisLengths(conic: Matrix):
+    """Computes the semi-axis lengths of a conic.
+
+    Formula: ChatGPT
+    """
     submatrix = conic[:2, :2]
     return (
         sqrt(-conic.det() / (MinEigenvalue(submatrix) * submatrix.det())),
@@ -55,11 +60,18 @@ def AxisLengths(conic: Matrix):
     )
 
 
-def SemiMajorAxis(conic: Matrix):
-    axes = AxisLengths(conic)
+def SemiMajorAxis(conic: Matrix) -> Expr:
+    """Computes the semi-major axis length i.e. the center-vertex distance of
+    a conic.
+
+    It's infinity for parabolas, zero for degenerate conics, and imaginary for
+    complex ellipses.
+    """
+    axes = SemiAxisLengths(conic)
     return Piecewise((axes[1], conic.det() > 0), (axes[0], True))
 
 
-def SemiMinorAxis(conic: Matrix):
-    axes = AxisLengths(conic)
+def SemiMinorAxis(conic: Matrix) -> Expr:
+    """Computes the semi-minor axis length of a conic."""
+    axes = SemiAxisLengths(conic)
     return Piecewise((axes[0], conic.det() > 0), (axes[1], True))

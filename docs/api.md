@@ -9,7 +9,9 @@
 * [central\_conic](#central_conic)
   * [ConicFromCenterAndPoints](#central_conic.ConicFromCenterAndPoints)
   * [ConicCenter](#central_conic.ConicCenter)
-  * [AxisLengths](#central_conic.AxisLengths)
+  * [SemiAxisLengths](#central_conic.SemiAxisLengths)
+  * [SemiMajorAxis](#central_conic.SemiMajorAxis)
+  * [SemiMinorAxis](#central_conic.SemiMinorAxis)
 * [circle](#circle)
   * [CircleRadius](#circle.CircleRadius)
 * [line](#line)
@@ -131,7 +133,7 @@ May return
  - a hyperbola;
  - a parallel line pair;
  - zero matrix if the solution is ambiguous, which happens when some of the
-   (center, pᵢ, pⱼ) triples are collinear.
+   (`center`, `pᵢ`, `pⱼ`) triples are collinear.
 
 <a id="central_conic.ConicCenter"></a>
 
@@ -141,17 +143,45 @@ May return
 def ConicCenter(conic: Matrix)
 ```
 
-Source: ChatGPT
+Computes the center point of a conic.
 
-<a id="central_conic.AxisLengths"></a>
+Formula: ChatGPT
 
-#### AxisLengths
+<a id="central_conic.SemiAxisLengths"></a>
+
+#### SemiAxisLengths
 
 ```python
-def AxisLengths(conic: Matrix)
+def SemiAxisLengths(conic: Matrix)
 ```
 
-Source: ChatGPT
+Computes the semi-axis lengths of a conic.
+
+Formula: ChatGPT
+
+<a id="central_conic.SemiMajorAxis"></a>
+
+#### SemiMajorAxis
+
+```python
+def SemiMajorAxis(conic: Matrix) -> Expr
+```
+
+Computes the semi-major axis length i.e. the center-vertex distance of
+a conic.
+
+It's infinity for parabolas, zero for degenerate conics, and imaginary for
+complex ellipses.
+
+<a id="central_conic.SemiMinorAxis"></a>
+
+#### SemiMinorAxis
+
+```python
+def SemiMinorAxis(conic: Matrix) -> Expr
+```
+
+Computes the semi-minor axis length of a conic.
 
 <a id="circle"></a>
 
