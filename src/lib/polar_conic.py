@@ -1,12 +1,14 @@
 """Utilities for conic sections in polar parametric form.
 
 Polar conic sections are represented as parametric curves with angle θ, where
-each point is the image of a point on the unit circle (x² + y² = 1) under a
+each point is the image of a point on the unit circle (`x² + y² = 1`) under a
 projective transformation:
 
+```
        [a b c]   [cos θ]
 C(θ) = [d e f] * [sin θ]
        [g h i]   [  1  ]
+```
 """
 
 from sympy import cos, Matrix, sin

@@ -37,11 +37,13 @@ def MinEigenvalue(symmetric_matrix2x2: Matrix):
 def ConicMatrix(a, b, c, d, e, f):
     """3x3 symmetric matrix from the conic equation
 
+    ```
             [a b d] [x]
     [x y 1] [b c e] [y] = 0
             [d e f] [1]
+    ```
 
-    Expanded form: ax² + 2bxy + cy² + 2dx + 2ey + f = 0
+    Expanded form: `ax² + 2bxy + cy² + 2dx + 2ey + f = 0`
     """
     return Matrix([[a, b, d], [b, c, e], [d, e, f]])
 

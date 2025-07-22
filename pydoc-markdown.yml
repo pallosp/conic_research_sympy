@@ -1,0 +1,12 @@
+loaders:
+  - type: python
+    search_path: [src/lib]
+
+processors:
+  - type: filter
+    skip_empty_modules: true
+
+renderer:
+  type: markdown
+  filename: docs/api.md
+  render_toc: true
