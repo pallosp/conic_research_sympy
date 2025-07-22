@@ -15,6 +15,15 @@ class TestLineXLine:
         line2 = HorizontalLine(y)
         assert IsNonZeroMultiple(LineXLine(line1, line2), [x, y, 1])
 
+    def test_parallel_lines(self):
+        line1 = Matrix([1, 2, 3])
+        line2 = Matrix([1, 2, 4])
+        assert LineXLine(line1, line2) == Matrix([2, -1, 0])
+
+    def test_coincident_lines(self):
+        line = Matrix([1, 2, 3])
+        assert LineXLine(line, line) == Matrix([0, 0, 0])
+
 
 class TestConicXLine:
     def test_general_case(self):

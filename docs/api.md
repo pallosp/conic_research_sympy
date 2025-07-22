@@ -719,10 +719,13 @@ Formula: `research/steiner_ellipse.py`
 #### LineXLine
 
 ```python
-def LineXLine(line1: Matrix, line2: Matrix)
+def LineXLine(line1: Matrix, line2: Matrix) -> Matrix
 ```
 
-Intersects two lines.
+Computes the intersection of two lines.
+
+Returns an ideal point if the lines are parallel, or a zero vector if they
+coincide.
 
 <a id="intersection.ConicXLine"></a>
 

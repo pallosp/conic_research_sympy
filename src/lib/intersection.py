@@ -4,8 +4,12 @@ from sympy import Matrix, nan, Piecewise, sqrt, Tuple
 from lib.matrix import NonZeroCross, SkewMatrix
 
 
-def LineXLine(line1: Matrix, line2: Matrix):
-    """Intersects two lines."""
+def LineXLine(line1: Matrix, line2: Matrix) -> Matrix:
+    """Computes the intersection of two lines.
+
+    Returns an ideal point if the lines are parallel, or a zero vector if they
+    coincide.
+    """
     return line1.cross(line2)
 
 
