@@ -36,10 +36,9 @@ def ConicFromPoly(
 def ConicThroughPoints(p1, p2, p3, p4, p5) -> Matrix:
     """Computes the conic that goes through the given points.
 
+    Returns the conic matrix, or a zero matrix if the result is ambiguous.
     The result is unique if no 2 points coincide and no 4 points are collinear.
     The result is non-degenerate if no 3 points are collinear.
-
-    Returns the conic matrix, or a zero matrix if the result is ambiguous.
 
     Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 10.1
     """
