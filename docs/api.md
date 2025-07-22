@@ -2,9 +2,12 @@
 
 * [matrix](#matrix)
   * [IsNonZeroMultiple](#matrix.IsNonZeroMultiple)
+  * [MaxEigenvalue](#matrix.MaxEigenvalue)
+  * [MinEigenvalue](#matrix.MinEigenvalue)
   * [ConicMatrix](#matrix.ConicMatrix)
   * [QuadraticForm](#matrix.QuadraticForm)
   * [SkewMatrix](#matrix.SkewMatrix)
+  * [NonZeroCross](#matrix.NonZeroCross)
   * [IsDefinite](#matrix.IsDefinite)
 * [central\_conic](#central_conic)
   * [ConicFromCenterAndPoints](#central_conic.ConicFromCenterAndPoints)
@@ -74,62 +77,106 @@
 #### IsNonZeroMultiple
 
 ```python
-def IsNonZeroMultiple(m1: Matrix | list, m2: Matrix | list) -> bool
+def IsNonZeroMultiple(m1: Matrix | Sequence[Expr],
+                      m2: Matrix | Sequence[Expr]) -> bool
 ```
 
 Tells whether two matrices are non-zero scalar multiples of each other.
 
-Treats lists as column vectors.
+Treats lists and tuples as column vectors.
+
+<a id="matrix.MaxEigenvalue"></a>
+
+#### MaxEigenvalue
+
+```python
+def MaxEigenvalue(symmetric_matrix2x2: Matrix) -> Expr
+```
+
+Returns the higher eigenvalue of a 2x2 symmetric matrix.
+
+<a id="matrix.MinEigenvalue"></a>
+
+#### MinEigenvalue
+
+```python
+def MinEigenvalue(symmetric_matrix2x2: Matrix)
+```
+
+Returns the lower eigenvalue of a 2x2 symmetric matrix.
 
 <a id="matrix.ConicMatrix"></a>
 
 #### ConicMatrix
 
 ```python
-def ConicMatrix(a, b, c, d, e, f)
+def ConicMatrix(a: Expr, b: Expr, c: Expr, d: Expr, e: Expr,
+                f: Expr) -> Matrix
 ```
 
-3x3 symmetric matrix from the conic equation
+Builds a 3x3 symmetric conic matrix from its elements.
 
+The conic equation looks like this:
 ```
         [a b d] [x]
 [x y 1] [b c e] [y] = 0
         [d e f] [1]
 ```
 
-Expanded form: `ax² + 2bxy + cy² + 2dx + 2ey + f = 0`
+or in expanded form `ax² + 2bxy + cy² + 2dx + 2ey + f = 0`
 
 <a id="matrix.QuadraticForm"></a>
 
 #### QuadraticForm
 
 ```python
-def QuadraticForm(sym_matrix: Matrix, vector: Matrix)
+def QuadraticForm(sym_matrix: Matrix, vector: Matrix) -> Expr
 ```
 
-Quadratic form for a nxn symmetric matrix and a n-element column vector.
+Computes the quadratic form for a nxn symmetric matrix and an n-element
+column vector.
 
-Formula: vᵀ·M·v
+Use case: when `sym_matrix` and `vector` represent a conic and a projective
+point, respectively, the quadratic form is zero iff the point is on the
+conic.
+
+Formula: `vᵀ·M·v`
 
 <a id="matrix.SkewMatrix"></a>
 
 #### SkewMatrix
 
 ```python
-def SkewMatrix(vector3: Matrix)
+def SkewMatrix(vector3: Matrix) -> Matrix
 ```
 
-Skew-symmetric matrix for a 3d vector.
+Creates a skew-symmetric matrix from a 3d vector.
+
+<a id="matrix.NonZeroCross"></a>
+
+## NonZeroCross Objects
+
+```python
+class NonZeroCross(Function)
+```
+
+Finds a column and a row in a matrix whose intersection is a non-zero
+element.
+
+Returns an unevaluated `sympy.Function` if none of the elements can be
+proven to be non-zero, or `nan` in case of a zero matrix.
 
 <a id="matrix.IsDefinite"></a>
 
 #### IsDefinite
 
 ```python
-def IsDefinite(matrix: Matrix) -> bool
+def IsDefinite(matrix: Matrix) -> bool | None
 ```
 
 Checks if a real matrix is either positive or negative definite.
+
+Returns a bool or `None` if the definitess can't be decided.
 
 <a id="central_conic"></a>
 
