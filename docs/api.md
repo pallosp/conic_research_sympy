@@ -39,7 +39,11 @@
   * [IsLinePair](#conic_classification.IsLinePair)
   * [IsDoubleLine](#conic_classification.IsDoubleLine)
 * [point](#point)
+  * [IdealPoint](#point.IdealPoint)
   * [IdealPointOnLine](#point.IdealPointOnLine)
+  * [PointToXY](#point.PointToXY)
+  * [PointToVec3](#point.PointToVec3)
+  * [Centroid](#point.Centroid)
 * [polar\_conic](#polar_conic)
   * [ConicFromPolarMatrix](#polar_conic.ConicFromPolarMatrix)
 * [ellipse](#ellipse)
@@ -475,6 +479,16 @@ Whether the conic consists of two coincident projective lines.
 
 # point
 
+<a id="point.IdealPoint"></a>
+
+#### IdealPoint
+
+```python
+def IdealPoint(x: Expr, y: Expr) -> Matrix
+```
+
+Creates an ideal point at the given direction.
+
 <a id="point.IdealPointOnLine"></a>
 
 #### IdealPointOnLine
@@ -483,12 +497,42 @@ Whether the conic consists of two coincident projective lines.
 def IdealPointOnLine(line: Matrix) -> Matrix
 ```
 
-Coordinates of the ideal point on the line.
+Returns the coordinates of the ideal point on the line.
 
 The first two coordinates specify the line's direction. The third one is
 always zero.
 
 If the line is the ideal line, returns a zero vector.
+
+<a id="point.PointToXY"></a>
+
+#### PointToXY
+
+```python
+def PointToXY(point: Matrix | Sequence[Expr]) -> Tuple[Expr, Expr]
+```
+
+Computes the Euclidean coordinates of a projective point.
+
+<a id="point.PointToVec3"></a>
+
+#### PointToVec3
+
+```python
+def PointToVec3(point: Matrix | Sequence[Expr]) -> Matrix
+```
+
+Computes the homogeneous coordinates of a projective point.
+
+<a id="point.Centroid"></a>
+
+#### Centroid
+
+```python
+def Centroid(*points: Sequence[Expr]) -> Tuple[Expr, Expr]
+```
+
+Computes the centroid of a set of points.
 
 <a id="polar_conic"></a>
 
