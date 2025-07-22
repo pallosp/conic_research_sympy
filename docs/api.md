@@ -27,6 +27,8 @@
   * [AxisDirection](#conic.AxisDirection)
   * [SplitToLines](#conic.SplitToLines)
   * [IdealPoints](#conic.IdealPoints)
+* [degenerate\_conic](#degenerate_conic)
+  * [LinePair](#degenerate_conic.LinePair)
 * [distance](#distance)
   * [PointPointDistance](#distance.PointPointDistance)
   * [PointLineDistance](#distance.PointLineDistance)
@@ -385,6 +387,20 @@ Returns two points. Special cases:
  - For parabolas these are the same point.
  - For ellipses these are the complex conjugates of each other.
  - For symbolic conics returns an unevaluated `sympy.Function`.
+
+<a id="degenerate_conic"></a>
+
+# degenerate\_conic
+
+<a id="degenerate_conic.LinePair"></a>
+
+#### LinePair
+
+```python
+def LinePair(line1: Matrix, line2: Matrix) -> Matrix
+```
+
+Constructs a conic section from two projective lines.
 
 <a id="distance"></a>
 
