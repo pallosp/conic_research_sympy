@@ -1,61 +1,60 @@
 # Table of Contents
 
-- [Table of Contents](#table-of-contents)
-- [matrix](#matrix)
-      - [IsNonZeroMultiple](#isnonzeromultiple)
-      - [ConicMatrix](#conicmatrix)
-      - [QuadraticForm](#quadraticform)
-      - [SkewMatrix](#skewmatrix)
-      - [IsDefinite](#isdefinite)
-- [central\_conic](#central_conic)
-      - [ConicFromCenterAndPoints](#conicfromcenterandpoints)
-      - [ConicCenter](#coniccenter)
-      - [SemiAxisLengths](#semiaxislengths)
-      - [SemiMajorAxis](#semimajoraxis)
-      - [SemiMinorAxis](#semiminoraxis)
-- [circle](#circle)
-      - [Circle](#circle-1)
-      - [CircleRadius](#circleradius)
-      - [DirectorCircle](#directorcircle)
-- [line](#line)
-      - [AreParallel](#areparallel)
-      - [ArePerpendicular](#areperpendicular)
-- [conic](#conic)
-      - [ConicThroughPoints](#conicthroughpoints)
-      - [ConicFromFocusAndDirectrix](#conicfromfocusanddirectrix)
-      - [Eccentricity](#eccentricity)
-      - [AxisDirection](#axisdirection)
-  - [SplitToLines Objects](#splittolines-objects)
-  - [IdealPoints Objects](#idealpoints-objects)
-- [distance](#distance)
-      - [PointPointDistance](#pointpointdistance)
-      - [PointLineDistance](#pointlinedistance)
-- [conic\_classification](#conic_classification)
-      - [IsDegenerate](#isdegenerate)
-      - [IsNonDegenerate](#isnondegenerate)
-      - [IsFiniteConic](#isfiniteconic)
-      - [IsComplexEllipse](#iscomplexellipse)
-      - [IsEllipse](#isellipse)
-      - [IsParabola](#isparabola)
-      - [IsHyperbola](#ishyperbola)
-      - [IsCircular](#iscircular)
-      - [IsLinePair](#islinepair)
-      - [IsDoubleLine](#isdoubleline)
-- [point](#point)
-      - [IdealPoint](#idealpoint)
-      - [IdealPointOnLine](#idealpointonline)
-      - [PointToXY](#pointtoxy)
-      - [PointToVec3](#pointtovec3)
-      - [Centroid](#centroid)
-- [polar\_conic](#polar_conic)
-      - [ConicFromPolarMatrix](#conicfrompolarmatrix)
-- [ellipse](#ellipse)
-      - [Ellipse](#ellipse-1)
-      - [SteinerEllipse](#steinerellipse)
-      - [SteinerInellipse](#steinerinellipse)
-- [intersection](#intersection)
-      - [LineXLine](#linexline)
-      - [ConicXLine](#conicxline)
+* [matrix](#matrix)
+  * [IsNonZeroMultiple](#matrix.IsNonZeroMultiple)
+  * [ConicMatrix](#matrix.ConicMatrix)
+  * [QuadraticForm](#matrix.QuadraticForm)
+  * [SkewMatrix](#matrix.SkewMatrix)
+  * [IsDefinite](#matrix.IsDefinite)
+* [central\_conic](#central_conic)
+  * [ConicFromCenterAndPoints](#central_conic.ConicFromCenterAndPoints)
+  * [ConicCenter](#central_conic.ConicCenter)
+  * [SemiAxisLengths](#central_conic.SemiAxisLengths)
+  * [SemiMajorAxis](#central_conic.SemiMajorAxis)
+  * [SemiMinorAxis](#central_conic.SemiMinorAxis)
+* [circle](#circle)
+  * [Circle](#circle.Circle)
+  * [CircleRadius](#circle.CircleRadius)
+  * [DirectorCircle](#circle.DirectorCircle)
+* [line](#line)
+  * [AreParallel](#line.AreParallel)
+  * [ArePerpendicular](#line.ArePerpendicular)
+* [conic](#conic)
+  * [ConicThroughPoints](#conic.ConicThroughPoints)
+  * [ConicFromFocusAndDirectrix](#conic.ConicFromFocusAndDirectrix)
+  * [Eccentricity](#conic.Eccentricity)
+  * [AxisDirection](#conic.AxisDirection)
+  * [SplitToLines](#conic.SplitToLines)
+  * [IdealPoints](#conic.IdealPoints)
+* [distance](#distance)
+  * [PointPointDistance](#distance.PointPointDistance)
+  * [PointLineDistance](#distance.PointLineDistance)
+* [conic\_classification](#conic_classification)
+  * [IsDegenerate](#conic_classification.IsDegenerate)
+  * [IsNonDegenerate](#conic_classification.IsNonDegenerate)
+  * [IsFiniteConic](#conic_classification.IsFiniteConic)
+  * [IsComplexEllipse](#conic_classification.IsComplexEllipse)
+  * [IsEllipse](#conic_classification.IsEllipse)
+  * [IsParabola](#conic_classification.IsParabola)
+  * [IsHyperbola](#conic_classification.IsHyperbola)
+  * [IsCircular](#conic_classification.IsCircular)
+  * [IsLinePair](#conic_classification.IsLinePair)
+  * [IsDoubleLine](#conic_classification.IsDoubleLine)
+* [point](#point)
+  * [IdealPoint](#point.IdealPoint)
+  * [IdealPointOnLine](#point.IdealPointOnLine)
+  * [PointToXY](#point.PointToXY)
+  * [PointToVec3](#point.PointToVec3)
+  * [Centroid](#point.Centroid)
+* [polar\_conic](#polar_conic)
+  * [ConicFromPolarMatrix](#polar_conic.ConicFromPolarMatrix)
+* [ellipse](#ellipse)
+  * [Ellipse](#ellipse.Ellipse)
+  * [SteinerEllipse](#ellipse.SteinerEllipse)
+  * [SteinerInellipse](#ellipse.SteinerInellipse)
+* [intersection](#intersection)
+  * [LineXLine](#intersection.LineXLine)
+  * [ConicXLine](#intersection.ConicXLine)
 
 <a id="matrix"></a>
 
@@ -125,7 +124,7 @@ Checks if a real matrix is either positive or negative definite.
 
 <a id="central_conic"></a>
 
-# central_conic
+# central\_conic
 
 <a id="central_conic.ConicFromCenterAndPoints"></a>
 
@@ -141,12 +140,11 @@ def ConicFromCenterAndPoints(center: Matrix | Sequence[Expr],
 Computes the conic section with the given center and perimeter points.
 
 May return
-
-- an ellipse;
-- a hyperbola;
-- a parallel line pair;
-- zero matrix if the solution is ambiguous, which happens when some of the
-  (`center`, `pᵢ`, `pⱼ`) triples are collinear.
+ - an ellipse;
+ - a hyperbola;
+ - a parallel line pair;
+ - zero matrix if the solution is ambiguous, which happens when some of the
+   (`center`, `pᵢ`, `pⱼ`) triples are collinear.
 
 <a id="central_conic.ConicCenter"></a>
 
@@ -387,7 +385,7 @@ NaN for ideal points.
 
 <a id="conic_classification"></a>
 
-# conic_classification
+# conic\_classification
 
 <a id="conic_classification.IsDegenerate"></a>
 
@@ -576,7 +574,7 @@ Computes the centroid of a set of points.
 
 <a id="polar_conic"></a>
 
-# polar_conic
+# polar\_conic
 
 Utilities for conic sections in polar parametric form.
 
@@ -667,3 +665,4 @@ def ConicXLine(conic: Matrix, line: Matrix)
 Intersects a conic with a line. Returns two points or NaN.
 
 Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 11.3
+
