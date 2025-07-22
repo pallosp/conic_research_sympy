@@ -1,4 +1,4 @@
-from sympy import I, Matrix, nan, sqrt, symbols
+from sympy import I, Function, Matrix, nan, sqrt, symbols
 
 from lib.circle import UNIT_CIRCLE
 from lib.degenerate_conic import LinePair
@@ -56,17 +56,17 @@ class TestConicXLine:
         assert IsNonZeroMultiple(ConicXLine(conic, Y_AXIS)[0], Matrix([0, 0, 1]))
         assert IsNonZeroMultiple(ConicXLine(conic, IDEAL_LINE)[0], Matrix([1, 0, 0]))
 
-    def test_conic_containing_line(self):
-        assert ConicXLine(LinePair(X_AXIS, Y_AXIS), X_AXIS) == nan
-        assert ConicXLine(LinePair(X_AXIS, X_AXIS), X_AXIS) == nan
+    def test_conic_contains_line(self):
+        assert ConicXLine(LinePair(X_AXIS, Y_AXIS), X_AXIS) is nan
+        assert ConicXLine(LinePair(X_AXIS, X_AXIS), X_AXIS) is nan
 
     def test_zero_line(self):
         zero_line = Matrix([0, 0, 0])
-        assert ConicXLine(LinePair(X_AXIS, Y_AXIS), zero_line) == nan
+        assert ConicXLine(LinePair(X_AXIS, Y_AXIS), zero_line) is nan
 
     def test_zero_conic(self):
         zero_conic = Matrix.zeros(3, 3)
-        assert ConicXLine(zero_conic, Matrix([1, 2, 3])) == nan
+        assert ConicXLine(zero_conic, Matrix([1, 2, 3])) is nan
 
     def test_double_intersection(self):
         intersections = ConicXLine(UNIT_CIRCLE, HorizontalLine(1))
@@ -77,3 +77,8 @@ class TestConicXLine:
         intersections = ConicXLine(UNIT_CIRCLE, HorizontalLine(2))
         intersections = sorted((PointToXY(i) for i in intersections), key=str)
         assert intersections == sorted([(-sqrt(3) * I, 2), (sqrt(3) * I, 2)], key=str)
+
+    def test_symbolic_conic(self):
+        conic = ConicMatrix(*symbols("a b c d e f"))
+        intersections = ConicXLine(conic, IDEAL_LINE)
+        assert isinstance(intersections, Function)
