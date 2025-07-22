@@ -13,7 +13,9 @@
   * [SemiMajorAxis](#central_conic.SemiMajorAxis)
   * [SemiMinorAxis](#central_conic.SemiMinorAxis)
 * [circle](#circle)
+  * [Circle](#circle.Circle)
   * [CircleRadius](#circle.CircleRadius)
+  * [DirectorCircle](#circle.DirectorCircle)
 * [line](#line)
   * [AreParallel](#line.AreParallel)
   * [ArePerpendicular](#line.ArePerpendicular)
@@ -187,19 +189,42 @@ Computes the semi-minor axis length of a conic.
 
 # circle
 
+<a id="circle.Circle"></a>
+
+#### Circle
+
+```python
+def Circle(center: Matrix | list, radius: Expr) -> Matrix
+```
+
+Creates a circle from its center and radius.
+
 <a id="circle.CircleRadius"></a>
 
 #### CircleRadius
 
 ```python
-def CircleRadius(circle)
+def CircleRadius(circle: Matrix) -> Expr
 ```
 
 Computes the radius of a circle conic.
 
 The result is not specified if the conic matrix is not a circle.
+The computation is based on `research/director_circle.py`.
 
-The computation is based on director_circle.py.
+<a id="circle.DirectorCircle"></a>
+
+#### DirectorCircle
+
+```python
+def DirectorCircle(conic: Matrix) -> Matrix
+```
+
+Computes the director circle of a conic. It's also called orthoptic
+circle or Fermat–Apollonius circle.
+
+Definition: https://en.wikipedia.org/wiki/Director_circle<br>
+Formula: `research/director_circle.py`
 
 <a id="line"></a>
 

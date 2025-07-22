@@ -1,25 +1,31 @@
-from sympy import Matrix, sqrt
+from sympy import Expr, Matrix, sqrt
 from lib.matrix import ConicMatrix
 from lib.point import ORIGIN, PointToXY
 
 
-def Circle(center, r):
+def Circle(center: Matrix | list, radius: Expr) -> Matrix:
+    """Creates a circle from its center and radius."""
     x, y = PointToXY(center)
-    return ConicMatrix(-1, 0, -1, x, y, r * r - x * x - y * y)
+    return ConicMatrix(-1, 0, -1, x, y, radius * radius - x * x - y * y)
 
 
-def CircleRadius(circle):
+def CircleRadius(circle: Matrix) -> Expr:
     """Computes the radius of a circle conic.
 
     The result is not specified if the conic matrix is not a circle.
-
-    The computation is based on director_circle.py.
+    The computation is based on `research/director_circle.py`.
     """
     a, b, c = circle[0], circle[1], circle[4]
     return sqrt(-circle.det() * (a + c) / 2) / (a * c - b * b)
 
 
-def DirectorCircle(conic):
+def DirectorCircle(conic: Matrix) -> Matrix:
+    """Computes the director circle of a conic. It's also called orthoptic
+    circle or Fermat–Apollonius circle.
+
+    Definition: https://en.wikipedia.org/wiki/Director_circle<br>
+    Formula: `research/director_circle.py`
+    """
     a, _, _, _, c, _, d, e, f = conic.adjugate()
     return Matrix(
         [
