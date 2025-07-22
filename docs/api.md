@@ -330,13 +330,13 @@ Formula: `research/conic_from_focus_and_directrix.py`
 def Eccentricity(conic: Matrix)
 ```
 
-Eccentricity of the conic section.
+Computes the eccentricity of a conic section.
 
 The result is ambiguous in case of degenerate conics: evaluate
-(Eccentricity(conic), Eccentricity(-conic)) to get both values.
+`(Eccentricity(conic), Eccentricity(-conic))` to get both values.
 
-Source: https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients
-Own research: focus_directrix_eccentricity.py
+Formula: https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients
+Own research: `research/focus_directrix_eccentricity.py`
 
 <a id="conic.AxisDirection"></a>
 
