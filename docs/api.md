@@ -1,58 +1,61 @@
 # Table of Contents
 
-* [matrix](#matrix)
-  * [IsNonZeroMultiple](#matrix.IsNonZeroMultiple)
-  * [ConicMatrix](#matrix.ConicMatrix)
-  * [QuadraticForm](#matrix.QuadraticForm)
-  * [SkewMatrix](#matrix.SkewMatrix)
-  * [IsDefinite](#matrix.IsDefinite)
-* [central\_conic](#central_conic)
-  * [ConicFromCenterAndPoints](#central_conic.ConicFromCenterAndPoints)
-  * [ConicCenter](#central_conic.ConicCenter)
-  * [SemiAxisLengths](#central_conic.SemiAxisLengths)
-  * [SemiMajorAxis](#central_conic.SemiMajorAxis)
-  * [SemiMinorAxis](#central_conic.SemiMinorAxis)
-* [circle](#circle)
-  * [Circle](#circle.Circle)
-  * [CircleRadius](#circle.CircleRadius)
-  * [DirectorCircle](#circle.DirectorCircle)
-* [line](#line)
-  * [AreParallel](#line.AreParallel)
-  * [ArePerpendicular](#line.ArePerpendicular)
-* [conic](#conic)
-  * [ConicThroughPoints](#conic.ConicThroughPoints)
-  * [ConicFromFocusAndDirectrix](#conic.ConicFromFocusAndDirectrix)
-  * [Eccentricity](#conic.Eccentricity)
-  * [AxisDirection](#conic.AxisDirection)
-  * [SplitToLines](#conic.SplitToLines)
-  * [IdealPoints](#conic.IdealPoints)
-* [distance](#distance)
-  * [PointPointDistance](#distance.PointPointDistance)
-  * [PointLineDistance](#distance.PointLineDistance)
-* [conic\_classification](#conic_classification)
-  * [IsDegenerate](#conic_classification.IsDegenerate)
-  * [IsNonDegenerate](#conic_classification.IsNonDegenerate)
-  * [IsFiniteConic](#conic_classification.IsFiniteConic)
-  * [IsComplexEllipse](#conic_classification.IsComplexEllipse)
-  * [IsEllipse](#conic_classification.IsEllipse)
-  * [IsCircular](#conic_classification.IsCircular)
-  * [IsLinePair](#conic_classification.IsLinePair)
-  * [IsDoubleLine](#conic_classification.IsDoubleLine)
-* [point](#point)
-  * [IdealPoint](#point.IdealPoint)
-  * [IdealPointOnLine](#point.IdealPointOnLine)
-  * [PointToXY](#point.PointToXY)
-  * [PointToVec3](#point.PointToVec3)
-  * [Centroid](#point.Centroid)
-* [polar\_conic](#polar_conic)
-  * [ConicFromPolarMatrix](#polar_conic.ConicFromPolarMatrix)
-* [ellipse](#ellipse)
-  * [Ellipse](#ellipse.Ellipse)
-  * [SteinerEllipse](#ellipse.SteinerEllipse)
-  * [SteinerInellipse](#ellipse.SteinerInellipse)
-* [intersection](#intersection)
-  * [LineXLine](#intersection.LineXLine)
-  * [ConicXLine](#intersection.ConicXLine)
+- [Table of Contents](#table-of-contents)
+- [matrix](#matrix)
+      - [IsNonZeroMultiple](#isnonzeromultiple)
+      - [ConicMatrix](#conicmatrix)
+      - [QuadraticForm](#quadraticform)
+      - [SkewMatrix](#skewmatrix)
+      - [IsDefinite](#isdefinite)
+- [central\_conic](#central_conic)
+      - [ConicFromCenterAndPoints](#conicfromcenterandpoints)
+      - [ConicCenter](#coniccenter)
+      - [SemiAxisLengths](#semiaxislengths)
+      - [SemiMajorAxis](#semimajoraxis)
+      - [SemiMinorAxis](#semiminoraxis)
+- [circle](#circle)
+      - [Circle](#circle-1)
+      - [CircleRadius](#circleradius)
+      - [DirectorCircle](#directorcircle)
+- [line](#line)
+      - [AreParallel](#areparallel)
+      - [ArePerpendicular](#areperpendicular)
+- [conic](#conic)
+      - [ConicThroughPoints](#conicthroughpoints)
+      - [ConicFromFocusAndDirectrix](#conicfromfocusanddirectrix)
+      - [Eccentricity](#eccentricity)
+      - [AxisDirection](#axisdirection)
+  - [SplitToLines Objects](#splittolines-objects)
+  - [IdealPoints Objects](#idealpoints-objects)
+- [distance](#distance)
+      - [PointPointDistance](#pointpointdistance)
+      - [PointLineDistance](#pointlinedistance)
+- [conic\_classification](#conic_classification)
+      - [IsDegenerate](#isdegenerate)
+      - [IsNonDegenerate](#isnondegenerate)
+      - [IsFiniteConic](#isfiniteconic)
+      - [IsComplexEllipse](#iscomplexellipse)
+      - [IsEllipse](#isellipse)
+      - [IsParabola](#isparabola)
+      - [IsHyperbola](#ishyperbola)
+      - [IsCircular](#iscircular)
+      - [IsLinePair](#islinepair)
+      - [IsDoubleLine](#isdoubleline)
+- [point](#point)
+      - [IdealPoint](#idealpoint)
+      - [IdealPointOnLine](#idealpointonline)
+      - [PointToXY](#pointtoxy)
+      - [PointToVec3](#pointtovec3)
+      - [Centroid](#centroid)
+- [polar\_conic](#polar_conic)
+      - [ConicFromPolarMatrix](#conicfrompolarmatrix)
+- [ellipse](#ellipse)
+      - [Ellipse](#ellipse-1)
+      - [SteinerEllipse](#steinerellipse)
+      - [SteinerInellipse](#steinerinellipse)
+- [intersection](#intersection)
+      - [LineXLine](#linexline)
+      - [ConicXLine](#conicxline)
 
 <a id="matrix"></a>
 
@@ -122,7 +125,7 @@ Checks if a real matrix is either positive or negative definite.
 
 <a id="central_conic"></a>
 
-# central\_conic
+# central_conic
 
 <a id="central_conic.ConicFromCenterAndPoints"></a>
 
@@ -138,11 +141,12 @@ def ConicFromCenterAndPoints(center: Matrix | Sequence[Expr],
 Computes the conic section with the given center and perimeter points.
 
 May return
- - an ellipse;
- - a hyperbola;
- - a parallel line pair;
- - zero matrix if the solution is ambiguous, which happens when some of the
-   (`center`, `pᵢ`, `pⱼ`) triples are collinear.
+
+- an ellipse;
+- a hyperbola;
+- a parallel line pair;
+- zero matrix if the solution is ambiguous, which happens when some of the
+  (`center`, `pᵢ`, `pⱼ`) triples are collinear.
 
 <a id="central_conic.ConicCenter"></a>
 
@@ -383,7 +387,7 @@ NaN for ideal points.
 
 <a id="conic_classification"></a>
 
-# conic\_classification
+# conic_classification
 
 <a id="conic_classification.IsDegenerate"></a>
 
@@ -393,10 +397,11 @@ NaN for ideal points.
 def IsDegenerate(conic: Matrix) -> bool | None
 ```
 
-Whether the conic is degenerate.
+Tells whether the conic is degenerate.
 
 Degenerate conics consist of a single projective point or a pair of
 projective lines. The zero matrix is also considered degenerate.
+Returns None if undecidable.
 
 <a id="conic_classification.IsNonDegenerate"></a>
 
@@ -406,10 +411,10 @@ projective lines. The zero matrix is also considered degenerate.
 def IsNonDegenerate(conic: Matrix) -> bool | None
 ```
 
-Whether the conic is non-degenerate.
+Tells whether the conic is non-degenerate.
 
 Non-degenerate conics include real or complex ellipses, parabolas and
-hyperbolas.
+hyperbolas. Returns None if undecidable.
 
 <a id="conic_classification.IsFiniteConic"></a>
 
@@ -419,7 +424,9 @@ hyperbolas.
 def IsFiniteConic(conic: Matrix) -> bool | None
 ```
 
-Whether all points on the conic are finite.
+Tells whether all points on the conic are finite.
+
+Returns None if undecidable.
 
 <a id="conic_classification.IsComplexEllipse"></a>
 
@@ -429,7 +436,10 @@ Whether all points on the conic are finite.
 def IsComplexEllipse(conic: Matrix) -> bool | None
 ```
 
-Whether the conic is an ellipse with a real center and imaginary radii.
+Tells Whether the conic is an ellipse with a real center and imaginary
+radii.
+
+Returns None if undecidable.
 
 <a id="conic_classification.IsEllipse"></a>
 
@@ -439,7 +449,33 @@ Whether the conic is an ellipse with a real center and imaginary radii.
 def IsEllipse(conic: Matrix) -> bool | None
 ```
 
-Whether the conic is an ellipse with real radii.
+Tells whether the conic is an ellipse with real radii.
+
+Returns None if undecidable.
+
+<a id="conic_classification.IsParabola"></a>
+
+#### IsParabola
+
+```python
+def IsParabola(conic: Matrix) -> bool | None
+```
+
+Tells whether the conic is a parabola.
+
+Returns None if undecidable.
+
+<a id="conic_classification.IsHyperbola"></a>
+
+#### IsHyperbola
+
+```python
+def IsHyperbola(conic: Matrix) -> bool | None
+```
+
+Tells whether the conic is a hyperbola.
+
+Returns None if undecidable.
 
 <a id="conic_classification.IsCircular"></a>
 
@@ -449,11 +485,11 @@ Whether the conic is an ellipse with real radii.
 def IsCircular(conic: Matrix) -> bool | None
 ```
 
-Whether there is a single center point around which the conic is
+Tells whether there is a single center point around which the conic is
 invariant under all rotations.
 
 Circles, complex circles, zero-radius circles have such circular symmetry.
-Double ideal lines are not considered circular.
+Double ideal lines are not considered circular. Returns None if undecidable.
 
 <a id="conic_classification.IsLinePair"></a>
 
@@ -463,7 +499,9 @@ Double ideal lines are not considered circular.
 def IsLinePair(conic: Matrix) -> bool | None
 ```
 
-Whether the conic is the union of two projective lines.
+Tells whether the conic is the union of two projective lines.
+
+Returns None if undecidable.
 
 <a id="conic_classification.IsDoubleLine"></a>
 
@@ -473,7 +511,9 @@ Whether the conic is the union of two projective lines.
 def IsDoubleLine(conic: Matrix) -> bool | None
 ```
 
-Whether the conic consists of two coincident projective lines.
+Tells whether the conic consists of two coincident projective lines.
+
+Returns None if undecidable.
 
 <a id="point"></a>
 
@@ -536,7 +576,7 @@ Computes the centroid of a set of points.
 
 <a id="polar_conic"></a>
 
-# polar\_conic
+# polar_conic
 
 Utilities for conic sections in polar parametric form.
 
@@ -627,4 +667,3 @@ def ConicXLine(conic: Matrix, line: Matrix)
 Intersects a conic with a line. Returns two points or NaN.
 
 Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 11.3
-
