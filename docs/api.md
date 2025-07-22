@@ -498,7 +498,7 @@ Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 11.1
 class IdealPoints(Function)
 ```
 
-Computes the ideal points of a conic section.
+Computes the ideal points on a conic section.
 
 Returns two points. Special cases:
  - For parabolas these are the same point.
