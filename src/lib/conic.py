@@ -85,7 +85,9 @@ def AxisDirection(conic: Matrix) -> Matrix:
     namely the ideal point in that direction.
 
     The result is ambiguous in case of degenerate conics: evaluate
-    (AxisDirection(conic), AxisDirection(-conic)) to get both values.
+    `(AxisDirection(conic), AxisDirection(-conic))` to get both values.
+
+    Formula: `research/focus_directrix_eccentricity.py`
     """
     a, b, c = conic[0], conic[3], conic[4]
     sign = Piecewise((1, conic.det() >= 0), (-1, True))

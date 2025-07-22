@@ -350,7 +350,9 @@ Returns the direction of the major axis of the conic section,
 namely the ideal point in that direction.
 
 The result is ambiguous in case of degenerate conics: evaluate
-(AxisDirection(conic), AxisDirection(-conic)) to get both values.
+`(AxisDirection(conic), AxisDirection(-conic))` to get both values.
+
+Formula: `research/focus_directrix_eccentricity.py`
 
 <a id="conic.SplitToLines"></a>
 
