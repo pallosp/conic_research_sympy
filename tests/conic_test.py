@@ -1,4 +1,4 @@
-from sympy import I, Matrix, Rational, sqrt, symbols
+from sympy import I, Matrix, Poly, Rational, sqrt, symbols
 from sympy.abc import x, y
 
 from lib.circle import UNIT_CIRCLE, Circle
@@ -37,10 +37,18 @@ def AreProjectiveSetsEqual(set1, set2):
     return True
 
 
-def test_ConicFromPoly():
-    poly = (x + 2) * (3 * y - 4) + x**2
-    point = Matrix([x, y, 1])
-    assert poly.equals(QuadraticForm(ConicFromPoly(poly), point))
+class TestConicFromPoly:
+    def test_expr(self):
+        poly = (x + 2) * (3 * y - 4) + x**2
+        point = Matrix([x, y, 1])
+        assert poly.equals(QuadraticForm(ConicFromPoly(poly), point))
+
+    def test_poly(self):
+        assert ConicFromPoly(Poly(1 - x * x - y * y)) == UNIT_CIRCLE
+
+    def test_custom_variables(self):
+        cx, cy = symbols("cx cy")
+        assert ConicFromPoly(1 - cx**2 - cy**2, x=cx, y=cy) == UNIT_CIRCLE
 
 
 class TestConicThroughPoints:
