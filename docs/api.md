@@ -59,6 +59,7 @@
   * [PointToVec3](#point.PointToVec3)
   * [Centroid](#point.Centroid)
 * [polar\_conic](#polar_conic)
+  * [PointAtAngle](#polar_conic.PointAtAngle)
   * [ConicFromPolarMatrix](#polar_conic.ConicFromPolarMatrix)
 * [ellipse](#ellipse)
   * [Ellipse](#ellipse.Ellipse)
@@ -757,6 +758,17 @@ C(θ) = [d e f] * [sin θ]
        [g h i]   [  1  ]
 ```
 
+<a id="polar_conic.PointAtAngle"></a>
+
+#### PointAtAngle
+
+```python
+def PointAtAngle(polar: Matrix, theta: Expr) -> Matrix
+```
+
+Computes the coordinates of the projective point on a polar conic
+corresponding to a certain angle.
+
 <a id="polar_conic.ConicFromPolarMatrix"></a>
 
 #### ConicFromPolarMatrix
@@ -767,7 +779,8 @@ def ConicFromPolarMatrix(polar: Matrix) -> Matrix
 
 Transforms a conic from polar to quadratic form.
 
-Algorithm: TransformConic(UNIT_CIRCLE, polar)
+The algorithm is essentially applying the polar matrix as a projective
+transformation on the unit circle.
 
 <a id="ellipse"></a>
 

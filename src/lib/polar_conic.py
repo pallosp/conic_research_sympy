@@ -11,7 +11,7 @@ C(θ) = [d e f] * [sin θ]
 ```
 """
 
-from sympy import cos, Matrix, sin
+from sympy import Expr, cos, Matrix, sin
 
 from lib.circle import UNIT_CIRCLE
 
@@ -19,14 +19,18 @@ from lib.circle import UNIT_CIRCLE
 POLAR_UNIT_CIRCLE = Matrix.eye(3)
 
 
-def PointAtAngle(polar: Matrix, theta) -> Matrix:
+def PointAtAngle(polar: Matrix, theta: Expr) -> Matrix:
+    """Computes the coordinates of the projective point on a polar conic
+    corresponding to a certain angle.
+    """
     return polar * Matrix([cos(theta), sin(theta), 1])
 
 
 def ConicFromPolarMatrix(polar: Matrix) -> Matrix:
     """Transforms a conic from polar to quadratic form.
 
-    Algorithm: TransformConic(UNIT_CIRCLE, polar)
+    The algorithm is essentially applying the polar matrix as a projective
+    transformation on the unit circle.
     """
     polar_adjugate = polar.adjugate()
     return polar_adjugate.T * UNIT_CIRCLE * polar_adjugate
