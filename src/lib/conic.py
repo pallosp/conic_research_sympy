@@ -1,4 +1,5 @@
-from sympy import Expr, Function, I, Matrix, Piecewise, Poly, Symbol, Tuple, abc, sqrt
+from typing import Tuple
+from sympy import Expr, Function, I, Matrix, Piecewise, Poly, Symbol, abc, sqrt
 
 from lib.matrix import NonZeroCross, SkewMatrix
 from lib.point import PointToVec3, PointToXY
@@ -98,13 +99,16 @@ def AxisDirection(conic: Matrix) -> Matrix:
 class SplitToLines(Function):
     """Splits a degenerate conic into two lines.
 
-    In case of point conics the lines will be complex conjugates.
+    Special cases:
+     - For non-degenerate conics the result is unspecified.
+     - For point conics the lines will be complex conjugates.
+     - For symbolic conics returns an unevaluated `sympy.Function`.
 
     Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 11.1
     """
 
     @classmethod
-    def eval(cls, conic: Matrix):
+    def eval(cls, conic: Matrix) -> Tuple[Matrix, Matrix] | None:
         adj = conic.adjugate()
         A, C, F = adj.diagonal()
 
@@ -118,16 +122,18 @@ class SplitToLines(Function):
             return None
 
         cross = NonZeroCross(conic)
-        if isinstance(cross, Tuple):
-            return (cross[0], cross[1].T)
-        return None
+        if isinstance(cross, NonZeroCross):
+            return None
+        return (cross[0], cross[1].T)
 
 
 class IdealPoints(Function):
     """Computes the ideal points of a conic section.
 
-    Always returns two points. For parabolas these are the same point.
-    For ellipses these are the complex conjugates of each other.
+    Returns two points. Special cases:
+     - For parabolas these are the same point.
+     - For ellipses these are the complex conjugates of each other.
+     - For symbolic conics returns an unevaluated `sympy.Function`.
     """
 
     @classmethod
@@ -135,6 +141,6 @@ class IdealPoints(Function):
         a, b, c = conic[0], conic[1], conic[4]
         disc = sqrt(b * b - a * c)
         cross = NonZeroCross(Matrix([[c, -b - disc, 0], [-b + disc, a, 0], [0, 0, 0]]))
-        if isinstance(cross, Tuple):
-            return (cross[0], cross[1].T)
-        return None
+        if isinstance(cross, NonZeroCross):
+            return None
+        return (cross[0], cross[1].T)
