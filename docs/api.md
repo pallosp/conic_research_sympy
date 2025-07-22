@@ -201,7 +201,7 @@ Computes the semi-minor axis length of a conic.
 #### Circle
 
 ```python
-def Circle(center: Matrix | list, radius: Expr) -> Matrix
+def Circle(center: Matrix | Sequence[Expr], radius: Expr) -> Matrix
 ```
 
 Creates a circle from its center and radius.

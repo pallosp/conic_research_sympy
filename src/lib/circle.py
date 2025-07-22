@@ -1,9 +1,12 @@
+from typing import Sequence
 from sympy import Expr, Matrix, sqrt
+
 from lib.matrix import ConicMatrix
 from lib.point import ORIGIN, PointToXY
 
 
-def Circle(center: Matrix | list, radius: Expr) -> Matrix:
+
+def Circle(center: Matrix | Sequence[Expr], radius: Expr) -> Matrix:
     """Creates a circle from its center and radius."""
     x, y = PointToXY(center)
     return ConicMatrix(-1, 0, -1, x, y, radius * radius - x * x - y * y)
