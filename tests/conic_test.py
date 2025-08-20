@@ -1,4 +1,3 @@
-from typing import Sequence
 from sympy import I, Matrix, Poly, Rational, sqrt, symbols
 from sympy.abc import x, y
 
@@ -9,36 +8,14 @@ from lib.conic import (
     ConicFromPoly,
     ConicThroughPoints,
     Eccentricity,
-    IdealPoints,
-    SplitToLines,
+    IdealPoints
 )
 from lib.degenerate_conic import LinePair
 from lib.ellipse import Ellipse
-from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine, VerticalLine
+from lib.line import X_AXIS, Y_AXIS
 from lib.matrix import IsNonZeroMultiple, QuadraticForm
 from lib.point import IdealPoint, PointToVec3
-
-
-def AreProjectiveSetsEqual(
-    set1: Sequence[Matrix],
-    set2: Sequence[Matrix],
-) -> bool:
-    """Compares two sets of projective points or lines for equality."""
-    if len(set1) != len(set2):
-        return False
-
-    remaining = list(set2)
-
-    for v1 in set1:
-        found = False
-        for v2 in remaining:
-            if IsNonZeroMultiple(v1, v2):
-                remaining.remove(v2)
-                found = True
-                break
-        if not found:
-            return False
-    return True
+from tests.util import AreProjectiveSetsEqual
 
 
 class TestConicFromPoly:
@@ -123,39 +100,6 @@ class TestAxisDirection:
         dir1 = AxisDirection(conic)
         dir2 = AxisDirection(-conic)
         assert AreProjectiveSetsEqual([dir1, dir2], [[1, 1, 0], [1, -1, 0]])
-
-
-class TestSplitToLines:
-    def test_horizontal_lines(self):
-        lines = [HorizontalLine(1), HorizontalLine(2)]
-        conic = LinePair(*lines)
-        assert AreProjectiveSetsEqual(lines, SplitToLines(conic))
-
-    def test_vertical_lines(self):
-        lines = [VerticalLine(1), VerticalLine(2)]
-        conic = LinePair(*lines)
-        assert AreProjectiveSetsEqual(lines, SplitToLines(conic))
-
-    def test_double_line(self):
-        lines = [Matrix([1, 2, 3])] * 2
-        conic = LinePair(*lines)
-        assert AreProjectiveSetsEqual(lines, SplitToLines(conic))
-
-    def test_double_ideal_line(self):
-        lines = [IDEAL_LINE] * 2
-        conic = LinePair(*lines)
-        assert AreProjectiveSetsEqual(lines, SplitToLines(conic))
-
-    def test_general_case(self):
-        lines = [Matrix([1, 2, 3]), Matrix([4, 5, 6])]
-        conic = LinePair(*lines)
-        assert AreProjectiveSetsEqual(lines, SplitToLines(conic))
-
-    def test_point_conic(self):
-        conic = Circle((0, 0), 0)
-        assert AreProjectiveSetsEqual(
-            [Matrix([1, I, 0]), Matrix([1, -I, 0])], SplitToLines(conic)
-        )
 
 
 class TestIdealPoints:

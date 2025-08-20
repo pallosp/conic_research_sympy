@@ -1,7 +1,6 @@
-from typing import Tuple
 from sympy import Expr, Function, I, Matrix, Piecewise, Poly, Symbol, abc, sqrt
 
-from lib.matrix import NonZeroCross, SkewMatrix
+from lib.matrix import NonZeroCross
 from lib.point import PointToVec3, PointToXY
 
 
@@ -94,37 +93,6 @@ def AxisDirection(conic: Matrix) -> Matrix:
     sign = Piecewise((1, conic.det() >= 0), (-1, True))
     x, y = sqrt(sign * (a - c) / 2 + sign * b * I).simplify().as_real_imag()
     return Matrix([x, y, 0])
-
-
-class SplitToLines(Function):
-    """Splits a degenerate conic into two lines.
-
-    Special cases:
-     - For non-degenerate conics the result is unspecified.
-     - For point conics the lines will be complex conjugates.
-     - For symbolic conics returns an unevaluated `sympy.Function`.
-
-    Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 11.1
-    """
-
-    @classmethod
-    def eval(cls, conic: Matrix) -> Tuple[Matrix, Matrix] | None:
-        adj = conic.adjugate()
-        A, C, F = adj.diagonal()
-
-        if A.is_nonzero:
-            conic = conic + SkewMatrix(adj.col(0) / sqrt(-A))
-        elif C.is_nonzero:
-            conic = conic + SkewMatrix(adj.col(1) / sqrt(-C))
-        elif F.is_nonzero:
-            conic = conic + SkewMatrix(adj.col(2) / sqrt(-F))
-        elif not (A.is_zero and C.is_zero and F.is_zero):
-            return None
-
-        cross = NonZeroCross(conic)
-        if isinstance(cross, NonZeroCross):
-            return None
-        return (cross[0], cross[1].T)
 
 
 class IdealPoints(Function):

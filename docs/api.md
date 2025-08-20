@@ -34,10 +34,10 @@
   * [ConicFromFocusAndDirectrix](#conic.ConicFromFocusAndDirectrix)
   * [Eccentricity](#conic.Eccentricity)
   * [AxisDirection](#conic.AxisDirection)
-  * [SplitToLines](#conic.SplitToLines)
   * [IdealPoints](#conic.IdealPoints)
 * [degenerate\_conic](#degenerate_conic)
   * [LinePair](#degenerate_conic.LinePair)
+  * [SplitToLines](#degenerate_conic.SplitToLines)
 * [distance](#distance)
   * [PointPointDistance](#distance.PointPointDistance)
   * [PointLineDistance](#distance.PointLineDistance)
@@ -481,23 +481,6 @@ The result is ambiguous in case of degenerate conics: evaluate
 
 Formula: `research/focus_directrix_eccentricity.py`
 
-<a id="conic.SplitToLines"></a>
-
-## SplitToLines Objects
-
-```python
-class SplitToLines(Function)
-```
-
-Splits a degenerate conic into two lines.
-
-Special cases:
- - For non-degenerate conics the result is unspecified.
- - For point conics the lines will be complex conjugates.
- - For symbolic conics returns an unevaluated `sympy.Function`.
-
-Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 11.1
-
 <a id="conic.IdealPoints"></a>
 
 ## IdealPoints Objects
@@ -526,6 +509,23 @@ def LinePair(line1: Matrix, line2: Matrix) -> Matrix
 ```
 
 Constructs a conic section from two projective lines.
+
+<a id="degenerate_conic.SplitToLines"></a>
+
+## SplitToLines Objects
+
+```python
+class SplitToLines(Function)
+```
+
+Splits a degenerate conic into two lines.
+
+Special cases:
+ - For non-degenerate conics the result is unspecified.
+ - For point conics the lines will be complex conjugates.
+ - For symbolic conics returns an unevaluated `sympy.Function`.
+
+Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 11.1
 
 <a id="distance"></a>
 
