@@ -33,7 +33,7 @@ from lib.transform import TransformConic, Translate
 #   b = det M₂ / det M
 #   c = det M₃ / det M
 #
-# Conic formula:
+# Conic *Formula*:
 #
 #   det M₁⋅x² + det M₂⋅x⋅y + det M₃⋅y² - det M = 0
 #

@@ -57,7 +57,7 @@ def ConicFromFocusAndDirectrix(
 ) -> Matrix:
     """Constructs a conic from its focus, directrix and eccentricity.
 
-    Formula: `research/conic_from_focus_and_directrix.py`
+    *Formula*: `research/conic_from_focus_and_directrix.py`
     """
     fx, fy = PointToXY(focus)
     m1 = directrix * directrix.T
@@ -71,8 +71,8 @@ def Eccentricity(conic: Matrix):
     The result is ambiguous in case of degenerate conics: evaluate
     `(Eccentricity(conic), Eccentricity(-conic))` to get both values.
 
-    Formula: https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients
-    Own research: `research/focus_directrix_eccentricity.py`
+    *Formula*: https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients<br>
+    *Own research*: `research/focus_directrix_eccentricity.py`
     """
     a, b, c = conic[0], conic[1], conic[4]
     s = sqrt(((a - c) ** 2 + 4 * b**2).factor())
@@ -87,7 +87,7 @@ def AxisDirection(conic: Matrix) -> Matrix:
     The result is ambiguous in case of degenerate conics: evaluate
     `(AxisDirection(conic), AxisDirection(-conic))` to get both values.
 
-    Formula: `research/focus_directrix_eccentricity.py`
+    *Formula*: `research/focus_directrix_eccentricity.py`
     """
     a, b, c = conic[0], conic[3], conic[4]
     sign = Piecewise((1, conic.det() >= 0), (-1, True))

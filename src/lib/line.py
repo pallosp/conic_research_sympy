@@ -82,7 +82,7 @@ def AngleBisector(line1: Matrix, line2: Matrix) -> Matrix:
      - AngleBisector(ideal line, ideal line) = zero vector
      - AngleBisector(ideal line, real line) = ideal line
 
-    Formula: research/angle_bisector.py
+    *Formula*: research/angle_bisector.py
     """
     l1 = sqrt(line1[0] ** 2 + line1[1] ** 2)
     l2 = sqrt(line2[0] ** 2 + line2[1] ** 2)

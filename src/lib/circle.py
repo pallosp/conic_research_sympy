@@ -25,8 +25,8 @@ def DirectorCircle(conic: Matrix) -> Matrix:
     """Computes the director circle of a conic. It's also called orthoptic
     circle or Fermat–Apollonius circle.
 
-    Definition: https://en.wikipedia.org/wiki/Director_circle<br>
-    Formula: `research/director_circle.py`
+    *Definition*: https://en.wikipedia.org/wiki/Director_circle<br>
+    *Formula*: `research/director_circle.py`
     """
     a, _, _, _, c, _, d, e, f = conic.adjugate()
     return Matrix(

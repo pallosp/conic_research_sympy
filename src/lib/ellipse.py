@@ -16,7 +16,7 @@ def Ellipse(
     """Constructs an ellipse from its center, radii and the rotation angle of
     the first radius.
 
-    Formula: `research/ellipse_from_params.py`
+    *Formula*: `research/ellipse_from_params.py`
     """
     assert r1_angle is None or r1_direction is None
     center_x, center_y = PointToXY(center)
@@ -42,8 +42,8 @@ def SteinerEllipse(
     The ellipse goes through the three points and is centered at the triangle's
     centroid.
 
-    Definition: https://en.wikipedia.org/wiki/Steiner_ellipse<br>
-    Formula: `research/steiner_ellipse.py`
+    *Definition*: https://en.wikipedia.org/wiki/Steiner_ellipse<br>
+    *Formula*: `research/steiner_ellipse.py`
     """
     x1, y1 = PointToXY(point1)
     x2, y2 = PointToXY(point2)
@@ -80,8 +80,8 @@ def SteinerInellipse(
     The ellipse is centered at the triangle's centroid, and is tangent to the
     triangle's sides at their midpoints.
 
-    Definition: https://en.wikipedia.org/wiki/Steiner_inellipse<br>
-    Formula: `research/steiner_ellipse.py`
+    *Definition*: https://en.wikipedia.org/wiki/Steiner_inellipse<br>
+    *Formula*: `research/steiner_ellipse.py`
     """
     x1, y1 = PointToXY(point1)
     x2, y2 = PointToXY(point2)

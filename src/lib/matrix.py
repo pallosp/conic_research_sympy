@@ -61,7 +61,7 @@ def QuadraticForm(sym_matrix: Matrix, vector: Matrix) -> Expr:
     point, respectively, the quadratic form is zero iff the point is on the
     conic.
 
-    Formula: `vᵀ·M·v`
+    *Formula*: `vᵀ·M·v`
     """
     return vector.dot(vector.T * sym_matrix)
 

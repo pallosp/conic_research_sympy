@@ -49,7 +49,7 @@ def ConicFromCenterAndPoints(
 def ConicCenter(conic: Matrix) -> Tuple[Expr, Expr]:
     """Computes the center point of a conic.
 
-    Formula: ChatGPT"""
+    *Formula*: ChatGPT"""
     x, y, z = conic.row(0).cross(conic.row(1))
     return (x / z, y / z)
 
@@ -57,7 +57,7 @@ def ConicCenter(conic: Matrix) -> Tuple[Expr, Expr]:
 def SemiAxisLengths(conic: Matrix) -> Tuple[Expr, Expr]:
     """Computes the semi-axis lengths of a conic.
 
-    Formula: ChatGPT
+    *Formula*: ChatGPT
     """
     submatrix = conic[:2, :2]
     return (
