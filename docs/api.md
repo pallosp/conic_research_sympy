@@ -397,6 +397,8 @@ Special cases:
  - AngleBisector(ideal line, ideal line) = zero vector
  - AngleBisector(ideal line, real line) = ideal line
 
+Formula: research/angle_bisector.py
+
 <a id="line.PerpendicularBisector"></a>
 
 #### PerpendicularBisector
