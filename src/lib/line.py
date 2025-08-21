@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Sequence, Tuple
 from sympy import Expr, Matrix
 
 from lib.point import PointToVec3, PointToXY
@@ -40,6 +40,33 @@ def PerpendicularLine(
     x, y = PointToXY(throughPoint)
     a, b, _ = toLine
     return Matrix([-b, a, -b * x + a * y])
+
+
+def LineThroughPoint(
+    point: Matrix | Sequence[Expr],
+    *,
+    direction: Matrix | Sequence[Expr] = None,
+    normal: Matrix | Sequence[Expr] = None
+) -> Matrix:
+    """Constructs a line through a point with the given direction.
+
+    The direction can be specified as
+     - a 2D direction vector: `direction=(dx, dy)`
+     - an ideal point on the line: `direction=(dx, dy, 0)`
+     - a 2D normal vector: `normal=(nx, ny)`
+     - an ideal point on the perpendicular line: `normal=(nx, ny, 0)`
+    """
+    # Exactly one of direction or normal must be specified
+    assert (direction is not None) != (normal is not None)
+    x, y = PointToXY(point)
+    if direction is not None:
+        dx, dy, *rest = direction
+        assert rest == [] or rest == [0]
+        return Matrix([-dy, dx, dy * x - dx * y])
+    else:
+        nx, ny, *rest = normal
+        assert rest == [] or rest == [0]
+        return Matrix([nx, ny, -nx * x - ny * y])
 
 
 def PerpendicularBisector(

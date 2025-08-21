@@ -1,3 +1,4 @@
+import pytest
 from sympy import Matrix, symbols
 from sympy.abc import x, y
 
@@ -7,6 +8,7 @@ from lib.line import (
     HorizontalLine,
     IDEAL_LINE,
     LineBetween,
+    LineThroughPoint,
     ParallelLine,
     PerpendicularBisector,
     PerpendicularLine,
@@ -14,11 +16,40 @@ from lib.line import (
     X_AXIS,
     Y_AXIS,
 )
+from lib.point import IdealPointOnLine, PointToVec3
 
 
 class TestPerpendicularLine:
     def test_numeric(self):
         assert Y_AXIS == PerpendicularLine(X_AXIS, (0, 1))
+
+
+class TestLineThroughPoint:
+    def test_missing_direction_and_normal(self):
+        point = symbols("x,y")
+        with pytest.raises(AssertionError):
+            LineThroughPoint(point)
+
+    def test_overspecified_direction_and_normal(self):
+        point = symbols("x,y")
+        direction = symbols("dx,dy")
+        normal = symbols("nx,ny")
+        with pytest.raises(AssertionError):
+            LineThroughPoint(point, direction=direction, normal=normal)
+
+    def test_direction_specified(self):
+        point = symbols("x,y")
+        direction = symbols("dx,dy")
+        line = LineThroughPoint(point, direction=direction)
+        assert (line.dot(PointToVec3(point))).is_zero
+        assert IdealPointOnLine(line) == Matrix(direction + (0,))
+
+    def test_normal_vector_specified(self):
+        point = symbols("x,y")
+        normal = symbols("nx,ny")
+        line = LineThroughPoint(point, normal=normal)
+        assert (line.dot(PointToVec3(point))).is_zero
+        assert line[0:2] == list(normal)
 
 
 class TestPerpendicularBisector:
