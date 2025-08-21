@@ -3,6 +3,7 @@ from sympy import Matrix, symbols
 from sympy.abc import x, y
 
 from lib.line import (
+    AngleBisector,
     AreParallel,
     ArePerpendicular,
     HorizontalLine,
@@ -16,6 +17,7 @@ from lib.line import (
     X_AXIS,
     Y_AXIS,
 )
+from lib.matrix import IsNonZeroMultiple
 from lib.point import IdealPointOnLine, PointToVec3
 
 
@@ -50,6 +52,48 @@ class TestLineThroughPoint:
         line = LineThroughPoint(point, normal=normal)
         assert (line.dot(PointToVec3(point))).is_zero
         assert line[0:2] == list(normal)
+
+
+class TestAngleBisector:
+    def test_bisector_of_axes(self):
+        assert X_AXIS.dot(Matrix([1, 1, 1])) > 0
+        assert Y_AXIS.dot(Matrix([1, 1, 1])) < 0
+
+        bisector = AngleBisector(X_AXIS, Y_AXIS)
+        assert bisector.dot(Matrix([0, 0, 1])) == 0
+        assert bisector.dot(Matrix([1, -1, 1])) == 0
+
+        bisector = AngleBisector(X_AXIS, -Y_AXIS)
+        assert bisector.dot(Matrix([0, 0, 1])) == 0
+        assert bisector.dot(Matrix([1, 1, 1])) == 0
+
+    def test_parallel_lines_same_direction(self):
+        line1 = HorizontalLine(1)
+        line2 = HorizontalLine(3)
+        center_line = AngleBisector(line1, line2)
+        assert IsNonZeroMultiple(center_line, IDEAL_LINE)
+
+    def test_parallel_lines_opposite_direction(self):
+        line1 = HorizontalLine(1)
+        line2 = -HorizontalLine(3)
+        center_line = AngleBisector(line1, line2)
+        assert IsNonZeroMultiple(center_line, HorizontalLine(2))
+
+    def test_coincident_lines_same_direction(self):
+        line = Matrix([1, 2, 3])
+        assert AngleBisector(line, line * 2).is_zero_matrix
+
+    def test_coincident_lines_opposite_direction(self):
+        line = Matrix([1, 2, 3])
+        assert IsNonZeroMultiple(AngleBisector(line, -line), line)
+
+    def test_two_ideal_lines(self):
+        assert AngleBisector(IDEAL_LINE, IDEAL_LINE).is_zero_matrix
+        assert AngleBisector(IDEAL_LINE, -IDEAL_LINE).is_zero_matrix
+
+    def test_real_and_ideal_lines(self):
+        real_line = Matrix([1, 2, 3])
+        assert IsNonZeroMultiple(AngleBisector(real_line, IDEAL_LINE), IDEAL_LINE)
 
 
 class TestPerpendicularBisector:

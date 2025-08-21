@@ -1,5 +1,5 @@
 from typing import Sequence, Tuple
-from sympy import Expr, Matrix
+from sympy import Expr, Matrix, sqrt
 
 from lib.point import PointToVec3, PointToXY
 
@@ -67,6 +67,24 @@ def LineThroughPoint(
         nx, ny, *rest = normal
         assert rest == [] or rest == [0]
         return Matrix([nx, ny, -nx * x - ny * y])
+
+
+def AngleBisector(line1: Matrix, line2: Matrix) -> Matrix:
+    """Constructs the angle bisector of two lines.
+
+    Chooses the bisector whose points substituted into the lines' equations have
+    the same sign. Negate one of the lines to get the other angle bisector.
+
+    Special cases:
+     - AngleBisector(parallel real lines, opposite direction) = center line
+     - AngleBisector(coincident real lines, same direction) = zero vector
+     - AngleBisector(other parallel real lines, same direction) = ideal line
+     - AngleBisector(ideal line, ideal line) = zero vector
+     - AngleBisector(ideal line, real line) = ideal line
+    """
+    l1 = sqrt(line1[0] ** 2 + line1[1] ** 2)
+    l2 = sqrt(line2[0] ** 2 + line2[1] ** 2)
+    return line1 * l2 - line2 * l1
 
 
 def PerpendicularBisector(

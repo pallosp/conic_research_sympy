@@ -26,6 +26,7 @@
   * [ParallelLine](#line.ParallelLine)
   * [PerpendicularLine](#line.PerpendicularLine)
   * [LineThroughPoint](#line.LineThroughPoint)
+  * [AngleBisector](#line.AngleBisector)
   * [PerpendicularBisector](#line.PerpendicularBisector)
   * [AreParallel](#line.AreParallel)
   * [ArePerpendicular](#line.ArePerpendicular)
@@ -375,6 +376,26 @@ The direction can be specified as
  - an ideal point on the line: `direction=(dx, dy, 0)`
  - a 2D normal vector: `normal=(nx, ny)`
  - an ideal point on the perpendicular line: `normal=(nx, ny, 0)`
+
+<a id="line.AngleBisector"></a>
+
+#### AngleBisector
+
+```python
+def AngleBisector(line1: Matrix, line2: Matrix) -> Matrix
+```
+
+Constructs the angle bisector of two lines.
+
+Chooses the bisector whose points substituted into the lines' equations have
+the same sign. Negate one of the lines to get the other angle bisector.
+
+Special cases:
+ - AngleBisector(parallel real lines, opposite direction) = center line
+ - AngleBisector(coincident real lines, same direction) = zero vector
+ - AngleBisector(other parallel real lines, same direction) = ideal line
+ - AngleBisector(ideal line, ideal line) = zero vector
+ - AngleBisector(ideal line, real line) = ideal line
 
 <a id="line.PerpendicularBisector"></a>
 
