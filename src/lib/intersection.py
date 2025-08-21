@@ -1,7 +1,7 @@
-from typing import Sequence, Tuple
-from sympy import Expr, Matrix, nan, Piecewise, sqrt
-from sympy.core.numbers import NaN
+from collections.abc import Sequence
 
+from sympy import Expr, Matrix, Piecewise, nan, sqrt
+from sympy.core.numbers import NaN
 
 from lib.matrix import NonZeroCross, SkewMatrix
 
@@ -18,7 +18,7 @@ def LineXLine(line1: Matrix, line2: Matrix) -> Matrix:
 def ConicXLine(
     conic: Matrix,
     line: Matrix,
-) -> Tuple[Matrix | Sequence[Expr], Matrix | Sequence[Expr]] | NaN:
+) -> tuple[Matrix | Sequence[Expr], Matrix | Sequence[Expr]] | NaN:
     """Intersects a conic with a line. Returns two points.
 
     Special cases:

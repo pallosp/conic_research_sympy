@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 
-from sympy import Matrix, gcd, pi, pprint, symbols
+from sympy import Expr, Matrix, gcd, pi, pprint, symbols
 
 from lib.polar_conic import PointAtAngle
-
 
 a, b, c, d, e, f, g, h, i, alpha, beta = symbols("a,b,c,d,e,f,g,h,i,alpha,beta")
 polar_matrix = Matrix([[a, b, c], [d, e, f], [g, h, i]])
 
 
-def GetIntersectionOfSecants(end_point_func):
+def GetIntersectionOfSecants(end_point_func: callable[[Expr], Expr]) -> Matrix:
     alpha, beta = symbols("alpha,beta")
 
     p1 = PointAtAngle(polar_matrix, alpha)

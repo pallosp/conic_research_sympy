@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
 from textwrap import indent
+
 from sympy import (
     Eq,
+    Expr,
     Matrix,
     Piecewise,
     Pow,
@@ -19,11 +21,11 @@ from sympy import (
 from lib.conic import ConicFromFocusAndDirectrix
 
 
-def print_indented(expr):
+def print_indented(expr: object) -> None:
     print(indent(pretty(expr), "  "))
 
 
-def println_indented(expr):
+def println_indented(expr: object) -> None:
     print(indent(pretty(expr), "  ") + "\n")
 
 
@@ -77,7 +79,7 @@ min_eigen_fde, max_eigen_fde = (
 )
 
 
-def Add(*eqs):
+def Add(*eqs: Eq) -> Eq:
     left = eqs[0].lhs
     right = eqs[0].rhs
     for term in eqs[1:]:
@@ -86,19 +88,19 @@ def Add(*eqs):
     return Eq(left, right)
 
 
-def Sub(eq0, eq1):
+def Sub(eq0: Eq, eq1: Eq) -> Eq:
     return Eq(eq0.lhs - eq1.lhs, eq0.rhs - eq1.rhs)
 
 
-def Mul(eq, factor):
+def Mul(eq: Eq, factor: Expr) -> Eq:
     return Eq(eq.lhs * factor, eq.rhs * factor)
 
 
-def Div(eq, denom):
+def Div(eq: Eq, denom: Expr) -> Eq:
     return Eq(eq.lhs / denom, eq.rhs / denom)
 
 
-def Swap(eq):
+def Swap(eq: Eq) -> Eq:
     return Eq(eq.rhs, eq.lhs)
 
 

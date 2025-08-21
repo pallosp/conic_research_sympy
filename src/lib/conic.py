@@ -1,3 +1,5 @@
+from collections.abc import Sequence
+
 from sympy import Expr, Function, I, Matrix, Piecewise, Poly, Symbol, abc, sqrt
 
 from lib.matrix import NonZeroCross
@@ -9,8 +11,7 @@ def ConicFromPoly(
     x: Symbol = abc.x,
     y: Symbol = abc.y,
 ) -> Matrix:
-    """
-    Constructs the 3×3 symmetric matrix representation of a conic section
+    """Constructs the 3×3 symmetric matrix representation of a conic section
     from a two-variable quadratic polynomial in the form of
     ```
     ax² + bxy + cy² + dx + ey + f
@@ -33,7 +34,13 @@ def ConicFromPoly(
     return Matrix([[a, b, d], [b, c, e], [d, e, f]])
 
 
-def ConicThroughPoints(p1, p2, p3, p4, p5) -> Matrix:
+def ConicThroughPoints(
+    p1: Matrix | Sequence[Expr],
+    p2: Matrix | Sequence[Expr],
+    p3: Matrix | Sequence[Expr],
+    p4: Matrix | Sequence[Expr],
+    p5: Matrix | Sequence[Expr],
+) -> Matrix:
     """Computes the conic that goes through the given points.
 
     Returns the conic matrix, or a zero matrix if the result is ambiguous.
@@ -53,7 +60,7 @@ def ConicThroughPoints(p1, p2, p3, p4, p5) -> Matrix:
 
 
 def ConicFromFocusAndDirectrix(
-    focus: Matrix, directrix: Matrix, eccentricity: Expr
+    focus: Matrix, directrix: Matrix, eccentricity: Expr,
 ) -> Matrix:
     """Constructs a conic from its focus, directrix and eccentricity.
 
@@ -108,7 +115,7 @@ class IdealPoints(Function):
     """
 
     @classmethod
-    def eval(cls, conic: Matrix):
+    def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None:
         a, b, c = conic[0], conic[1], conic[4]
         disc = sqrt(b * b - a * c)
         cross = NonZeroCross(Matrix([[c, -b - disc, 0], [-b + disc, a, 0], [0, 0, 0]]))

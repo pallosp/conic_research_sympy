@@ -1,4 +1,5 @@
-from typing import Sequence
+from collections.abc import Sequence
+
 from sympy import Expr, Matrix, sqrt
 
 from lib.matrix import ConicMatrix
@@ -35,7 +36,7 @@ def DirectorCircle(conic: Matrix) -> Matrix:
             [-1, 0, d / f],
             [0, -1, e / f],
             [d / f, e / f, -(a + c) / f],
-        ]
+        ],
     )
 
 

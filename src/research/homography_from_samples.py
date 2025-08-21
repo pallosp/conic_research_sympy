@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sympy import Matrix, pprint, symbols, sympify
+from sympy import Expr, Matrix, pprint, symbols, sympify
 
 """Calculates the transformation that maps (xᵢ,yᵢ) to (uᵢ,vᵢ) for i=0..3.
 ᵢ
@@ -26,7 +26,9 @@ u0, v0, u1, v1, u2, v2, u3, v3 = symbols("u0,v0,u1,v1,u2,v2,u3,v3")
 # linear equation system where m is a 8x8 matrix below.
 
 
-def GetTransform(*mappings):
+def GetTransform(
+    *mappings: list[tuple[tuple[Expr, Expr], tuple[Expr, Expr]]],
+) -> Matrix:
     (
         ((x0, y0), (u0, v0)),
         ((x1, y1), (u1, v1)),
@@ -43,10 +45,10 @@ def GetTransform(*mappings):
             [0, 0, 0, x2, y2, 1, -v2 * x2, -v2 * y2],
             [x3, y3, 1, 0, 0, 0, -u3 * x3, -u3 * y3],
             [0, 0, 0, x3, y3, 1, -v3 * x3, -v3 * y3],
-        ]
+        ],
     )
     uv = Matrix([u0, v0, u1, v1, u2, v2, u3, v3])
-    coefficients = list(m.inv() * uv) + [sympify(1)]
+    coefficients = [*list(m.inv() * uv), sympify(1)]
     for i in range(len(coefficients)):
         coefficients[i] = coefficients[i].factor()
     return Matrix(3, 3, coefficients)

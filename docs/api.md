@@ -117,7 +117,7 @@ Returns the higher eigenvalue of a 2x2 symmetric matrix.
 #### MinEigenvalue
 
 ```python
-def MinEigenvalue(symmetric_matrix2x2: Matrix)
+def MinEigenvalue(symmetric_matrix2x2: Matrix) -> Expr
 ```
 
 Returns the lower eigenvalue of a 2x2 symmetric matrix.
@@ -224,7 +224,7 @@ May return
 #### ConicCenter
 
 ```python
-def ConicCenter(conic: Matrix) -> Tuple[Expr, Expr]
+def ConicCenter(conic: Matrix) -> tuple[Expr, Expr]
 ```
 
 Computes the center point of a conic.
@@ -236,7 +236,7 @@ Computes the center point of a conic.
 #### SemiAxisLengths
 
 ```python
-def SemiAxisLengths(conic: Matrix) -> Tuple[Expr, Expr]
+def SemiAxisLengths(conic: Matrix) -> tuple[Expr, Expr]
 ```
 
 Computes the semi-axis lengths of a conic.
@@ -361,8 +361,8 @@ Connects two projective points with a line.
 #### ParallelLine
 
 ```python
-def ParallelLine(withLine: Matrix,
-                 throughPoint: Matrix | Sequence[Expr]) -> Matrix
+def ParallelLine(with_line: Matrix,
+                 through_point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 Constructs a line through a point parallel to a line.
@@ -372,8 +372,8 @@ Constructs a line through a point parallel to a line.
 #### PerpendicularLine
 
 ```python
-def PerpendicularLine(toLine: Matrix,
-                      throughPoint: Matrix | Sequence[Expr]) -> Matrix
+def PerpendicularLine(to_line: Matrix,
+                      through_point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 Constructs a line through a point perpendicular to a line.
@@ -508,7 +508,11 @@ The resulting matrix is:
 #### ConicThroughPoints
 
 ```python
-def ConicThroughPoints(p1, p2, p3, p4, p5) -> Matrix
+def ConicThroughPoints(p1: Matrix | Sequence[Expr],
+                       p2: Matrix | Sequence[Expr],
+                       p3: Matrix | Sequence[Expr],
+                       p4: Matrix | Sequence[Expr],
+                       p5: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 Computes the conic that goes through the given points.
@@ -816,7 +820,7 @@ If the line is the ideal line, returns a zero vector.
 #### PointToXY
 
 ```python
-def PointToXY(point: Matrix | Sequence[Expr]) -> Tuple[Expr, Expr]
+def PointToXY(point: Matrix | Sequence[Expr]) -> tuple[Expr, Expr]
 ```
 
 Computes the Euclidean coordinates of a projective point.
@@ -836,7 +840,7 @@ Computes the homogeneous coordinates of a projective point.
 #### Centroid
 
 ```python
-def Centroid(*points: Sequence[Expr]) -> Tuple[Expr, Expr]
+def Centroid(*points: Sequence[Expr]) -> tuple[Expr, Expr]
 ```
 
 Computes the centroid of a set of points.
@@ -1039,7 +1043,7 @@ coincide.
 ```python
 def ConicXLine(
     conic: Matrix, line: Matrix
-) -> Tuple[Matrix | Sequence[Expr], Matrix | Sequence[Expr]] | NaN
+) -> tuple[Matrix | Sequence[Expr], Matrix | Sequence[Expr]] | NaN
 ```
 
 Intersects a conic with a line. Returns two points.

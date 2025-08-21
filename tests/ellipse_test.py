@@ -1,6 +1,6 @@
 from sympy import factor, pi, simplify, symbols
 
-from lib.central_conic import SemiAxisLengths, ConicCenter
+from lib.central_conic import ConicCenter, SemiAxisLengths
 from lib.circle import UNIT_CIRCLE
 from lib.ellipse import Ellipse, SteinerEllipse, SteinerInellipse
 from lib.matrix import IsNonZeroMultiple, QuadraticForm
@@ -41,7 +41,7 @@ class TestEllipseFromParams:
         center = symbols("x,y")
         r_min, r_diff = symbols("r_min,r_diff", positive=True)
         ellipse = Ellipse(center, r_min, r_min + r_diff, r1_direction=(73, -25))
-        axes = tuple(factor(simplify(len)) for len in SemiAxisLengths(ellipse))
+        axes = tuple(factor(simplify(length)) for length in SemiAxisLengths(ellipse))
         assert (r_min, r_min + r_diff) == axes or (r_min + r_diff, r_min) == axes
 
 

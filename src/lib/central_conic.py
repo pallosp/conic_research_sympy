@@ -1,4 +1,5 @@
-from typing import Sequence, Tuple
+from collections.abc import Sequence
+
 from sympy import Expr, Matrix, Piecewise, sqrt
 
 from lib.matrix import ConicMatrix, MaxEigenvalue, MinEigenvalue
@@ -31,7 +32,7 @@ def ConicFromCenterAndPoints(
             [x1 * x1, x1 * y1, y1 * y1],
             [x2 * x2, x2 * y2, y2 * y2],
             [x3 * x3, x3 * y3, y3 * y3],
-        ]
+        ],
     )
     m1, m2, m3 = m.copy(), m.copy(), m.copy()
     m1[:, 0] = Matrix([1, 1, 1])
@@ -46,15 +47,16 @@ def ConicFromCenterAndPoints(
     return ConicMatrix(a, b, c, d, e, f)
 
 
-def ConicCenter(conic: Matrix) -> Tuple[Expr, Expr]:
+def ConicCenter(conic: Matrix) -> tuple[Expr, Expr]:
     """Computes the center point of a conic.
 
-    *Formula*: ChatGPT"""
+    *Formula*: ChatGPT
+    """
     x, y, z = conic.row(0).cross(conic.row(1))
     return (x / z, y / z)
 
 
-def SemiAxisLengths(conic: Matrix) -> Tuple[Expr, Expr]:
+def SemiAxisLengths(conic: Matrix) -> tuple[Expr, Expr]:
     """Computes the semi-axis lengths of a conic.
 
     *Formula*: ChatGPT

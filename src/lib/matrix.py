@@ -1,4 +1,5 @@
-from typing import Sequence, Tuple
+from collections.abc import Sequence
+
 from sympy import Expr, Function, Matrix, nan, sqrt
 from sympy.core.logic import fuzzy_and
 from sympy.core.numbers import NaN
@@ -30,7 +31,7 @@ def MaxEigenvalue(symmetric_matrix2x2: Matrix) -> Expr:
     return (a + c) / 2 + sqrt((a - c) ** 2 + 4 * b**2) / 2
 
 
-def MinEigenvalue(symmetric_matrix2x2: Matrix):
+def MinEigenvalue(symmetric_matrix2x2: Matrix) -> Expr:
     """Returns the lower eigenvalue of a 2x2 symmetric matrix."""
     assert symmetric_matrix2x2.shape == (2, 2)
     a, b, b2, c = symmetric_matrix2x2
@@ -74,7 +75,7 @@ def SkewMatrix(vector3: Matrix) -> Matrix:
             [0, -z, y],
             [z, 0, -x],
             [-y, x, 0],
-        ]
+        ],
     )
 
 
@@ -87,7 +88,7 @@ class NonZeroCross(Function):
     """
 
     @classmethod
-    def eval(cls, matrix: Matrix) -> Tuple[Matrix, Matrix] | NaN | None:
+    def eval(cls, matrix: Matrix) -> tuple[Matrix, Matrix] | NaN | None:
         all_zero = True
         for i in range(len(matrix)):
             el = matrix[i]
@@ -97,6 +98,7 @@ class NonZeroCross(Function):
                 all_zero = False
         if all_zero:
             return nan
+        return None
 
 
 def IsDefinite(matrix: Matrix) -> bool | None:

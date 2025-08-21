@@ -4,7 +4,6 @@ from sympy import Eq, MatAdd, MatMul, Matrix, pprint, symbols
 
 from lib.distance import PointLineDistance, PointPointDistance
 
-
 print("\nConic equation from focus, directrix and eccentricity:\n")
 
 # eccentricity = |distance(p, focus) / distance(p, directrix)|
@@ -33,7 +32,7 @@ conic_matrix = Matrix(
         [coeffs[x * x], coeffs[x * y] / 2, coeffs[x] / 2],
         [coeffs[x * y] / 2, coeffs[y * y], coeffs[y] / 2],
         [coeffs[x] / 2, coeffs[y] / 2, coeffs[1]],
-    ]
+    ],
 )
 pprint(conic_matrix)
 

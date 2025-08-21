@@ -44,5 +44,5 @@ class TestSplitToLines:
     def test_point_conic(self):
         conic = Circle((0, 0), 0)
         assert AreProjectiveSetsEqual(
-            [Matrix([1, I, 0]), Matrix([1, -I, 0])], SplitToLines(conic)
+            [Matrix([1, I, 0]), Matrix([1, -I, 0])], SplitToLines(conic),
         )

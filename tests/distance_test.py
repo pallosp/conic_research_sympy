@@ -1,7 +1,7 @@
 from sympy import nan
 
 from lib.distance import PointLineDistance, PointPointDistance
-from lib.line import IDEAL_LINE, VerticalLine, X_AXIS
+from lib.line import IDEAL_LINE, X_AXIS, VerticalLine
 from lib.point import IdealPoint
 
 

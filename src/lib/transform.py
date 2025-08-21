@@ -1,4 +1,4 @@
-from sympy import Expr, cos, Matrix, sin
+from sympy import Expr, Matrix, cos, sin
 
 
 def TransformConic(conic: Matrix, transformation: Matrix) -> Matrix:
@@ -25,7 +25,7 @@ def Rotate(angle: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix:
             [cos_angle, -sin_angle, x0 * (1 - cos_angle) + y0 * sin_angle],
             [sin_angle, cos_angle, y0 * (1 - cos_angle) - x0 * sin_angle],
             [0, 0, 1],
-        ]
+        ],
     )
 
 
@@ -38,7 +38,7 @@ def ScaleXY(scale_x: Expr, scale_y: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix:
             [scale_x, 0, x0 * (1 - scale_x)],
             [0, scale_y, y0 * (1 - scale_y)],
             [0, 0, 1],
-        ]
+        ],
     )
 
 

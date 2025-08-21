@@ -1,7 +1,8 @@
-from typing import Sequence
+from collections.abc import Sequence
+
 from sympy import Expr, Matrix, sqrt
 
-from lib.point import PointToXY, PointToVec3
+from lib.point import PointToVec3, PointToXY
 
 
 def PointPointDistance(

@@ -1,11 +1,11 @@
-from sympy import I, Function, Matrix, nan, sqrt, symbols
+from sympy import Function, I, Matrix, nan, sqrt, symbols
 
 from lib.circle import UNIT_CIRCLE
 from lib.degenerate_conic import LinePair
 from lib.intersection import ConicXLine, LineXLine
-from lib.line import HorizontalLine, IDEAL_LINE, VerticalLine, X_AXIS, Y_AXIS
+from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine, VerticalLine
 from lib.matrix import ConicMatrix, IsNonZeroMultiple, QuadraticForm
-from lib.point import IdealPoint, ORIGIN, PointToXY
+from lib.point import ORIGIN, IdealPoint, PointToXY
 
 
 class TestLineXLine:

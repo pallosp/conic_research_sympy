@@ -114,11 +114,11 @@ class TestIsComplexEllipse:
         center = symbols("x,y")
         r = symbols("r1,r2", positive=True)
         imag_r = [r[0] * I, r[1] * I]
-        dir = symbols("dx,dy", positive=True)
+        r1_dir = symbols("dx,dy", positive=True)
         assert IsComplexEllipse(Ellipse(center, *r)) is False
-        assert IsComplexEllipse(Ellipse(center, *r, r1_direction=dir)) is False
+        assert IsComplexEllipse(Ellipse(center, *r, r1_direction=r1_dir)) is False
         assert IsComplexEllipse(Ellipse(center, *imag_r)) is True
-        assert IsComplexEllipse(Ellipse(center, *imag_r, r1_direction=dir)) is True
+        assert IsComplexEllipse(Ellipse(center, *imag_r, r1_direction=r1_dir)) is True
 
     def test_symbolic_point(self):
         point = Circle(symbols("x,y"), 0)

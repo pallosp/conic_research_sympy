@@ -50,7 +50,7 @@ def IsEllipse(conic: Matrix) -> bool | None:
             IsNonDegenerate(conic),
             conic[:2, :2].det().is_positive,
             fuzzy_not(IsDefinite(conic)),
-        ]
+        ],
     )
 
 
@@ -90,7 +90,7 @@ def IsLinePair(conic: Matrix) -> bool | None:
             IsDegenerate(conic),
             fuzzy_not(IsFiniteConic(conic)),
             fuzzy_not(conic.is_zero_matrix),
-        ]
+        ],
     )
 
 
@@ -107,5 +107,5 @@ def IsDoubleLine(conic: Matrix) -> bool | None:
         [
             conic.adjugate().is_zero_matrix,
             fuzzy_not(conic.is_zero_matrix),
-        ]
+        ],
     )

@@ -2,10 +2,9 @@
 
 from sympy import pprint, simplify, sqrt, symbols
 
-from lib.circle import Circle
 from lib.central_conic import ConicCenter, SemiMajorAxis, SemiMinorAxis
+from lib.circle import Circle
 from lib.matrix import ConicMatrix
-
 
 conic = ConicMatrix(*symbols("a,b,c,d,e,f"))
 
@@ -28,6 +27,7 @@ pprint(
         zip(
             [a_adj, b_adj, c_adj, d_adj, e_adj, f_adj],
             symbols("a_adj,b_adj,c_adj,d_adj,e_adj,f_adj"),
+            strict=False,
         ),
-    )
+    ),
 )

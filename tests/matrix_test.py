@@ -54,7 +54,7 @@ class TestEigenvalues:
 class TestConicMatrix:
     def test_conic_matrix(self):
         assert ConicMatrix(1, 2, 3, 4, 5, 6) == Matrix(
-            [[1, 2, 4], [2, 3, 5], [4, 5, 6]]
+            [[1, 2, 4], [2, 3, 5], [4, 5, 6]],
         )
 
 

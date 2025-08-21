@@ -1,10 +1,10 @@
 from sympy import Matrix, pi, sqrt
 from sympy.abc import x, y
 
+from lib.circle import UNIT_CIRCLE, Circle, CircleRadius, DirectorCircle
 from lib.conic import ConicFromPoly
 from lib.ellipse import Ellipse
 from lib.matrix import IsNonZeroMultiple
-from lib.circle import UNIT_CIRCLE, Circle, CircleRadius, DirectorCircle
 
 
 def test_unit_circle():

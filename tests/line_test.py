@@ -3,19 +3,19 @@ from sympy import Matrix, symbols
 from sympy.abc import x, y
 
 from lib.line import (
+    IDEAL_LINE,
+    X_AXIS,
+    Y_AXIS,
     AngleBisector,
     AreParallel,
     ArePerpendicular,
     HorizontalLine,
-    IDEAL_LINE,
     LineBetween,
     LineThroughPoint,
     ParallelLine,
     PerpendicularBisector,
     PerpendicularLine,
     VerticalLine,
-    X_AXIS,
-    Y_AXIS,
 )
 from lib.matrix import IsNonZeroMultiple
 from lib.point import IdealPointOnLine, PointToVec3
@@ -23,7 +23,7 @@ from lib.point import IdealPointOnLine, PointToVec3
 
 class TestPerpendicularLine:
     def test_numeric(self):
-        assert Y_AXIS == PerpendicularLine(X_AXIS, (0, 1))
+        assert PerpendicularLine(X_AXIS, (0, 1)) == Y_AXIS
 
 
 class TestLineThroughPoint:
@@ -44,7 +44,7 @@ class TestLineThroughPoint:
         direction = symbols("dx,dy")
         line = LineThroughPoint(point, direction=direction)
         assert (line.dot(PointToVec3(point))).is_zero
-        assert IdealPointOnLine(line) == Matrix(direction + (0,))
+        assert IdealPointOnLine(line) == Matrix((*direction, 0))
 
     def test_normal_vector_specified(self):
         point = symbols("x,y")

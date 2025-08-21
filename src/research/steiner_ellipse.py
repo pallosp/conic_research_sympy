@@ -6,7 +6,7 @@
 # A special case is the Steiner ellipse, where the conic's center coincides
 # with the centroid of the triangle formed by the perimeter points.
 
-from sympy import pprint, symbols, Matrix
+from sympy import Expr, Matrix, pprint, symbols
 
 from lib.central_conic import ConicCenter
 from lib.matrix import QuadraticForm
@@ -52,7 +52,7 @@ m = Matrix(
         [x1 * x1, x1 * y1, y1 * y1],
         [x2 * x2, x2 * y2, y2 * y2],
         [x3 * x3, x3 * y3, y3 * y3],
-    ]
+    ],
 )
 
 m1, m2, m3 = m.copy(), m.copy(), m.copy()
@@ -65,7 +65,7 @@ conic = Matrix(
         [m1.det(), m2.det() / 2, 0],
         [m2.det() / 2, m3.det(), 0],
         [0, 0, -m.det()],
-    ]
+    ],
 )
 
 assert ConicCenter(conic) == (0, 0)
@@ -118,7 +118,12 @@ steiner /= Matrix([[x1, x2, x3], [y1, y2, y3], [1, 1, 1]]).det() / -18
 a, _, _, b, c, _, d, e, f = (elem.factor() for elem in steiner)
 
 
-def PolyAsDet(poly, col1_options, col2_options, col3_options):
+def PolyAsDet(
+    poly: Expr,
+    col1_options: list[Matrix],
+    col2_options: list[Matrix],
+    col3_options: list[Matrix],
+) -> Matrix:
     """Expresses poly as the determinant of a 3x3 matrix."""
     for c1 in col1_options:
         for c2 in col2_options:
@@ -145,7 +150,7 @@ col_xy_asymmetric = Matrix(
         x1 * y2 - x2 * y1,
         x2 * y3 - x3 * y2,
         x3 * y1 - x1 * y3,
-    ]
+    ],
 )
 col_xy_symmetric = [
     Matrix(
@@ -153,7 +158,7 @@ col_xy_symmetric = [
             x1 * (y2 - y3) - y1 * (x2 - x3),
             x2 * (y3 - y1) - y2 * (x3 - x1),
             x3 * (y1 - y2) - y3 * (x1 - x2),
-        ]
+        ],
     ),
     Matrix([x2 * y3 - x3 * y2, x3 * y1 - x1 * y3, x1 * y2 - x2 * y1]),
 ]

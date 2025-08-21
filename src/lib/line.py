@@ -1,4 +1,5 @@
-from typing import Sequence, Tuple
+from collections.abc import Sequence
+
 from sympy import Expr, Matrix, sqrt
 
 from lib.point import PointToVec3, PointToXY
@@ -23,22 +24,22 @@ def LineBetween(
 
 
 def ParallelLine(
-    withLine: Matrix,
-    throughPoint: Matrix | Sequence[Expr],
+    with_line: Matrix,
+    through_point: Matrix | Sequence[Expr],
 ) -> Matrix:
     """Constructs a line through a point parallel to a line."""
-    x, y = PointToXY(throughPoint)
-    a, b, _ = withLine
+    x, y = PointToXY(through_point)
+    a, b, _ = with_line
     return Matrix([a, b, -a * x - b * y])
 
 
 def PerpendicularLine(
-    toLine: Matrix,
-    throughPoint: Matrix | Sequence[Expr],
+    to_line: Matrix,
+    through_point: Matrix | Sequence[Expr],
 ) -> Matrix:
     """Constructs a line through a point perpendicular to a line."""
-    x, y = PointToXY(throughPoint)
-    a, b, _ = toLine
+    x, y = PointToXY(through_point)
+    a, b, _ = to_line
     return Matrix([-b, a, -b * x + a * y])
 
 
@@ -46,7 +47,7 @@ def LineThroughPoint(
     point: Matrix | Sequence[Expr],
     *,
     direction: Matrix | Sequence[Expr] = None,
-    normal: Matrix | Sequence[Expr] = None
+    normal: Matrix | Sequence[Expr] = None,
 ) -> Matrix:
     """Constructs a line through a point with the given direction.
 
@@ -61,12 +62,11 @@ def LineThroughPoint(
     x, y = PointToXY(point)
     if direction is not None:
         dx, dy, *rest = direction
-        assert rest == [] or rest == [0]
+        assert rest in ([], [0])
         return Matrix([-dy, dx, dy * x - dx * y])
-    else:
-        nx, ny, *rest = normal
-        assert rest == [] or rest == [0]
-        return Matrix([nx, ny, -nx * x - ny * y])
+    nx, ny, *rest = normal
+    assert rest in ([], [0])
+    return Matrix([nx, ny, -nx * x - ny * y])
 
 
 def AngleBisector(line1: Matrix, line2: Matrix) -> Matrix:

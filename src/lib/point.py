@@ -1,4 +1,5 @@
-from typing import Sequence, Tuple
+from collections.abc import Sequence
+
 from sympy import Expr, Matrix, sympify
 
 #: The point at (0, 0)
@@ -21,7 +22,7 @@ def IdealPointOnLine(line: Matrix) -> Matrix:
     return Matrix([line[1], -line[0], 0])
 
 
-def PointToXY(point: Matrix | Sequence[Expr]) -> Tuple[Expr, Expr]:
+def PointToXY(point: Matrix | Sequence[Expr]) -> tuple[Expr, Expr]:
     """Computes the Euclidean coordinates of a projective point."""
     assert len(point) in (2, 3)
     if len(point) == 2:
@@ -40,7 +41,7 @@ def PointToVec3(point: Matrix | Sequence[Expr]) -> Matrix:
     return Matrix(point)
 
 
-def Centroid(*points: Sequence[Expr]) -> Tuple[Expr, Expr]:
+def Centroid(*points: Sequence[Expr]) -> tuple[Expr, Expr]:
     """Computes the centroid of a set of points."""
     n = len(points)
     assert n > 0

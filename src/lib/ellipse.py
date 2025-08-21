@@ -1,4 +1,5 @@
-from typing import Sequence
+from collections.abc import Sequence
+
 from sympy import Expr, Matrix, cos, sin
 
 from lib.matrix import ConicMatrix
@@ -11,7 +12,7 @@ def Ellipse(
     r2: Expr,
     *,
     r1_angle: Expr = None,
-    r1_direction: Expr = None
+    r1_direction: Expr = None,
 ) -> Matrix:
     """Constructs an ellipse from its center, radii and the rotation angle of
     the first radius.
@@ -64,7 +65,7 @@ def SteinerEllipse(
                 x_row,
                 [x1 * y2 - x2 * y1, x2 * y3 - x3 * y2, x3 * y1 - x1 * y3],
                 y_row,
-            ]
+            ],
         ).det()
         * 2
     )
@@ -102,7 +103,7 @@ def SteinerInellipse(
                 [x2 + x3, x3 + x1, x1 + x2],
                 [x2 * y3 - x3 * y2, x3 * y1 - x1 * y3, x1 * y2 - x2 * y1],
                 [y2 + y3, y3 + y1, y1 + y2],
-            ]
+            ],
         ).det()
         / 2
     )

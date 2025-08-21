@@ -1,5 +1,3 @@
-from typing import Tuple
-
 from sympy import Function, Matrix, sqrt
 
 from lib.matrix import NonZeroCross, SkewMatrix
@@ -24,7 +22,7 @@ class SplitToLines(Function):
     """
 
     @classmethod
-    def eval(cls, conic: Matrix) -> Tuple[Matrix, Matrix] | None:
+    def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None:
         adj = conic.adjugate()
         A, C, F = adj.diagonal()
 

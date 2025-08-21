@@ -7,7 +7,7 @@ from lib.central_conic import (
     SemiMajorAxis,
     SemiMinorAxis,
 )
-from lib.circle import Circle, UNIT_CIRCLE
+from lib.circle import UNIT_CIRCLE, Circle
 from lib.conic import ConicFromPoly
 from lib.degenerate_conic import LinePair
 from lib.line import X_AXIS, HorizontalLine

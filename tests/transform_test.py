@@ -1,8 +1,8 @@
 from sympy import pi, simplify, symbols
 
-from lib.circle import Circle
 from lib.central_conic import ConicCenter
-from lib.line import HorizontalLine, LineBetween, X_AXIS
+from lib.circle import Circle
+from lib.line import X_AXIS, HorizontalLine, LineBetween
 from lib.matrix import ConicMatrix, IsNonZeroMultiple
 from lib.transform import (
     Rotate,

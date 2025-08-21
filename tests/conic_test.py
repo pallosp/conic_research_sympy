@@ -8,7 +8,7 @@ from lib.conic import (
     ConicFromPoly,
     ConicThroughPoints,
     Eccentricity,
-    IdealPoints
+    IdealPoints,
 )
 from lib.degenerate_conic import LinePair
 from lib.ellipse import Ellipse
@@ -126,5 +126,6 @@ class TestIdealPoints:
     def test_circle(self):
         ideal_points = IdealPoints(UNIT_CIRCLE)
         assert AreProjectiveSetsEqual(
-            ideal_points, [IdealPoint(1, I), IdealPoint(1, -I)]
+            ideal_points,
+            [IdealPoint(1, I), IdealPoint(1, -I)],
         )
