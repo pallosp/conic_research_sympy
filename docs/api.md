@@ -292,7 +292,8 @@ def CircleRadius(circle: Matrix) -> Expr
 Computes the radius of a circle conic.
 
 The result is not specified if the conic matrix is not a circle.
-The computation is based on `research/director_circle.py`.
+The computation is based on
+[research/director_circle.py](../src/research/director_circle.py).
 
 <a id="circle.DirectorCircle"></a>
 
@@ -306,7 +307,7 @@ Computes the director circle of a conic. It's also called orthoptic
 circle or Fermat–Apollonius circle.
 
 *Definition*: https://en.wikipedia.org/wiki/Director_circle<br>
-*Formula*: `research/director_circle.py`
+*Formula*: [research/director_circle.py](../src/research/director_circle.py)
 
 <a id="circle.UNIT_CIRCLE"></a>
 
@@ -416,7 +417,7 @@ Special cases:
  - AngleBisector(ideal line, ideal line) = zero vector
  - AngleBisector(ideal line, real line) = ideal line
 
-*Formula*: research/angle_bisector.py
+*Formula*: [research/angle_bisector.py](../src/research/angle_bisector.py)
 
 <a id="line.PerpendicularBisector"></a>
 
@@ -529,14 +530,15 @@ def ConicFromFocusAndDirectrix(focus: Matrix, directrix: Matrix,
 
 Constructs a conic from its focus, directrix and eccentricity.
 
-*Formula*: `research/conic_from_focus_and_directrix.py`
+*Formula*:
+[research/conic_from_focus_and_directrix.py](../src/research/conic_from_focus_and_directrix.py)
 
 <a id="conic.Eccentricity"></a>
 
 #### Eccentricity
 
 ```python
-def Eccentricity(conic: Matrix)
+def Eccentricity(conic: Matrix) -> Expr
 ```
 
 Computes the eccentricity of a conic section.
@@ -545,7 +547,8 @@ The result is ambiguous in case of degenerate conics: evaluate
 `(Eccentricity(conic), Eccentricity(-conic))` to get both values.
 
 *Formula*: https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients<br>
-*Own research*: `research/focus_directrix_eccentricity.py`
+*Own research*:
+[research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
 
 <a id="conic.AxisDirection"></a>
 
@@ -561,7 +564,8 @@ namely the ideal point in that direction.
 The result is ambiguous in case of degenerate conics: evaluate
 `(AxisDirection(conic), AxisDirection(-conic))` to get both values.
 
-*Formula*: `research/focus_directrix_eccentricity.py`
+*Formula*:
+[research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
 
 <a id="conic.IdealPoints"></a>
 
@@ -972,7 +976,8 @@ def Ellipse(center: Matrix | Sequence[Expr],
 Constructs an ellipse from its center, radii and the rotation angle of
 the first radius.
 
-*Formula*: `research/ellipse_from_params.py`
+*Formula*:
+[research/ellipse_from_params.py](../src/research/ellipse_from_params.py)
 
 <a id="ellipse.SteinerEllipse"></a>
 
@@ -990,7 +995,7 @@ The ellipse goes through the three points and is centered at the triangle's
 centroid.
 
 *Definition*: https://en.wikipedia.org/wiki/Steiner_ellipse<br>
-*Formula*: `research/steiner_ellipse.py`
+*Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
 
 <a id="ellipse.SteinerInellipse"></a>
 
@@ -1008,7 +1013,7 @@ The ellipse is centered at the triangle's centroid, and is tangent to the
 triangle's sides at their midpoints.
 
 *Definition*: https://en.wikipedia.org/wiki/Steiner_inellipse<br>
-*Formula*: `research/steiner_ellipse.py`
+*Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
 
 <a id="intersection"></a>
 

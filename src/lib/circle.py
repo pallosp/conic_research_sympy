@@ -15,7 +15,8 @@ def CircleRadius(circle: Matrix) -> Expr:
     """Computes the radius of a circle conic.
 
     The result is not specified if the conic matrix is not a circle.
-    The computation is based on `research/director_circle.py`.
+    The computation is based on
+    [research/director_circle.py](../src/research/director_circle.py).
     """
     a, b, c = circle[0], circle[1], circle[4]
     return sqrt(-circle.det() * (a + c) / 2) / (a * c - b * b)
@@ -26,7 +27,7 @@ def DirectorCircle(conic: Matrix) -> Matrix:
     circle or Fermat–Apollonius circle.
 
     *Definition*: https://en.wikipedia.org/wiki/Director_circle<br>
-    *Formula*: `research/director_circle.py`
+    *Formula*: [research/director_circle.py](../src/research/director_circle.py)
     """
     a, _, _, _, c, _, d, e, f = conic.adjugate()
     return Matrix(
