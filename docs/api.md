@@ -25,6 +25,7 @@
   * [LineBetween](#line.LineBetween)
   * [ParallelLine](#line.ParallelLine)
   * [PerpendicularLine](#line.PerpendicularLine)
+  * [LineThroughPoint](#line.LineThroughPoint)
   * [PerpendicularBisector](#line.PerpendicularBisector)
   * [AreParallel](#line.AreParallel)
   * [ArePerpendicular](#line.ArePerpendicular)
@@ -355,6 +356,25 @@ def PerpendicularLine(toLine: Matrix,
 ```
 
 Constructs a line through a point perpendicular to a line.
+
+<a id="line.LineThroughPoint"></a>
+
+#### LineThroughPoint
+
+```python
+def LineThroughPoint(point: Matrix | Sequence[Expr],
+                     *,
+                     direction: Matrix | Sequence[Expr] = None,
+                     normal: Matrix | Sequence[Expr] = None) -> Matrix
+```
+
+Constructs a line through a point with the given direction.
+
+The direction can be specified as
+ - a 2D direction vector: `direction=(dx, dy)`
+ - an ideal point on the line: `direction=(dx, dy, 0)`
+ - a 2D normal vector: `normal=(nx, ny)`
+ - an ideal point on the perpendicular line: `normal=(nx, ny, 0)`
 
 <a id="line.PerpendicularBisector"></a>
 
