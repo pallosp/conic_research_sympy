@@ -28,6 +28,7 @@ where = ["src"]
 [tool.ruff]
 select = [
   "E501",  # line length
+  "F401",  # unused imports
   "T201",  # print statements
   "TID251",  # banned API usage
 ]
