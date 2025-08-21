@@ -5,7 +5,6 @@ from lib.matrix import ConicMatrix
 from lib.point import ORIGIN, PointToXY
 
 
-
 def Circle(center: Matrix | Sequence[Expr], radius: Expr) -> Matrix:
     """Creates a circle from its center and radius."""
     x, y = PointToXY(center)
@@ -39,5 +38,8 @@ def DirectorCircle(conic: Matrix) -> Matrix:
     )
 
 
+#: The circle at the origin with radius 1.
 UNIT_CIRCLE = Circle(ORIGIN, 1)
+
+#: The circle at the origin with radius 𝑖.
 COMPLEX_UNIT_CIRCLE = Matrix.eye(3)

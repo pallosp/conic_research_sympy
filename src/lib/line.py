@@ -121,6 +121,13 @@ def ArePerpendicular(line1: Matrix, line2: Matrix) -> bool | None:
     return (a1 * a2 + b1 * b2).expand().is_zero
 
 
+#: The projective line at infinity.
 IDEAL_LINE = Matrix([0, 0, 1])
+
+#: The horizontal line at y=0. Substituting a point at y>0 to the line's
+#: equation will evaluate to a positive value.
 X_AXIS = HorizontalLine(0)
+
+#: The vertical line at x=0. Substituting a point at x<0 to the line's equation
+#: will evaluate to a positive value.
 Y_AXIS = VerticalLine(0)

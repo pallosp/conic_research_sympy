@@ -16,6 +16,7 @@ from sympy import Expr, cos, Matrix, sin
 from lib.circle import UNIT_CIRCLE
 
 
+#: The circle at the origin with radius 1, in polar matrix form.
 POLAR_UNIT_CIRCLE = Matrix.eye(3)
 
 

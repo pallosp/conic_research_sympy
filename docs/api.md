@@ -19,6 +19,8 @@
   * [Circle](#circle.Circle)
   * [CircleRadius](#circle.CircleRadius)
   * [DirectorCircle](#circle.DirectorCircle)
+  * [UNIT\_CIRCLE](#circle.UNIT_CIRCLE)
+  * [COMPLEX\_UNIT\_CIRCLE](#circle.COMPLEX_UNIT_CIRCLE)
 * [line](#line)
   * [HorizontalLine](#line.HorizontalLine)
   * [VerticalLine](#line.VerticalLine)
@@ -30,6 +32,9 @@
   * [PerpendicularBisector](#line.PerpendicularBisector)
   * [AreParallel](#line.AreParallel)
   * [ArePerpendicular](#line.ArePerpendicular)
+  * [IDEAL\_LINE](#line.IDEAL_LINE)
+  * [X\_AXIS](#line.X_AXIS)
+  * [Y\_AXIS](#line.Y_AXIS)
 * [conic](#conic)
   * [ConicFromPoly](#conic.ConicFromPoly)
   * [ConicThroughPoints](#conic.ConicThroughPoints)
@@ -55,6 +60,7 @@
   * [IsLinePair](#conic_classification.IsLinePair)
   * [IsDoubleLine](#conic_classification.IsDoubleLine)
 * [point](#point)
+  * [ORIGIN](#point.ORIGIN)
   * [IdealPoint](#point.IdealPoint)
   * [IdealPointOnLine](#point.IdealPointOnLine)
   * [PointToXY](#point.PointToXY)
@@ -68,6 +74,7 @@
   * [ScaleXY](#transform.ScaleXY)
   * [Scale](#transform.Scale)
 * [polar\_conic](#polar_conic)
+  * [POLAR\_UNIT\_CIRCLE](#polar_conic.POLAR_UNIT_CIRCLE)
   * [PointAtAngle](#polar_conic.PointAtAngle)
   * [ConicFromPolarMatrix](#polar_conic.ConicFromPolarMatrix)
 * [ellipse](#ellipse)
@@ -301,6 +308,18 @@ circle or Fermat–Apollonius circle.
 Definition: https://en.wikipedia.org/wiki/Director_circle<br>
 Formula: `research/director_circle.py`
 
+<a id="circle.UNIT_CIRCLE"></a>
+
+#### UNIT\_CIRCLE
+
+The circle at the origin with radius 1.
+
+<a id="circle.COMPLEX_UNIT_CIRCLE"></a>
+
+#### COMPLEX\_UNIT\_CIRCLE
+
+The circle at the origin with radius 𝑖.
+
 <a id="line"></a>
 
 # line
@@ -435,6 +454,26 @@ Tells whether line1 and line2 are perpendicular.
 
 Returns True if they are perpendicular, False if not, None if undecidable.
 Considers the ideal line perpendicular to everything.
+
+<a id="line.IDEAL_LINE"></a>
+
+#### IDEAL\_LINE
+
+The projective line at infinity.
+
+<a id="line.X_AXIS"></a>
+
+#### X\_AXIS
+
+The horizontal line at y=0. Substituting a point at y>0 to the line's
+equation will evaluate to a positive value.
+
+<a id="line.Y_AXIS"></a>
+
+#### Y\_AXIS
+
+The vertical line at x=0. Substituting a point at x<0 to the line's equation
+will evaluate to a positive value.
 
 <a id="conic"></a>
 
@@ -737,6 +776,12 @@ Returns None if undecidable.
 
 # point
 
+<a id="point.ORIGIN"></a>
+
+#### ORIGIN
+
+The point at (0, 0)
+
 <a id="point.IdealPoint"></a>
 
 #### IdealPoint
@@ -876,6 +921,12 @@ projective transformation:
 C(θ) = [d e f] * [sin θ]
        [g h i]   [  1  ]
 ```
+
+<a id="polar_conic.POLAR_UNIT_CIRCLE"></a>
+
+#### POLAR\_UNIT\_CIRCLE
+
+The circle at the origin with radius 1, in polar matrix form.
 
 <a id="polar_conic.PointAtAngle"></a>
 

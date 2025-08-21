@@ -1,6 +1,7 @@
 from typing import Sequence, Tuple
 from sympy import Expr, Matrix, sympify
 
+#: The point at (0, 0)
 ORIGIN = Matrix([0, 0, 1])
 
 
