@@ -15,7 +15,7 @@ from lib.conic import (
 from lib.degenerate_conic import LinePair
 from lib.ellipse import Ellipse
 from lib.intersection import ConicXLine
-from lib.line import X_AXIS, Y_AXIS, LineThroughPoint
+from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, LineThroughPoint
 from lib.matrix import ConicMatrix, IsNonZeroMultiple, QuadraticForm
 from lib.point import IdealPoint, PointToVec3
 from tests.util import AreProjectiveSetsEqual
@@ -140,6 +140,12 @@ class TestPolePolar:
         pole = Matrix(symbols("x y z"))
         polar = PolarLine(conic, pole)
         assert IsNonZeroMultiple(pole, PolePoint(conic, polar))
+
+    def test_polar_of_circle_center(self):
+        center = (2, 3)
+        circle = Circle(center, 4)
+        polar_line = PolarLine(circle, center)
+        assert IsNonZeroMultiple(polar_line, IDEAL_LINE)
 
     def test_polar_of_point_on_conic(self):
         hyperbola = ConicFromPoly(x * y - 6)

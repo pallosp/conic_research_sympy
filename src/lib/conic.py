@@ -60,7 +60,7 @@ def ConicThroughPoints(
 
 
 def ConicFromFocusAndDirectrix(
-    focus: Matrix,
+    focus: Matrix | Sequence[Expr],
     directrix: Matrix,
     eccentricity: Expr,
 ) -> Matrix:
@@ -135,10 +135,10 @@ def PolePoint(conic: Matrix, polar_line: Matrix) -> Matrix:
     return conic.adjugate() * polar_line
 
 
-def PolarLine(conic: Matrix, pole_point: Matrix) -> Matrix:
+def PolarLine(conic: Matrix, pole_point: Matrix | Sequence[Expr]) -> Matrix:
     """Computes the polar line of a conic with respect to the given pole point.
 
     *Pole / polar identity*: `conic * pole_point = polar_line`
     *Source*: https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line
     """
-    return conic * pole_point
+    return conic * PointToVec3(pole_point)

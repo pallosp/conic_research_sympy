@@ -530,7 +530,8 @@ Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 10.1
 #### ConicFromFocusAndDirectrix
 
 ```python
-def ConicFromFocusAndDirectrix(focus: Matrix, directrix: Matrix,
+def ConicFromFocusAndDirectrix(focus: Matrix | Sequence[Expr],
+                               directrix: Matrix,
                                eccentricity: Expr) -> Matrix
 ```
 
@@ -606,7 +607,7 @@ Computes the pole point of a conic with respect to the given polar line.
 #### PolarLine
 
 ```python
-def PolarLine(conic: Matrix, pole_point: Matrix) -> Matrix
+def PolarLine(conic: Matrix, pole_point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 Computes the polar line of a conic with respect to the given pole point.
