@@ -9,11 +9,14 @@ from lib.conic import (
     ConicThroughPoints,
     Eccentricity,
     IdealPoints,
+    PolarLine,
+    PolePoint,
 )
 from lib.degenerate_conic import LinePair
 from lib.ellipse import Ellipse
-from lib.line import X_AXIS, Y_AXIS
-from lib.matrix import IsNonZeroMultiple, QuadraticForm
+from lib.intersection import ConicXLine
+from lib.line import X_AXIS, Y_AXIS, LineThroughPoint
+from lib.matrix import ConicMatrix, IsNonZeroMultiple, QuadraticForm
 from lib.point import IdealPoint, PointToVec3
 from tests.util import AreProjectiveSetsEqual
 
@@ -129,3 +132,25 @@ class TestIdealPoints:
             ideal_points,
             [IdealPoint(1, I), IdealPoint(1, -I)],
         )
+
+
+class TestPolePolar:
+    def test_pole_polar_reciprocity(self):
+        conic = ConicMatrix(*symbols("a b c d e f"))
+        pole = Matrix(symbols("x y z"))
+        polar = PolarLine(conic, pole)
+        assert IsNonZeroMultiple(pole, PolePoint(conic, polar))
+
+    def test_polar_of_point_on_conic(self):
+        hyperbola = ConicFromPoly(x * y - 6)
+        point = Matrix([3, 2, 1])
+        polar_line = PolarLine(hyperbola, point)
+        assert point.dot(polar_line) == 0
+        intersections = ConicXLine(hyperbola, polar_line)
+        assert intersections[0] == intersections[1]  # tangent line
+
+    def test_pole_of_line_tangent_to_conic(self):
+        circle = Circle((0, 0), 5)
+        tangent_line = LineThroughPoint((3, 4), direction=(-4, 3))
+        pole_point = PolePoint(circle, tangent_line)
+        assert QuadraticForm(circle, pole_point) == 0

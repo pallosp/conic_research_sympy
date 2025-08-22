@@ -60,7 +60,9 @@ def ConicThroughPoints(
 
 
 def ConicFromFocusAndDirectrix(
-    focus: Matrix, directrix: Matrix, eccentricity: Expr,
+    focus: Matrix,
+    directrix: Matrix,
+    eccentricity: Expr,
 ) -> Matrix:
     """Constructs a conic from its focus, directrix and eccentricity.
 
@@ -122,3 +124,21 @@ class IdealPoints(Function):
         if isinstance(cross, NonZeroCross):
             return None
         return (cross[0], cross[1].T)
+
+
+def PolePoint(conic: Matrix, polar_line: Matrix) -> Matrix:
+    """Computes the pole point of a conic with respect to the given polar line.
+
+    *Pole / polar identity*: `conic * pole_point = polar_line`<br>
+    *Source*: https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line
+    """
+    return conic.adjugate() * polar_line
+
+
+def PolarLine(conic: Matrix, pole_point: Matrix) -> Matrix:
+    """Computes the polar line of a conic with respect to the given pole point.
+
+    *Pole / polar identity*: `conic * pole_point = polar_line`
+    *Source*: https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line
+    """
+    return conic * pole_point

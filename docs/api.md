@@ -42,6 +42,8 @@
   * [Eccentricity](#conic.Eccentricity)
   * [AxisDirection](#conic.AxisDirection)
   * [IdealPoints](#conic.IdealPoints)
+  * [PolePoint](#conic.PolePoint)
+  * [PolarLine](#conic.PolarLine)
 * [degenerate\_conic](#degenerate_conic)
   * [LinePair](#degenerate_conic.LinePair)
   * [SplitToLines](#degenerate_conic.SplitToLines)
@@ -585,6 +587,32 @@ Returns two points. Special cases:
  - For parabolas these are the same point.
  - For ellipses these are the complex conjugates of each other.
  - For symbolic conics returns an unevaluated `sympy.Function`.
+
+<a id="conic.PolePoint"></a>
+
+#### PolePoint
+
+```python
+def PolePoint(conic: Matrix, polar_line: Matrix) -> Matrix
+```
+
+Computes the pole point of a conic with respect to the given polar line.
+
+*Pole / polar identity*: `conic * pole_point = polar_line`<br>
+*Source*: https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line
+
+<a id="conic.PolarLine"></a>
+
+#### PolarLine
+
+```python
+def PolarLine(conic: Matrix, pole_point: Matrix) -> Matrix
+```
+
+Computes the polar line of a conic with respect to the given pole point.
+
+*Pole / polar identity*: `conic * pole_point = polar_line`
+*Source*: https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line
 
 <a id="degenerate_conic"></a>
 
