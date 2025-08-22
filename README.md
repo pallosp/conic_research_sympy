@@ -3,11 +3,9 @@
 This project provides a symbolic framework for working with classic Euclidean
 and projective geometry in 2D. Built on top of [SymPy](https://www.sympy.org/),
 it offers tools to construct, transform, and analyze geometric entities such as
-points, lines and conics in projective space. It supports classification
-(ellipse, parabola, hyperbola, degenerate cases), symbolic manipulation of conic
-matrices, intersections, distances, and projective transformations.
+points, lines, and conics in projective space.
 
-The API includes:
+The API supports:
 
 - Conic representation in quadratic and polar forms
 - Constructing conics from 5 points, focus/directrix, center/radii, and more
