@@ -2,7 +2,7 @@ from collections.abc import Sequence
 
 from sympy import Expr, Function, I, Matrix, Piecewise, Poly, Symbol, abc, sqrt
 
-from lib.matrix import NonZeroCross
+from lib.matrix import NonZeroCross, QuadraticForm
 from lib.point import PointToVec3, PointToXY
 
 
@@ -142,3 +142,8 @@ def PolarLine(conic: Matrix, pole_point: Matrix | Sequence[Expr]) -> Matrix:
     *Source*: https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line
     """
     return conic * PointToVec3(pole_point)
+
+
+def ConicContainsPoint(conic: Matrix, point: Matrix | Sequence[Expr]) -> bool:
+    """Checks if a point lies on a conic."""
+    return QuadraticForm(conic, PointToVec3(point)).equals(0)

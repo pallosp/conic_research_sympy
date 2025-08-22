@@ -4,6 +4,7 @@ from sympy.abc import x, y
 from lib.circle import UNIT_CIRCLE, Circle
 from lib.conic import (
     AxisDirection,
+    ConicContainsPoint,
     ConicFromFocusAndDirectrix,
     ConicFromPoly,
     ConicThroughPoints,
@@ -17,7 +18,7 @@ from lib.ellipse import Ellipse
 from lib.intersection import ConicXLine
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, LineThroughPoint
 from lib.matrix import ConicMatrix, IsNonZeroMultiple, QuadraticForm
-from lib.point import IdealPoint, PointToVec3
+from lib.point import IdealPoint
 from tests.util import AreProjectiveSetsEqual
 
 
@@ -40,7 +41,7 @@ class TestConicThroughPoints:
         p1, p2, p3, p4, p5 = (1, 2), (2, 3), (3, 5), (5, 8), (8, 13)
         conic = ConicThroughPoints(p1, p2, p3, p4, p5)
         for p in p1, p2, p3, p4, p5:
-            assert QuadraticForm(conic, PointToVec3(p)) == 0
+            assert ConicContainsPoint(conic, p)
 
     def test_line_pair(self):
         p1, p2, p3, p4, p5 = (0, 0), (1, 0), (0, 1), (-1, 0), (0, -1)
@@ -159,4 +160,4 @@ class TestPolePolar:
         circle = Circle((0, 0), 5)
         tangent_line = LineThroughPoint((3, 4), direction=(-4, 3))
         pole_point = PolePoint(circle, tangent_line)
-        assert QuadraticForm(circle, pole_point) == 0
+        assert ConicContainsPoint(circle, pole_point)

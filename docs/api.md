@@ -44,6 +44,7 @@
   * [IdealPoints](#conic.IdealPoints)
   * [PolePoint](#conic.PolePoint)
   * [PolarLine](#conic.PolarLine)
+  * [ConicContainsPoint](#conic.ConicContainsPoint)
 * [degenerate\_conic](#degenerate_conic)
   * [LinePair](#degenerate_conic.LinePair)
   * [SplitToLines](#degenerate_conic.SplitToLines)
@@ -614,6 +615,16 @@ Computes the polar line of a conic with respect to the given pole point.
 
 *Pole / polar identity*: `conic * pole_point = polar_line`
 *Source*: https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line
+
+<a id="conic.ConicContainsPoint"></a>
+
+#### ConicContainsPoint
+
+```python
+def ConicContainsPoint(conic: Matrix, point: Matrix | Sequence[Expr]) -> bool
+```
+
+Checks if a point lies on a conic.
 
 <a id="degenerate_conic"></a>
 

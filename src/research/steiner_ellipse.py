@@ -9,7 +9,7 @@
 from sympy import Expr, Matrix, pprint, symbols
 
 from lib.central_conic import ConicCenter
-from lib.matrix import QuadraticForm
+from lib.conic import ConicContainsPoint
 from lib.transform import TransformConic, Translate
 
 # Simplification WLOG: let the center point be at (0, 0).
@@ -69,9 +69,9 @@ conic = Matrix(
 )
 
 assert ConicCenter(conic) == (0, 0)
-assert QuadraticForm(conic, Matrix([x1, y1, 1])).equals(0)
-assert QuadraticForm(conic, Matrix([x2, y2, 1])).equals(0)
-assert QuadraticForm(conic, Matrix([x3, y3, 1])).equals(0)
+assert ConicContainsPoint(conic, Matrix([x1, y1, 1]))
+assert ConicContainsPoint(conic, Matrix([x2, y2, 1]))
+assert ConicContainsPoint(conic, Matrix([x3, y3, 1]))
 
 # Generalization for arbitrary center point (xc, yc)
 #
@@ -105,7 +105,7 @@ substitutions = {
 conic = TransformConic(conic.subs(substitutions), Translate(xc, yc))
 
 assert ConicCenter(conic)[0].equals(xc)
-assert QuadraticForm(conic, Matrix([x1, y1, 1])).equals(0)
+assert ConicContainsPoint(conic, Matrix([x1, y1, 1]))
 
 # The Steiner ellipse is a special case when xc = (x₁+x₂+x₃)/3 and
 # yc = (y₁+y₂+y₃)/3.

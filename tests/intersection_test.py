@@ -1,10 +1,11 @@
 from sympy import Function, I, Matrix, nan, sqrt, symbols
 
 from lib.circle import UNIT_CIRCLE
+from lib.conic import ConicContainsPoint
 from lib.degenerate_conic import LinePair
 from lib.intersection import ConicXLine, LineXLine
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine, VerticalLine
-from lib.matrix import ConicMatrix, IsNonZeroMultiple, QuadraticForm
+from lib.matrix import ConicMatrix, IsNonZeroMultiple
 from lib.point import ORIGIN, IdealPoint, PointToXY
 
 
@@ -30,8 +31,8 @@ class TestConicXLine:
         conic = ConicMatrix(1, 2, 3, 4, 5, 6)
         line = Matrix([1, 2, 3])
         p1, p2 = ConicXLine(conic, line)
-        assert QuadraticForm(conic, p1).equals(0)
-        assert QuadraticForm(conic, p2).equals(0)
+        assert ConicContainsPoint(conic, p1)
+        assert ConicContainsPoint(conic, p2)
 
     def test_x_y_axes_conic(self):
         conic = LinePair(X_AXIS, Y_AXIS)

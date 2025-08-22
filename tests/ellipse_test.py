@@ -2,8 +2,9 @@ from sympy import factor, pi, simplify, symbols
 
 from lib.central_conic import ConicCenter, SemiAxisLengths
 from lib.circle import UNIT_CIRCLE
+from lib.conic import ConicContainsPoint
 from lib.ellipse import Ellipse, SteinerEllipse, SteinerInellipse
-from lib.matrix import IsNonZeroMultiple, QuadraticForm
+from lib.matrix import IsNonZeroMultiple
 from lib.point import ORIGIN, Centroid, PointToVec3
 
 
@@ -51,9 +52,9 @@ class TestSteinerEllipse:
         p2 = (7, 3)
         p3 = (5, 5)
         ellipse = SteinerEllipse(p1, p2, p3)
-        assert QuadraticForm(ellipse, PointToVec3(p1)).equals(0)
-        assert QuadraticForm(ellipse, PointToVec3(p2)).equals(0)
-        assert QuadraticForm(ellipse, PointToVec3(p3)).equals(0)
+        assert ConicContainsPoint(ellipse, PointToVec3(p1))
+        assert ConicContainsPoint(ellipse, PointToVec3(p2))
+        assert ConicContainsPoint(ellipse, PointToVec3(p3))
         assert ConicCenter(ellipse) == Centroid(p1, p2, p3)
 
     def test_inellipse(self):
@@ -61,7 +62,7 @@ class TestSteinerEllipse:
         p2 = (7, 3)
         p3 = (5, 5)
         ellipse = SteinerInellipse(p1, p2, p3)
-        assert QuadraticForm(ellipse, PointToVec3(Centroid(p2, p3))).equals(0)
-        assert QuadraticForm(ellipse, PointToVec3(Centroid(p3, p1))).equals(0)
-        assert QuadraticForm(ellipse, PointToVec3(Centroid(p1, p2))).equals(0)
+        assert ConicContainsPoint(ellipse, PointToVec3(Centroid(p2, p3)))
+        assert ConicContainsPoint(ellipse, PointToVec3(Centroid(p3, p1)))
+        assert ConicContainsPoint(ellipse, PointToVec3(Centroid(p1, p2)))
         assert ConicCenter(ellipse) == Centroid(p1, p2, p3)
