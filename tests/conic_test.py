@@ -210,3 +210,15 @@ class TestConicContainsLine:
         assert ConicContainsLine(conic, line2) is True
         assert ConicContainsLine(conic, Y_AXIS) is None
         assert ConicContainsLine(conic, IDEAL_LINE) is None
+
+    def test_coincident_line_pair_numeric(self):
+        conic = LinePair(X_AXIS, X_AXIS)
+        assert ConicContainsLine(conic, X_AXIS) is True
+        assert ConicContainsLine(conic, Y_AXIS) is False
+        assert ConicContainsLine(conic, HorizontalLine(1)) is False
+
+    def test_point_conic_numeric(self):
+        conic = Circle((0, 0), 0)
+        assert ConicContainsLine(conic, X_AXIS) is False
+        assert ConicContainsLine(conic, HorizontalLine(1)) is False
+        assert ConicContainsLine(conic, Matrix([1, I, 0])) is True
