@@ -16,9 +16,9 @@ from lib.conic import (
 from lib.degenerate_conic import LinePair
 from lib.ellipse import Ellipse
 from lib.intersection import ConicXLine
-from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, LineThroughPoint
+from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine, LineThroughPoint
 from lib.matrix import ConicMatrix, IsNonZeroMultiple, QuadraticForm
-from lib.point import IdealPoint
+from lib.point import ORIGIN, IdealPoint
 from tests.util import AreProjectiveSetsEqual
 
 
@@ -161,6 +161,17 @@ class TestPolePolar:
         tangent_line = LineThroughPoint((3, 4), direction=(-4, 3))
         pole_point = PolePoint(circle, tangent_line)
         assert ConicContainsPoint(circle, pole_point)
+
+    def test_line_pair_conic(self):
+        conic = LinePair(X_AXIS, Y_AXIS)
+        # one of the lines
+        assert PolePoint(conic, X_AXIS).is_zero_matrix
+        # concurrent line
+        assert PolePoint(conic, Matrix([1, 1, 0])).is_zero_matrix
+        # any other line
+        assert IsNonZeroMultiple(PolePoint(conic, HorizontalLine(1)), ORIGIN)
+        assert IsNonZeroMultiple(PolePoint(conic, Matrix([1, 2, 3])), ORIGIN)
+        assert IsNonZeroMultiple(PolePoint(conic, IDEAL_LINE), ORIGIN)
 
 
 class TestConicContainsPoint:
