@@ -8,6 +8,7 @@ from lib.point import PointToVec3, PointToXY
 
 def ConicFromPoly(
     poly: Expr | Poly,
+    *,
     x: Symbol = abc.x,
     y: Symbol = abc.y,
 ) -> Matrix:
@@ -144,6 +145,9 @@ def PolarLine(conic: Matrix, pole_point: Matrix | Sequence[Expr]) -> Matrix:
     return conic * PointToVec3(pole_point)
 
 
-def ConicContainsPoint(conic: Matrix, point: Matrix | Sequence[Expr]) -> bool:
-    """Checks if a point lies on a conic."""
-    return QuadraticForm(conic, PointToVec3(point)).equals(0)
+def ConicContainsPoint(conic: Matrix, point: Matrix | Sequence[Expr]) -> bool | None:
+    """Checks if a point lies on a conic.
+
+    Returns None if undecidable.
+    """
+    return QuadraticForm(conic, PointToVec3(point)).is_zero

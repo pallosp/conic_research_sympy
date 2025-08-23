@@ -161,3 +161,18 @@ class TestPolePolar:
         tangent_line = LineThroughPoint((3, 4), direction=(-4, 3))
         pole_point = PolePoint(circle, tangent_line)
         assert ConicContainsPoint(circle, pole_point)
+
+
+class TestConicContainsPoint:
+    def test_numeric(self):
+        conic = ConicFromPoly(x * y - 6)
+        assert ConicContainsPoint(conic, (3, 2)) is True
+        assert ConicContainsPoint(conic, (1, 0, 0)) is True
+        assert ConicContainsPoint(conic, (1, 1, 0)) is False
+
+    def test_symbolic(self):
+        x, y = symbols("x y", real=True)
+        conic = ConicFromPoly(x * y - 6, x=x, y=y)
+        assert ConicContainsPoint(conic, (x, y)) is None
+        assert ConicContainsPoint(conic, (x, 0, 0)) is True
+        assert ConicContainsPoint(conic, (x, -x)) is False
