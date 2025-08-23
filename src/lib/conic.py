@@ -130,6 +130,11 @@ class IdealPoints(Function):
 def PolePoint(conic: Matrix, polar_line: Matrix) -> Matrix:
     """Computes the pole point of a conic with respect to the given polar line.
 
+    If the conic is degenerate, i.e. it factors into `l₁` and `l₂` real or
+    complex conjugate lines, the pole is
+     - the zero vector if `l₁`, `l₂`, and `polar_line` are concurrent;
+     - the intersection of `l₁` and `l₂` otherwise.
+
     *Pole / polar identity*: `conic * pole_point = polar_line`<br>
     *Source*: https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line
     """

@@ -173,6 +173,12 @@ class TestPolePolar:
         assert IsNonZeroMultiple(PolePoint(conic, Matrix([1, 2, 3])), ORIGIN)
         assert IsNonZeroMultiple(PolePoint(conic, IDEAL_LINE), ORIGIN)
 
+    def test_point_conic(self):
+        conic = Circle((3, 2), 0)
+        assert IsNonZeroMultiple(PolePoint(conic, X_AXIS), (3, 2, 1))
+        assert IsNonZeroMultiple(PolePoint(conic, IDEAL_LINE), (3, 2, 1))
+        assert PolePoint(conic, HorizontalLine(2)).is_zero_matrix
+
 
 class TestConicContainsPoint:
     def test_numeric(self):
