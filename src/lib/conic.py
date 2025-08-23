@@ -1,6 +1,7 @@
 from collections.abc import Sequence
 
 from sympy import Expr, Function, I, Matrix, Piecewise, Poly, Symbol, abc, sqrt
+from sympy.core.logic import fuzzy_and
 
 from lib.matrix import NonZeroCross, QuadraticForm
 from lib.point import PointToVec3, PointToXY
@@ -156,3 +157,21 @@ def ConicContainsPoint(conic: Matrix, point: Matrix | Sequence[Expr]) -> bool | 
     Returns None if undecidable.
     """
     return QuadraticForm(conic, PointToVec3(point)).is_zero
+
+
+def ConicContainsLine(conic: Matrix, line: Matrix) -> bool | None:
+    """Checks if a line lies on a conic.
+
+    Returns None if undecidable.
+    """
+    a, b, c = line
+    return fuzzy_and(
+        [
+            # Is `line` concurrent to the conic lines?
+            PolePoint(conic, line).is_zero_matrix,
+            # Do at least two different points of `line` lie on `conic`?
+            QuadraticForm(conic, Matrix([0, -c, b])).is_zero,
+            QuadraticForm(conic, Matrix([c, 0, -a])).is_zero,
+            QuadraticForm(conic, Matrix([-b, a, 0])).is_zero,
+        ],
+    )

@@ -4,6 +4,7 @@ from sympy.abc import x, y
 from lib.circle import UNIT_CIRCLE, Circle
 from lib.conic import (
     AxisDirection,
+    ConicContainsLine,
     ConicContainsPoint,
     ConicFromFocusAndDirectrix,
     ConicFromPoly,
@@ -193,3 +194,19 @@ class TestConicContainsPoint:
         assert ConicContainsPoint(conic, (x, y)) is None
         assert ConicContainsPoint(conic, (x, 0, 0)) is True
         assert ConicContainsPoint(conic, (x, -x)) is False
+
+
+class TestConicContainsLine:
+    def test_circle_symbolic(self):
+        circle = Circle((1, 2), 3)
+        line = Matrix(symbols("a b c", positive=True))
+        assert ConicContainsLine(circle, line) is False
+
+    def test_line_pair_symbolic(self):
+        line1 = Matrix(symbols("a b c"))
+        line2 = X_AXIS
+        conic = LinePair(line1, line2)
+        assert ConicContainsLine(conic, line1) is True
+        assert ConicContainsLine(conic, line2) is True
+        assert ConicContainsLine(conic, Y_AXIS) is None
+        assert ConicContainsLine(conic, IDEAL_LINE) is None
