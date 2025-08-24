@@ -18,7 +18,7 @@ class TestIdealPointOnLine:
 
 class TestCentroid:
     def test_no_points(self):
-        with pytest.raises(AssertionError):
+        with pytest.raises(ValueError, match="At least one point"):
             Centroid()
 
     def test_one_point(self):

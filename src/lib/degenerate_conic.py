@@ -5,8 +5,8 @@ from lib.matrix import NonZeroCross, SkewMatrix
 
 def LinePair(line1: Matrix, line2: Matrix) -> Matrix:
     """Constructs a conic section from two projective lines."""
-    assert line1.shape == (3, 1)
-    assert line2.shape == (3, 1)
+    if line1.shape != (3, 1) or line2.shape != (3, 1):
+        raise ValueError("The lines must be 3-dimensional column vectors.")
     return (line1 * line2.T + line2 * line1.T) / 2
 
 

@@ -46,13 +46,19 @@ ignore = [
   "PLR2004",  # Magic value used in comparison
   "RUF002",  # Ambiguous Unicode character in docstring
   "RUF003",  # Ambiguous Unicode character in comment
-  "S101",  # Use of `assert` detected
   "TRY003",  # Use Exception subclasses instead of messages
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"src/research/*.py" = ["T201", "TID251"]
-"tests/*.py" = ["ANN201", "D101"]
+"src/research/*.py" = [
+  "T201",  # print statement
+  "TID251",  # banned API (configured below)
+]
+"tests/*.py" = [
+  "ANN201",  # Missing return type annotation
+  "D101",  # Missing function docstring
+  "S101",  # Use of `assert` detected
+]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "sympy.pprint".msg = "Do not use sympy.pprint outside src/research"

@@ -58,14 +58,17 @@ def LineThroughPoint(
      - an ideal point on the perpendicular line: `normal=(nx, ny, 0)`
     """
     # Exactly one of direction or normal must be specified
-    assert (direction is not None) != (normal is not None)
+    if (direction is None) == (normal is None):
+        raise ValueError("Specify exactly one of direction or normal.")
     x, y = PointToXY(point)
     if direction is not None:
         dx, dy, *rest = direction
-        assert rest in ([], [0])
+        if rest not in ([], [0]):
+            raise ValueError("Invalid direction vector.")
         return Matrix([-dy, dx, dy * x - dx * y])
     nx, ny, *rest = normal
-    assert rest in ([], [0])
+    if rest not in ([], [0]):
+        raise ValueError("Invalid normal vector.")
     return Matrix([nx, ny, -nx * x - ny * y])
 
 

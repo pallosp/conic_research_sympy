@@ -29,14 +29,14 @@ class TestPerpendicularLine:
 class TestLineThroughPoint:
     def test_missing_direction_and_normal(self):
         point = symbols("x,y")
-        with pytest.raises(AssertionError):
+        with pytest.raises(ValueError, match="Specify exactly one"):
             LineThroughPoint(point)
 
     def test_overspecified_direction_and_normal(self):
         point = symbols("x,y")
         direction = symbols("dx,dy")
         normal = symbols("nx,ny")
-        with pytest.raises(AssertionError):
+        with pytest.raises(ValueError, match="Specify exactly one"):
             LineThroughPoint(point, direction=direction, normal=normal)
 
     def test_direction_specified(self):

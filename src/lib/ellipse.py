@@ -20,7 +20,8 @@ def Ellipse(
     *Formula*:
     [research/ellipse_from_params.py](../src/research/ellipse_from_params.py)
     """
-    assert r1_angle is None or r1_direction is None
+    if (r1_angle is not None) and (r1_direction is not None):
+        raise ValueError("Specify either r1_angle or r1_direction, not both.")
     center_x, center_y = PointToXY(center)
     axis_dir_x, axis_dir_y = (
         r1_direction or (1, 0) if r1_angle is None else (cos(r1_angle), sin(r1_angle))

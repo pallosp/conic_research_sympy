@@ -24,7 +24,8 @@ def IdealPointOnLine(line: Matrix) -> Matrix:
 
 def PointToXY(point: Matrix | Sequence[Expr]) -> tuple[Expr, Expr]:
     """Computes the Euclidean coordinates of a projective point."""
-    assert len(point) in (2, 3)
+    if len(point) not in (2, 3):
+        raise ValueError("The point must be a 2D or 3D vector, list or tuple.")
     if len(point) == 2:
         return sympify(point)
     x, y, z = sympify(point)
@@ -33,7 +34,8 @@ def PointToXY(point: Matrix | Sequence[Expr]) -> tuple[Expr, Expr]:
 
 def PointToVec3(point: Matrix | Sequence[Expr]) -> Matrix:
     """Computes the homogeneous coordinates of a projective point."""
-    assert len(point) in (2, 3)
+    if len(point) not in (2, 3):
+        raise ValueError("The point must be a 2D or 3D vector, list or tuple.")
     if len(point) == 2:
         return Matrix([point[0], point[1], 1])
     if point is Matrix:
@@ -44,7 +46,8 @@ def PointToVec3(point: Matrix | Sequence[Expr]) -> Matrix:
 def Centroid(*points: Sequence[Expr]) -> tuple[Expr, Expr]:
     """Computes the centroid of a set of points."""
     n = len(points)
-    assert n > 0
+    if n == 0:
+        raise ValueError("At least one point must be provided.")
     cx, cy = sympify((0, 0))
     for p in points:
         x, y = PointToXY(p)

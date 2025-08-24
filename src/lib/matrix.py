@@ -23,19 +23,21 @@ def IsNonZeroMultiple(m1: Matrix | Sequence[Expr], m2: Matrix | Sequence[Expr]) 
     return (v1.dot(v1) * v2.dot(v2) - v1.dot(v2) ** 2).equals(0)
 
 
-def MaxEigenvalue(symmetric_matrix2x2: Matrix) -> Expr:
+def MaxEigenvalue(symmetric_matrix_2x2: Matrix) -> Expr:
     """Returns the higher eigenvalue of a 2x2 symmetric matrix."""
-    assert symmetric_matrix2x2.shape == (2, 2)
-    a, b, b2, c = symmetric_matrix2x2
-    assert b == b2
+    m = symmetric_matrix_2x2
+    if m.shape != (2, 2) or m != m.T:
+        raise ValueError("The input must be a 2x2 symmetric matrix.")
+    a, b, _, c = m
     return (a + c) / 2 + sqrt((a - c) ** 2 + 4 * b**2) / 2
 
 
-def MinEigenvalue(symmetric_matrix2x2: Matrix) -> Expr:
+def MinEigenvalue(symmetric_matrix_2x2: Matrix) -> Expr:
     """Returns the lower eigenvalue of a 2x2 symmetric matrix."""
-    assert symmetric_matrix2x2.shape == (2, 2)
-    a, b, b2, c = symmetric_matrix2x2
-    assert b == b2
+    m = symmetric_matrix_2x2
+    if m.shape != (2, 2) or m != m.T:
+        raise ValueError("The input must be a 2x2 symmetric matrix.")
+    a, b, _, c = m
     return (a + c) / 2 - sqrt((a - c) ** 2 + 4 * b**2) / 2
 
 

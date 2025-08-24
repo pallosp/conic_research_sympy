@@ -111,7 +111,7 @@ Treats lists and tuples as column vectors.
 #### MaxEigenvalue
 
 ```python
-def MaxEigenvalue(symmetric_matrix2x2: Matrix) -> Expr
+def MaxEigenvalue(symmetric_matrix_2x2: Matrix) -> Expr
 ```
 
 Returns the higher eigenvalue of a 2x2 symmetric matrix.
@@ -121,7 +121,7 @@ Returns the higher eigenvalue of a 2x2 symmetric matrix.
 #### MinEigenvalue
 
 ```python
-def MinEigenvalue(symmetric_matrix2x2: Matrix) -> Expr
+def MinEigenvalue(symmetric_matrix_2x2: Matrix) -> Expr
 ```
 
 Returns the lower eigenvalue of a 2x2 symmetric matrix.
