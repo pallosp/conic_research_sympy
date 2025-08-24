@@ -24,15 +24,15 @@ class SplitToLines(Function):
     @classmethod
     def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None:
         adj = conic.adjugate()
-        A, C, F = adj.diagonal()
+        a, c, f = adj.diagonal()
 
-        if A.is_nonzero:
-            conic = conic + SkewMatrix(adj.col(0) / sqrt(-A))
-        elif C.is_nonzero:
-            conic = conic + SkewMatrix(adj.col(1) / sqrt(-C))
-        elif F.is_nonzero:
-            conic = conic + SkewMatrix(adj.col(2) / sqrt(-F))
-        elif not (A.is_zero and C.is_zero and F.is_zero):
+        if a.is_nonzero:
+            conic = conic + SkewMatrix(adj.col(0) / sqrt(-a))
+        elif c.is_nonzero:
+            conic = conic + SkewMatrix(adj.col(1) / sqrt(-c))
+        elif f.is_nonzero:
+            conic = conic + SkewMatrix(adj.col(2) / sqrt(-f))
+        elif not (a.is_zero and c.is_zero and f.is_zero):
             return None
 
         cross = NonZeroCross(conic)
