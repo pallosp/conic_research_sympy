@@ -11,3 +11,10 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+  - repo: local
+    hooks:
+      - id: check-docs
+        name: Ensure docs/api.md is up to date
+        entry: ./.pre-commit-check-docs.sh
+        language: system
+        pass_filenames: false

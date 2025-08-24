@@ -13,11 +13,9 @@ requires-python = ">=3.10"
 [project.optional-dependencies]
 dev = [
     "pre-commit",
+    "pydoc-markdown",
     "pytest",
     "ruff"
-]
-docs = [
-    "pydoc-markdown"
 ]
 
 [tool.setuptools]

@@ -38,6 +38,5 @@ pip install -e '.[dev]'
 To regenerate the API docs, run
 
 ```sh
-pip install -e '.[docs]'
 pydoc-markdown
 ```
