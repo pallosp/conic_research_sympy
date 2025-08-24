@@ -45,6 +45,7 @@
   * [PolePoint](#conic.PolePoint)
   * [PolarLine](#conic.PolarLine)
   * [ConicContainsPoint](#conic.ConicContainsPoint)
+  * [ConicContainsLine](#conic.ConicContainsLine)
 * [degenerate\_conic](#degenerate_conic)
   * [LinePair](#degenerate_conic.LinePair)
   * [SplitToLines](#degenerate_conic.SplitToLines)
@@ -489,6 +490,7 @@ will evaluate to a positive value.
 
 ```python
 def ConicFromPoly(poly: Expr | Poly,
+                  *,
                   x: Symbol = abc.x,
                   y: Symbol = abc.y) -> Matrix
 ```
@@ -600,6 +602,11 @@ def PolePoint(conic: Matrix, polar_line: Matrix) -> Matrix
 
 Computes the pole point of a conic with respect to the given polar line.
 
+If the conic is degenerate, i.e. it factors into `l₁` and `l₂` real or
+complex conjugate lines, the pole is
+ - the zero vector if `l₁`, `l₂`, and `polar_line` are concurrent;
+ - the intersection of `l₁` and `l₂` otherwise.
+
 *Pole / polar identity*: `conic * pole_point = polar_line`<br>
 *Source*: https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line
 
@@ -621,10 +628,28 @@ Computes the polar line of a conic with respect to the given pole point.
 #### ConicContainsPoint
 
 ```python
-def ConicContainsPoint(conic: Matrix, point: Matrix | Sequence[Expr]) -> bool
+def ConicContainsPoint(conic: Matrix,
+                       point: Matrix | Sequence[Expr]) -> bool | None
 ```
 
 Checks if a point lies on a conic.
+
+Returns None if undecidable.
+
+<a id="conic.ConicContainsLine"></a>
+
+#### ConicContainsLine
+
+```python
+def ConicContainsLine(conic: Matrix, line: Matrix) -> bool | None
+```
+
+Checks if a line lies on a conic.
+
+Returns None if undecidable.
+
+*Formula*:
+[research/conic_line_containment.py](../src/research/conic_line_containment.py)
 
 <a id="degenerate_conic"></a>
 
