@@ -16,5 +16,6 @@ repos:
       - id: check-docs
         name: Ensure docs/api.md is up to date
         entry: ./.pre-commit-check-docs.sh
-        language: system
+        additional_dependencies: [pydoc-markdown]
+        language: python
         pass_filenames: false

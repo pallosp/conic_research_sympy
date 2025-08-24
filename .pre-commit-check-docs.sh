@@ -21,7 +21,7 @@ trap 'rm -f "$TMP_CONFIG"' EXIT
 grep -v '^[[:space:]]*filename:' "$CONFIG_FILE" > "$TMP_CONFIG"
 
 # Diff generated docs against committed version
-if ! .venv/bin/pydoc-markdown "$TMP_CONFIG" | cmp -s "$API_FILE" -; then
+if ! pydoc-markdown "$TMP_CONFIG" | cmp -s "$API_FILE" -; then
   echo
   echo "$API_FILE is out of date. Run 'pydoc-markdown' to regenerate." >&2
   exit 1
