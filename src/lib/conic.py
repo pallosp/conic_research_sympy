@@ -1,9 +1,8 @@
 from collections.abc import Sequence
 
 from sympy import Expr, Function, I, Matrix, Piecewise, Poly, Symbol, abc, sqrt
-from sympy.core.logic import fuzzy_and
 
-from lib.matrix import NonZeroCross, QuadraticForm
+from lib.matrix import NonZeroCross, QuadraticForm, SkewMatrix
 from lib.point import PointToVec3, PointToXY
 
 
@@ -163,15 +162,9 @@ def ConicContainsLine(conic: Matrix, line: Matrix) -> bool | None:
     """Checks if a line lies on a conic.
 
     Returns None if undecidable.
+
+    *Formula*:
+    [research/conic_line_containment.py](../src/research/conic_line_containment.py)
     """
-    a, b, c = line
-    return fuzzy_and(
-        [
-            # Is `line` concurrent to the conic lines?
-            PolePoint(conic, line).is_zero_matrix,
-            # Do at least two different points of `line` lie on `conic`?
-            QuadraticForm(conic, Matrix([0, -c, b])).is_zero,
-            QuadraticForm(conic, Matrix([c, 0, -a])).is_zero,
-            QuadraticForm(conic, Matrix([-b, a, 0])).is_zero,
-        ],
-    )
+    skew = SkewMatrix(line)
+    return (skew * conic * skew).is_zero_matrix
