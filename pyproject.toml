@@ -51,6 +51,7 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "src/research/*.py" = [
+  "S101",  # Use of `assert` detected
   "T201",  # print statement
   "TID251",  # banned API (configured below)
 ]
