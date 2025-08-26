@@ -64,6 +64,7 @@
   * [IsCircular](#conic_classification.IsCircular)
   * [IsLinePair](#conic_classification.IsLinePair)
   * [IsDoubleLine](#conic_classification.IsDoubleLine)
+  * [IsFinitePointConic](#conic_classification.IsFinitePointConic)
 * [point](#point)
   * [ORIGIN](#point.ORIGIN)
   * [IdealPoint](#point.IdealPoint)
@@ -864,6 +865,18 @@ def IsDoubleLine(conic: Matrix) -> bool | None
 ```
 
 Tells whether the conic consists of two coincident projective lines.
+
+Returns None if undecidable.
+
+<a id="conic_classification.IsFinitePointConic"></a>
+
+#### IsFinitePointConic
+
+```python
+def IsFinitePointConic(conic: Matrix) -> bool | None
+```
+
+Tells whether the conic consists of a single Euclidean point.
 
 Returns None if undecidable.
 

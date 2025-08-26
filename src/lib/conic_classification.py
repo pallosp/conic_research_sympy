@@ -109,3 +109,11 @@ def IsDoubleLine(conic: Matrix) -> bool | None:
             fuzzy_not(conic.is_zero_matrix),
         ],
     )
+
+
+def IsFinitePointConic(conic: Matrix) -> bool | None:
+    """Tells whether the conic consists of a single Euclidean point.
+
+    Returns None if undecidable.
+    """
+    return fuzzy_and([IsDegenerate(conic), IsFiniteConic(conic)])

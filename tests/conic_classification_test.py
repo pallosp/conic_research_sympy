@@ -10,6 +10,7 @@ from lib.conic_classification import (
     IsDoubleLine,
     IsEllipse,
     IsFiniteConic,
+    IsFinitePointConic,
     IsHyperbola,
     IsLinePair,
     IsParabola,
@@ -259,3 +260,23 @@ class TestIsDoubleLine:
 
     def test_symbolic_point(self):
         assert IsDoubleLine(Circle(symbols("x,y", real=True), 0)) is False
+
+
+class TestIsFinitePointConic:
+    def test_zero_radius_circle(self):
+        assert IsFinitePointConic(Circle(symbols("x,y"), 0)) is True
+
+    def test_circle(self):
+        assert IsFinitePointConic(Circle(symbols("x,y"), 1)) is False
+
+    def test_ideal_point_conic(self):
+        ideal_point = ConicFromPoly(x * x + 1)
+        assert IsFinitePointConic(ideal_point) is False
+
+    def test_line_pair(self):
+        assert IsFinitePointConic(LinePair(X_AXIS, Y_AXIS)) is False
+        assert IsFinitePointConic(LinePair(X_AXIS, IDEAL_LINE)) is False
+        assert IsFinitePointConic(LinePair(IDEAL_LINE, IDEAL_LINE)) is False
+
+    def test_undecidable(self):
+        assert IsFinitePointConic(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
