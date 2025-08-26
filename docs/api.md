@@ -66,6 +66,7 @@
   * [IsCircular](#conic_classification.IsCircular)
   * [IsLinePair](#conic_classification.IsLinePair)
   * [IsDoubleLine](#conic_classification.IsDoubleLine)
+  * [IsPointConic](#conic_classification.IsPointConic)
   * [IsFinitePointConic](#conic_classification.IsFinitePointConic)
 * [point](#point)
   * [ORIGIN](#point.ORIGIN)
@@ -905,6 +906,21 @@ def IsDoubleLine(conic: Matrix) -> bool | None
 Tells whether the conic consists of two coincident projective lines.
 
 Returns None if undecidable.
+
+<a id="conic_classification.IsPointConic"></a>
+
+#### IsPointConic
+
+```python
+def IsPointConic(conic: Matrix) -> bool | None
+```
+
+Tells whether the conic consists of a single projective point.
+
+Returns None if undecidable.
+
+A conic is a point conic iff it's degenerate and splits to two lines with
+complex coordinates.
 
 <a id="conic_classification.IsFinitePointConic"></a>
 

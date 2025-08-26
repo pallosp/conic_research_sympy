@@ -14,8 +14,9 @@ from lib.conic_classification import (
     IsHyperbola,
     IsLinePair,
     IsParabola,
+    IsPointConic,
 )
-from lib.degenerate_conic import LinePair
+from lib.degenerate_conic import LinePair, PointConic
 from lib.ellipse import Ellipse
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine
 from lib.matrix import ConicMatrix
@@ -260,6 +261,38 @@ class TestIsDoubleLine:
 
     def test_symbolic_point(self):
         assert IsDoubleLine(Circle(symbols("x,y", real=True), 0)) is False
+
+
+class TestIsPointConic:
+    def test_zero_matrix(self):
+        assert IsPointConic(Matrix.zeros(3, 3)) is False
+
+    def test_zero_radius_circle(self):
+        circle = Circle(symbols("x,y"), 0)
+        assert IsPointConic(circle) is True
+        assert IsPointConic(-circle) is True
+
+    def test_finite_point_conic(self):
+        point = PointConic(symbols("x,y", real=True))
+        assert IsPointConic(point) is True
+
+    def test_ideal_point_conic(self):
+        point = PointConic([*symbols("x,y", positive=True), 0])
+        assert IsPointConic(point) is True
+
+    def test_line_pair(self):
+        line1 = Matrix(symbols("a1,b1,c1", positive=True))
+        line2 = Matrix(symbols("a2,b2,c2", positive=True))
+        line_pair = LinePair(line1, line2)
+        assert IsPointConic(line_pair) is False
+
+    def test_circle(self):
+        circle = Circle(symbols("x,y"), symbols("r", positive=True))
+        assert IsPointConic(circle) is False
+
+    def test_circle_undecidable(self):
+        circle = Circle(symbols("x,y"), symbols("r"))
+        assert IsPointConic(circle) is None
 
 
 class TestIsFinitePointConic:

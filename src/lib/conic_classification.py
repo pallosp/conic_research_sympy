@@ -1,5 +1,5 @@
 from sympy import Eq, Matrix
-from sympy.core.logic import fuzzy_and, fuzzy_not
+from sympy.core.logic import fuzzy_and, fuzzy_not, fuzzy_or
 
 from lib.matrix import IsDefinite
 
@@ -107,6 +107,31 @@ def IsDoubleLine(conic: Matrix) -> bool | None:
         [
             conic.adjugate().is_zero_matrix,
             fuzzy_not(conic.is_zero_matrix),
+        ],
+    )
+
+
+def IsPointConic(conic: Matrix) -> bool | None:
+    """Tells whether the conic consists of a single projective point.
+
+    Returns None if undecidable.
+
+    A conic is a point conic iff it's degenerate and splits to two lines with
+    complex coordinates.
+    """
+    a, _, _, b, c, _, d, e, f = conic
+    return fuzzy_and(
+        [
+            IsDegenerate(conic),
+            # If any of the sqrt subexpressions in SplitToLines' implementation
+            # are negative, the conic splits to complex lines.
+            fuzzy_or(
+                [
+                    (b * b - a * c).factor().is_negative,
+                    (d * d - a * f).factor().is_negative,
+                    (e * e - c * f).factor().is_negative,
+                ],
+            ),
         ],
     )
 
