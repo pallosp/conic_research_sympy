@@ -127,6 +127,23 @@ class IdealPoints(Function):
         return (cross[0], cross[1].T)
 
 
+def ProjectiveConicCenter(conic: Matrix) -> Matrix:
+    """Computes the generalized projective center of a conic.
+
+    It's equivalent to [ConicCenter](#central_conic.ConicCenter) (returns an
+    Euclidean point) for
+     - real and complex ellipses
+     - hyperbolas
+     - conics consisting of a single Euclidean point
+     - crossing Euclidean line pairs
+
+    For parabolas returns the ideal point on it.
+
+    For other line pair conics and ideal point conics returns `(0, 0, 0)ᵀ`.
+    """
+    return conic.col(0).cross(conic.col(1))
+
+
 def PolePoint(conic: Matrix, polar_line: Matrix) -> Matrix:
     """Computes the pole point of a conic with respect to the given polar line.
 

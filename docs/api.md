@@ -42,6 +42,7 @@
   * [Eccentricity](#conic.Eccentricity)
   * [AxisDirection](#conic.AxisDirection)
   * [IdealPoints](#conic.IdealPoints)
+  * [ProjectiveConicCenter](#conic.ProjectiveConicCenter)
   * [PolePoint](#conic.PolePoint)
   * [PolarLine](#conic.PolarLine)
   * [ConicContainsPoint](#conic.ConicContainsPoint)
@@ -591,6 +592,27 @@ Returns two points. Special cases:
  - For parabolas these are the same point.
  - For ellipses these are the complex conjugates of each other.
  - For symbolic conics returns an unevaluated `sympy.Function`.
+
+<a id="conic.ProjectiveConicCenter"></a>
+
+#### ProjectiveConicCenter
+
+```python
+def ProjectiveConicCenter(conic: Matrix) -> Matrix
+```
+
+Computes the generalized projective center of a conic.
+
+It's equivalent to [ConicCenter](#central_conic.ConicCenter) (returns an
+Euclidean point) for
+ - real and complex ellipses
+ - hyperbolas
+ - conics consisting of a single Euclidean point
+ - crossing Euclidean line pairs
+
+For parabolas returns the ideal point on it.
+
+For other line pair conics and ideal point conics returns `(0, 0, 0)ᵀ`.
 
 <a id="conic.PolePoint"></a>
 

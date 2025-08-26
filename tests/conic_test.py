@@ -13,6 +13,7 @@ from lib.conic import (
     IdealPoints,
     PolarLine,
     PolePoint,
+    ProjectiveConicCenter,
 )
 from lib.degenerate_conic import LinePair
 from lib.ellipse import Ellipse
@@ -134,6 +135,47 @@ class TestIdealPoints:
             ideal_points,
             [IdealPoint(1, I), IdealPoint(1, -I)],
         )
+
+
+class TestProjectiveConicCenter:
+    def test_circle(self):
+        center = symbols("x,y")
+        circle = Circle(center, symbols("r"))
+        assert ProjectiveConicCenter(circle) == Matrix([*center, 1])
+
+    def test_ellipse(self):
+        center = symbols("x,y")
+        ellipse = Ellipse(
+            center,
+            symbols("r1", positive=True),
+            symbols("r2", positive=True),
+            r1_direction=symbols("dx,dy", positive=True),
+        )
+        computed_center = ProjectiveConicCenter(ellipse).expand()
+        assert IsNonZeroMultiple(computed_center, Matrix([*center, 1]))
+
+    def test_parabola(self):
+        focus = (0, 0)
+        directrix = Matrix(symbols("a,b,c", positive=True))
+        parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
+        center = ProjectiveConicCenter(parabola)
+        ideal_point = IdealPoints(parabola)[0]
+        assert IsNonZeroMultiple(center, ideal_point)
+
+    def test_parallel_line_pair(self):
+        line1 = HorizontalLine(1)
+        line2 = HorizontalLine(2)
+        line_pair = LinePair(line1, line2)
+        assert ProjectiveConicCenter(line_pair).is_zero_matrix
+
+    def test_euclidean_and_ideal_line(self):
+        line = Matrix(symbols("a,b,c", positive=True))
+        line_pair = LinePair(line, IDEAL_LINE)
+        assert ProjectiveConicCenter(line_pair).is_zero_matrix
+
+    def test_ideal_point_conic(self):
+        ideal_point = ConicFromPoly(x * x + 1)
+        assert ProjectiveConicCenter(ideal_point).is_zero_matrix
 
 
 class TestPolePolar:
