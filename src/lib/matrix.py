@@ -1,14 +1,17 @@
 from collections.abc import Sequence
 
 from sympy import Expr, Function, Matrix, nan, sqrt
-from sympy.core.logic import fuzzy_and
+from sympy.core.logic import fuzzy_and, fuzzy_not
 from sympy.core.numbers import NaN
 
 
-def IsNonZeroMultiple(m1: Matrix | Sequence[Expr], m2: Matrix | Sequence[Expr]) -> bool:
+def IsNonZeroMultiple(
+    m1: Matrix | Sequence[Expr],
+    m2: Matrix | Sequence[Expr],
+) -> bool | None:
     """Tells whether two matrices are non-zero scalar multiples of each other.
 
-    Treats lists and tuples as column vectors.
+    Treats lists and tuples as column vectors. Returns None if undecidable.
     """
     if not isinstance(m1, Matrix):
         m1 = Matrix(m1)
@@ -16,11 +19,19 @@ def IsNonZeroMultiple(m1: Matrix | Sequence[Expr], m2: Matrix | Sequence[Expr]) 
         m2 = Matrix(m2)
     if m1.shape != m2.shape:
         return False
-    if m1.is_zero_matrix != m2.is_zero_matrix:
-        return False
     v1 = m1.reshape(len(m1), 1)
     v2 = m2.reshape(len(m2), 1)
-    return (v1.dot(v1) * v2.dot(v2) - v1.dot(v2) ** 2).equals(0)
+    v1_is_zero = v1.is_zero_matrix
+    v2_is_zero = v2.is_zero_matrix
+    if v1_is_zero and v2_is_zero:
+        return True
+    return fuzzy_and(
+        [
+            (v1.dot(v1) * v2.dot(v2) - v1.dot(v2) ** 2).expand().is_zero,
+            fuzzy_not(v1_is_zero),
+            fuzzy_not(v2_is_zero),
+        ],
+    )
 
 
 def MaxEigenvalue(symmetric_matrix_2x2: Matrix) -> Expr:

@@ -21,7 +21,7 @@ class TestEllipseFromParams:
 
     def test_axis_direction_vector_length_invariance(self):
         center = symbols("x,y")
-        r1, r2, r1_dir_x, r1_dir_y = symbols("r1,r2,r1_dir_x,r1_dir_y")
+        r1, r2, r1_dir_x, r1_dir_y = symbols("r1,r2,dx,dy", positive=True)
         conic1 = Ellipse(center, r1, r2, r1_direction=(r1_dir_x, r1_dir_y))
         conic2 = Ellipse(center, r1, r2, r1_direction=(r1_dir_x * -2, r1_dir_y * -2))
         assert IsNonZeroMultiple(conic1, conic2)

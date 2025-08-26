@@ -99,12 +99,12 @@
 
 ```python
 def IsNonZeroMultiple(m1: Matrix | Sequence[Expr],
-                      m2: Matrix | Sequence[Expr]) -> bool
+                      m2: Matrix | Sequence[Expr]) -> bool | None
 ```
 
 Tells whether two matrices are non-zero scalar multiples of each other.
 
-Treats lists and tuples as column vectors.
+Treats lists and tuples as column vectors. Returns None if undecidable.
 
 <a id="matrix.MaxEigenvalue"></a>
 

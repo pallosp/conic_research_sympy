@@ -11,7 +11,7 @@ from lib.matrix import (
 )
 
 
-class TestIsScalarMultiple:
+class TestIsNonZeroMultiple:
     def test_vectors(self):
         assert IsNonZeroMultiple(Matrix([2]), Matrix([3]))
         assert IsNonZeroMultiple(Matrix([1, 2]), Matrix([-2, -4]))
@@ -20,28 +20,37 @@ class TestIsScalarMultiple:
         assert not IsNonZeroMultiple(Matrix([1, 2]), Matrix([2, 1]))
 
     def test_matrices(self):
-        assert not IsNonZeroMultiple(Matrix([[1, 2]]), Matrix([[1], [2]]))
-        assert IsNonZeroMultiple(Matrix([[1, 2], [3, 4]]), Matrix([[2, 4], [6, 8]]))
-        assert not IsNonZeroMultiple(Matrix([[1, 2], [3, 4]]), Matrix([[0, 0], [0, 0]]))
-        assert not IsNonZeroMultiple(Matrix([[1, 2], [3, 4]]), Matrix([[1, 1], [1, 1]]))
+        matrix_1234 = Matrix([[1, 2], [3, 4]])
+        assert IsNonZeroMultiple(Matrix([[1, 2]]), Matrix([[1], [2]])) is False
+        assert IsNonZeroMultiple(matrix_1234, Matrix([[2, 4], [6, 8]])) is True
+        assert IsNonZeroMultiple(matrix_1234, Matrix.zeros(2, 2)) is False
+        assert IsNonZeroMultiple(matrix_1234, Matrix([[1, 1], [1, 1]])) is False
 
     def test_lists(self):
-        assert not IsNonZeroMultiple([1], [2, 3])
-        assert IsNonZeroMultiple([0, 0], [0, 0])
-        assert IsNonZeroMultiple([1, 2], [2, 4])
-        assert not IsNonZeroMultiple([1, 2], [0, 0])
-        assert not IsNonZeroMultiple([1, 2], [2, 3])
+        assert IsNonZeroMultiple([1], [2, 3]) is False
+        assert IsNonZeroMultiple([0, 0], [0, 0]) is True
+        assert IsNonZeroMultiple([1, 2], [2, 4]) is True
+        assert IsNonZeroMultiple([1, 2], [0, 0]) is False
+        assert IsNonZeroMultiple([1, 2], [2, 3]) is False
 
     def test_matrix_vs_list(self):
-        assert IsNonZeroMultiple(Matrix([1, 2]), [2, 4])
-        assert IsNonZeroMultiple([1, 2], Matrix([2, 4]))
-        assert not IsNonZeroMultiple(Matrix([1, 2]).T, [2, 4])
-        assert not IsNonZeroMultiple(Matrix([1, 2]), [2, 3])
-        assert not IsNonZeroMultiple([1, 2], Matrix([2, 3]))
+        assert IsNonZeroMultiple(Matrix([1, 2]), [2, 4]) is True
+        assert IsNonZeroMultiple([1, 2], Matrix([2, 4])) is True
+        assert IsNonZeroMultiple(Matrix([1, 2]).T, [2, 4]) is False
+        assert IsNonZeroMultiple(Matrix([1, 2]), [2, 3]) is False
+        assert IsNonZeroMultiple([1, 2], Matrix([2, 3])) is False
 
     def test_symbolic(self):
         x = symbols("x")
-        assert IsNonZeroMultiple([x, 1], [-x, -1])
+        assert IsNonZeroMultiple([x, 1], [-x, -1]) is True
+
+        p = symbols("p", positive=True)
+        assert IsNonZeroMultiple([1, 2], [p, p * 2]) is True
+        assert IsNonZeroMultiple([1, 2], [p, p]) is False
+
+    def test_undecidable(self):
+        x = symbols("x")
+        assert IsNonZeroMultiple([1, 2], [x, x * 2]) is None
 
 
 class TestEigenvalues:

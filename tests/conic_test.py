@@ -141,7 +141,7 @@ class TestPolePolar:
         conic = ConicMatrix(*symbols("a b c d e f"))
         pole = Matrix(symbols("x y z"))
         polar = PolarLine(conic, pole)
-        assert IsNonZeroMultiple(pole, PolePoint(conic, polar))
+        assert PolePoint(conic, polar).equals(pole * conic.det())
 
     def test_polar_of_circle_center(self):
         center = (2, 3)
