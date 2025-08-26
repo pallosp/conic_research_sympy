@@ -1,9 +1,11 @@
 from sympy import I, Matrix
 
 from lib.circle import Circle
-from lib.degenerate_conic import LinePair, SplitToLines
+from lib.conic import IdealPoints
+from lib.conic_classification import IsDegenerate, IsFiniteConic
+from lib.degenerate_conic import LinePair, PointConic, SplitToLines
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine, VerticalLine
-from lib.matrix import ConicMatrix, IsNonZeroMultiple
+from lib.matrix import ConicMatrix, IsNonZeroMultiple, IsRealMatrix
 from tests.util import AreProjectiveSetsEqual
 
 
@@ -13,6 +15,21 @@ class TestLinePair:
         assert IsNonZeroMultiple(LinePair(IDEAL_LINE, IDEAL_LINE), double_ideal)
         plus = ConicMatrix(0, 1, 0, 0, 0, 0)
         assert IsNonZeroMultiple(LinePair(X_AXIS, Y_AXIS), plus)
+
+
+class TestPointConic:
+    def test_real_point(self):
+        point = (1, 2)
+        conic = PointConic(point)
+        assert IsDegenerate(conic) is True
+        assert IsFiniteConic(conic) is True
+
+    def test_ideal_point(self):
+        point = (1, 2, 0)
+        conic = PointConic(point)
+        assert IsDegenerate(conic) is True
+        assert AreProjectiveSetsEqual(IdealPoints(conic), [point, point])
+        assert IsRealMatrix(SplitToLines(conic)[0]) is False
 
 
 class TestSplitToLines:
@@ -44,5 +61,6 @@ class TestSplitToLines:
     def test_point_conic(self):
         conic = Circle((0, 0), 0)
         assert AreProjectiveSetsEqual(
-            [Matrix([1, I, 0]), Matrix([1, -I, 0])], SplitToLines(conic),
+            [Matrix([1, I, 0]), Matrix([1, -I, 0])],
+            SplitToLines(conic),
         )

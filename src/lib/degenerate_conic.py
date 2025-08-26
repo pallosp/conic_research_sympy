@@ -1,6 +1,9 @@
-from sympy import Function, Matrix, sqrt
+from collections.abc import Sequence
 
-from lib.matrix import NonZeroCross, SkewMatrix
+from sympy import Expr, Function, Matrix, sqrt
+
+from lib.matrix import ConicMatrix, NonZeroCross, SkewMatrix
+from lib.point import PointToVec3
 
 
 def LinePair(line1: Matrix, line2: Matrix) -> Matrix:
@@ -8,6 +11,34 @@ def LinePair(line1: Matrix, line2: Matrix) -> Matrix:
     if line1.shape != (3, 1) or line2.shape != (3, 1):
         raise ValueError("The lines must be 3-dimensional column vectors.")
     return (line1 * line2.T + line2 * line1.T) / 2
+
+
+def PointConic(point: Matrix | Sequence[Expr]) -> Matrix:
+    """Constructs a conic that degenerates to a single point.
+
+    Let the point's homogeneous coordinates be `(x, y, z)` and let
+    the variable point on the conic be `v = (X, Y, Z)`. The conic is
+    defined by the quadratic form `vᵀ C v = 0`.
+
+    For a conic consisting of just the given point, the condition
+    `x : y : z = X : Y : Z` must hold. Such conics can be expressed by the
+    equation
+
+        λ₁(Y*z - Z*y)² + λ₂(Z*x - X*z)² + λ₃(X*y - Y*x)² = 0
+
+    where `λ₁`, `λ₂` and `λ₃` are either all positive or all negative.
+    This function returns the corresponding conic matrix for the choice
+    `λ₁ = λ₂ = λ₃ = -1`.
+    """
+    x, y, z = PointToVec3(point)
+    return ConicMatrix(
+        -y * y - z * z,
+        x * y,
+        -z * z - x * x,
+        x * z,
+        y * z,
+        -x * x - y * y,
+    )
 
 
 class SplitToLines(Function):

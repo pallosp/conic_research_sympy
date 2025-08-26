@@ -50,6 +50,7 @@
   * [ConicContainsLine](#conic.ConicContainsLine)
 * [degenerate\_conic](#degenerate_conic)
   * [LinePair](#degenerate_conic.LinePair)
+  * [PointConic](#degenerate_conic.PointConic)
   * [SplitToLines](#degenerate_conic.SplitToLines)
 * [distance](#distance)
   * [PointPointDistance](#distance.PointPointDistance)
@@ -700,6 +701,30 @@ def LinePair(line1: Matrix, line2: Matrix) -> Matrix
 ```
 
 Constructs a conic section from two projective lines.
+
+<a id="degenerate_conic.PointConic"></a>
+
+#### PointConic
+
+```python
+def PointConic(point: Matrix | Sequence[Expr]) -> Matrix
+```
+
+Constructs a conic that degenerates to a single point.
+
+Let the point's homogeneous coordinates be `(x, y, z)` and let
+the variable point on the conic be `v = (X, Y, Z)`. The conic is
+defined by the quadratic form `vᵀ C v = 0`.
+
+For a conic consisting of just the given point, the condition
+`x : y : z = X : Y : Z` must hold. Such conics can be expressed by the
+equation
+
+    λ₁(Y*z - Z*y)² + λ₂(Z*x - X*z)² + λ₃(X*y - Y*x)² = 0
+
+where `λ₁`, `λ₂` and `λ₃` are either all positive or all negative.
+This function returns the corresponding conic matrix for the choice
+`λ₁ = λ₂ = λ₃ = -1`.
 
 <a id="degenerate_conic.SplitToLines"></a>
 
