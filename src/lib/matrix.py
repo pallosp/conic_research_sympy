@@ -114,6 +114,14 @@ class NonZeroCross(Function):
         return None
 
 
+def IsRealMatrix(matrix: Matrix) -> bool | None:
+    """Checks if all elements of a matrix are real.
+
+    Returns a bool or `None` if undecidable.
+    """
+    return fuzzy_and(el.is_real for el in matrix)
+
+
 def IsDefinite(matrix: Matrix) -> bool | None:
     """Checks if a real matrix is either positive or negative definite.
 

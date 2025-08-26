@@ -1,9 +1,10 @@
-from sympy import Function, Matrix, nan, sqrt, symbols
+from sympy import Function, I, Matrix, nan, sqrt, symbols
 
 from lib.matrix import (
     ConicMatrix,
     IsDefinite,
     IsNonZeroMultiple,
+    IsRealMatrix,
     MaxEigenvalue,
     MinEigenvalue,
     NonZeroCross,
@@ -94,6 +95,17 @@ class TestNonZeroCross:
         x = symbols("x", nonnegative=True)
         assert NonZeroCross(Matrix([[x - x, 0], [1, 0]]))[1] == Matrix([1, 0]).T
         assert NonZeroCross(Matrix([[0, 0], [x + 1, 0]]))[0] == Matrix([0, x + 1])
+
+
+class TestIsRealMatrix:
+    def test_numeric(self):
+        assert IsRealMatrix(Matrix([[1, 2], [3, 4]])) is True
+        assert IsRealMatrix(Matrix([[1, 2], [3, I]])) is False
+
+    def test_symbolic(self):
+        assert IsRealMatrix(Matrix([symbols("x", real=True)])) is True
+        assert IsRealMatrix(Matrix([symbols("x")])) is None
+        assert IsRealMatrix(Matrix([symbols("x", nonzero=True) * I])) is False
 
 
 class TestIsDefinite:

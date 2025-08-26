@@ -8,6 +8,7 @@
   * [QuadraticForm](#matrix.QuadraticForm)
   * [SkewMatrix](#matrix.SkewMatrix)
   * [NonZeroCross](#matrix.NonZeroCross)
+  * [IsRealMatrix](#matrix.IsRealMatrix)
   * [IsDefinite](#matrix.IsDefinite)
 * [central\_conic](#central_conic)
   * [ConicFromCenterAndPoints](#central_conic.ConicFromCenterAndPoints)
@@ -188,6 +189,18 @@ element.
 
 Returns an unevaluated `sympy.Function` if none of the elements can be
 proven to be non-zero, or `nan` in case of a zero matrix.
+
+<a id="matrix.IsRealMatrix"></a>
+
+#### IsRealMatrix
+
+```python
+def IsRealMatrix(matrix: Matrix) -> bool | None
+```
+
+Checks if all elements of a matrix are real.
+
+Returns a bool or `None` if undecidable.
 
 <a id="matrix.IsDefinite"></a>
 
