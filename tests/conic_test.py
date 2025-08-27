@@ -244,6 +244,13 @@ class TestConicContainsLine:
         line = Matrix(symbols("a b c", positive=True))
         assert ConicContainsLine(circle, line) is False
 
+    def test_parabola_symbolic(self):
+        focus = (0, 0)
+        directrix = Matrix(symbols("d1,d2,d3", positive=True))
+        conic = ConicFromFocusAndDirectrix(focus, directrix, 1)
+        line = Matrix(symbols("a,b,c", positive=True))
+        assert ConicContainsLine(conic, line) is False
+
     def test_line_pair_symbolic(self):
         line1 = Matrix(symbols("a b c"))
         line2 = X_AXIS
