@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Matrix
+from sympy import Expr, Matrix, Pow
 
 from lib.matrix import IsNonZeroMultiple
 
@@ -25,3 +25,8 @@ def AreProjectiveSetsEqual(
         if not found:
             return False
     return True
+
+
+def FactorRadicals(expr: Expr) -> Expr:
+    """Factors each Pow and sqrt subexpressions inside expr."""
+    return expr.replace(Pow, lambda base, exp: Pow(base.factor(), exp))

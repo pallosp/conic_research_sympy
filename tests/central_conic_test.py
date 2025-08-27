@@ -8,12 +8,13 @@ from lib.central_conic import (
     SemiMinorAxis,
 )
 from lib.circle import UNIT_CIRCLE, Circle
-from lib.conic import ConicFromPoly
+from lib.conic import ConicFromFocusAndDirectrix, ConicFromPoly
 from lib.degenerate_conic import LinePair
 from lib.line import X_AXIS, HorizontalLine
 from lib.matrix import IsNonZeroMultiple
 from lib.point import ORIGIN
 from lib.transform import ScaleXY, TransformConic
+from tests.util import FactorRadicals
 
 
 class TestConicFromCenterAndPoints:
@@ -77,6 +78,14 @@ class TestSemiAxisLengths:
         assert SemiMajorAxis(ellipse * -1) == 3
         assert SemiMinorAxis(ellipse) == 2
         assert SemiMinorAxis(ellipse * -1) == 2
+
+    def test_symbolic_hyperbola(self):
+        directrix = Matrix(symbols("a,b,c", positive=True))
+        hyperbola = ConicFromFocusAndDirectrix((0, 0), directrix, 2)
+        assert FactorRadicals(SemiMajorAxis(hyperbola)).is_real is True
+        assert FactorRadicals(SemiMajorAxis(-hyperbola)).is_real is True
+        assert FactorRadicals(SemiMinorAxis(hyperbola)).is_real is False
+        assert FactorRadicals(SemiMinorAxis(-hyperbola)).is_real is False
 
     def test_parabola(self):
         parabola = ConicFromPoly(x * x - y)
