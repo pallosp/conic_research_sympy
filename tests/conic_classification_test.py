@@ -31,6 +31,13 @@ class TestIsDegenerate:
         assert IsDegenerate(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
         assert IsDegenerate(Matrix.diag(symbols("a,c,f", positive=True))) is False
 
+    def test_symbolic_conic_from_focus_and_directrix(self):
+        focus = (0, 0)
+        directrix = Matrix(symbols("a,b,c", positive=True))
+        eccentricity = symbols("e", positive=True)
+        conic = ConicFromFocusAndDirectrix(focus, directrix, eccentricity)
+        assert IsDegenerate(conic) is False
+
     def test_symbolic_line_pair(self):
         line_pair = LinePair(Matrix(symbols("a,b,c")), Matrix(symbols("d,e,f")))
         assert IsDegenerate(line_pair) is True
