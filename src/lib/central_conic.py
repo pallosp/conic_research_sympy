@@ -50,9 +50,9 @@ def ConicFromCenterAndPoints(
 def ConicCenter(conic: Matrix) -> tuple[Expr, Expr]:
     """Computes the center point of a conic.
 
-    *Formula*: ChatGPT
+    *Formula*: [research/conic_center.py](../src/research/conic_center.py)
     """
-    x, y, z = conic.row(0).cross(conic.row(1))
+    x, y, z = conic.col(0).cross(conic.col(1))
     return (x / z, y / z)
 
 
