@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Matrix, Piecewise, sqrt
+from sympy import Expr, Function, Matrix, sqrt
 
 from lib.matrix import ConicMatrix, MaxEigenvalue, MinEigenvalue
 from lib.point import PointToXY
@@ -68,30 +68,52 @@ def SemiAxisLengths(conic: Matrix) -> tuple[Expr, Expr]:
     )
 
 
-def SemiMajorAxis(conic: Matrix) -> Expr:
+class SemiMajorAxis(Function):
     """Computes the semi-major axis length i.e. the center-vertex distance of
     a conic.
 
     The returned value is:
-     - a real number for ellipses and hyperbolas;
+     - a positive number for ellipses and hyperbolas;
      - infinity for parabolas;
-     - imaginary for complex ellipses;
+     - an imaginary number for complex ellipses;
      - nan for ideal point conics;
      - zero for the other degenerate conics.
+
+    Returns an unevaluated `sympy.Function` if we can't tell which axis is
+    longer.
     """
-    axes = SemiAxisLengths(conic)
-    return Piecewise((axes[1], conic.det() > 0), (axes[0], True))
+
+    @classmethod
+    def eval(cls, conic: Matrix) -> Expr | None:
+        axes = SemiAxisLengths(conic)
+        det = conic.det()
+        if det.is_nonnegative:
+            return axes[1]
+        if det.is_negative:
+            return axes[0]
+        return None
 
 
-def SemiMinorAxis(conic: Matrix) -> Expr:
+class SemiMinorAxis(Function):
     """Computes the semi-minor axis length of a conic.
 
     The returned value is:
-     - a real number for ellipses;
+     - a positive number for ellipses;
      - infinity for parabolas;
-     - imaginary for hyperbolas and complex ellipses;
+     - an imaginary number for hyperbolas and complex ellipses;
      - nan for ideal point conics;
      - zero for the other degenerate conics.
+
+    Returns an unevaluated `sympy.Function` if we can't tell which axis is
+    shorter.
     """
-    axes = SemiAxisLengths(conic)
-    return Piecewise((axes[0], conic.det() > 0), (axes[1], True))
+
+    @classmethod
+    def eval(cls, conic: Matrix) -> Expr | None:
+        axes = SemiAxisLengths(conic)
+        det = conic.det()
+        if det.is_nonnegative:
+            return axes[0]
+        if det.is_negative:
+            return axes[1]
+        return None

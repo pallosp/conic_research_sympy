@@ -266,38 +266,44 @@ Computes the semi-axis lengths of a conic.
 
 <a id="central_conic.SemiMajorAxis"></a>
 
-#### SemiMajorAxis
+## SemiMajorAxis Objects
 
 ```python
-def SemiMajorAxis(conic: Matrix) -> Expr
+class SemiMajorAxis(Function)
 ```
 
 Computes the semi-major axis length i.e. the center-vertex distance of
 a conic.
 
 The returned value is:
- - a real number for ellipses and hyperbolas;
+ - a positive number for ellipses and hyperbolas;
  - infinity for parabolas;
- - imaginary for complex ellipses;
+ - an imaginary number for complex ellipses;
  - nan for ideal point conics;
  - zero for the other degenerate conics.
 
+Returns an unevaluated `sympy.Function` if we can't tell which axis is
+longer.
+
 <a id="central_conic.SemiMinorAxis"></a>
 
-#### SemiMinorAxis
+## SemiMinorAxis Objects
 
 ```python
-def SemiMinorAxis(conic: Matrix) -> Expr
+class SemiMinorAxis(Function)
 ```
 
 Computes the semi-minor axis length of a conic.
 
 The returned value is:
- - a real number for ellipses;
+ - a positive number for ellipses;
  - infinity for parabolas;
- - imaginary for hyperbolas and complex ellipses;
+ - an imaginary number for hyperbolas and complex ellipses;
  - nan for ideal point conics;
  - zero for the other degenerate conics.
+
+Returns an unevaluated `sympy.Function` if we can't tell which axis is
+shorter.
 
 <a id="circle"></a>
 

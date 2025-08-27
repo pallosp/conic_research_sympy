@@ -11,7 +11,7 @@ from lib.circle import UNIT_CIRCLE, Circle
 from lib.conic import ConicFromFocusAndDirectrix, ConicFromPoly
 from lib.degenerate_conic import LinePair, PointConic
 from lib.line import X_AXIS, HorizontalLine
-from lib.matrix import IsNonZeroMultiple
+from lib.matrix import ConicMatrix, IsNonZeroMultiple
 from lib.point import ORIGIN
 from lib.transform import ScaleXY, TransformConic
 from tests.util import FactorRadicals
@@ -114,3 +114,8 @@ class TestSemiAxisLengths:
         ideal_point_conic = PointConic([*symbols("x,y"), 0])
         assert SemiMajorAxis(ideal_point_conic) == nan
         assert SemiMinorAxis(ideal_point_conic) == nan
+
+    def test_undecidable(self):
+        conic = ConicMatrix(*symbols("a,b,c,d,e,f"))
+        assert isinstance(SemiMajorAxis(conic), SemiMajorAxis)
+        assert isinstance(SemiMinorAxis(conic), SemiMinorAxis)
