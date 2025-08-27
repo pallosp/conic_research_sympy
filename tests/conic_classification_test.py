@@ -288,8 +288,13 @@ class TestIsLinePair:
         assert IsLinePair(LinePair(line1, line1)) is True
         assert IsLinePair(LinePair(line1, line2)) is True
 
-    def test_symbolic_point(self):
+    def test_symbolic_finite_point_conics(self):
         assert IsLinePair(Circle(symbols("x,y"), 0)) is False
+        assert IsLinePair(PointConic(symbols("x,y", real=True))) is False
+
+    def test_symbolic_ideal_point_conic(self):
+        ideal_point_conic = PointConic([*symbols("x,y", positive=True), 0])
+        assert IsLinePair(ideal_point_conic) is False
 
 
 class TestIsDoubleLine:

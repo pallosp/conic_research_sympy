@@ -85,11 +85,16 @@ def IsLinePair(conic: Matrix) -> bool | None:
 
     Returns None if undecidable.
     """
+    a, _, _, b, c, _, d, e, f = conic
     return fuzzy_and(
         [
             IsDegenerate(conic),
-            fuzzy_not(IsFiniteConic(conic)),
             fuzzy_not(conic.is_zero_matrix),
+            # If all sqrt subexpressions in SplitToLines' implementation
+            # are nonnegative, the conic splits to real lines.
+            (b * b - a * c).factor().is_nonnegative,
+            (d * d - a * f).factor().is_nonnegative,
+            (e * e - c * f).factor().is_nonnegative,
         ],
     )
 
