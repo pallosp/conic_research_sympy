@@ -59,7 +59,7 @@ def ConicCenter(conic: Matrix) -> tuple[Expr, Expr]:
 def SemiAxisLengths(conic: Matrix) -> tuple[Expr, Expr]:
     """Computes the semi-axis lengths of a conic.
 
-    *Formula*: ChatGPT
+    *Formula*: [research/conic_radii.py](../src/research/conic_radii.py)
     """
     submatrix = conic[:2, :2]
     return (
