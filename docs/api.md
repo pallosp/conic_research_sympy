@@ -275,8 +275,12 @@ def SemiMajorAxis(conic: Matrix) -> Expr
 Computes the semi-major axis length i.e. the center-vertex distance of
 a conic.
 
-It's infinity for parabolas, zero for degenerate conics, and imaginary for
-complex ellipses.
+The returned value is:
+ - a real number for ellipses and hyperbolas;
+ - infinity for parabolas;
+ - imaginary for complex ellipses;
+ - nan for ideal point conics;
+ - zero for the other degenerate conics.
 
 <a id="central_conic.SemiMinorAxis"></a>
 
@@ -287,6 +291,13 @@ def SemiMinorAxis(conic: Matrix) -> Expr
 ```
 
 Computes the semi-minor axis length of a conic.
+
+The returned value is:
+ - a real number for ellipses;
+ - infinity for parabolas;
+ - imaginary for hyperbolas and complex ellipses;
+ - nan for ideal point conics;
+ - zero for the other degenerate conics.
 
 <a id="circle"></a>
 

@@ -1,4 +1,4 @@
-from sympy import Matrix, symbols
+from sympy import Matrix, nan, symbols
 from sympy.abc import x, y
 
 from lib.central_conic import (
@@ -9,7 +9,7 @@ from lib.central_conic import (
 )
 from lib.circle import UNIT_CIRCLE, Circle
 from lib.conic import ConicFromFocusAndDirectrix, ConicFromPoly
-from lib.degenerate_conic import LinePair
+from lib.degenerate_conic import LinePair, PointConic
 from lib.line import X_AXIS, HorizontalLine
 from lib.matrix import IsNonZeroMultiple
 from lib.point import ORIGIN
@@ -90,13 +90,27 @@ class TestSemiAxisLengths:
     def test_parabola(self):
         parabola = ConicFromPoly(x * x - y)
         assert SemiMajorAxis(parabola).is_infinite
+        assert SemiMajorAxis(-parabola).is_infinite
         assert SemiMinorAxis(parabola).is_infinite
+        assert SemiMinorAxis(-parabola).is_infinite
 
     def test_line_pair(self):
         line1 = Matrix(symbols("a b c"))
         line2 = Matrix(symbols("d e f"))
-        assert SemiMajorAxis(LinePair(line1, line2)) == 0
+        line_pair = LinePair(line1, line2)
+        assert SemiMajorAxis(line_pair) == 0
+        assert SemiMajorAxis(line_pair) == 0
 
-    def test_real_point_conic(self):
-        point = Circle(symbols("x y"), 0)
-        assert SemiMajorAxis(point) == 0
+    def test_finite_point_conic(self):
+        zero_circle = Circle(symbols("x y"), 0)
+        assert SemiMajorAxis(zero_circle) == 0
+        assert SemiMinorAxis(zero_circle) == 0
+
+        finite_point_conic = PointConic(symbols("x,y"))
+        assert SemiMajorAxis(finite_point_conic) == 0
+        assert SemiMinorAxis(finite_point_conic) == 0
+
+    def test_ideal_point_conic(self):
+        ideal_point_conic = PointConic([*symbols("x,y"), 0])
+        assert SemiMajorAxis(ideal_point_conic) == nan
+        assert SemiMinorAxis(ideal_point_conic) == nan
