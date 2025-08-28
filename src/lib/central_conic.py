@@ -2,6 +2,7 @@ from collections.abc import Sequence
 
 from sympy import Expr, Function, Matrix, sqrt
 
+from lib.conic_classification import IsFiniteConic
 from lib.matrix import ConicMatrix, MaxEigenvalue, MinEigenvalue
 from lib.point import PointToXY
 
@@ -86,11 +87,18 @@ class SemiMajorAxis(Function):
     @classmethod
     def eval(cls, conic: Matrix) -> Expr | None:
         axes = SemiAxisLengths(conic)
-        det = conic.det()
-        if det.is_nonnegative:
-            return axes[1]
-        if det.is_negative:
-            return axes[0]
+        finite = IsFiniteConic(conic)
+        if finite is True:
+            if conic[0].is_negative:
+                return axes[1]
+            if conic[0].is_nonnegative:
+                return axes[0]
+        if finite is False:
+            det = conic.det()
+            if det.is_nonnegative:
+                return axes[1]
+            if det.is_negative:
+                return axes[0]
         return None
 
 
@@ -111,9 +119,16 @@ class SemiMinorAxis(Function):
     @classmethod
     def eval(cls, conic: Matrix) -> Expr | None:
         axes = SemiAxisLengths(conic)
-        det = conic.det()
-        if det.is_nonnegative:
-            return axes[0]
-        if det.is_negative:
-            return axes[1]
+        finite = IsFiniteConic(conic)
+        if finite is True:
+            if conic[0].is_negative:
+                return axes[0]
+            if conic[0].is_nonnegative:
+                return axes[1]
+        if finite is False:
+            det = conic.det()
+            if det.is_nonnegative:
+                return axes[0]
+            if det.is_negative:
+                return axes[1]
         return None

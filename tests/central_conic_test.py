@@ -1,4 +1,4 @@
-from sympy import Matrix, nan, symbols
+from sympy import I, Matrix, nan, symbols
 from sympy.abc import x, y
 
 from lib.central_conic import (
@@ -10,6 +10,7 @@ from lib.central_conic import (
 from lib.circle import UNIT_CIRCLE, Circle
 from lib.conic import ConicFromFocusAndDirectrix, ConicFromPoly
 from lib.degenerate_conic import LinePair, PointConic
+from lib.ellipse import Ellipse
 from lib.line import X_AXIS, HorizontalLine
 from lib.matrix import ConicMatrix, IsNonZeroMultiple
 from lib.point import ORIGIN
@@ -75,9 +76,16 @@ class TestSemiAxisLengths:
     def test_ellipse(self):
         ellipse = TransformConic(UNIT_CIRCLE, ScaleXY(2, 3))
         assert SemiMajorAxis(ellipse) == 3
-        assert SemiMajorAxis(ellipse * -1) == 3
+        assert SemiMajorAxis(-ellipse) == 3
         assert SemiMinorAxis(ellipse) == 2
-        assert SemiMinorAxis(ellipse * -1) == 2
+        assert SemiMinorAxis(-ellipse) == 2
+
+    def test_complex_ellipse(self):
+        ellipse = Ellipse((1, 2), 3 * I, 4 * I)
+        assert SemiMajorAxis(ellipse) == 4 * I
+        assert SemiMajorAxis(-ellipse) == 4 * I
+        assert SemiMinorAxis(ellipse) == 3 * I
+        assert SemiMinorAxis(-ellipse) == 3 * I
 
     def test_symbolic_hyperbola(self):
         directrix = Matrix(symbols("a,b,c", positive=True))
@@ -95,18 +103,18 @@ class TestSemiAxisLengths:
         assert SemiMinorAxis(-parabola).is_infinite
 
     def test_line_pair(self):
-        line1 = Matrix(symbols("a b c"))
-        line2 = Matrix(symbols("d e f"))
+        line1 = Matrix(symbols("a b c", real=True))
+        line2 = Matrix(symbols("d e f", real=True))
         line_pair = LinePair(line1, line2)
         assert SemiMajorAxis(line_pair) == 0
         assert SemiMajorAxis(line_pair) == 0
 
     def test_finite_point_conic(self):
-        zero_circle = Circle(symbols("x y"), 0)
+        zero_circle = Circle(symbols("x y", real=True), 0)
         assert SemiMajorAxis(zero_circle) == 0
         assert SemiMinorAxis(zero_circle) == 0
 
-        finite_point_conic = PointConic(symbols("x,y"))
+        finite_point_conic = PointConic(symbols("x,y", real=True))
         assert SemiMajorAxis(finite_point_conic) == 0
         assert SemiMinorAxis(finite_point_conic) == 0
 
