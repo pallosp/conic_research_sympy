@@ -79,11 +79,11 @@ def AngleBisector(line1: Matrix, line2: Matrix) -> Matrix:
     the same sign. Negate one of the lines to get the other angle bisector.
 
     Special cases:
-     - AngleBisector(parallel real lines, opposite direction) = center line
-     - AngleBisector(coincident real lines, same direction) = zero vector
-     - AngleBisector(other parallel real lines, same direction) = ideal line
+     - AngleBisector(parallel finite lines, opposite direction) = center line
+     - AngleBisector(coincident finite lines, same direction) = zero vector
+     - AngleBisector(other parallel finite lines, same direction) = ideal line
      - AngleBisector(ideal line, ideal line) = zero vector
-     - AngleBisector(ideal line, real line) = ideal line
+     - AngleBisector(ideal line, finite line) = ideal line
 
     *Formula*: [research/angle_bisector.py](../src/research/angle_bisector.py)
     """

@@ -142,7 +142,7 @@ def IsPointConic(conic: Matrix) -> bool | None:
 
 
 def IsFinitePointConic(conic: Matrix) -> bool | None:
-    """Tells whether the conic consists of a single Euclidean point.
+    """Tells whether the conic consists of a single finite (Euclidean) point.
 
     Returns None if undecidable.
     """

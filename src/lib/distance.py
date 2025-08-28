@@ -12,7 +12,7 @@ def PointPointDistance(
     """Computes the signed distance between two points.
 
     Special cases:
-     - the distance between Euclidean and ideal points is infinity
+     - the distance between finite and ideal points is infinity
      - the distance between two ideal points is `nan`
     """
     x1, y1, z1 = PointToVec3(point1)
@@ -24,8 +24,8 @@ def PointLineDistance(point: Matrix | Sequence[Expr], line: Matrix) -> Expr:
     """Computes the signed distance between a point and a line.
 
     Special cases:
-     - the distance between Euclidean points and an ideal lines is infinity
-     - the distance between ideal points and an any projective lines is `nan`
+     - the distance between finite points and the ideal line is infinity
+     - the distance between ideal points and any projective lines is `nan`
     """
     x, y = PointToXY(point)
     a, b, c = line

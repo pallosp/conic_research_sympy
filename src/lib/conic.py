@@ -130,12 +130,12 @@ class IdealPoints(Function):
 def ProjectiveConicCenter(conic: Matrix) -> Matrix:
     """Computes the generalized projective center of a conic.
 
-    It's equivalent to [ConicCenter](#central_conic.ConicCenter) (returns an
-    Euclidean point) for
+    It's equivalent to [ConicCenter](#central_conic.ConicCenter) (returns a
+    finite point) for
      - real and complex ellipses
      - hyperbolas
-     - conics consisting of a single Euclidean point
-     - crossing Euclidean line pairs
+     - conics consisting of a single finite (Euclidean) point
+     - crossing finite line pairs
 
     For parabolas returns the ideal point on it.
 

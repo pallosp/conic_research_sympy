@@ -60,7 +60,7 @@ pprint(conic_matrix.det().factor())
 print("\nThe determinant is positive if")
 print()
 print("  • eccentricity > 0 (not a circle)")
-print("  • a²+b² > 0 (the directrix is a real line)")
+print("  • a²+b² > 0 (the directrix is a finite line)")
 print("  • ax+by+c ≠ 0 (the focus is not on the directix)")
 
 

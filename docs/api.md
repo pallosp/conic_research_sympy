@@ -450,11 +450,11 @@ Chooses the bisector whose points substituted into the lines' equations have
 the same sign. Negate one of the lines to get the other angle bisector.
 
 Special cases:
- - AngleBisector(parallel real lines, opposite direction) = center line
- - AngleBisector(coincident real lines, same direction) = zero vector
- - AngleBisector(other parallel real lines, same direction) = ideal line
+ - AngleBisector(parallel finite lines, opposite direction) = center line
+ - AngleBisector(coincident finite lines, same direction) = zero vector
+ - AngleBisector(other parallel finite lines, same direction) = ideal line
  - AngleBisector(ideal line, ideal line) = zero vector
- - AngleBisector(ideal line, real line) = ideal line
+ - AngleBisector(ideal line, finite line) = ideal line
 
 *Formula*: [research/angle_bisector.py](../src/research/angle_bisector.py)
 
@@ -637,12 +637,12 @@ def ProjectiveConicCenter(conic: Matrix) -> Matrix
 
 Computes the generalized projective center of a conic.
 
-It's equivalent to [ConicCenter](#central_conic.ConicCenter) (returns an
-Euclidean point) for
+It's equivalent to [ConicCenter](#central_conic.ConicCenter) (returns a
+finite point) for
  - real and complex ellipses
  - hyperbolas
- - conics consisting of a single Euclidean point
- - crossing Euclidean line pairs
+ - conics consisting of a single finite (Euclidean) point
+ - crossing finite line pairs
 
 For parabolas returns the ideal point on it.
 
@@ -802,7 +802,7 @@ def PointPointDistance(point1: Matrix | Sequence[Expr],
 Computes the signed distance between two points.
 
 Special cases:
- - the distance between Euclidean and ideal points is infinity
+ - the distance between finite and ideal points is infinity
  - the distance between two ideal points is `nan`
 
 <a id="distance.PointLineDistance"></a>
@@ -816,8 +816,8 @@ def PointLineDistance(point: Matrix | Sequence[Expr], line: Matrix) -> Expr
 Computes the signed distance between a point and a line.
 
 Special cases:
- - the distance between Euclidean points and an ideal lines is infinity
- - the distance between ideal points and an any projective lines is `nan`
+ - the distance between finite points and the ideal line is infinity
+ - the distance between ideal points and any projective lines is `nan`
 
 <a id="conic_classification"></a>
 
@@ -972,7 +972,7 @@ complex coordinates.
 def IsFinitePointConic(conic: Matrix) -> bool | None
 ```
 
-Tells whether the conic consists of a single Euclidean point.
+Tells whether the conic consists of a single finite (Euclidean) point.
 
 Returns None if undecidable.
 
