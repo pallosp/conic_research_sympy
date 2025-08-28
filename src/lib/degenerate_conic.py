@@ -72,3 +72,32 @@ class SplitToLines(Function):
         if isinstance(cross, NonZeroCross):
             return None
         return (cross[0], cross[1].T)
+
+
+class ExtractPoint(Function):
+    """Extracts the point from a point conic or the intersection of the
+    lines from a line pair conic.
+
+    Returns a zero vector for double line pairs, or an unspecified 3d
+    column vector if the conic is not degenerate.
+
+    *Algorithm*:
+
+    Let the rows of the conic matrix be `r₁`, `r₂` and `r₃`. The point `p` is
+    on the conic iff `pᵀ C p = 0`, i.e. `p·(r₁·p, r₂·p, r₃·p) = 0`.
+
+    `p = r₁⨯r₂` is a solution, because `r₁·(r₁⨯r₂) = 0`, `r₂·(r₁⨯r₂) = 0` and
+    `r₃·(r₁⨯r₂) = det C = 0`. So are `p = r₂⨯r₃` and `p = r₃⨯r₁`. When the
+    conic matrix is a rank 2 matrix (point conic or non-coincident line pair),
+    at least one of these is a non-zero vector.
+    """
+
+    @classmethod
+    def eval(cls, degenerate_conic: Matrix) -> Matrix | None:
+        adj = degenerate_conic.adjugate()
+        if adj.is_zero_matrix:
+            return Matrix.zeros(3, 1)
+        for i in range(3):
+            if adj.col(i).is_zero_matrix is False:
+                return adj.col(i)
+        return None

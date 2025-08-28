@@ -1,11 +1,12 @@
-from sympy import I, Matrix
+from sympy import I, Matrix, symbols
 
 from lib.circle import Circle
 from lib.conic import IdealPoints
 from lib.conic_classification import IsDegenerate, IsFiniteConic
-from lib.degenerate_conic import LinePair, PointConic, SplitToLines
+from lib.degenerate_conic import ExtractPoint, LinePair, PointConic, SplitToLines
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine, VerticalLine
 from lib.matrix import ConicMatrix, IsNonZeroMultiple, IsRealMatrix
+from lib.point import PointToVec3
 from tests.util import AreProjectiveSetsEqual
 
 
@@ -64,3 +65,34 @@ class TestSplitToLines:
             [Matrix([1, I, 0]), Matrix([1, -I, 0])],
             SplitToLines(conic),
         )
+
+
+class TestExtractPoint:
+    def test_symbolic_real_point_conic(self):
+        point = symbols("x,y", real=True)
+        zero_circle = Circle(point, 0)
+        assert IsNonZeroMultiple(ExtractPoint(zero_circle), PointToVec3(point))
+
+        finite_point_conic = PointConic(point)
+        assert IsNonZeroMultiple(ExtractPoint(finite_point_conic), PointToVec3(point))
+
+    def test_symbolic_ideal_point_conic(self):
+        point = [*symbols("x,y", positive=True), 0]
+        conic = PointConic(point)
+        assert IsNonZeroMultiple(ExtractPoint(conic), PointToVec3(point))
+
+    def test_zero_matrix(self):
+        conic = Matrix.zeros(3, 3)
+        assert ExtractPoint(conic) == Matrix([0, 0, 0])
+
+    def test_numeric_line_pairs(self):
+        line1 = Matrix([1, 2, 3])
+        line2 = Matrix([4, 5, 6])
+        conic = LinePair(line1, line2)
+        intersection = line1.cross(line2)
+        assert IsNonZeroMultiple(ExtractPoint(conic), intersection)
+
+    def test_symbolic_double_line(self):
+        line = Matrix(symbols("a b c"))
+        conic = LinePair(line, line)
+        assert ExtractPoint(conic) == Matrix([0, 0, 0])
