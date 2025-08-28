@@ -48,7 +48,8 @@ def ConicThroughPoints(
     The result is unique if no 2 points coincide and no 4 points are collinear.
     The result is non-degenerate if no 3 points are collinear.
 
-    Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 10.1
+    *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
+    section 10.1
     """
     p1, p2, p3, p4, p5 = [PointToVec3(p) for p in [p1, p2, p3, p4, p5]]
     g1 = p1.cross(p3)

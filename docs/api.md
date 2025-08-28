@@ -561,7 +561,8 @@ Returns the conic matrix, or a zero matrix if the result is ambiguous.
 The result is unique if no 2 points coincide and no 4 points are collinear.
 The result is non-degenerate if no 3 points are collinear.
 
-Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 10.1
+*Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
+section 10.1
 
 <a id="conic.ConicFromFocusAndDirectrix"></a>
 
@@ -760,7 +761,8 @@ Special cases:
  - For point conics the lines will be complex conjugates.
  - For symbolic conics returns an unevaluated `sympy.Function`.
 
-Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 11.1
+*Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
+section 11.1
 
 <a id="degenerate_conic.ExtractPoint"></a>
 
@@ -1251,5 +1253,6 @@ Special cases:
  - Returns an unevaluated `sympy.Function` for symbolic conics.
  - Returns None if the conic contains the entire line.
 
-Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 11.3
+*Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
+section 11.3
 

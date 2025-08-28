@@ -28,7 +28,8 @@ def ConicXLine(
      - Returns an unevaluated `sympy.Function` for symbolic conics.
      - Returns None if the conic contains the entire line.
 
-    Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 11.3
+    *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
+    section 11.3
     """
     skew_matrix = SkewMatrix(line)
     m = skew_matrix.T * conic * skew_matrix

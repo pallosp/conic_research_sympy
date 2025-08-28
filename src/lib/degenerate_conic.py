@@ -49,7 +49,8 @@ class SplitToLines(Function):
      - For point conics the lines will be complex conjugates.
      - For symbolic conics returns an unevaluated `sympy.Function`.
 
-    Algorithm: Jürgen Richter-Gebert, Projective Geometry, section 11.1
+    *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
+    section 11.1
     """
 
     @classmethod
