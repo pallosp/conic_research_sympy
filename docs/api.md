@@ -62,6 +62,7 @@
   * [IsFiniteConic](#conic_classification.IsFiniteConic)
   * [IsComplexEllipse](#conic_classification.IsComplexEllipse)
   * [IsEllipse](#conic_classification.IsEllipse)
+  * [IsCircle](#conic_classification.IsCircle)
   * [IsParabola](#conic_classification.IsParabola)
   * [IsHyperbola](#conic_classification.IsHyperbola)
   * [IsCircular](#conic_classification.IsCircular)
@@ -886,6 +887,18 @@ def IsEllipse(conic: Matrix) -> bool | None
 ```
 
 Tells whether the conic is an ellipse with real radii.
+
+Returns None if undecidable.
+
+<a id="conic_classification.IsCircle"></a>
+
+#### IsCircle
+
+```python
+def IsCircle(conic: Matrix) -> bool | None
+```
+
+Tells whether the conic is a circle.
 
 Returns None if undecidable.
 

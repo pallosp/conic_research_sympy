@@ -54,6 +54,21 @@ def IsEllipse(conic: Matrix) -> bool | None:
     )
 
 
+def IsCircle(conic: Matrix) -> bool | None:
+    """Tells whether the conic is a circle.
+
+    Returns None if undecidable.
+    """
+    a, _, _, b, c, _, _, _, _ = conic
+    return fuzzy_and(
+        [
+            (a - c).expand().is_zero,
+            b.is_zero,
+            (a * conic.det()).is_negative,
+        ],
+    )
+
+
 def IsParabola(conic: Matrix) -> bool | None:
     """Tells whether the conic is a parabola.
 

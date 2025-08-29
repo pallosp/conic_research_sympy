@@ -4,6 +4,7 @@ from sympy.abc import x, y
 from lib.circle import COMPLEX_UNIT_CIRCLE, UNIT_CIRCLE, Circle
 from lib.conic import AxisDirection, ConicFromFocusAndDirectrix, ConicFromPoly
 from lib.conic_classification import (
+    IsCircle,
     IsCircular,
     IsComplexEllipse,
     IsDegenerate,
@@ -125,6 +126,31 @@ class TestIsEllipse:
     def test_point_conic(self):
         point_conic = PointConic(symbols("x,y,z"))
         assert IsEllipse(point_conic) is False
+
+
+class TestIsCircle:
+    def test_symbolic_circular_conics(self):
+        x, y = symbols("x,y", real=True)
+
+        circle = Circle((x, y), symbols("r", positive=True))
+        assert IsCircle(circle) is True
+
+        circle_or_point = Circle((x, y), symbols("r", nonnegative=True))
+        assert IsCircle(circle_or_point) is None
+
+        complex_circle = Circle((x, y), symbols("r", positive=True) * I)
+        assert IsCircle(complex_circle) is False
+
+        double_ideal_line = LinePair(IDEAL_LINE, IDEAL_LINE)
+        assert IsCircle(double_ideal_line) is False
+
+    def test_symbolic_ellipse(self):
+        x, y = symbols("x,y", real=True)
+        r1, r2 = symbols("r1,r2", positive=True)
+
+        assert IsCircle(Ellipse((x, y), r1, r1)) is True
+        assert IsCircle(Ellipse((x, y), r1, r2)) is None
+        assert IsCircle(Ellipse((x, y), r1, r1 + r2)) is False
 
 
 class TestIsComplexEllipse:
