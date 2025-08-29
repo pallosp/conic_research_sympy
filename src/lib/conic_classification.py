@@ -1,4 +1,4 @@
-from sympy import Eq, Matrix
+from sympy import Matrix
 from sympy.core.logic import fuzzy_and, fuzzy_not, fuzzy_or
 
 from lib.matrix import IsDefinite
@@ -92,7 +92,13 @@ def IsCircular(conic: Matrix) -> bool | None:
     Circles, complex circles, zero-radius circles have such circular symmetry.
     Double ideal lines are not considered circular. Returns None if undecidable.
     """
-    return fuzzy_and([conic[0].is_nonzero, conic[3].is_zero, Eq(conic[0], conic[4])])
+    return fuzzy_and(
+        [
+            conic[0].is_nonzero,
+            conic[3].is_zero,
+            (conic[0] - conic[4]).expand().is_zero,
+        ],
+    )
 
 
 def IsLinePair(conic: Matrix) -> bool | None:

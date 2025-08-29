@@ -281,6 +281,13 @@ class TestIsCircular:
         r = symbols("r")
         assert IsCircular(Circle((0, 0), r)) is True
 
+    def test_symbolic_ellipse(self):
+        x, y = symbols("x,y", real=True)
+        r1, r2 = symbols("r1,r2", positive=True)
+        assert IsCircular(Ellipse((x, y), r1, r1)) is True
+        assert IsCircular(Ellipse((x, y), r1, r2)) is None
+        assert IsCircular(Ellipse((x, y), r1, r1 + r2)) is False
+
     def test_symbolic_conics(self):
         pos1, pos2 = symbols("pos1,pos2", positive=True)
         neg = symbols("neg", negative=True)
