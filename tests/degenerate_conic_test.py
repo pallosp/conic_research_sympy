@@ -7,7 +7,7 @@ from lib.degenerate_conic import ExtractPoint, LinePair, PointConic, SplitToLine
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine, VerticalLine
 from lib.matrix import ConicMatrix, IsNonZeroMultiple, IsRealMatrix
 from lib.point import PointToVec3
-from tests.util import AreProjectiveSetsEqual
+from tests.utils import AreProjectiveSetsEqual
 
 
 class TestLinePair:

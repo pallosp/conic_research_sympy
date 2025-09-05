@@ -21,7 +21,7 @@ from lib.intersection import ConicXLine
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine, LineThroughPoint
 from lib.matrix import ConicMatrix, IsNonZeroMultiple, QuadraticForm
 from lib.point import ORIGIN, IdealPoint
-from tests.util import AreProjectiveSetsEqual
+from tests.utils import AreProjectiveSetsEqual
 
 
 class TestConicFromPoly:

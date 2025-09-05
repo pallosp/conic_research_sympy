@@ -14,8 +14,8 @@ from lib.ellipse import Ellipse
 from lib.line import X_AXIS, HorizontalLine
 from lib.matrix import ConicMatrix, IsNonZeroMultiple
 from lib.point import ORIGIN
+from lib.sympy_utils import FactorRadicals
 from lib.transform import ScaleXY, TransformConic
-from tests.util import FactorRadicals
 
 
 class TestConicFromCenterAndPoints:

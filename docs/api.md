@@ -56,6 +56,13 @@
 * [distance](#distance)
   * [PointPointDistance](#distance.PointPointDistance)
   * [PointLineDistance](#distance.PointLineDistance)
+* [sympy\_utils](#sympy_utils)
+  * [AddEq](#sympy_utils.AddEq)
+  * [SubEq](#sympy_utils.SubEq)
+  * [MulEq](#sympy_utils.MulEq)
+  * [DivEq](#sympy_utils.DivEq)
+  * [SwapEq](#sympy_utils.SwapEq)
+  * [FactorRadicals](#sympy_utils.FactorRadicals)
 * [conic\_classification](#conic_classification)
   * [IsDegenerate](#conic_classification.IsDegenerate)
   * [IsNonDegenerate](#conic_classification.IsNonDegenerate)
@@ -821,6 +828,70 @@ Computes the signed distance between a point and a line.
 Special cases:
  - the distance between finite points and the ideal line is infinity
  - the distance between ideal points and any projective lines is `nan`
+
+<a id="sympy_utils"></a>
+
+# sympy\_utils
+
+<a id="sympy_utils.AddEq"></a>
+
+#### AddEq
+
+```python
+def AddEq(*eqs: Eq) -> Eq
+```
+
+Adds multiple sympy equations.
+
+<a id="sympy_utils.SubEq"></a>
+
+#### SubEq
+
+```python
+def SubEq(eq0: Eq, eq1: Eq) -> Eq
+```
+
+Subtracts one sympy equation from another.
+
+<a id="sympy_utils.MulEq"></a>
+
+#### MulEq
+
+```python
+def MulEq(eq: Eq, factor: Expr) -> Eq
+```
+
+Multiplies a sympy equation by a factor.
+
+<a id="sympy_utils.DivEq"></a>
+
+#### DivEq
+
+```python
+def DivEq(eq: Eq, denom: Expr) -> Eq
+```
+
+Divides a sympy equation by a denominator.
+
+<a id="sympy_utils.SwapEq"></a>
+
+#### SwapEq
+
+```python
+def SwapEq(eq: Eq) -> Eq
+```
+
+Swaps the lhs and rhs of a sympy equation.
+
+<a id="sympy_utils.FactorRadicals"></a>
+
+#### FactorRadicals
+
+```python
+def FactorRadicals(expr: Expr) -> Expr
+```
+
+Factors all `Pow` and `sqrt` subexpressions inside `expr`.
 
 <a id="conic_classification"></a>
 
