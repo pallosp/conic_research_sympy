@@ -80,16 +80,24 @@ min_eigen_fde, max_eigen_fde = (
 
 
 min_eigen, max_eigen = symbols("min_eigen,max_eigen")
-eigenvalue_min_eq = Eq(min_eigen, min_eigen_fde)
-eigenvalue_max_eq = Eq(max_eigen, max_eigen_fde)
-eigenvalue_sum_eq = factor(AddEq(eigenvalue_min_eq, eigenvalue_max_eq))
-eigenvalue_diff_eq = factor(SubEq(eigenvalue_max_eq, eigenvalue_min_eq))
+eigenvalue_min_eq_abc = Eq(min_eigen, min_eigen_abc)
+eigenvalue_max_eq_abc = Eq(max_eigen, max_eigen_abc)
+eigenvalue_sum_eq_abc = AddEq(eigenvalue_min_eq_abc, eigenvalue_max_eq_abc)
+eigenvalue_diff_eq_abc = SubEq(eigenvalue_max_eq_abc, eigenvalue_min_eq_abc)
+eigenvalue_min_eq_fde = Eq(min_eigen, min_eigen_fde)
+eigenvalue_max_eq_fde = Eq(max_eigen, max_eigen_fde)
+eigenvalue_sum_eq_fde = factor(AddEq(eigenvalue_min_eq_fde, eigenvalue_max_eq_fde))
+eigenvalue_diff_eq_fde = factor(SubEq(eigenvalue_max_eq_fde, eigenvalue_min_eq_fde))
 
 eigenvalue_eqs = [
-    eigenvalue_min_eq,
-    eigenvalue_max_eq,
-    eigenvalue_sum_eq,
-    eigenvalue_diff_eq,
+    eigenvalue_min_eq_abc,
+    eigenvalue_max_eq_abc,
+    eigenvalue_sum_eq_abc,
+    eigenvalue_diff_eq_abc,
+    eigenvalue_min_eq_fde,
+    eigenvalue_max_eq_fde,
+    eigenvalue_sum_eq_fde,
+    eigenvalue_diff_eq_fde,
 ]
 
 for eq in eigenvalue_eqs:
@@ -97,10 +105,15 @@ for eq in eigenvalue_eqs:
 
 print("As sign(λ) = sign(det):\n")
 
-eigenvalue_diff_eq = Eq((max_eigen - min_eigen) * sign(det, evaluate=False), ecc**2 * L)
-println_indented(eigenvalue_diff_eq)
+eigenvalue_diff_eq_fde = Eq(
+    (max_eigen - min_eigen) * sign(det, evaluate=False),
+    ecc**2 * L,
+)
+println_indented(eigenvalue_diff_eq_fde)
 
-lambda_eq = SwapEq(factor(DivEq(SubEq(eigenvalue_diff_eq, eigenvalue_sum_eq), 2)))
+lambda_eq = DivEq(SubEq(eigenvalue_diff_eq_fde, eigenvalue_sum_eq_fde), 2)
+lambda_eq = SwapEq(factor(lambda_eq))
+
 println_indented(lambda_eq)
 
 lambda_eq_piecewise = Eq(L, Piecewise((-min_eigen, det > 0), (-max_eigen, True)))
@@ -110,7 +123,7 @@ eigen_to_abc = {min_eigen: min_eigen_abc, max_eigen: max_eigen_abc}
 lambda_eq_abc = factor(lambda_eq.subs(eigen_to_abc))
 println_indented(lambda_eq_abc)
 
-ecc_square_eq = SwapEq(DivEq(eigenvalue_diff_eq, L))
+ecc_square_eq = SwapEq(DivEq(eigenvalue_diff_eq_fde, L))
 println_indented(ecc_square_eq)
 
 ecc_square_eq_abc = ecc_square_eq.subs(L, lambda_eq_abc.rhs).subs(eigen_to_abc)
