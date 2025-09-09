@@ -858,10 +858,10 @@ Subtracts one sympy equation from another.
 #### MulEq
 
 ```python
-def MulEq(eq: Eq, factor: Expr) -> Eq
+def MulEq(eq: Eq, factor: Expr | Eq) -> Eq
 ```
 
-Multiplies a sympy equation by a factor.
+Multiplies a sympy equation by a factor or another equation.
 
 <a id="sympy_utils.DivEq"></a>
 

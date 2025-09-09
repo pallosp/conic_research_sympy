@@ -16,9 +16,11 @@ def SubEq(eq0: Eq, eq1: Eq) -> Eq:
     return Eq(eq0.lhs - eq1.lhs, eq0.rhs - eq1.rhs)
 
 
-def MulEq(eq: Eq, factor: Expr) -> Eq:
-    """Multiplies a sympy equation by a factor."""
-    return Eq(eq.lhs * factor, eq.rhs * factor)
+def MulEq(eq: Eq, factor: Expr | Eq) -> Eq:
+    """Multiplies a sympy equation by a factor or another equation."""
+    lhs = factor.lhs if isinstance(factor, Eq) else factor
+    rhs = factor.rhs if isinstance(factor, Eq) else factor
+    return Eq(eq.lhs * lhs, eq.rhs * rhs)
 
 
 def DivEq(eq: Eq, denom: Expr) -> Eq:
