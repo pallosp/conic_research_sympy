@@ -11,6 +11,7 @@ from sympy import (
     atan2,
     cos,
     factor,
+    gcd,
     pretty,
     sign,
     simplify,
@@ -20,7 +21,7 @@ from sympy import (
     symbols,
 )
 
-from lib.conic import ConicFromFocusAndDirectrix
+from lib.conic import ConicFromFocusAndDirectrix, ProjectiveConicCenter
 from lib.matrix import ConicMatrix
 from lib.sympy_utils import AddEq, DivEq, FactorRadicals, MulEq, SubEq, SwapEq
 
@@ -244,3 +245,34 @@ println_indented(Eq(A + C, aplusc))
 
 c_solution = c_solution.subs(L, -(A + C)).simplify()
 println_indented(Eq(c, c_solution))
+
+print("\nThe (a, b) is parallel to the ideal point's direction\n")
+x, y, _ = ProjectiveConicCenter(ConicMatrix(A, B, C, D, E, F))
+
+a_value = x / sqrt(x * x + y * y)
+println_indented(Eq(a, a_value))
+
+a_value = a_value.expand().subs(B * B, A * C).factor()
+println_indented(Eq(a, a_value))
+
+parabola_det = ConicMatrix(A, B, C, D, E, F).det().subs(B * B, A * C)
+a_value = a_value.subs(parabola_det, det)
+println_indented(Eq(a, a_value))
+
+b_value = y / sqrt(x * x + y * y)
+b_value = b_value.expand().subs(B * B, A * C).factor()
+b_value = b_value.subs(parabola_det, det)
+println_indented(Eq(b, b_value))
+
+c_solution = c_solution.subs(a, a_value).subs(b, b_value).simplify()
+println_indented(Eq(c, c_solution))
+
+c_solution = c_solution.factor().subs(parabola_det, det)
+println_indented(Eq(c, c_solution))
+
+print("\nNormalized coordinates:\n")
+
+multiplier = 1 / gcd(a_value, b_value)
+println_indented(Eq(symbols("a'"), (a_value * multiplier).factor()))
+println_indented(Eq(symbols("b'"), (b_value * multiplier).factor()))
+println_indented(Eq(symbols("c'"), (c_solution * multiplier).factor()))
