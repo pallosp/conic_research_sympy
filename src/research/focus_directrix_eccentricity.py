@@ -208,3 +208,9 @@ for det_assumption in Q.positive, Q.negative:
             .refine(det_assumption(det))
         )
         println_indented(Eq(symbols(f"c{index+1}"), c_simplified))
+
+print("\nSpecial case: circle\n")
+
+print("  ∜(4B²+(A-C)²) = 0 ==> the c coefficent of the directrix is not valid.\n")
+print("  Multiplying all coefficients with that expression however will yield ")
+print("  a'=b'=0, c'≠0, which represents the ideal line.\n")
