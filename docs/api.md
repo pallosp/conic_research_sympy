@@ -615,6 +615,8 @@ def AxisDirection(conic: Matrix) -> Matrix
 Returns the direction of the major axis of the conic section,
 namely the ideal point in that direction.
 
+Returns the zero vector in case of circles.
+
 The result is ambiguous in case of degenerate conics: evaluate
 `(AxisDirection(conic), AxisDirection(-conic))` to get both values.
 
