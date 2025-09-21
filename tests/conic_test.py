@@ -88,8 +88,11 @@ class TestEccentricity:
 
 
 class TestAxisDirection:
-    def test_circle(self):
+    def test_unit_circle(self):
         assert AxisDirection(UNIT_CIRCLE).is_zero_matrix
+
+    def test_symbolic_circle(self):
+        assert AxisDirection(Circle(symbols("x y"), symbols("r"))).is_zero_matrix
 
     def test_ellipse(self):
         ellipse = Ellipse((6, 5), 4, 3, r1_direction=(2, 1))
