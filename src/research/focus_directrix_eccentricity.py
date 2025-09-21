@@ -182,9 +182,9 @@ assert len(directrix_c_values) == 2
 
 for det_assumption in Q.positive, Q.negative:
     print(f"\n  when det{'>0' if det_assumption == Q.positive else '<0'}\n")
-    for index, c in enumerate(directrix_c_values):
+    for index, c_solution in enumerate(directrix_c_values):
         c_simplified = (
-            c.subs(a * a, aa_eq.rhs)
+            c_solution.subs(a * a, aa_eq.rhs)
             .subs(b * b, bb_eq.rhs)
             .subs(a * b, ab_eq.rhs)
             .subs(ecc, sqrt(ecc_square_eq.rhs))
@@ -214,3 +214,33 @@ print("\nSpecial case: circle\n")
 print("  ∜(4B²+(A-C)²) = 0 ==> the c coefficent of the directrix is not valid.\n")
 print("  Multiplying all coefficients with that expression however will yield ")
 print("  a'=b'=0, c'≠0, which represents the ideal line.\n")
+
+print("\nSpecial case: parabola\n")
+
+println_indented(f_eq)
+
+println_indented(Eq(ecc, 1))
+f_eq = f_eq.subs(ecc, 1)
+println_indented(f_eq)
+
+f_eq = Eq(f_eq.lhs, f_eq.rhs.expand().collect(c * c * L))
+println_indented(f_eq)
+
+println_indented(Eq(a * a + b * b, 1))
+f_eq = f_eq.subs(a * a + b * b, 1)
+println_indented(f_eq)
+
+c_solution = solve(f_eq, c)[0]
+println_indented(Eq(c, c_solution))
+
+aplusc = conic[0] + conic[4]
+println_indented(Eq(A + C, aplusc))
+
+aplusc = aplusc.factor()
+println_indented(Eq(A + C, aplusc))
+
+aplusc = aplusc.subs(a * a + b * b, 1).subs(ecc, 1)
+println_indented(Eq(A + C, aplusc))
+
+c_solution = c_solution.subs(L, -(A + C)).simplify()
+println_indented(Eq(c, c_solution))
