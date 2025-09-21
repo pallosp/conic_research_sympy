@@ -7,18 +7,22 @@ from sympy import (
     Matrix,
     Piecewise,
     Pow,
+    Q,
     atan2,
     cos,
     factor,
     pretty,
     sign,
+    simplify,
     sin,
     solve,
+    sqrt,
     symbols,
 )
 
 from lib.conic import ConicFromFocusAndDirectrix
-from lib.sympy_utils import AddEq, DivEq, MulEq, SubEq, SwapEq
+from lib.matrix import ConicMatrix
+from lib.sympy_utils import AddEq, DivEq, FactorRadicals, MulEq, SubEq, SwapEq
 
 
 def print_indented(expr: object) -> None:
@@ -79,10 +83,11 @@ min_eigen_fde, max_eigen_fde = (
 )
 
 
-min_eigen, max_eigen = symbols("min_eigen,max_eigen")
+min_eigen, max_eigen = symbols("min_eigen,max_eigen", real=True, nonzero=True)
 eigenvalue_min_eq_abc = Eq(min_eigen, min_eigen_abc)
 eigenvalue_max_eq_abc = Eq(max_eigen, max_eigen_abc)
 eigenvalue_sum_eq_abc = AddEq(eigenvalue_min_eq_abc, eigenvalue_max_eq_abc)
+eigenvalue_prod_eq_abc = simplify(MulEq(eigenvalue_max_eq_abc, eigenvalue_min_eq_abc))
 eigenvalue_diff_eq_abc = SubEq(eigenvalue_max_eq_abc, eigenvalue_min_eq_abc)
 eigenvalue_min_eq_fde = Eq(min_eigen, min_eigen_fde)
 eigenvalue_max_eq_fde = Eq(max_eigen, max_eigen_fde)
@@ -93,6 +98,7 @@ eigenvalue_eqs = [
     eigenvalue_min_eq_abc,
     eigenvalue_max_eq_abc,
     eigenvalue_sum_eq_abc,
+    eigenvalue_prod_eq_abc,
     eigenvalue_diff_eq_abc,
     eigenvalue_min_eq_fde,
     eigenvalue_max_eq_fde,
@@ -153,3 +159,52 @@ theta_eq = Eq(theta, atan2(sin2_eq.rhs, cos2_eq.rhs) / 2)
 println_indented(theta_eq)
 println_indented(theta_eq.subs(ecc**2 * L, sign(ecc**2 * L)))
 println_indented(theta_eq.subs(ecc**2 * L, 1 / sign(det)))
+
+print("\nDirectrix equation:\n")
+
+println_indented(coeff_eq[3])
+fx_formula = solve(coeff_eq[3], fx)[0]
+println_indented(Eq(fx, fx_formula))
+
+println_indented(coeff_eq[4])
+fy_formula = solve(coeff_eq[4], fy)[0]
+println_indented(Eq(fy, fy_formula))
+
+f_eq = coeff_eq[5]
+println_indented(f_eq)
+f_eq = f_eq.subs({fx: fx_formula, fy: fy_formula})
+println_indented(f_eq)
+
+print("\nSolutions when there are two directrices:\n")
+
+directrix_c_values = solve(f_eq, c)
+assert len(directrix_c_values) == 2
+
+for det_assumption in Q.positive, Q.negative:
+    print(f"\n  when det{'>0' if det_assumption == Q.positive else '<0'}\n")
+    for index, c in enumerate(directrix_c_values):
+        c_simplified = (
+            c.subs(a * a, aa_eq.rhs)
+            .subs(b * b, bb_eq.rhs)
+            .subs(a * b, ab_eq.rhs)
+            .subs(ecc, sqrt(ecc_square_eq.rhs))
+            .subs(L, lambda_eq.rhs)
+            .simplify()
+            .refine(det_assumption(det))
+            .factor()
+            .collect(F)
+            .subs(A + C, min_eigen + max_eigen)
+            .simplify()
+        )
+        c_simplified = (
+            FactorRadicals(c_simplified)
+            .subs(max_eigen * min_eigen, eigenvalue_prod_eq_abc.rhs)
+            .subs(max_eigen - min_eigen, eigenvalue_diff_eq_abc.rhs)
+        )
+        c_simplified = (
+            FactorRadicals(c_simplified)
+            .subs(ConicMatrix(A, B, C, D, E, F).det(), det)
+            .subs(((A - C) ** 2).expand(), (A - C) ** 2)
+            .refine(det_assumption(det))
+        )
+        println_indented(Eq(symbols(f"c{index+1}"), c_simplified))
