@@ -91,6 +91,8 @@
   * [Rotate](#transform.Rotate)
   * [ScaleXY](#transform.ScaleXY)
   * [Scale](#transform.Scale)
+* [parabola](#parabola)
+  * [ParabolaDirectrix](#parabola.ParabolaDirectrix)
 * [polar\_conic](#polar_conic)
   * [POLAR\_UNIT\_CIRCLE](#polar_conic.POLAR_UNIT_CIRCLE)
   * [PointAtAngle](#polar_conic.PointAtAngle)
@@ -1197,6 +1199,27 @@ def Scale(scale: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix
 
 Computes the projective transformation matrix for a uniform scaling
 transformation.
+
+<a id="parabola"></a>
+
+# parabola
+
+<a id="parabola.ParabolaDirectrix"></a>
+
+#### ParabolaDirectrix
+
+```python
+def ParabolaDirectrix(parabola: Matrix) -> Matrix
+```
+
+Computes the directrix of a parabola represented as a conic matrix.
+
+Special cases for other conic types:
+- Returns the zero vector for coincident line pairs.
+- Returns the ideal line for non-coincident parallel line pairs.
+- Returns the ideal line for conics consisting of one finite and one ideal line.
+- Raises `ValueError` if the conic provably has 0 or 2 ideal points.
+- Returns an unspecified 3D column vector in all other cases.
 
 <a id="polar_conic"></a>
 
