@@ -1,13 +1,8 @@
 #!/usr/bin/env python
 
-from textwrap import indent
+from sympy import Eq, Matrix, simplify, symbols
 
-from sympy import Eq, Matrix, pretty, simplify, symbols
-
-
-def println_indented(expr: object) -> None:
-    print(indent(pretty(expr), "  ") + "\n")
-
+from research.util import println_indented
 
 a, b, c = symbols("a,b,c", real=True)
 min_eigen, max_eigen = symbols("min_eigen,max_eigen", real=True)

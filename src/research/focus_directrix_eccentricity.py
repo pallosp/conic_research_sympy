@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from textwrap import indent
 
 from sympy import (
     Eq,
@@ -12,7 +11,6 @@ from sympy import (
     cos,
     factor,
     gcd,
-    pretty,
     sign,
     simplify,
     sin,
@@ -24,15 +22,7 @@ from sympy import (
 from lib.conic import ConicFromFocusAndDirectrix, ProjectiveConicCenter
 from lib.matrix import ConicMatrix
 from lib.sympy_utils import AddEq, DivEq, FactorRadicals, MulEq, SubEq, SwapEq
-
-
-def print_indented(expr: object) -> None:
-    print(indent(pretty(expr), "  "))
-
-
-def println_indented(expr: object) -> None:
-    print(indent(pretty(expr), "  ") + "\n")
-
+from research.util import print_indented, println_indented
 
 fx, fy, a, b, c, ecc, L = symbols("x,y,a,b,c,e,lambda", real=True)
 
