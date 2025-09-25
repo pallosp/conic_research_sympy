@@ -2,6 +2,7 @@ from collections.abc import Sequence
 
 from sympy import Expr, Matrix, cos, sin
 
+from lib.distance import PointPointDistance
 from lib.matrix import ConicMatrix
 from lib.point import PointToXY
 
@@ -32,6 +33,34 @@ def Ellipse(
     d = -a * center_x - b * center_y
     e = -b * center_x - c * center_y
     f = (r1**2 * r2**2) * (axis_dir_x**2 + axis_dir_y**2) - d * center_x - e * center_y
+    return ConicMatrix(a, b, c, d, e, f)
+
+
+def EllipseFromFociAndPoint(
+    focus1: Matrix | Sequence[Expr],
+    focus2: Matrix | Sequence[Expr],
+    point: Matrix | Sequence[Expr],
+) -> Matrix:
+    """Constructs an ellipse from its focus points and an incident point."""
+    fx1, fy1 = PointToXY(focus1)
+    fx2, fy2 = PointToXY(focus2)
+
+    # center
+    cx, cy = (fx1 + fx2) / 2, (fy1 + fy2) / 2
+
+    # major axis direction
+    dx, dy = (fx2 - fx1) / 2, (fy2 - fy1) / 2
+
+    # semi-major axis length
+    r = (PointPointDistance(focus1, point) + PointPointDistance(focus2, point)) / 2
+
+    a = dx**2 - r**2
+    b = dx * dy
+    c = dy**2 - r**2
+    d = -cx * a - cy * b
+    e = -cx * b - cy * c
+    f = -cx * d - cy * e + a * c - b * b
+
     return ConicMatrix(a, b, c, d, e, f)
 
 

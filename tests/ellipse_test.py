@@ -3,7 +3,12 @@ from sympy import factor, pi, simplify, symbols
 from lib.central_conic import ConicCenter, SemiAxisLengths
 from lib.circle import UNIT_CIRCLE
 from lib.conic import ConicContainsPoint
-from lib.ellipse import Ellipse, SteinerEllipse, SteinerInellipse
+from lib.ellipse import (
+    Ellipse,
+    EllipseFromFociAndPoint,
+    SteinerEllipse,
+    SteinerInellipse,
+)
 from lib.matrix import IsNonZeroMultiple
 from lib.point import ORIGIN, Centroid, PointToVec3
 
@@ -44,6 +49,17 @@ class TestEllipseFromParams:
         ellipse = Ellipse(center, r_min, r_min + r_diff, r1_direction=(73, -25))
         axes = tuple(factor(simplify(length)) for length in SemiAxisLengths(ellipse))
         assert (r_min, r_min + r_diff) == axes or (r_min + r_diff, r_min) == axes
+
+
+class TestEllipseFromFociAndPoint:
+    def test_numeric(self):
+        f1 = (1, 2)
+        f2 = (3, 4)
+        p = (0, 0)
+        ellipse = EllipseFromFociAndPoint(f1, f2, p)
+        center = [coord.simplify() for coord in ConicCenter(ellipse)]
+        assert center == [2, 3]
+        assert ConicContainsPoint(ellipse, p)
 
 
 class TestSteinerEllipse:

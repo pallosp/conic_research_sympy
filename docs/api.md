@@ -99,6 +99,7 @@
   * [ConicFromPolarMatrix](#polar_conic.ConicFromPolarMatrix)
 * [ellipse](#ellipse)
   * [Ellipse](#ellipse.Ellipse)
+  * [EllipseFromFociAndPoint](#ellipse.EllipseFromFociAndPoint)
   * [SteinerEllipse](#ellipse.SteinerEllipse)
   * [SteinerInellipse](#ellipse.SteinerInellipse)
 * [intersection](#intersection)
@@ -1290,6 +1291,18 @@ the first radius.
 
 *Formula*:
 [research/ellipse_from_params.py](../src/research/ellipse_from_params.py)
+
+<a id="ellipse.EllipseFromFociAndPoint"></a>
+
+#### EllipseFromFociAndPoint
+
+```python
+def EllipseFromFociAndPoint(focus1: Matrix | Sequence[Expr],
+                            focus2: Matrix | Sequence[Expr],
+                            point: Matrix | Sequence[Expr]) -> Matrix
+```
+
+Constructs an ellipse from its focus points and an incident point.
 
 <a id="ellipse.SteinerEllipse"></a>
 
