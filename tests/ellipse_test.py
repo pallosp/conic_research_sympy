@@ -3,6 +3,7 @@ from sympy import factor, pi, simplify, symbols
 from lib.central_conic import ConicCenter, SemiAxisLengths
 from lib.circle import UNIT_CIRCLE
 from lib.conic import ConicContainsPoint
+from lib.conic_classification import IsEllipse
 from lib.ellipse import (
     Ellipse,
     EllipseFromFociAndPoint,
@@ -57,6 +58,7 @@ class TestEllipseFromFociAndPoint:
         f2 = (3, 4)
         p = (0, 0)
         ellipse = EllipseFromFociAndPoint(f1, f2, p)
+        assert IsEllipse(ellipse)
         center = [coord.simplify() for coord in ConicCenter(ellipse)]
         assert center == [2, 3]
         assert ConicContainsPoint(ellipse, p)
