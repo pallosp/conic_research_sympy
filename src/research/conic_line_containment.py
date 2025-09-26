@@ -31,33 +31,34 @@ The following statements are all equivalent:
  - S C S = 0
 """
 
-from sympy import Matrix, pprint, symbols
+from sympy import Matrix, symbols
 
 from lib.conic import PolePoint
 from lib.matrix import ConicMatrix, QuadraticForm, SkewMatrix
+from research.util import print_indented, println_indented
 
 conic = ConicMatrix(*symbols("a,b,c,d,e,f"))
 line = Matrix(symbols("x,y,z"))
 
 print("\nConic matrix:\n")
-pprint(conic)
+println_indented(conic)
 
 print("\nLine vector:\n")
-pprint(line)
+println_indented(line)
 
 skew = SkewMatrix(line)
 print("\nThree points on line are the columns of\n")
-pprint(skew)
+println_indented(skew)
 
 print("\nCorresponding quadratic forms:")
 print("(they must be zero if the line lies on the conic)\n")
 for i in range(skew.cols):
-    pprint(QuadraticForm(conic, skew.col(i)).expand())
+    print_indented(QuadraticForm(conic, skew.col(i)).expand())
 
 print("\nskew * conic * skewᵀ:")
 print("(notice that its diagonal elements are the quadratic forms)\n")
-pprint((skew * conic * skew.T).expand())
+println_indented((skew * conic * skew.T).expand())
 
 print("\nPole point corresponding to the line:")
 print("(must be the zero vector if the line is concurrent to the conic's lines)\n")
-pprint(PolePoint(conic, line).expand())
+println_indented(PolePoint(conic, line).expand())
