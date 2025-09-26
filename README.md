@@ -33,10 +33,32 @@ source .venv/bin/activate
 pip install -e '.[dev]'
 ```
 
-### Documentation
+### Useful commands
 
-To regenerate the API docs, run
+Regenerating the API docs:
 
 ```sh
 pydoc-markdown
+```
+
+Running the tests (with optional coverage report):
+
+```sh
+pytest
+
+pytest --cov src/lib --cov-report html
+open htmlcov/index.html
+```
+
+Running the linter (with optional auto-fixes):
+
+```sh
+ruff check
+ruff check --fix
+```
+
+Running all pre-commit checks for the staged files:
+
+```sh
+pre-commit
 ```

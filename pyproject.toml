@@ -15,6 +15,7 @@ dev = [
     "pre-commit",
     "pydoc-markdown",
     "pytest",
+    "pytest-cov",
     "ruff"
 ]
 
