@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sympy import Expr, Matrix, symbols, sympify
+from sympy import Expr, Matrix, factor, symbols, sympify
 
 from research.util import print_indented
 
@@ -51,9 +51,7 @@ def GetTransform(
     )
     uv = Matrix([u0, v0, u1, v1, u2, v2, u3, v3])
     coefficients = [*list(m.inv() * uv), sympify(1)]
-    for i in range(len(coefficients)):
-        coefficients[i] = coefficients[i].factor()
-    return Matrix(3, 3, coefficients)
+    return Matrix(3, 3, coefficients).applyfunc(factor)
 
 
 ################################################################################
