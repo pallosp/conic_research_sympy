@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-from sympy import Eq, MatAdd, MatMul, Matrix, pprint, symbols
+from sympy import Eq, MatAdd, MatMul, Matrix, gcd, symbols
 
 from lib.distance import PointLineDistance, PointPointDistance
+from research.util import println_indented
 
 print("\nConic equation from focus, directrix and eccentricity:\n")
 
@@ -20,7 +21,7 @@ distance_from_directrix = PointLineDistance(point_on_conic, directrix)
 conic_eq = (eccentricity * distance_from_directrix) ** 2 - distance_from_focus**2
 conic_eq = (conic_eq * (a * a + b * b)).simplify()
 
-pprint(Eq(conic_eq, 0))
+println_indented(Eq(conic_eq, 0))
 
 
 print("\nExpanded to matrix:\n")
@@ -34,27 +35,29 @@ conic_matrix = Matrix(
         [coeffs[x] / 2, coeffs[y] / 2, coeffs[1]],
     ],
 )
-pprint(conic_matrix)
+println_indented(conic_matrix)
 
 
 print("\nAs a sum of two matrices:\n")
 
 ecc_square = eccentricity**2
-ecc_matrix = conic_matrix.copy()
-for i in range(len(ecc_matrix)):
-    ecc_matrix[i] = ecc_matrix[i].collect(eccentricity).coeff(ecc_square)
+ecc_matrix = conic_matrix.applyfunc(
+    lambda el: el.collect(eccentricity).coeff(ecc_square),
+)
 
 remainder = conic_matrix - ecc_square * ecc_matrix
-for i in range(len(remainder)):
-    remainder[i] = (remainder[i] / (a * a + b * b)).factor()
+remainder_gcd = gcd(list(remainder))
+remainder = MatMul(
+    remainder.applyfunc(lambda el: (el / remainder_gcd).factor()), remainder_gcd,
+)
 
-conic_eq = MatAdd(MatMul(ecc_matrix, ecc_square), MatMul(remainder, a * a + b * b))
-pprint(conic_eq)
+conic_eq = MatAdd(MatMul(ecc_matrix, ecc_square), remainder)
+println_indented(conic_eq)
 
 
 print("\nDeterminant of the conic matrix above:\n")
 
-pprint(conic_matrix.det().factor())
+println_indented(conic_matrix.det().factor())
 
 
 print("\nThe determinant is positive if")
@@ -66,4 +69,4 @@ print("  • ax+by+c ≠ 0 (the focus is not on the directix)")
 
 print("\nIts discriminant:\n")
 
-pprint(conic_matrix[:2, :2].det().factor())
+println_indented(conic_matrix[:2, :2].det().factor())
