@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sympy import gcd, pprint, symbols
+from sympy import gcd, pprint, simplify, symbols
 
 from lib.central_conic import ConicCenter
 from lib.conic import IdealPoints
@@ -15,9 +15,7 @@ asymptote1 = LineBetween(center, ideal_point_1)
 asymptote2 = LineBetween(center, ideal_point_2)
 asymptote_conic = LinePair(asymptote1, asymptote2)
 
-for i in range(len(asymptote_conic)):
-    asymptote_conic[i] = asymptote_conic[i].simplify()
-
+asymptote_conic = asymptote_conic.applyfunc(simplify)
 asymptote_conic /= gcd(list(asymptote_conic))
 
 print("\nDegenerate conic from the two asymptotes:\n")
