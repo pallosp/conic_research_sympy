@@ -122,6 +122,7 @@ class IdealPoints(Function):
 
     @classmethod
     def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None:
+        """Internal implementation. Call `IdealPoints(conic)` directly."""
         a, b, c = conic[0], conic[1], conic[4]
         disc = sqrt(b * b - a * c)
         cross = NonZeroCross(Matrix([[c, -b - disc, 0], [-b + disc, a, 0], [0, 0, 0]]))

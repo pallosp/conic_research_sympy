@@ -58,6 +58,7 @@ class SplitToLines(Function):
 
     @classmethod
     def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None:
+        """Internal implementation. Call `SplitToLines(conic)` directly."""
         adj = conic.adjugate()
         a, c, f = adj.diagonal()
 
@@ -99,6 +100,7 @@ class ExtractPoint(Function):
 
     @classmethod
     def eval(cls, degenerate_conic: Matrix) -> Matrix | None:
+        """Internal implementation. Call `ExtractPoint(conic)` directly."""
         adj = degenerate_conic.adjugate()
         if adj.is_zero_matrix:
             return Matrix.zeros(3, 1)

@@ -102,6 +102,7 @@ class NonZeroCross(Function):
 
     @classmethod
     def eval(cls, matrix: Matrix) -> tuple[Matrix, Matrix] | NaN | None:
+        """Internal implementation. Call `NonZeroCross(matrix)` directly."""
         all_zero = True
         for i in range(len(matrix)):
             el = matrix[i]

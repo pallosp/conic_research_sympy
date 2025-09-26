@@ -8,6 +8,7 @@
   * [QuadraticForm](#matrix.QuadraticForm)
   * [SkewMatrix](#matrix.SkewMatrix)
   * [NonZeroCross](#matrix.NonZeroCross)
+    * [eval](#matrix.NonZeroCross.eval)
   * [IsRealMatrix](#matrix.IsRealMatrix)
   * [IsDefinite](#matrix.IsDefinite)
 * [central\_conic](#central_conic)
@@ -15,7 +16,9 @@
   * [ConicCenter](#central_conic.ConicCenter)
   * [SemiAxisLengths](#central_conic.SemiAxisLengths)
   * [SemiMajorAxis](#central_conic.SemiMajorAxis)
+    * [eval](#central_conic.SemiMajorAxis.eval)
   * [SemiMinorAxis](#central_conic.SemiMinorAxis)
+    * [eval](#central_conic.SemiMinorAxis.eval)
 * [circle](#circle)
   * [Circle](#circle.Circle)
   * [CircleRadius](#circle.CircleRadius)
@@ -43,6 +46,7 @@
   * [Eccentricity](#conic.Eccentricity)
   * [AxisDirection](#conic.AxisDirection)
   * [IdealPoints](#conic.IdealPoints)
+    * [eval](#conic.IdealPoints.eval)
   * [ProjectiveConicCenter](#conic.ProjectiveConicCenter)
   * [PolePoint](#conic.PolePoint)
   * [PolarLine](#conic.PolarLine)
@@ -52,7 +56,9 @@
   * [LinePair](#degenerate_conic.LinePair)
   * [PointConic](#degenerate_conic.PointConic)
   * [SplitToLines](#degenerate_conic.SplitToLines)
+    * [eval](#degenerate_conic.SplitToLines.eval)
   * [ExtractPoint](#degenerate_conic.ExtractPoint)
+    * [eval](#degenerate_conic.ExtractPoint.eval)
 * [distance](#distance)
   * [PointPointDistance](#distance.PointPointDistance)
   * [PointLineDistance](#distance.PointLineDistance)
@@ -204,6 +210,17 @@ element.
 Returns an unevaluated `sympy.Function` if none of the elements can be
 proven to be non-zero, or `nan` in case of a zero matrix.
 
+<a id="matrix.NonZeroCross.eval"></a>
+
+#### eval
+
+```python
+@classmethod
+def eval(cls, matrix: Matrix) -> tuple[Matrix, Matrix] | NaN | None
+```
+
+Internal implementation. Call `NonZeroCross(matrix)` directly.
+
 <a id="matrix.IsRealMatrix"></a>
 
 #### IsRealMatrix
@@ -299,6 +316,17 @@ The returned value is:
 Returns an unevaluated `sympy.Function` if we can't tell which axis is
 longer.
 
+<a id="central_conic.SemiMajorAxis.eval"></a>
+
+#### eval
+
+```python
+@classmethod
+def eval(cls, conic: Matrix) -> Expr | None
+```
+
+Internal implementation. Call `SemiMajorAxis(conic)` directly.
+
 <a id="central_conic.SemiMinorAxis"></a>
 
 ## SemiMinorAxis Objects
@@ -318,6 +346,17 @@ The returned value is:
 
 Returns an unevaluated `sympy.Function` if we can't tell which axis is
 shorter.
+
+<a id="central_conic.SemiMinorAxis.eval"></a>
+
+#### eval
+
+```python
+@classmethod
+def eval(cls, conic: Matrix) -> Expr | None
+```
+
+Internal implementation. Call `SemiMinorAxis(conic)` directly.
 
 <a id="circle"></a>
 
@@ -643,6 +682,17 @@ Returns two points. Special cases:
  - For ellipses these are the complex conjugates of each other.
  - For symbolic conics returns an unevaluated `sympy.Function`.
 
+<a id="conic.IdealPoints.eval"></a>
+
+#### eval
+
+```python
+@classmethod
+def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None
+```
+
+Internal implementation. Call `IdealPoints(conic)` directly.
+
 <a id="conic.ProjectiveConicCenter"></a>
 
 #### ProjectiveConicCenter
@@ -783,6 +833,17 @@ Special cases:
 *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
 section 11.1
 
+<a id="degenerate_conic.SplitToLines.eval"></a>
+
+#### eval
+
+```python
+@classmethod
+def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None
+```
+
+Internal implementation. Call `SplitToLines(conic)` directly.
+
 <a id="degenerate_conic.ExtractPoint"></a>
 
 ## ExtractPoint Objects
@@ -807,6 +868,17 @@ on the conic iff `pᵀ C p = 0`, i.e. `p·(r₁·p, r₂·p, r₃·p) = 0`.
 `r₃·(r₁⨯r₂) = det C = 0`. So are `p = r₂⨯r₃` and `p = r₃⨯r₁`. When the
 conic matrix is a rank 2 matrix (point conic or non-coincident line pair),
 at least one of these is a non-zero vector.
+
+<a id="degenerate_conic.ExtractPoint.eval"></a>
+
+#### eval
+
+```python
+@classmethod
+def eval(cls, degenerate_conic: Matrix) -> Matrix | None
+```
+
+Internal implementation. Call `ExtractPoint(conic)` directly.
 
 <a id="distance"></a>
 

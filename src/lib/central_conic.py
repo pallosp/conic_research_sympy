@@ -88,6 +88,7 @@ class SemiMajorAxis(Function):
 
     @classmethod
     def eval(cls, conic: Matrix) -> Expr | None:
+        """Internal implementation. Call `SemiMajorAxis(conic)` directly."""
         axes = SemiAxisLengths(conic)
         finite = IsFiniteConic(conic)
         if finite is True:
@@ -120,6 +121,7 @@ class SemiMinorAxis(Function):
 
     @classmethod
     def eval(cls, conic: Matrix) -> Expr | None:
+        """Internal implementation. Call `SemiMinorAxis(conic)` directly."""
         axes = SemiAxisLengths(conic)
         finite = IsFiniteConic(conic)
         if finite is True:
