@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
-from sympy import Expr, Matrix, pprint, symbols, sympify
+from sympy import Expr, Matrix, symbols, sympify
+
+from research.util import print_indented
 
 """Calculates the transformation that maps (xᵢ,yᵢ) to (uᵢ,vᵢ) for i=0..3.
-ᵢ
+
 Source: https://franklinta.com/2014/09/08/computing-css-matrix3d-transforms/
 """
 
@@ -83,7 +85,7 @@ print("Elements of the normalized transformation matrix:\n")
 
 transform *= transform[0].as_numer_denom()[1]
 for el in transform:
-    pprint(el)
+    print_indented(el)
 
 ################################################################################
 
@@ -101,4 +103,4 @@ print("Elements of the normalized transformation matrix:\n")
 
 transform *= transform[0].as_numer_denom()[1]
 for el in transform:
-    pprint(el)
+    print_indented(el)
