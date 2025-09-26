@@ -6,11 +6,12 @@
 # A special case is the Steiner ellipse, where the conic's center coincides
 # with the centroid of the triangle formed by the perimeter points.
 
-from sympy import Expr, Matrix, pprint, symbols
+from sympy import Determinant, Eq, Expr, Matrix, symbols
 
 from lib.central_conic import ConicCenter
 from lib.conic import ConicContainsPoint
 from lib.transform import TransformConic, Translate
+from research.util import println_indented
 
 # Simplification WLOG: let the center point be at (0, 0).
 #
@@ -69,9 +70,9 @@ conic = Matrix(
 )
 
 assert ConicCenter(conic) == (0, 0)
-assert ConicContainsPoint(conic, Matrix([x1, y1, 1]))
-assert ConicContainsPoint(conic, Matrix([x2, y2, 1]))
-assert ConicContainsPoint(conic, Matrix([x3, y3, 1]))
+assert ConicContainsPoint(conic, (x1, y1))
+assert ConicContainsPoint(conic, (x2, y2))
+assert ConicContainsPoint(conic, (x3, y3))
 
 # Generalization for arbitrary center point (xc, yc)
 #
@@ -123,14 +124,14 @@ def PolyAsDet(
     col1_options: list[Matrix],
     col2_options: list[Matrix],
     col3_options: list[Matrix],
-) -> Matrix:
+) -> Determinant:
     """Expresses poly as the determinant of a 3x3 matrix."""
     for c1 in col1_options:
         for c2 in col2_options:
             for c3 in col3_options:
                 matrix = Matrix.hstack(c1, c2, c3)
                 if poly.equals(matrix.det()):
-                    return matrix
+                    return Determinant(matrix)
     raise AssertionError("not found")
 
 
@@ -164,28 +165,32 @@ col_xy_symmetric = [
 ]
 
 
-print("\nElements of the Steiner ellipse matrix:")
+print("\nElements of the Steiner ellipse matrix:\n")
 
-print("\na = determinant of\n")
-pprint(PolyAsDet(a, col_y_options, col_y_options, [col_ones]))
-
-print("\nb = determinant of\n")
-pprint(PolyAsDet(b, col_x_options, col_y_options, [col_ones]))
-
-print("\nc = determinant of\n")
-pprint(PolyAsDet(c, col_x_options, col_x_options, [col_ones]))
-
-print("\nd = determinant of\n")
-pprint(PolyAsDet(d, col_y_options, col_y_options, col_x_options))
-
-print("\ne = determinant of\n")
-pprint(PolyAsDet(e, col_x_options, col_x_options, col_y_options))
-
-print("\nf = determinant of\n")
-pprint(PolyAsDet(f, col_x_options, col_xy_symmetric, col_y_options))
-
-print("\nf = 2 * determinant of\n")
-pprint(PolyAsDet(f / 2, col_x_options, [col_xy_asymmetric], col_y_options))
+println_indented(
+    Eq(symbols("a"), PolyAsDet(a, col_y_options, col_y_options, [col_ones])),
+)
+println_indented(
+    Eq(symbols("b"), PolyAsDet(b, col_x_options, col_y_options, [col_ones])),
+)
+println_indented(
+    Eq(symbols("c"), PolyAsDet(c, col_x_options, col_x_options, [col_ones])),
+)
+println_indented(
+    Eq(symbols("d"), PolyAsDet(d, col_y_options, col_y_options, col_x_options)),
+)
+println_indented(
+    Eq(symbols("e"), PolyAsDet(e, col_x_options, col_x_options, col_y_options)),
+)
+println_indented(
+    Eq(symbols("f"), PolyAsDet(f, col_x_options, col_xy_symmetric, col_y_options)),
+)
+println_indented(
+    Eq(
+        symbols("f") / 2,
+        PolyAsDet(f / 2, col_x_options, [col_xy_asymmetric], col_y_options),
+    ),
+)
 
 # Steiner inellipse
 #
@@ -193,7 +198,7 @@ pprint(PolyAsDet(f / 2, col_x_options, [col_xy_asymmetric], col_y_options))
 # According to scale_conic_from_center.py its a, b, c, d and e coefficients are
 # the same (modulo a constant factor).
 
-print("\n\nElements of the Steiner inellipse matrix:")
+print("\nElements of the Steiner inellipse matrix:\n")
 
 inellipse_subs = {
     x1: (x2 + x3) / 2,
@@ -206,20 +211,24 @@ inellipse_subs = {
 
 a, b, c, d, e, f = (v.xreplace(inellipse_subs) * 4 for v in [a, b, c, d, e, f])
 
-print("\na = determinant of\n")
-pprint(PolyAsDet(a, col_y_options, col_y_options, [col_ones]))
-
-print("\nb = determinant of\n")
-pprint(PolyAsDet(b, col_x_options, col_y_options, [col_ones]))
-
-print("\nc = determinant of\n")
-pprint(PolyAsDet(c, col_x_options, col_x_options, [col_ones]))
-
-print("\nd = determinant of\n")
-pprint(PolyAsDet(d, col_y_options, col_y_options, col_x_options))
-
-print("\ne = determinant of\n")
-pprint(PolyAsDet(e, col_x_options, col_x_options, col_y_options))
-
-print("\nf = 1/2 * determinant of\n")
-pprint(PolyAsDet(f * 2, col_x_options, col_xy_symmetric, col_y_options))
+println_indented(
+    Eq(symbols("a"), PolyAsDet(a, col_y_options, col_y_options, [col_ones])),
+)
+println_indented(
+    Eq(symbols("b"), PolyAsDet(b, col_x_options, col_y_options, [col_ones])),
+)
+println_indented(
+    Eq(symbols("c"), PolyAsDet(c, col_x_options, col_x_options, [col_ones])),
+)
+println_indented(
+    Eq(symbols("d"), PolyAsDet(d, col_y_options, col_y_options, col_x_options)),
+)
+println_indented(
+    Eq(symbols("e"), PolyAsDet(e, col_x_options, col_x_options, col_y_options)),
+)
+println_indented(
+    Eq(
+        symbols("f") * 2,
+        PolyAsDet(f * 2, col_x_options, col_xy_symmetric, col_y_options),
+    ),
+)
