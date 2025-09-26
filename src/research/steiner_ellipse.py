@@ -23,9 +23,9 @@ from research.util import println_indented
 #
 # This linear equation system in matrix form:
 #
-#   [x₁⋅x₁ x₁⋅y₁ y₁⋅y₁] [a]   [1]
-#   [x₂⋅x₂ x₂⋅y₂ y₂⋅y₂] [b] = [1]
-#   [x₃⋅x₃ x₃⋅y₃ y₃⋅y₃] [c]   [1]
+#   [x₁² x₁⋅y₁ y₁²] [a]   [1]
+#   [x₂² x₂⋅y₂ y₂²] [b] = [1]
+#   [x₃² x₃⋅y₃ y₃²] [c]   [1]
 #
 # Solution using Cramer's rule:
 #
@@ -34,7 +34,7 @@ from research.util import println_indented
 #   b = det M₂ / det M
 #   c = det M₃ / det M
 #
-# Conic *Formula*:
+# Conic formula:
 #
 #   det M₁⋅x² + det M₂⋅x⋅y + det M₃⋅y² - det M = 0
 #
@@ -83,9 +83,9 @@ assert ConicContainsPoint(conic, (x3, y3))
 #
 #   simplify(TransformConic(ConicMatrix(a, b, c, 0, 0, f), Translate(xc, yc))
 #
-#   [a b 0]    [a           b           -a⋅xc-b⋅yc           ]
-#   [b c 0] -> [b           c           -b⋅xc-c⋅yc           ]
-#   [0 0 f]    [-a⋅xc-b⋅yc  -b⋅xc-c⋅yc  f-a⋅xc²+b⋅xc⋅yc+c⋅yc²]
+#   [a b 0]    [a             b             -a⋅xc - b⋅yc               ]
+#   [b c 0] -> [b             c             -b⋅xc - c⋅yc               ]
+#   [0 0 f]    [-a⋅xc - b⋅yc  -b⋅xc - c⋅yc  f - a⋅xc² + b⋅xc⋅yc + c⋅yc²]
 #
 # I couldn't find a way to express the last row and column of the matrix with a
 # reasonably simple formula.

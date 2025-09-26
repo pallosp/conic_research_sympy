@@ -252,6 +252,8 @@ May return
  - zero matrix if the solution is ambiguous, which happens when some of the
    (`center`, `pᵢ`, `pⱼ`) triples are collinear.
 
+*Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
+
 <a id="central_conic.ConicCenter"></a>
 
 #### ConicCenter

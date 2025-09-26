@@ -21,6 +21,8 @@ def ConicFromCenterAndPoints(
      - a parallel line pair;
      - zero matrix if the solution is ambiguous, which happens when some of the
        (`center`, `pᵢ`, `pⱼ`) triples are collinear.
+
+    *Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
     """
     x, y = PointToXY(center)
     x1, y1 = PointToXY(p1)
