@@ -176,7 +176,7 @@ def ConicContainsPoint(conic: Matrix, point: Matrix | Sequence[Expr]) -> bool | 
 
     Returns None if undecidable.
     """
-    return QuadraticForm(conic, PointToVec3(point)).is_zero
+    return QuadraticForm(conic, PointToVec3(point)).expand().is_zero
 
 
 def ConicContainsLine(conic: Matrix, line: Matrix) -> bool | None:
