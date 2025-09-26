@@ -762,6 +762,9 @@ where `λ₁`, `λ₂` and `λ₃` are either all positive or all negative.
 This function returns the corresponding conic matrix for the choice
 `λ₁ = λ₂ = λ₃ = -1`.
 
+Hint: Use [ExtractPoint](#degenerate_conic.ExtractPoint) to recover the
+point from the resulting conic.
+
 <a id="degenerate_conic.SplitToLines"></a>
 
 ## SplitToLines Objects
@@ -792,7 +795,8 @@ Extracts the point from a point conic or the intersection of the
 lines from a line pair conic.
 
 Returns a zero vector for double line pairs, or an unspecified 3d
-column vector if the conic is not degenerate.
+column vector if the conic is not degenerate. May return an unevaluated
+`sympy.Function` for symbolic conic matrices.
 
 *Algorithm*:
 

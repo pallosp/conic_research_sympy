@@ -29,6 +29,9 @@ def PointConic(point: Matrix | Sequence[Expr]) -> Matrix:
     where `λ₁`, `λ₂` and `λ₃` are either all positive or all negative.
     This function returns the corresponding conic matrix for the choice
     `λ₁ = λ₂ = λ₃ = -1`.
+
+    Hint: Use [ExtractPoint](#degenerate_conic.ExtractPoint) to recover the
+    point from the resulting conic.
     """
     x, y, z = PointToVec3(point)
     return ConicMatrix(
@@ -80,7 +83,8 @@ class ExtractPoint(Function):
     lines from a line pair conic.
 
     Returns a zero vector for double line pairs, or an unspecified 3d
-    column vector if the conic is not degenerate.
+    column vector if the conic is not degenerate. May return an unevaluated
+    `sympy.Function` for symbolic conic matrices.
 
     *Algorithm*:
 
