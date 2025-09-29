@@ -28,19 +28,20 @@ fx, fy, a, b, c, ecc, L = symbols("x,y,a,b,c,e,lambda", real=True)
 
 focus = (fx, fy)
 directrix = Matrix([a, b, c])
-conic = ConicFromFocusAndDirectrix(focus, directrix, ecc) * L
+conic_fde = ConicFromFocusAndDirectrix(focus, directrix, ecc) * L
 
+A, B, C, D, E, F = symbols("A,B,C,D,E,F", real=True)
+conic_abc = ConicMatrix(A, B, C, D, E, F)
 
 print("\nEquations to determine the foci, directrices and eccentricity:\n")
 
-A, B, C, D, E, F = symbols("A,B,C,D,E,F", real=True)
 coeff_eq = [
-    Eq(A, conic[0]),
-    Eq(B, conic[3]),
-    Eq(C, conic[4]),
-    Eq(D, conic[6]),
-    Eq(E, conic[7]),
-    Eq(F, conic[8]),
+    Eq(A, conic_fde[0]),
+    Eq(B, conic_fde[3]),
+    Eq(C, conic_fde[4]),
+    Eq(D, conic_fde[6]),
+    Eq(E, conic_fde[7]),
+    Eq(F, conic_fde[8]),
 ]
 for eq in coeff_eq:
     print_indented(eq)
@@ -54,7 +55,7 @@ for i in range(len(coeff_eq)):
 print("\nDeterminant of the conic matrix:\n")
 
 det = symbols("det", nonzero=True)
-det_eq = Eq(det, conic.det().factor().subs(a * a + b * b, 1))
+det_eq = Eq(det, conic_fde.det().factor().subs(a * a + b * b, 1))
 print_indented(det_eq)
 
 print("\nThis implies that sign(λ) = sign(det).")
@@ -194,7 +195,7 @@ for det_assumption in Q.positive, Q.negative:
         )
         c_simplified = (
             FactorRadicals(c_simplified)
-            .subs(ConicMatrix(A, B, C, D, E, F).det(), det)
+            .subs(conic_abc.det(), det)
             .subs(((A - C) ** 2).expand(), (A - C) ** 2)
             .refine(det_assumption(det))
         )
@@ -224,7 +225,7 @@ println_indented(f_eq)
 c_solution = solve(f_eq, c)[0]
 println_indented(Eq(c, c_solution))
 
-aplusc = conic[0] + conic[4]
+aplusc = conic_fde[0] + conic_fde[4]
 println_indented(Eq(A + C, aplusc))
 
 aplusc = aplusc.factor()
@@ -237,7 +238,7 @@ c_solution = c_solution.subs(L, -(A + C)).simplify()
 println_indented(Eq(c, c_solution))
 
 print("\nThe (a, b) is parallel to the ideal point's direction\n")
-x, y, _ = ProjectiveConicCenter(ConicMatrix(A, B, C, D, E, F))
+x, y, _ = ProjectiveConicCenter(conic_abc)
 
 a_value = x / sqrt(x * x + y * y)
 println_indented(Eq(a, a_value))
@@ -245,7 +246,7 @@ println_indented(Eq(a, a_value))
 a_value = a_value.expand().subs(B * B, A * C).factor()
 println_indented(Eq(a, a_value))
 
-parabola_det = ConicMatrix(A, B, C, D, E, F).det().subs(B * B, A * C)
+parabola_det = conic_abc.det().subs(B * B, A * C)
 a_value = a_value.subs(parabola_det, det)
 println_indented(Eq(a, a_value))
 
@@ -263,6 +264,11 @@ println_indented(Eq(c, c_solution))
 print("\nNormalized coordinates:\n")
 
 multiplier = 1 / gcd(a_value, b_value)
-println_indented(Eq(symbols("a'"), (a_value * multiplier).factor()))
-println_indented(Eq(symbols("b'"), (b_value * multiplier).factor()))
-println_indented(Eq(symbols("c'"), (c_solution * multiplier).factor()))
+
+directrix_a = (a_value * multiplier).factor()
+directrix_b = (b_value * multiplier).factor()
+directrix_c = (c_solution * multiplier).factor()
+
+println_indented(Eq(symbols("a'"), directrix_a))
+println_indented(Eq(symbols("b'"), directrix_b))
+println_indented(Eq(symbols("c'"), directrix_c))
