@@ -249,7 +249,7 @@ println_indented(Eq(A + C, aplusc))
 c_solution = c_solution.subs(L, -(A + C)).simplify()
 println_indented(Eq(c, c_solution))
 
-print("\nThe (a, b) is parallel to the ideal point's direction\n")
+print("\nThe (a, b) vector is parallel to the ideal point's direction\n")
 x, y, _ = ProjectiveConicCenter(conic_abc)
 
 a_value = x / sqrt(x * x + y * y)
