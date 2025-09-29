@@ -7,7 +7,7 @@ from lib.matrix import ConicMatrix, QuadraticForm
 from lib.sympy_utils import EqChain
 from research.util import println_indented
 
-HORIZONTAL_LINE = "-" * 88
+HORIZONTAL_LINE = "-" * 100
 
 a, b, c, d, e, f = symbols("a b c d e f")
 parabola = ConicMatrix(a, b, c, d, e, f)
@@ -16,10 +16,10 @@ print(f"{HORIZONTAL_LINE}\n")
 
 print("Conic matrix adjugate\n")
 
-adj = parabola.adjugate()
-aa, _, _, ab, ac, _, ad, ae, af = parabola.adjugate()
-
-println_indented(adj)
+adj_symbols = ConicMatrix(*symbols("A_adj B_adj C_adj D_adj E_adj F_adj"))
+adj_elements = parabola.adjugate()
+aa, _, _, ab, ac, _, ad, ae, af = adj_elements
+println_indented(EqChain(symbols("adj"), adj_elements, adj_symbols))
 
 println_indented("The last row contains the generalized center point's coordinates.")
 
@@ -81,11 +81,25 @@ println_indented(Eq(d * det, d_times_det))
 print("The c⋅d³ term hints at an (a⋅f - d²)⋅(b⋅e - c⋅d) subexpression.")
 print("The remainder turns out to be the product of two other adj. matrix elements.\n")
 
-println_indented(Eq(d * det, (d_times_det + ac * ad).factor() - ac * ad))
+d_times_det_factored = (d_times_det + ac * ad).factor() - ac * ad
+println_indented(
+    EqChain(
+        d * det,
+        d_times_det_factored,
+        d_times_det_factored.subs(zip(adj_elements, adj_symbols, strict=True)),
+    ),
+)
 
-print("Similarly:\n")
+print("Similarly\n")
 
 e_times_det = (e * parabola.det()).expand()
-println_indented(Eq(e * det, (e_times_det + aa * ae).factor() - aa * ae))
+e_times_det_factored = (e_times_det + aa * ae).factor() - aa * ae
+println_indented(
+    EqChain(
+        e * det,
+        e_times_det_factored,
+        e_times_det_factored.subs(zip(adj_elements, adj_symbols, strict=True)),
+    ),
+)
 
 print(f"{HORIZONTAL_LINE}\n")
