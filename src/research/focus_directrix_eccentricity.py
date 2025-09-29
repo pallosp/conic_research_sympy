@@ -24,6 +24,8 @@ from lib.matrix import ConicMatrix
 from lib.sympy_utils import AddEq, DivEq, FactorRadicals, MulEq, SubEq, SwapEq
 from research.util import print_indented, println_indented
 
+HORIZONTAL_LINE = "-" * 88
+
 fx, fy, a, b, c, ecc, L = symbols("x,y,a,b,c,e,lambda", real=True)
 
 focus = (fx, fy)
@@ -33,7 +35,9 @@ conic_fde = ConicFromFocusAndDirectrix(focus, directrix, ecc) * L
 A, B, C, D, E, F = symbols("A,B,C,D,E,F", real=True)
 conic_abc = ConicMatrix(A, B, C, D, E, F)
 
-print("\nEquations to determine the foci, directrices and eccentricity:\n")
+print(f"\n{HORIZONTAL_LINE}\n")
+
+print("Equations to determine the foci, directrices and eccentricity:\n")
 
 coeff_eq = [
     Eq(A, conic_fde[0]),
@@ -127,6 +131,8 @@ println_indented(ecc_square_eq)
 ecc_square_eq_abc = ecc_square_eq.subs(L, lambda_eq_abc.rhs).subs(eigen_to_abc)
 println_indented(ecc_square_eq_abc)
 
+print(f"{HORIZONTAL_LINE}\n")
+
 print("Directrix normal vector a.k.a. focal axis direction:\n")
 
 aa_eq = Eq(a**2, solve(coeff_eq[0], a**2)[0])
@@ -152,7 +158,9 @@ println_indented(theta_eq)
 println_indented(theta_eq.subs(ecc**2 * L, sign(ecc**2 * L)))
 println_indented(theta_eq.subs(ecc**2 * L, 1 / sign(det)))
 
-print("\nDirectrix equation:\n")
+print(f"{HORIZONTAL_LINE}\n")
+
+print("Directrix equation:\n")
 
 println_indented(coeff_eq[3])
 fx_formula = solve(coeff_eq[3], fx)[0]
@@ -201,13 +209,17 @@ for det_assumption in Q.positive, Q.negative:
         )
         println_indented(Eq(symbols(f"c{index+1}"), c_simplified))
 
-print("\nSpecial case: circle\n")
+print(f"{HORIZONTAL_LINE}\n")
+
+print("Special case: circle\n")
 
 print("  ∜(4B²+(A-C)²) = 0 ==> the c coefficent of the directrix is not valid.\n")
 print("  Multiplying all coefficients with that expression however will yield ")
 print("  a'=b'=0, c'≠0, which represents the ideal line.\n")
 
-print("\nSpecial case: parabola\n")
+print(f"{HORIZONTAL_LINE}\n")
+
+print("Special case: parabola\n")
 
 println_indented(f_eq)
 
@@ -272,3 +284,25 @@ directrix_c = (c_solution * multiplier).factor()
 println_indented(Eq(symbols("a'"), directrix_a))
 println_indented(Eq(symbols("b'"), directrix_b))
 println_indented(Eq(symbols("c'"), directrix_c))
+
+print(f"{HORIZONTAL_LINE}\n")
+
+print("Parabola focus:\n")
+
+println_indented(coeff_eq[3])
+
+fx_value = solve(coeff_eq[3], fx)[0]
+println_indented(Eq(fx, fx_value))
+
+fx_value = fx_value.subs(L, -(A + C))
+fx_value = fx_value.subs(ecc, 1)
+fx_value = fx_value.subs(a, a_value)
+fx_value = fx_value.subs(c, c_solution)
+println_indented(Eq(fx, fx_value))
+
+fy_value = solve(coeff_eq[4], fy)[0]
+fy_value = fy_value.subs(L, -(A + C))
+fy_value = fy_value.subs(ecc, 1)
+fy_value = fy_value.subs(b, b_value)
+fy_value = fy_value.subs(c, c_solution)
+println_indented(Eq(fy, fy_value))
