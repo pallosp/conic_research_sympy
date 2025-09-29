@@ -33,6 +33,15 @@ def SwapEq(eq: Eq) -> Eq:
     return Eq(eq.rhs, eq.lhs)
 
 
+def EqChain(*expressions: Expr) -> Eq | Expr:
+    """Creates a chain of equations, i.e. `expr_1 = expr_2 = ... = expr_n`."""
+    if not expressions:
+        raise ValueError("At least one expression is required")
+    if len(expressions) == 1:
+        return expressions[0]
+    return Eq(EqChain(*expressions[0:-1]), expressions[-1], evaluate=False)
+
+
 def FactorRadicals(expr: Expr) -> Expr:
     """Factors all `Pow` and `sqrt` subexpressions inside `expr`."""
     return expr.replace(Pow, lambda base, exp: Pow(base.factor(), exp))

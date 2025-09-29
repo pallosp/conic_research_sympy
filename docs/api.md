@@ -68,6 +68,7 @@
   * [MulEq](#sympy_utils.MulEq)
   * [DivEq](#sympy_utils.DivEq)
   * [SwapEq](#sympy_utils.SwapEq)
+  * [EqChain](#sympy_utils.EqChain)
   * [FactorRadicals](#sympy_utils.FactorRadicals)
 * [conic\_classification](#conic_classification)
   * [IsDegenerate](#conic_classification.IsDegenerate)
@@ -966,6 +967,16 @@ def SwapEq(eq: Eq) -> Eq
 ```
 
 Swaps the lhs and rhs of a sympy equation.
+
+<a id="sympy_utils.EqChain"></a>
+
+#### EqChain
+
+```python
+def EqChain(*expressions: Expr) -> Eq | Expr
+```
+
+Creates a chain of equations, i.e. `expr_1 = expr_2 = ... = expr_n`.
 
 <a id="sympy_utils.FactorRadicals"></a>
 
