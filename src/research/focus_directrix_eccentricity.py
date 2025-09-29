@@ -21,7 +21,7 @@ from sympy import (
 
 from lib.conic import ConicFromFocusAndDirectrix, ProjectiveConicCenter
 from lib.matrix import ConicMatrix
-from lib.sympy_utils import AddEq, DivEq, FactorRadicals, MulEq, SubEq, SwapEq
+from lib.sympy_utils import AddEq, DivEq, EqChain, FactorRadicals, MulEq, SubEq, SwapEq
 from research.util import print_indented, println_indented
 
 HORIZONTAL_LINE = "-" * 88
@@ -306,3 +306,33 @@ fy_value = fy_value.subs(ecc, 1)
 fy_value = fy_value.subs(b, b_value)
 fy_value = fy_value.subs(c, c_solution)
 println_indented(Eq(fy, fy_value))
+
+print("Expressed by the adjugate matrix elements:\n")
+
+aa, ab, ac, ad, ae, af = symbols("A' B' C' D' E' F'")
+adj_symbols = Matrix([[aa, ab, ad], [ab, ac, ae], [ad, ae, af]])
+adj_values = conic_abc.adjugate()
+
+println_indented(EqChain(symbols("adj"), adj_symbols, adj_values))
+fx_value = fx_value.subs(zip(adj_values, adj_symbols, strict=True))
+println_indented(EqChain(fx, fx_value, fx_value.factor()))
+
+print("Using the parabola determinant identities:\n")
+
+a_plus_c_times_det = -ad * ad - ae * ae
+d_times_det = ab * ae - ac * ad
+e_times_det = ab * ad - aa * ae
+
+println_indented(Eq((A + C) * det, a_plus_c_times_det))
+println_indented(Eq(D * det, d_times_det))
+println_indented(Eq(E * det, e_times_det))
+
+fx_value = fx_value.factor()
+fx_value = fx_value.subs(D * det, d_times_det).subs((A + C) * det, a_plus_c_times_det)
+println_indented(EqChain(fx, fx_value.factor().collect(ad)))
+
+fy_value = fy_value.subs(zip(adj_values, adj_symbols, strict=True)).factor()
+fy_value = fy_value.subs(E * det, e_times_det).subs((A + C) * det, a_plus_c_times_det)
+println_indented(EqChain(fy, fy_value.factor().collect(ae)))
+
+print(f"{HORIZONTAL_LINE}\n")
