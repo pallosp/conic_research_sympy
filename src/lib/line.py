@@ -80,9 +80,9 @@ def AngleBisector(line1: Matrix, line2: Matrix) -> Matrix:
 
     Special cases:
      - AngleBisector(parallel finite lines, opposite direction) = center line
-     - AngleBisector(coincident finite lines, same direction) = zero vector
+     - AngleBisector(coincident finite lines, same direction) = `[0, 0, 0]ᵀ`
      - AngleBisector(other parallel finite lines, same direction) = ideal line
-     - AngleBisector(ideal line, ideal line) = zero vector
+     - AngleBisector(ideal line, ideal line) = `[0, 0, 0]ᵀ`
      - AngleBisector(ideal line, finite line) = ideal line
 
     *Formula*: [research/angle_bisector.py](../src/research/angle_bisector.py)

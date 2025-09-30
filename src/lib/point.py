@@ -17,7 +17,7 @@ def IdealPointOnLine(line: Matrix) -> Matrix:
     The first two coordinates specify the line's direction. The third one is
     always zero.
 
-    If the line is the ideal line, returns a zero vector.
+    If the line is the ideal line, returns `[0, 0, 0]ᵀ`.
     """
     return Matrix([line[1], -line[0], 0])
 

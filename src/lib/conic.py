@@ -97,7 +97,7 @@ def AxisDirection(conic: Matrix) -> Matrix:
     """Returns the direction of the major axis of the conic section,
     namely the ideal point in that direction.
 
-    Returns the zero vector in case of circles.
+    Returns `[0, 0, 0]ᵀ` in case of circles.
 
     The result is ambiguous in case of degenerate conics: evaluate
     `(AxisDirection(conic), AxisDirection(-conic))` to get both values.
@@ -144,7 +144,7 @@ def ProjectiveConicCenter(conic: Matrix) -> Matrix:
     For parabolas returns the ideal point on it
     ([proof](../src/research/parabola_center.py))
 
-    For other line pair conics and ideal point conics returns `(0, 0, 0)ᵀ`.
+    For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
     """
     return conic.col(0).cross(conic.col(1))
 
@@ -154,7 +154,7 @@ def PolePoint(conic: Matrix, polar_line: Matrix) -> Matrix:
 
     If the conic is degenerate, i.e. it factors into `l₁` and `l₂` real or
     complex conjugate lines, the pole is
-     - the zero vector if `l₁`, `l₂`, and `polar_line` are concurrent;
+     - `[0, 0, 0]ᵀ` if `l₁`, `l₂`, and `polar_line` are concurrent;
      - the intersection of `l₁` and `l₂` otherwise.
 
     *Pole / polar identity*: `conic * pole_point = polar_line`<br>

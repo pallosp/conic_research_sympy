@@ -5,7 +5,7 @@ def ParabolaDirectrix(parabola: Matrix) -> Matrix:
     """Computes the directrix of a parabola represented as a conic matrix.
 
     Special cases for other conic types:
-    - Returns the zero vector for coincident line pairs.
+    - Returns `[0, 0, 0]ᵀ` for coincident line pairs.
     - Returns the ideal line for
       - non-coincident parallel line pairs;
       - conics consisting of one finite and one ideal line;
@@ -23,7 +23,7 @@ def ParabolaFocus(parabola: Matrix) -> Matrix:
     """Computes the focus of a parabola represented as a conic matrix.
 
     Special cases for other conic types:
-    - Returns the zero vector for
+    - Returns `[0, 0, 0]ᵀ` for
       - conics with one ideal point;
       - conics containing the ideal line.
     - Raises `ValueError` if the conic provably has 0 or 2 ideal points.

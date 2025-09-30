@@ -505,9 +505,9 @@ the same sign. Negate one of the lines to get the other angle bisector.
 
 Special cases:
  - AngleBisector(parallel finite lines, opposite direction) = center line
- - AngleBisector(coincident finite lines, same direction) = zero vector
+ - AngleBisector(coincident finite lines, same direction) = `[0, 0, 0]ᵀ`
  - AngleBisector(other parallel finite lines, same direction) = ideal line
- - AngleBisector(ideal line, ideal line) = zero vector
+ - AngleBisector(ideal line, ideal line) = `[0, 0, 0]ᵀ`
  - AngleBisector(ideal line, finite line) = ideal line
 
 *Formula*: [research/angle_bisector.py](../src/research/angle_bisector.py)
@@ -661,7 +661,7 @@ def AxisDirection(conic: Matrix) -> Matrix
 Returns the direction of the major axis of the conic section,
 namely the ideal point in that direction.
 
-Returns the zero vector in case of circles.
+Returns `[0, 0, 0]ᵀ` in case of circles.
 
 The result is ambiguous in case of degenerate conics: evaluate
 `(AxisDirection(conic), AxisDirection(-conic))` to get both values.
@@ -715,7 +715,7 @@ finite point) for
 For parabolas returns the ideal point on it
 ([proof](../src/research/parabola_center.py))
 
-For other line pair conics and ideal point conics returns `(0, 0, 0)ᵀ`.
+For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
 
 <a id="conic.PolePoint"></a>
 
@@ -729,7 +729,7 @@ Computes the pole point of a conic with respect to the given polar line.
 
 If the conic is degenerate, i.e. it factors into `l₁` and `l₂` real or
 complex conjugate lines, the pole is
- - the zero vector if `l₁`, `l₂`, and `polar_line` are concurrent;
+ - `[0, 0, 0]ᵀ` if `l₁`, `l₂`, and `polar_line` are concurrent;
  - the intersection of `l₁` and `l₂` otherwise.
 
 *Pole / polar identity*: `conic * pole_point = polar_line`<br>
@@ -857,7 +857,7 @@ class ExtractPoint(Function)
 Extracts the point from a point conic or the intersection of the
 lines from a line pair conic.
 
-Returns a zero vector for double line pairs, or an unspecified 3d
+Returns `[0, 0, 0]ᵀ` for double line pairs, or an unspecified 3d
 column vector if the conic is not degenerate. May return an unevaluated
 `sympy.Function` for symbolic conic matrices.
 
@@ -1191,7 +1191,7 @@ Returns the coordinates of the ideal point on the line.
 The first two coordinates specify the line's direction. The third one is
 always zero.
 
-If the line is the ideal line, returns a zero vector.
+If the line is the ideal line, returns `[0, 0, 0]ᵀ`.
 
 <a id="point.PointToXY"></a>
 
@@ -1307,7 +1307,7 @@ def ParabolaDirectrix(parabola: Matrix) -> Matrix
 Computes the directrix of a parabola represented as a conic matrix.
 
 Special cases for other conic types:
-- Returns the zero vector for coincident line pairs.
+- Returns `[0, 0, 0]ᵀ` for coincident line pairs.
 - Returns the ideal line for
   - non-coincident parallel line pairs;
   - conics consisting of one finite and one ideal line;
@@ -1326,7 +1326,7 @@ def ParabolaFocus(parabola: Matrix) -> Matrix
 Computes the focus of a parabola represented as a conic matrix.
 
 Special cases for other conic types:
-- Returns the zero vector for
+- Returns `[0, 0, 0]ᵀ` for
   - conics with one ideal point;
   - conics containing the ideal line.
 - Raises `ValueError` if the conic provably has 0 or 2 ideal points.
@@ -1463,7 +1463,7 @@ def LineXLine(line1: Matrix, line2: Matrix) -> Matrix
 
 Computes the intersection of two lines.
 
-Returns an ideal point if the lines are parallel, or a zero vector if they
+Returns an ideal point if the lines are parallel, or `[0, 0, 0]ᵀ` if they
 coincide.
 
 <a id="intersection.ConicXLine"></a>

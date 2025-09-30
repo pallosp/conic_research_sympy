@@ -83,7 +83,7 @@ class ExtractPoint(Function):
     """Extracts the point from a point conic or the intersection of the
     lines from a line pair conic.
 
-    Returns a zero vector for double line pairs, or an unspecified 3d
+    Returns `[0, 0, 0]ᵀ` for double line pairs, or an unspecified 3d
     column vector if the conic is not degenerate. May return an unevaluated
     `sympy.Function` for symbolic conic matrices.
 
