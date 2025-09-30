@@ -26,6 +26,7 @@
   * [UNIT\_CIRCLE](#circle.UNIT_CIRCLE)
   * [COMPLEX\_UNIT\_CIRCLE](#circle.COMPLEX_UNIT_CIRCLE)
 * [line](#line)
+  * [LineContainsPoint](#line.LineContainsPoint)
   * [HorizontalLine](#line.HorizontalLine)
   * [VerticalLine](#line.VerticalLine)
   * [LineBetween](#line.LineBetween)
@@ -417,6 +418,19 @@ The circle at the origin with radius 𝑖.
 <a id="line"></a>
 
 # line
+
+<a id="line.LineContainsPoint"></a>
+
+#### LineContainsPoint
+
+```python
+def LineContainsPoint(line: Matrix,
+                      point: Matrix | Sequence[Expr]) -> bool | None
+```
+
+Tells whether `point` is on `line`.
+
+Returns None if undecidable.
 
 <a id="line.HorizontalLine"></a>
 

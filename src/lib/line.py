@@ -5,6 +5,14 @@ from sympy import Expr, Matrix, sqrt
 from lib.point import PointToVec3, PointToXY
 
 
+def LineContainsPoint(line: Matrix, point: Matrix | Sequence[Expr]) -> bool | None:
+    """Tells whether `point` is on `line`.
+
+    Returns None if undecidable.
+    """
+    return line.dot(PointToVec3(point)).expand().is_zero
+
+
 def HorizontalLine(y: Expr) -> Matrix:
     """Constructs a horizontal line with the given y-coordinate."""
     return Matrix([0, 1, -y])

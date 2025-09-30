@@ -11,6 +11,7 @@ from lib.line import (
     ArePerpendicular,
     HorizontalLine,
     LineBetween,
+    LineContainsPoint,
     LineThroughPoint,
     ParallelLine,
     PerpendicularBisector,
@@ -18,7 +19,21 @@ from lib.line import (
     VerticalLine,
 )
 from lib.matrix import IsNonZeroMultiple
-from lib.point import IdealPointOnLine, PointToVec3
+from lib.point import ORIGIN, Centroid, IdealPointOnLine
+
+
+class TestLineContainsPoint:
+    def test_numeric(self):
+        line = Matrix([1, 1, -3])  # x+y=3
+        assert LineContainsPoint(line, (2, 1)) is True
+        assert LineContainsPoint(line, (2, 2)) is False
+
+    def test_symbolic(self):
+        line = Matrix([1, 1, -3])  # x+y=3
+        x = symbols("x")
+        assert LineContainsPoint(line, (x, 3 - x)) is True
+        assert LineContainsPoint(line, (x, 2 - x)) is False
+        assert LineContainsPoint(line, (x, 1)) is None
 
 
 class TestPerpendicularLine:
@@ -43,14 +58,14 @@ class TestLineThroughPoint:
         point = symbols("x,y")
         direction = symbols("dx,dy")
         line = LineThroughPoint(point, direction=direction)
-        assert (line.dot(PointToVec3(point))).is_zero
+        assert LineContainsPoint(line, point)
         assert IdealPointOnLine(line) == Matrix((*direction, 0))
 
     def test_normal_vector_specified(self):
         point = symbols("x,y")
         normal = symbols("nx,ny")
         line = LineThroughPoint(point, normal=normal)
-        assert (line.dot(PointToVec3(point))).is_zero
+        assert LineContainsPoint(line, point)
         assert line[0:2] == list(normal)
 
 
@@ -60,12 +75,12 @@ class TestAngleBisector:
         assert Y_AXIS.dot(Matrix([1, 1, 1])) < 0
 
         bisector = AngleBisector(X_AXIS, Y_AXIS)
-        assert bisector.dot(Matrix([0, 0, 1])) == 0
-        assert bisector.dot(Matrix([1, -1, 1])) == 0
+        assert LineContainsPoint(bisector, ORIGIN)
+        assert LineContainsPoint(bisector, (1, -1))
 
         bisector = AngleBisector(X_AXIS, -Y_AXIS)
-        assert bisector.dot(Matrix([0, 0, 1])) == 0
-        assert bisector.dot(Matrix([1, 1, 1])) == 0
+        assert LineContainsPoint(bisector, ORIGIN)
+        assert LineContainsPoint(bisector, (1, 1))
 
     def test_parallel_lines_same_direction(self):
         line1 = HorizontalLine(1)
@@ -102,8 +117,8 @@ class TestPerpendicularBisector:
         point1 = (x1, y1)
         point2 = (x2, y2)
         bisector = PerpendicularBisector(point1, point2)
-        center = Matrix([(x1 + x2) / 2, (y1 + y2) / 2, 1])
-        assert bisector.dot(center).expand().is_zero
+        center = Centroid(point1, point2)
+        assert LineContainsPoint(bisector, center)
         assert ArePerpendicular(bisector, LineBetween(point1, point2))
 
 
