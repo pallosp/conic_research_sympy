@@ -142,7 +142,7 @@ def ProjectiveConicCenter(conic: Matrix) -> Matrix:
      - crossing finite line pairs
 
     For parabolas returns the ideal point on it
-    ([proof](../src/research/parabola_identities.py))
+    ([proof](../src/research/parabola_center.py))
 
     For other line pair conics and ideal point conics returns `(0, 0, 0)ᵀ`.
     """
