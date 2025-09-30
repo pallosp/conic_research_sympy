@@ -1,10 +1,10 @@
 import pytest
-from sympy import Matrix, symbols
+from sympy import Matrix, factor, gcd, symbols
 
-from lib.conic import ConicFromFocusAndDirectrix
+from lib.conic import ConicFromFocusAndDirectrix, PolarLine
 from lib.degenerate_conic import LinePair, PointConic
 from lib.line import IDEAL_LINE
-from lib.matrix import IsNonZeroMultiple
+from lib.matrix import ConicMatrix, IsNonZeroMultiple
 from lib.parabola import ParabolaDirectrix, ParabolaFocus
 from lib.point import ORIGIN
 
@@ -64,3 +64,10 @@ class TestParabolaFocusAndDirectrix:
             ParabolaFocus(hyperbola)
         with pytest.raises(ValueError, match="Not a parabola"):
             ParabolaDirectrix(hyperbola)
+
+    def test_pole_polar_relationship(self):
+        conic = ConicMatrix(*symbols("a b c d e f"))
+        focus = ParabolaFocus(conic)
+        directrix = ParabolaDirectrix(conic)
+        polar = PolarLine(conic, focus).applyfunc(factor)
+        assert directrix == polar / gcd(list(polar))

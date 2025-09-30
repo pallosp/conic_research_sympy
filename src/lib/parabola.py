@@ -12,6 +12,9 @@ def ParabolaDirectrix(parabola: Matrix) -> Matrix:
       - ideal point conics.
     - Raises `ValueError` if the conic provably has 0 or 2 ideal points.
     - Returns an unspecified 3D column vector in all other cases.
+
+    *Formula*:
+    [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
     """
     a, _, _, _, c, _, d, e, f = parabola.adjugate()
     if f.is_zero not in (True, None):
@@ -28,14 +31,12 @@ def ParabolaFocus(parabola: Matrix) -> Matrix:
       - conics containing the ideal line.
     - Raises `ValueError` if the conic provably has 0 or 2 ideal points.
     - Returns an unspecified 3D column vector in all other cases.
+
+    *Formula*:
+    [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
     """
-    a, _, _, b, c, _, d, e, f = parabola.adjugate()
+    adj = parabola.adjugate()
+    a, _, _, _, c, _, d, e, f = adj
     if f.is_zero not in (True, None):
         raise ValueError("Not a parabola (or a degenerate conic with one ideal point)")
-    return Matrix(
-        [
-            (b * e - d * c) + d * (a + c) / 2,
-            (b * d - a * e) + e * (a + c) / 2,
-            d * d + e * e,
-        ],
-    )
+    return adj * Matrix([d, e, -(a + c) / 2])

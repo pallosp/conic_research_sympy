@@ -1315,6 +1315,9 @@ Special cases for other conic types:
 - Raises `ValueError` if the conic provably has 0 or 2 ideal points.
 - Returns an unspecified 3D column vector in all other cases.
 
+*Formula*:
+[research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
+
 <a id="parabola.ParabolaFocus"></a>
 
 #### ParabolaFocus
@@ -1331,6 +1334,9 @@ Special cases for other conic types:
   - conics containing the ideal line.
 - Raises `ValueError` if the conic provably has 0 or 2 ideal points.
 - Returns an unspecified 3D column vector in all other cases.
+
+*Formula*:
+[research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
 
 <a id="polar_conic"></a>
 
