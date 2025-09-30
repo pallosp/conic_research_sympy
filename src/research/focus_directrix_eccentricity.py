@@ -309,8 +309,8 @@ println_indented(Eq(fy, fy_value))
 
 print("Expressed by the adjugate matrix elements:\n")
 
-aa, ab, ac, ad, ae, af = symbols("A' B' C' D' E' F'")
-adj_symbols = Matrix([[aa, ab, ad], [ab, ac, ae], [ad, ae, af]])
+aa, ba, ca, da, ea, fa = symbols("A_a B_a C_a D_a E_a F_a")
+adj_symbols = Matrix([[aa, ba, da], [ba, ca, ea], [da, ea, fa]])
 adj_values = conic_abc.adjugate()
 
 println_indented(EqChain(symbols("adj"), adj_symbols, adj_values))
@@ -319,9 +319,9 @@ println_indented(EqChain(fx, fx_value, fx_value.factor()))
 
 print("Using the parabola determinant identities:\n")
 
-a_plus_c_times_det = -ad * ad - ae * ae
-d_times_det = ab * ae - ac * ad
-e_times_det = ab * ad - aa * ae
+a_plus_c_times_det = -da * da - ea * ea
+d_times_det = ba * ea - ca * da
+e_times_det = ba * da - aa * ea
 
 println_indented(Eq((A + C) * det, a_plus_c_times_det))
 println_indented(Eq(D * det, d_times_det))
@@ -329,10 +329,10 @@ println_indented(Eq(E * det, e_times_det))
 
 fx_value = fx_value.factor()
 fx_value = fx_value.subs(D * det, d_times_det).subs((A + C) * det, a_plus_c_times_det)
-println_indented(EqChain(fx, fx_value.factor().collect(ad)))
+println_indented(EqChain(fx, fx_value.factor().collect(da)))
 
 fy_value = fy_value.subs(zip(adj_values, adj_symbols, strict=True)).factor()
 fy_value = fy_value.subs(E * det, e_times_det).subs((A + C) * det, a_plus_c_times_det)
-println_indented(EqChain(fy, fy_value.factor().collect(ae)))
+println_indented(EqChain(fy, fy_value.factor().collect(ea)))
 
 print(f"{HORIZONTAL_LINE}\n")
