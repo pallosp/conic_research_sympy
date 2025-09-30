@@ -54,3 +54,19 @@ def Centroid(*points: Sequence[Expr]) -> tuple[Expr, Expr]:
         cx += x
         cy += y
     return (cx / n, cy / n)
+
+
+def PerpendicularFoot(
+    point: Matrix | Sequence[Expr],
+    line: Matrix,
+) -> tuple[Expr, Expr]:
+    """Computes the foot of the perpendicular through `point` to `line`.
+
+    Returns `(nan, nan)` when `point`, `line` or both are infinite.
+
+    *Formula*: https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+    """
+    x, y = PointToXY(point)
+    a, b, c = line
+    f = (a * x + b * y + c) / (a * a + b * b)
+    return (x - a * f, y - b * f)

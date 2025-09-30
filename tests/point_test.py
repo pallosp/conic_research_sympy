@@ -1,8 +1,9 @@
 import pytest
-from sympy import Matrix, Rational, symbols
+from sympy import Matrix, Rational, nan, symbols
 
 from lib.line import IDEAL_LINE
-from lib.point import Centroid, IdealPointOnLine
+from lib.matrix import IsNonZeroMultiple
+from lib.point import Centroid, IdealPointOnLine, PerpendicularFoot
 
 
 class TestIdealPointOnLine:
@@ -30,3 +31,15 @@ class TestCentroid:
 
     def test_full_precision(self):
         assert Centroid((0, 0), (1, 0), (1, 1)) == (Rational(2, 3), Rational(1, 3))
+
+
+class TestPerpendicularFoot:
+    def test_finite_point_and_line(self):
+        point = (1, -1)
+        line = Matrix([1, 1, -4])  # x+y=4
+        assert IsNonZeroMultiple(PerpendicularFoot(point, line), (3, 1))
+
+    def test_ideal_point_or_line(self):
+        assert PerpendicularFoot((1, 2), IDEAL_LINE) == (nan, nan)
+        assert PerpendicularFoot((1, 2, 0), Matrix([1, 2, 3])) == (nan, nan)
+        assert PerpendicularFoot((1, 2, 0), IDEAL_LINE) == (nan, nan)
