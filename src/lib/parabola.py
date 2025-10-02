@@ -1,6 +1,17 @@
 from sympy import Matrix
 
 
+def ParabolaDirectrixFromAdjugate(parabola_adjugate: Matrix) -> Matrix:
+    """Computes the directrix of a parabola represented as the adjugate of a
+    conic matrix. See [ParabolaDirectrix](#parabola.ParabolaDirectrix) for the
+    details.
+    """
+    a, _, _, _, c, _, d, e, f = parabola_adjugate
+    if f.is_zero not in (True, None):
+        raise ValueError("Not a parabola (or a degenerate conic with one ideal point)")
+    return Matrix([d, e, (a + c) / -2])
+
+
 def ParabolaDirectrix(parabola: Matrix) -> Matrix:
     """Computes the directrix of a parabola represented as a conic matrix.
 
@@ -16,10 +27,17 @@ def ParabolaDirectrix(parabola: Matrix) -> Matrix:
     *Formula*:
     [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
     """
-    a, _, _, _, c, _, d, e, f = parabola.adjugate()
+    return ParabolaDirectrixFromAdjugate(parabola.adjugate())
+
+
+def ParabolaFocusFromAdjugate(parabola_adjugate: Matrix) -> Matrix:
+    """Computes the focus of a parabola represented as the adjugate of a
+    conic matrix. See [ParabolaFocus](#parabola.ParabolaFocus) for the details.
+    """
+    a, _, _, _, c, _, d, e, f = parabola_adjugate
     if f.is_zero not in (True, None):
         raise ValueError("Not a parabola (or a degenerate conic with one ideal point)")
-    return Matrix([d, e, (a + c) / -2])
+    return parabola_adjugate * Matrix([d, e, -(a + c) / 2])
 
 
 def ParabolaFocus(parabola: Matrix) -> Matrix:
@@ -35,8 +53,4 @@ def ParabolaFocus(parabola: Matrix) -> Matrix:
     *Formula*:
     [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
     """
-    adj = parabola.adjugate()
-    a, _, _, _, c, _, d, e, f = adj
-    if f.is_zero not in (True, None):
-        raise ValueError("Not a parabola (or a degenerate conic with one ideal point)")
-    return adj * Matrix([d, e, -(a + c) / 2])
+    return ParabolaFocusFromAdjugate(parabola.adjugate())

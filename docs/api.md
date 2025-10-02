@@ -104,7 +104,9 @@
   * [Scale](#transform.Scale)
   * [TransformationFromSamples](#transform.TransformationFromSamples)
 * [parabola](#parabola)
+  * [ParabolaDirectrixFromAdjugate](#parabola.ParabolaDirectrixFromAdjugate)
   * [ParabolaDirectrix](#parabola.ParabolaDirectrix)
+  * [ParabolaFocusFromAdjugate](#parabola.ParabolaFocusFromAdjugate)
   * [ParabolaFocus](#parabola.ParabolaFocus)
 * [polar\_conic](#polar_conic)
   * [POLAR\_UNIT\_CIRCLE](#polar_conic.POLAR_UNIT_CIRCLE)
@@ -1381,6 +1383,18 @@ https://franklinta.com/2014/09/08/computing-css-matrix3d-transforms/
 
 # parabola
 
+<a id="parabola.ParabolaDirectrixFromAdjugate"></a>
+
+#### ParabolaDirectrixFromAdjugate
+
+```python
+def ParabolaDirectrixFromAdjugate(parabola_adjugate: Matrix) -> Matrix
+```
+
+Computes the directrix of a parabola represented as the adjugate of a
+conic matrix. See [ParabolaDirectrix](#parabola.ParabolaDirectrix) for the
+details.
+
 <a id="parabola.ParabolaDirectrix"></a>
 
 #### ParabolaDirectrix
@@ -1402,6 +1416,17 @@ Special cases for other conic types:
 
 *Formula*:
 [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
+
+<a id="parabola.ParabolaFocusFromAdjugate"></a>
+
+#### ParabolaFocusFromAdjugate
+
+```python
+def ParabolaFocusFromAdjugate(parabola_adjugate: Matrix) -> Matrix
+```
+
+Computes the focus of a parabola represented as the adjugate of a
+conic matrix. See [ParabolaFocus](#parabola.ParabolaFocus) for the details.
 
 <a id="parabola.ParabolaFocus"></a>
 
