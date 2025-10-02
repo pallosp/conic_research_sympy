@@ -1,10 +1,11 @@
-from sympy import pi, simplify, symbols
+from sympy import Matrix, nan, pi, simplify, symbols
 
 from lib.central_conic import ConicCenter
 from lib.circle import Circle
-from lib.line import X_AXIS, HorizontalLine, LineBetween
+from lib.line import IDEAL_LINE, X_AXIS, HorizontalLine, LineBetween
 from lib.matrix import ConicMatrix, IsNonZeroMultiple
 from lib.transform import (
+    ReflectToLine,
     Rotate,
     Scale,
     ScaleXY,
@@ -51,6 +52,17 @@ class TestRotate:
         rotation = Rotate(theta, x0, y0)
         rotation_sequence = Translate(x0, y0) * Rotate(theta) * Translate(-x0, -y0)
         assert simplify(rotation) == simplify(rotation_sequence)
+
+
+class TestReflection:
+    def test_reflect_to_finite_line(self):
+        axis = Matrix([1, 1, -4])  # x+y=4
+        point = Matrix([3, 0, 1])
+        assert ReflectToLine(axis) * point == Matrix([4, 1, 1])
+
+    def test_reflect_to_ideal_line(self):
+        reflection = ReflectToLine(IDEAL_LINE)
+        assert reflection == Matrix.ones(3, 3) * nan
 
 
 class TestScale:

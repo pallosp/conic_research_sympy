@@ -99,6 +99,7 @@
   * [TransformLine](#transform.TransformLine)
   * [Translate](#transform.Translate)
   * [Rotate](#transform.Rotate)
+  * [ReflectToLine](#transform.ReflectToLine)
   * [ScaleXY](#transform.ScaleXY)
   * [Scale](#transform.Scale)
   * [TransformationFromSamples](#transform.TransformationFromSamples)
@@ -1318,6 +1319,18 @@ def Rotate(angle: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix
 ```
 
 Computes the transformation matrix for a rotation around a point.
+
+<a id="transform.ReflectToLine"></a>
+
+#### ReflectToLine
+
+```python
+def ReflectToLine(axis: Matrix) -> Matrix
+```
+
+Computes the transformation matrix for a reflection to a line.
+
+Returns a `nan` matrix if `axis` is the ideal line.
 
 <a id="transform.ScaleXY"></a>
 

@@ -31,6 +31,21 @@ def Rotate(angle: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix:
     )
 
 
+def ReflectToLine(axis: Matrix) -> Matrix:
+    """Computes the transformation matrix for a reflection to a line.
+
+    Returns a `nan` matrix if `axis` is the ideal line.
+    """
+    a, b, c = axis
+    return Matrix(
+        [
+            [b**2 - a**2, -2 * a * b, -2 * a * c],
+            [-2 * a * b, (a**2 - b**2), -2 * b * c],
+            [0, 0, a**2 + b**2],
+        ],
+    ).applyfunc(lambda el: el / (a**2 + b**2))
+
+
 def ScaleXY(scale_x: Expr, scale_y: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix:
     """Computes the projective transformation matrix for scaling along the x-
     and y-axes.
