@@ -45,7 +45,7 @@
   * [ConicThroughPoints](#conic.ConicThroughPoints)
   * [ConicFromFocusAndDirectrix](#conic.ConicFromFocusAndDirectrix)
   * [Eccentricity](#conic.Eccentricity)
-  * [AxisDirection](#conic.AxisDirection)
+  * [FocalAxisDirection](#conic.FocalAxisDirection)
   * [IdealPoints](#conic.IdealPoints)
     * [eval](#conic.IdealPoints.eval)
   * [ProjectiveConicCenter](#conic.ProjectiveConicCenter)
@@ -668,21 +668,22 @@ The result is ambiguous in case of degenerate conics: evaluate
 *Own research*:
 [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
 
-<a id="conic.AxisDirection"></a>
+<a id="conic.FocalAxisDirection"></a>
 
-#### AxisDirection
+#### FocalAxisDirection
 
 ```python
-def AxisDirection(conic: Matrix) -> Matrix
+def FocalAxisDirection(conic: Matrix) -> Matrix
 ```
 
-Returns the direction of the major axis of the conic section,
-namely the ideal point in that direction.
+Returns the direction of the focal axis of the conic section, namely the
+ideal point in that direction.
 
-Returns `[0, 0, 0]ᵀ` in case of circles.
-
-The result is ambiguous in case of degenerate conics: evaluate
-`(AxisDirection(conic), AxisDirection(-conic))` to get both values.
+Special cases:
+- Returns `[0, 0, 0]ᵀ` in case of circles.
+- The result is ambiguous in case of degenerate conics: evaluate
+  `(FocalAxisDirection(conic), FocalAxisDirection(-conic))` to get both
+  values.
 
 *Formula*:
 [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)

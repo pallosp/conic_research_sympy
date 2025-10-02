@@ -93,14 +93,15 @@ def Eccentricity(conic: Matrix) -> Expr:
     return sqrt(2 * s / (s - det_sign * (a + c)))
 
 
-def AxisDirection(conic: Matrix) -> Matrix:
-    """Returns the direction of the major axis of the conic section,
-    namely the ideal point in that direction.
+def FocalAxisDirection(conic: Matrix) -> Matrix:
+    """Returns the direction of the focal axis of the conic section, namely the
+    ideal point in that direction.
 
-    Returns `[0, 0, 0]ᵀ` in case of circles.
-
-    The result is ambiguous in case of degenerate conics: evaluate
-    `(AxisDirection(conic), AxisDirection(-conic))` to get both values.
+    Special cases:
+    - Returns `[0, 0, 0]ᵀ` in case of circles.
+    - The result is ambiguous in case of degenerate conics: evaluate
+      `(FocalAxisDirection(conic), FocalAxisDirection(-conic))` to get both
+      values.
 
     *Formula*:
     [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)

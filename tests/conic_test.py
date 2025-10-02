@@ -3,13 +3,13 @@ from sympy.abc import x, y
 
 from lib.circle import UNIT_CIRCLE, Circle
 from lib.conic import (
-    AxisDirection,
     ConicContainsLine,
     ConicContainsPoint,
     ConicFromFocusAndDirectrix,
     ConicFromPoly,
     ConicThroughPoints,
     Eccentricity,
+    FocalAxisDirection,
     IdealPoints,
     PolarLine,
     PolePoint,
@@ -89,25 +89,29 @@ class TestEccentricity:
 
 class TestAxisDirection:
     def test_unit_circle(self):
-        assert AxisDirection(UNIT_CIRCLE).is_zero_matrix
+        assert FocalAxisDirection(UNIT_CIRCLE).is_zero_matrix
 
     def test_symbolic_circle(self):
-        assert AxisDirection(Circle(symbols("x y"), symbols("r"))).is_zero_matrix
+        assert FocalAxisDirection(Circle(symbols("x y"), symbols("r"))).is_zero_matrix
 
     def test_ellipse(self):
         ellipse = Ellipse((6, 5), 4, 3, r1_direction=(2, 1))
-        assert IsNonZeroMultiple(AxisDirection(ellipse), (2, 1, 0))
-        assert IsNonZeroMultiple(AxisDirection(-ellipse), (2, 1, 0))
+        assert IsNonZeroMultiple(FocalAxisDirection(ellipse), (2, 1, 0))
+        assert IsNonZeroMultiple(FocalAxisDirection(-ellipse), (2, 1, 0))
 
     def test_hyperbola(self):
         hyperbola = ConicFromPoly(x * y - 1)
-        assert IsNonZeroMultiple(AxisDirection(hyperbola), (1, 1, 0))
-        assert IsNonZeroMultiple(AxisDirection(-hyperbola), (1, 1, 0))
+        assert IsNonZeroMultiple(FocalAxisDirection(hyperbola), (1, 1, 0))
+        assert IsNonZeroMultiple(FocalAxisDirection(-hyperbola), (1, 1, 0))
+
+    def test_parabola(self):
+        parabola = ConicFromFocusAndDirectrix((1, 2), Matrix([3, 4, 5]), 1)
+        assert IsNonZeroMultiple(FocalAxisDirection(parabola), (3, 4, 0))
 
     def test_degenerate_conic(self):
         conic = LinePair(X_AXIS, Y_AXIS)
-        dir1 = AxisDirection(conic)
-        dir2 = AxisDirection(-conic)
+        dir1 = FocalAxisDirection(conic)
+        dir2 = FocalAxisDirection(-conic)
         assert AreProjectiveSetsEqual([dir1, dir2], [[1, 1, 0], [1, -1, 0]])
 
 

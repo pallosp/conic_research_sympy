@@ -2,7 +2,7 @@ from sympy import I, Matrix, Rational, pi, symbols
 from sympy.abc import x, y
 
 from lib.circle import COMPLEX_UNIT_CIRCLE, UNIT_CIRCLE, Circle
-from lib.conic import AxisDirection, ConicFromFocusAndDirectrix, ConicFromPoly
+from lib.conic import ConicFromFocusAndDirectrix, ConicFromPoly, FocalAxisDirection
 from lib.conic_classification import (
     IsCircle,
     IsCircular,
@@ -254,7 +254,7 @@ class TestIsCircular:
         assert IsCircular(zero_circle) is True
 
         finite_point_conic = PointConic([3, 2, 1])
-        assert AxisDirection(finite_point_conic).is_zero_matrix is False
+        assert FocalAxisDirection(finite_point_conic).is_zero_matrix is False
         assert IsCircular(finite_point_conic) is False
 
         ideal_point_conic = PointConic([*symbols("x,y", positive=True), 0])
