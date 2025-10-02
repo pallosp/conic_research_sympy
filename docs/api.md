@@ -1332,6 +1332,9 @@ Computes the transformation matrix for a reflection to a line.
 
 Returns a `nan` matrix if `axis` is the ideal line.
 
+*Formula*:
+[research/reflection_matrix.py](../src/research/reflection_matrix.py)
+
 <a id="transform.ScaleXY"></a>
 
 #### ScaleXY
