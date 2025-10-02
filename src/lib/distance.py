@@ -2,6 +2,7 @@ from collections.abc import Sequence
 
 from sympy import Expr, Matrix, sqrt
 
+from lib.line import AreParallel
 from lib.point import PointToVec3, PointToXY
 
 
@@ -30,3 +31,25 @@ def PointLineDistance(point: Matrix | Sequence[Expr], line: Matrix) -> Expr:
     x, y = PointToXY(point)
     a, b, c = line
     return (a * x + b * y + c) / sqrt(a * a + b * b)
+
+
+def ParallelLineDistance(line1: Matrix, line2: Matrix) -> Expr:
+    """Computes the signed distance between two parallel lines.
+
+    The return value is positive if the two lines have the same direction,
+    negative otherwise.
+
+    Special cases:
+    - Returns infinity if one of the lines is the ideal line.
+    - Returns `nan` if both lines are ideal lines.
+    - Raises a `ValueError` if the lines are provably not parallel.
+    - Returns an unspecified value if the lines cross at a finite point, but
+      Sympy cannot prove this fact.
+    """
+    if AreParallel(line1, line2) is False:
+        raise ValueError("The lines must be parallel")
+    a1, b1, c1 = line1
+    a2, b2, c2 = line2
+    return sqrt((a1 * c2 - a2 * c1) ** 2 + (b1 * c2 - b2 * c1) ** 2) / (
+        a1 * a2 + b1 * b2
+    )

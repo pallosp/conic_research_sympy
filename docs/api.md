@@ -63,6 +63,7 @@
 * [distance](#distance)
   * [PointPointDistance](#distance.PointPointDistance)
   * [PointLineDistance](#distance.PointLineDistance)
+  * [ParallelLineDistance](#distance.ParallelLineDistance)
 * [sympy\_utils](#sympy_utils)
   * [AddEq](#sympy_utils.AddEq)
   * [SubEq](#sympy_utils.SubEq)
@@ -929,6 +930,26 @@ Computes the signed distance between a point and a line.
 Special cases:
  - the distance between finite points and the ideal line is infinity
  - the distance between ideal points and any projective lines is `nan`
+
+<a id="distance.ParallelLineDistance"></a>
+
+#### ParallelLineDistance
+
+```python
+def ParallelLineDistance(line1: Matrix, line2: Matrix) -> Expr
+```
+
+Computes the signed distance between two parallel lines.
+
+The return value is positive if the two lines have the same direction,
+negative otherwise.
+
+Special cases:
+- Returns infinity if one of the lines is the ideal line.
+- Returns `nan` if both lines are ideal lines.
+- Raises a `ValueError` if the lines are provably not parallel.
+- Returns an unspecified value if the lines cross at a finite point, but
+  Sympy cannot prove this fact.
 
 <a id="sympy_utils"></a>
 
