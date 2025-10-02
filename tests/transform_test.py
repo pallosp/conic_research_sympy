@@ -8,6 +8,7 @@ from lib.transform import (
     Rotate,
     Scale,
     ScaleXY,
+    TransformationFromSamples,
     TransformConic,
     TransformLine,
     Translate,
@@ -74,3 +75,11 @@ class TestTransformLine:
     def test_translate_line(self):
         translated = TransformLine(X_AXIS, Translate(1, 2))
         assert translated == HorizontalLine(2)
+
+
+class TestTransformationFromSamples:
+    def test_rotate_90(self):
+        source = ((1, 0), (0, 1), (-1, 0), (0, -1))
+        target = ((0, 1), (-1, 0), (0, -1), (1, 0))
+        transform = TransformationFromSamples(source, target)
+        assert transform == Rotate(pi / 2)

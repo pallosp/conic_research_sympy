@@ -101,6 +101,7 @@
   * [Rotate](#transform.Rotate)
   * [ScaleXY](#transform.ScaleXY)
   * [Scale](#transform.Scale)
+  * [TransformationFromSamples](#transform.TransformationFromSamples)
 * [parabola](#parabola)
   * [ParabolaDirectrix](#parabola.ParabolaDirectrix)
   * [ParabolaFocus](#parabola.ParabolaFocus)
@@ -1342,6 +1343,22 @@ def Scale(scale: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix
 
 Computes the projective transformation matrix for a uniform scaling
 transformation.
+
+<a id="transform.TransformationFromSamples"></a>
+
+#### TransformationFromSamples
+
+```python
+def TransformationFromSamples(
+        source_points: Sequence[tuple[Expr, Expr]],
+        target_points: Sequence[tuple[Expr, Expr]]) -> Matrix
+```
+
+Computes the transformation matrix that maps one quadrilateral to
+another.
+
+*Algorithm*:
+https://franklinta.com/2014/09/08/computing-css-matrix3d-transforms/
 
 <a id="parabola"></a>
 
