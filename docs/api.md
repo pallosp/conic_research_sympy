@@ -109,6 +109,7 @@
   * [ParabolaFocusFromAdjugate](#parabola.ParabolaFocusFromAdjugate)
   * [ParabolaFocus](#parabola.ParabolaFocus)
   * [ParabolaAxis](#parabola.ParabolaAxis)
+  * [ParabolaFocalParameter](#parabola.ParabolaFocalParameter)
 * [polar\_conic](#polar_conic)
   * [POLAR\_UNIT\_CIRCLE](#polar_conic.POLAR_UNIT_CIRCLE)
   * [PointAtAngle](#polar_conic.PointAtAngle)
@@ -1467,6 +1468,18 @@ Special cases for other conic types:
   - conics containing the ideal line.
 - Raises `ValueError` if the conic provably has 0 or 2 ideal points.
 - Returns an unspecified 3D column vector in all other cases.
+
+<a id="parabola.ParabolaFocalParameter"></a>
+
+#### ParabolaFocalParameter
+
+```python
+def ParabolaFocalParameter(parabola: Matrix) -> Expr
+```
+
+Computes the parabola's focus-directrix distance.
+
+*Formula*: [research/focal_parameter.py](../src/research/focal_parameter.py)
 
 <a id="polar_conic"></a>
 

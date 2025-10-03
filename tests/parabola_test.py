@@ -4,9 +4,15 @@ from sympy import Matrix, factor, gcd, symbols
 from lib.circle import UNIT_CIRCLE
 from lib.conic import ConicFromFocusAndDirectrix, PolarLine
 from lib.degenerate_conic import LinePair, PointConic
+from lib.distance import PointLineDistance
 from lib.line import IDEAL_LINE, ArePerpendicular, LineContainsPoint
 from lib.matrix import ConicMatrix, IsNonZeroMultiple
-from lib.parabola import ParabolaAxis, ParabolaDirectrix, ParabolaFocus
+from lib.parabola import (
+    ParabolaAxis,
+    ParabolaDirectrix,
+    ParabolaFocalParameter,
+    ParabolaFocus,
+)
 from lib.point import ORIGIN
 
 
@@ -102,3 +108,12 @@ class TestParabolaAxis:
         finite_line = Matrix(symbols("a b c"))
         line_pair = LinePair(finite_line, IDEAL_LINE)
         assert ParabolaAxis(line_pair).is_zero_matrix
+
+
+class TestParabolaFocalParameter:
+    def test_focal_parameter(self):
+        focus = (6, 5)
+        directrix = Matrix([4, 3, 2])
+        parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
+        fp = ParabolaFocalParameter(parabola)
+        assert fp == PointLineDistance(focus, directrix)

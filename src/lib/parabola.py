@@ -1,4 +1,4 @@
-from sympy import Matrix
+from sympy import Expr, Matrix, sqrt
 
 
 def ParabolaDirectrixFromAdjugate(parabola_adjugate: Matrix) -> Matrix:
@@ -72,3 +72,12 @@ def ParabolaAxis(parabola: Matrix) -> Matrix:
     if discriminant.is_zero is False:
         raise ValueError("Not a parabola (or a degenerate conic with one ideal point)")
     return parabola * Matrix([-y, x, 0])
+
+
+def ParabolaFocalParameter(parabola: Matrix) -> Expr:
+    """Computes the parabola's focus-directrix distance.
+
+    *Formula*: [research/focal_parameter.py](../src/research/focal_parameter.py)
+    """
+    a, c, _ = parabola.diagonal()
+    return sqrt(-parabola.det() / (a + c) ** 3)
