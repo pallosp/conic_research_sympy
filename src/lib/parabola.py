@@ -7,7 +7,7 @@ def ParabolaDirectrixFromAdjugate(parabola_adjugate: Matrix) -> Matrix:
     details.
     """
     a, _, _, _, c, _, d, e, f = parabola_adjugate
-    if f.is_zero not in (True, None):
+    if f.is_zero is False:
         raise ValueError("Not a parabola (or a degenerate conic with one ideal point)")
     return Matrix([d, e, (a + c) / -2])
 
@@ -35,7 +35,7 @@ def ParabolaFocusFromAdjugate(parabola_adjugate: Matrix) -> Matrix:
     conic matrix. See [ParabolaFocus](#parabola.ParabolaFocus) for the details.
     """
     a, _, _, _, c, _, d, e, f = parabola_adjugate
-    if f.is_zero not in (True, None):
+    if f.is_zero is False:
         raise ValueError("Not a parabola (or a degenerate conic with one ideal point)")
     return parabola_adjugate * Matrix([d, e, -(a + c) / 2])
 
@@ -45,7 +45,7 @@ def ParabolaFocus(parabola: Matrix) -> Matrix:
 
     Special cases for other conic types:
     - Returns `[0, 0, 0]ᵀ` for
-      - conics with one ideal point;
+      - degenerate conics with one ideal point;
       - conics containing the ideal line.
     - Raises `ValueError` if the conic provably has 0 or 2 ideal points.
     - Returns an unspecified 3D column vector in all other cases.
@@ -54,3 +54,21 @@ def ParabolaFocus(parabola: Matrix) -> Matrix:
     [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
     """
     return ParabolaFocusFromAdjugate(parabola.adjugate())
+
+
+def ParabolaAxis(parabola: Matrix) -> Matrix:
+    """Computes the parabola's focal axis line.
+
+    It's the polar line corresponding to the ideal point on the directrix.
+
+    Special cases for other conic types:
+    - Returns `[0, 0, 0]ᵀ` for
+      - degenerate conics with one ideal point;
+      - conics containing the ideal line.
+    - Raises `ValueError` if the conic provably has 0 or 2 ideal points.
+    - Returns an unspecified 3D column vector in all other cases.
+    """
+    x, y, discriminant = parabola.row(0).cross(parabola.row(1))
+    if discriminant.is_zero is False:
+        raise ValueError("Not a parabola (or a degenerate conic with one ideal point)")
+    return parabola * Matrix([-y, x, 0])

@@ -108,6 +108,7 @@
   * [ParabolaDirectrix](#parabola.ParabolaDirectrix)
   * [ParabolaFocusFromAdjugate](#parabola.ParabolaFocusFromAdjugate)
   * [ParabolaFocus](#parabola.ParabolaFocus)
+  * [ParabolaAxis](#parabola.ParabolaAxis)
 * [polar\_conic](#polar_conic)
   * [POLAR\_UNIT\_CIRCLE](#polar_conic.POLAR_UNIT_CIRCLE)
   * [PointAtAngle](#polar_conic.PointAtAngle)
@@ -1440,13 +1441,32 @@ Computes the focus of a parabola represented as a conic matrix.
 
 Special cases for other conic types:
 - Returns `[0, 0, 0]ᵀ` for
-  - conics with one ideal point;
+  - degenerate conics with one ideal point;
   - conics containing the ideal line.
 - Raises `ValueError` if the conic provably has 0 or 2 ideal points.
 - Returns an unspecified 3D column vector in all other cases.
 
 *Formula*:
 [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
+
+<a id="parabola.ParabolaAxis"></a>
+
+#### ParabolaAxis
+
+```python
+def ParabolaAxis(parabola: Matrix) -> Matrix
+```
+
+Computes the parabola's focal axis line.
+
+It's the polar line corresponding to the ideal point on the directrix.
+
+Special cases for other conic types:
+- Returns `[0, 0, 0]ᵀ` for
+  - degenerate conics with one ideal point;
+  - conics containing the ideal line.
+- Raises `ValueError` if the conic provably has 0 or 2 ideal points.
+- Returns an unspecified 3D column vector in all other cases.
 
 <a id="polar_conic"></a>
 

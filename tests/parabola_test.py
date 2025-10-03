@@ -1,11 +1,12 @@
 import pytest
 from sympy import Matrix, factor, gcd, symbols
 
+from lib.circle import UNIT_CIRCLE
 from lib.conic import ConicFromFocusAndDirectrix, PolarLine
 from lib.degenerate_conic import LinePair, PointConic
-from lib.line import IDEAL_LINE
+from lib.line import IDEAL_LINE, ArePerpendicular, LineContainsPoint
 from lib.matrix import ConicMatrix, IsNonZeroMultiple
-from lib.parabola import ParabolaDirectrix, ParabolaFocus
+from lib.parabola import ParabolaAxis, ParabolaDirectrix, ParabolaFocus
 from lib.point import ORIGIN
 
 
@@ -71,3 +72,33 @@ class TestParabolaFocusAndDirectrix:
         directrix = ParabolaDirectrix(conic)
         polar = PolarLine(conic, focus).applyfunc(factor)
         assert directrix == polar / gcd(list(polar))
+
+
+class TestParabolaAxis:
+    def test_numeric_parabola(self):
+        focus = (6, 5)
+        directrix = Matrix([4, 3, 2])
+        parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
+        axis = ParabolaAxis(parabola)
+        assert LineContainsPoint(axis, ParabolaFocus(parabola))
+        assert ArePerpendicular(axis, ParabolaDirectrix(parabola))
+
+    def test_not_a_parabola(self):
+        with pytest.raises(ValueError, match="Not a parabola"):
+            ParabolaAxis(UNIT_CIRCLE)
+
+    def test_double_finite_line(self):
+        line = Matrix(symbols("a b c"))
+        line_pair = LinePair(line, line)
+        assert ParabolaAxis(line_pair).is_zero_matrix
+
+    def test_parallel_lines(self):
+        line1 = Matrix([1, 2, 3])
+        line2 = Matrix([1, 2, 4])
+        line_pair = LinePair(line1, line2)
+        assert ParabolaAxis(line_pair).is_zero_matrix
+
+    def test_finite_plus_ideal_line(self):
+        finite_line = Matrix(symbols("a b c"))
+        line_pair = LinePair(finite_line, IDEAL_LINE)
+        assert ParabolaAxis(line_pair).is_zero_matrix
