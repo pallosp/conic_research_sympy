@@ -1,5 +1,7 @@
 from sympy import Expr, Matrix, sqrt
 
+from lib.point import PointToXY
+
 
 def ParabolaDirectrixFromAdjugate(parabola_adjugate: Matrix) -> Matrix:
     """Computes the directrix of a parabola represented as the adjugate of a
@@ -54,6 +56,19 @@ def ParabolaFocus(parabola: Matrix) -> Matrix:
     [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
     """
     return ParabolaFocusFromAdjugate(parabola.adjugate())
+
+
+def ParabolaVertex(parabola: Matrix) -> tuple[Expr, Expr]:
+    """Computes the parabola's vertex.
+
+    *Formula*: [research/parabola_vertex.py](../src/research/parabola_vertex.py)
+    """
+    a, _, _, b, c, _, d, e, _ = parabola
+    fx, fy = PointToXY(ParabolaFocus(parabola))
+    return (
+        fx - (b * e - c * d) / (2 * (a + c) ** 2),
+        fy - (b * d - a * e) / (2 * (a + c) ** 2),
+    )
 
 
 def ParabolaAxis(parabola: Matrix) -> Matrix:

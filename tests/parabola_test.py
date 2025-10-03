@@ -12,12 +12,12 @@ from lib.parabola import (
     ParabolaDirectrix,
     ParabolaFocalParameter,
     ParabolaFocus,
+    ParabolaVertex,
 )
-from lib.point import ORIGIN
+from lib.point import ORIGIN, Centroid, PerpendicularFoot
 
 
 class TestParabolaFocusAndDirectrix:
-
     def test_numeric_parabola(self):
         focus = (6, 5)
         directrix = Matrix([4, 3, 2])
@@ -78,6 +78,16 @@ class TestParabolaFocusAndDirectrix:
         directrix = ParabolaDirectrix(conic)
         polar = PolarLine(conic, focus).applyfunc(factor)
         assert directrix == polar / gcd(list(polar))
+
+
+class TestParabolaVertex:
+    def test_numeric_parabola(self):
+        focus = (6, 5)
+        directrix = Matrix([4, 3, 2])
+        parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
+        foot = PerpendicularFoot(focus, directrix)
+        vertex = Centroid(focus, foot)
+        assert vertex == ParabolaVertex(parabola)
 
 
 class TestParabolaAxis:

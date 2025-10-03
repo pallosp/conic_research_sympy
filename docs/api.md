@@ -108,6 +108,7 @@
   * [ParabolaDirectrix](#parabola.ParabolaDirectrix)
   * [ParabolaFocusFromAdjugate](#parabola.ParabolaFocusFromAdjugate)
   * [ParabolaFocus](#parabola.ParabolaFocus)
+  * [ParabolaVertex](#parabola.ParabolaVertex)
   * [ParabolaAxis](#parabola.ParabolaAxis)
   * [ParabolaFocalParameter](#parabola.ParabolaFocalParameter)
 * [polar\_conic](#polar_conic)
@@ -1449,6 +1450,18 @@ Special cases for other conic types:
 
 *Formula*:
 [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
+
+<a id="parabola.ParabolaVertex"></a>
+
+#### ParabolaVertex
+
+```python
+def ParabolaVertex(parabola: Matrix) -> tuple[Expr, Expr]
+```
+
+Computes the parabola's vertex.
+
+*Formula*: [research/parabola_vertex.py](../src/research/parabola_vertex.py)
 
 <a id="parabola.ParabolaAxis"></a>
 
