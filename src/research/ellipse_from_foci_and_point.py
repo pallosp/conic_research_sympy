@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-from sympy import cancel, gcd, sqrt, symbols
+from sympy import cancel, expand, gcd, sqrt, symbols
 
+from lib.central_conic import ConicFromFociAndRadius
 from lib.distance import PointPointDistance
 from lib.ellipse import Ellipse
 from lib.point import Centroid
@@ -31,3 +32,10 @@ ellipse = ellipse.applyfunc(cancel)
 
 print("  Conic matrix:\n")
 println_indented(ellipse)
+
+print("This is equivalent to the matrix computed by ConicFromFociAndRadius:\n")
+
+equiv_ellipse = expand(ConicFromFociAndRadius(focus1, focus2, r1))
+println_indented(equiv_ellipse)
+
+assert ellipse == equiv_ellipse

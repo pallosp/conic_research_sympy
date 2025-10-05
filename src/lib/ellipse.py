@@ -2,6 +2,7 @@ from collections.abc import Sequence
 
 from sympy import Expr, Matrix, cos, sin
 
+from lib.central_conic import ConicFromFociAndRadius
 from lib.distance import PointPointDistance
 from lib.matrix import ConicMatrix
 from lib.point import PointToXY
@@ -52,28 +53,10 @@ def EllipseFromFociAndPoint(
     """Constructs an ellipse from its focus points and an incident point.
 
     *Formula*:
-    [research/conic_from_foci_and_point.py](../src/research/conic_from_foci_and_point.py)
+    [research/ellipse_from_foci_and_point.py](../src/research/ellipse_from_foci_and_point.py)
     """
-    fx1, fy1 = PointToXY(focus1)
-    fx2, fy2 = PointToXY(focus2)
-
-    # center
-    cx, cy = (fx1 + fx2) / 2, (fy1 + fy2) / 2
-
-    # center -> focus vector
-    dx, dy = (fx2 - fx1) / 2, (fy2 - fy1) / 2
-
-    # semi-major axis length
     r = (PointPointDistance(focus1, point) + PointPointDistance(focus2, point)) / 2
-
-    a = dx**2 - r**2
-    b = dx * dy
-    c = dy**2 - r**2
-    d = -cx * a - cy * b
-    e = -cx * b - cy * c
-    f = -cx * d - cy * e + a * c - b * b
-
-    return ConicMatrix(a, b, c, d, e, f)
+    return ConicFromFociAndRadius(focus1, focus2, r)
 
 
 def SteinerEllipse(

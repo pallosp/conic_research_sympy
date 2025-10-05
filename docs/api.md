@@ -1593,7 +1593,7 @@ def EllipseFromFociAndPoint(focus1: Matrix | Sequence[Expr],
 Constructs an ellipse from its focus points and an incident point.
 
 *Formula*:
-[research/conic_from_foci_and_point.py](../src/research/conic_from_foci_and_point.py)
+[research/ellipse_from_foci_and_point.py](../src/research/ellipse_from_foci_and_point.py)
 
 <a id="ellipse.SteinerEllipse"></a>
 
