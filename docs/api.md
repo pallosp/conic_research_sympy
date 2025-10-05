@@ -978,10 +978,10 @@ Adds multiple sympy equations.
 #### SubEq
 
 ```python
-def SubEq(eq0: Eq, eq1: Eq) -> Eq
+def SubEq(eq0: Eq, eq1: Expr | Eq) -> Eq
 ```
 
-Subtracts one sympy equation from another.
+Subtracts a sympy equation or expression from another equation.
 
 <a id="sympy_utils.MulEq"></a>
 

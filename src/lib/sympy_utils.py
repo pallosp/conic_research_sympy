@@ -11,9 +11,11 @@ def AddEq(*eqs: Eq) -> Eq:
     return Eq(left, right)
 
 
-def SubEq(eq0: Eq, eq1: Eq) -> Eq:
-    """Subtracts one sympy equation from another."""
-    return Eq(eq0.lhs - eq1.lhs, eq0.rhs - eq1.rhs)
+def SubEq(eq0: Eq, eq1: Expr | Eq) -> Eq:
+    """Subtracts a sympy equation or expression from another equation."""
+    lhs = eq1.lhs if isinstance(eq1, Eq) else eq1
+    rhs = eq1.rhs if isinstance(eq1, Eq) else eq1
+    return Eq(eq0.lhs - lhs, eq0.rhs - rhs)
 
 
 def MulEq(eq: Eq, factor: Expr | Eq) -> Eq:
