@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sympy import factor, gcd, sqrt, symbols
+from sympy import cancel, gcd, sqrt, symbols
 
 from lib.distance import PointPointDistance
 from lib.ellipse import Ellipse
@@ -26,13 +26,8 @@ r1 = symbols("r1")
 r2 = sqrt(r1**2 - linear_ecc**2)
 
 ellipse = Ellipse(center, r1, r2, r1_direction=major_axis_dir)
-
-ellipse = ellipse.applyfunc(factor)
 ellipse /= gcd(list(ellipse))
-
-ellipse = ellipse.applyfunc(factor)
-ellipse[0] = ellipse[0].expand()
-ellipse[4] = ellipse[4].expand()
+ellipse = ellipse.applyfunc(cancel)
 
 print("  Conic matrix:\n")
 println_indented(ellipse)
