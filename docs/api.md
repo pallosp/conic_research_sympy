@@ -116,6 +116,8 @@
   * [POLAR\_UNIT\_CIRCLE](#polar_conic.POLAR_UNIT_CIRCLE)
   * [PointAtAngle](#polar_conic.PointAtAngle)
   * [ConicFromPolarMatrix](#polar_conic.ConicFromPolarMatrix)
+* [hyperbola](#hyperbola)
+  * [HyperbolaFromFociAndPoint](#hyperbola.HyperbolaFromFociAndPoint)
 * [ellipse](#ellipse)
   * [Ellipse](#ellipse.Ellipse)
   * [EllipseFromFociAndPoint](#ellipse.EllipseFromFociAndPoint)
@@ -274,6 +276,8 @@ def ConicFromFociAndRadius(focus1: Matrix | Sequence[Expr],
 
 Computes the ellipse or hyperbola with the given focus points and
 radius, i.e. center-vertex distance.
+
+If `radius` is negative, takes its absolute value.
 
 *Formula*:
 [research/conic_from_foci_and_radius.py](../src/research/conic_from_foci_and_radius.py)
@@ -1556,6 +1560,25 @@ Transforms a conic from polar to quadratic form.
 
 The algorithm is essentially applying the polar matrix as a projective
 transformation on the unit circle.
+
+<a id="hyperbola"></a>
+
+# hyperbola
+
+<a id="hyperbola.HyperbolaFromFociAndPoint"></a>
+
+#### HyperbolaFromFociAndPoint
+
+```python
+def HyperbolaFromFociAndPoint(focus1: Matrix | Sequence[Expr],
+                              focus2: Matrix | Sequence[Expr],
+                              point: Matrix | Sequence[Expr]) -> Matrix
+```
+
+Constructs a hyperbola from its focus points and an incident point.
+
+*Formula*:
+[research/conic_from_foci_and_radius.py](../src/research/conic_from_foci_and_radius.py)
 
 <a id="ellipse"></a>
 

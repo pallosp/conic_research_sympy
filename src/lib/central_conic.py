@@ -15,6 +15,8 @@ def ConicFromFociAndRadius(
     """Computes the ellipse or hyperbola with the given focus points and
     radius, i.e. center-vertex distance.
 
+    If `radius` is negative, takes its absolute value.
+
     *Formula*:
     [research/conic_from_foci_and_radius.py](../src/research/conic_from_foci_and_radius.py)
     """

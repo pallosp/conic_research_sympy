@@ -26,6 +26,11 @@ class TestConicFromFociAndRadius:
         conic = ConicFromFociAndRadius(center, center, radius)
         assert IsNonZeroMultiple(conic, Circle(center, radius))
 
+    def test_radius_sign_does_not_matter(self):
+        conic1 = ConicFromFociAndRadius((1, 2), (3, 4), 5)
+        conic2 = ConicFromFociAndRadius((1, 2), (3, 4), -5)
+        assert conic1 == conic2
+
 
 class TestConicFromCenterAndPoints:
     def test_ambiguous_solution(self):
