@@ -1557,8 +1557,8 @@ def Ellipse(center: Matrix | Sequence[Expr],
             r1_direction: Expr = None) -> Matrix
 ```
 
-Constructs an ellipse from its center, radii and the rotation angle of
-the first radius.
+Constructs an ellipse from its center, radii, and the either the
+direction vector of the first radius or its angle to horizontal.
 
 *Formula*:
 [research/ellipse_from_params.py](../src/research/ellipse_from_params.py)
@@ -1574,6 +1574,9 @@ def EllipseFromFociAndPoint(focus1: Matrix | Sequence[Expr],
 ```
 
 Constructs an ellipse from its focus points and an incident point.
+
+*Formula*:
+[research/conic_from_foci_and_point.py](../src/research/conic_from_foci_and_point.py)
 
 <a id="ellipse.SteinerEllipse"></a>
 

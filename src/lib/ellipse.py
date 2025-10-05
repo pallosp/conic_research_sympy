@@ -15,24 +15,32 @@ def Ellipse(
     r1_angle: Expr = None,
     r1_direction: Expr = None,
 ) -> Matrix:
-    """Constructs an ellipse from its center, radii and the rotation angle of
-    the first radius.
+    """Constructs an ellipse from its center, radii, and the either the
+    direction vector of the first radius or its angle to horizontal.
 
     *Formula*:
     [research/ellipse_from_params.py](../src/research/ellipse_from_params.py)
     """
     if (r1_angle is not None) and (r1_direction is not None):
         raise ValueError("Specify either r1_angle or r1_direction, not both.")
-    center_x, center_y = PointToXY(center)
-    axis_dir_x, axis_dir_y = (
-        r1_direction or (1, 0) if r1_angle is None else (cos(r1_angle), sin(r1_angle))
-    )
-    a = -((r1 * axis_dir_y) ** 2) - (r2 * axis_dir_x) ** 2
-    b = (r1**2 - r2**2) * axis_dir_x * axis_dir_y
-    c = -((r1 * axis_dir_x) ** 2) - (r2 * axis_dir_y) ** 2
-    d = -a * center_x - b * center_y
-    e = -b * center_x - c * center_y
-    f = (r1**2 * r2**2) * (axis_dir_x**2 + axis_dir_y**2) - d * center_x - e * center_y
+
+    # center
+    cx, cy = PointToXY(center)
+
+    # major axis direction
+    dx, dy = 1, 0
+    if r1_angle is not None:
+        dx, dy = cos(r1_angle), sin(r1_angle)
+    elif r1_direction is not None:
+        dx, dy = r1_direction
+
+    a = -((r1 * dy) ** 2) - (r2 * dx) ** 2
+    b = (r1**2 - r2**2) * dx * dy
+    c = -((r1 * dx) ** 2) - (r2 * dy) ** 2
+    d = -a * cx - b * cy
+    e = -b * cx - c * cy
+    f = (r1**2 * r2**2) * (dx**2 + dy**2) - d * cx - e * cy
+
     return ConicMatrix(a, b, c, d, e, f)
 
 
@@ -41,14 +49,18 @@ def EllipseFromFociAndPoint(
     focus2: Matrix | Sequence[Expr],
     point: Matrix | Sequence[Expr],
 ) -> Matrix:
-    """Constructs an ellipse from its focus points and an incident point."""
+    """Constructs an ellipse from its focus points and an incident point.
+
+    *Formula*:
+    [research/conic_from_foci_and_point.py](../src/research/conic_from_foci_and_point.py)
+    """
     fx1, fy1 = PointToXY(focus1)
     fx2, fy2 = PointToXY(focus2)
 
     # center
     cx, cy = (fx1 + fx2) / 2, (fy1 + fy2) / 2
 
-    # major axis direction
+    # center -> focus vector
     dx, dy = (fx2 - fx1) / 2, (fy2 - fy1) / 2
 
     # semi-major axis length
