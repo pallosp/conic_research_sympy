@@ -4,6 +4,7 @@ from sympy.abc import x, y
 from lib.central_conic import (
     ConicCenter,
     ConicFromCenterAndPoints,
+    ConicFromFociAndRadius,
     SemiMajorAxis,
     SemiMinorAxis,
 )
@@ -16,6 +17,14 @@ from lib.matrix import ConicMatrix, IsNonZeroMultiple
 from lib.point import ORIGIN
 from lib.sympy_utils import FactorRadicals
 from lib.transform import ScaleXY, TransformConic
+
+
+class TestConicFromFociAndRadius:
+    def test_circle(self):
+        center = (1, 2)
+        radius = 3
+        conic = ConicFromFociAndRadius(center, center, radius)
+        assert IsNonZeroMultiple(conic, Circle(center, radius))
 
 
 class TestConicFromCenterAndPoints:

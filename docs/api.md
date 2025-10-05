@@ -12,6 +12,7 @@
   * [IsRealMatrix](#matrix.IsRealMatrix)
   * [IsDefinite](#matrix.IsDefinite)
 * [central\_conic](#central_conic)
+  * [ConicFromFociAndRadius](#central_conic.ConicFromFociAndRadius)
   * [ConicFromCenterAndPoints](#central_conic.ConicFromCenterAndPoints)
   * [ConicCenter](#central_conic.ConicCenter)
   * [SemiAxisLengths](#central_conic.SemiAxisLengths)
@@ -260,6 +261,22 @@ Returns a bool or `None` if the definitess can't be decided.
 <a id="central_conic"></a>
 
 # central\_conic
+
+<a id="central_conic.ConicFromFociAndRadius"></a>
+
+#### ConicFromFociAndRadius
+
+```python
+def ConicFromFociAndRadius(focus1: Matrix | Sequence[Expr],
+                           focus2: Matrix | Sequence[Expr],
+                           radius: Expr) -> Matrix
+```
+
+Computes the ellipse or hyperbola with the given focus points and
+radius, i.e. center-vertex distance.
+
+*Formula*:
+[research/conic_from_foci_and_radius.py](../src/research/conic_from_foci_and_radius.py)
 
 <a id="central_conic.ConicFromCenterAndPoints"></a>
 

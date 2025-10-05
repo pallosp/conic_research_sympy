@@ -7,6 +7,36 @@ from lib.matrix import ConicMatrix, MaxEigenvalue, MinEigenvalue
 from lib.point import PointToXY
 
 
+def ConicFromFociAndRadius(
+    focus1: Matrix | Sequence[Expr],
+    focus2: Matrix | Sequence[Expr],
+    radius: Expr,
+) -> Matrix:
+    """Computes the ellipse or hyperbola with the given focus points and
+    radius, i.e. center-vertex distance.
+
+    *Formula*:
+    [research/conic_from_foci_and_radius.py](../src/research/conic_from_foci_and_radius.py)
+    """
+    fx1, fy1 = PointToXY(focus1)
+    fx2, fy2 = PointToXY(focus2)
+
+    # center
+    cx, cy = (fx1 + fx2) / 2, (fy1 + fy2) / 2
+
+    # center -> focus vector
+    dx, dy = (fx2 - fx1) / 2, (fy2 - fy1) / 2
+
+    a = dx**2 - radius**2
+    b = dx * dy
+    c = dy**2 - radius**2
+    d = -cx * a - cy * b
+    e = -cx * b - cy * c
+    f = -cx * d - cy * e + (a * c - b * b)
+
+    return ConicMatrix(a, b, c, d, e, f)
+
+
 def ConicFromCenterAndPoints(
     center: Matrix | Sequence[Expr],
     p1: Matrix | Sequence[Expr],
