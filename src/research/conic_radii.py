@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
-from sympy import Eq, pprint, simplify, solve, sqrt, symbols
+from sympy import Eq, simplify, solve, sqrt, symbols
 
 from lib.central_conic import ConicCenter
 from lib.matrix import ConicMatrix
 from lib.transform import Rotate, TransformConic, Translate
+from research.util import println_indented
 
 # Bring the conic to the standard form by translating its center to the origin
 # and rotating it to align with the axes.
@@ -41,6 +42,16 @@ assert conic.is_diagonal()
 # Standard central conic formula: x²/r1² + y²/r2² = 1
 print("\nSemi-axis lengths:\n")
 a, c, f = conic.diagonal()
-pprint(Eq(symbols("r1") ** 2, -f / a))
-print()
-pprint(Eq(symbols("r2") ** 2, -f / c))
+println_indented(Eq(symbols("r1") ** 2, -f / a))
+println_indented(Eq(symbols("r2") ** 2, -f / c))
+
+print("In terms of the 2x2 submatrix eigenvalues:\n")
+
+eigenvals = list(conic[:2, :2].eigenvals())
+eigenval_subs = {
+    eigenvals[0]: symbols("lambda_1"),
+    eigenvals[1]: symbols("lambda_2"),
+}
+
+println_indented(Eq(symbols("r1") ** 2, -f / a.subs(eigenval_subs)))
+println_indented(Eq(symbols("r2") ** 2, -f / c.subs(eigenval_subs)))
