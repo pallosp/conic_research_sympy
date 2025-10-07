@@ -21,6 +21,7 @@
   * [SemiMinorAxis](#central_conic.SemiMinorAxis)
     * [eval](#central_conic.SemiMinorAxis.eval)
   * [LinearEccentricity](#central_conic.LinearEccentricity)
+  * [ShrinkConicToZero](#central_conic.ShrinkConicToZero)
 * [circle](#circle)
   * [Circle](#circle.Circle)
   * [CircleRadius](#circle.CircleRadius)
@@ -414,6 +415,25 @@ point. Special cases:
  - zero for all other degenerate conics.
 
 *Formula*: √|r₁²-r₂²| where r₁ and r₂ are the semi-axis lengths.
+
+<a id="central_conic.ShrinkConicToZero"></a>
+
+#### ShrinkConicToZero
+
+```python
+def ShrinkConicToZero(conic: Matrix) -> Matrix
+```
+
+Scales a conic section from its center with a factor of zero.
+
+Turns hyperbolas to line pair conics consisting of their asymptotes, and
+ellipses to point conics.
+
+This transformation is only meaningful for central conics: for other
+conic types the result matrix will have infinite or `nan` elements.
+
+*Formula*:
+[research/scale_conic_from_center.py](../src/research/scale_conic_from_center.py
 
 <a id="circle"></a>
 

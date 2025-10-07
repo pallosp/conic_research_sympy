@@ -188,3 +188,19 @@ def LinearEccentricity(conic: Matrix) -> Expr:
     a, _, _, b, c, _, _, _, _ = conic
     l1, l2 = conic[:2, :2].eigenvals(multiple=True)
     return sqrt(Abs(conic.det() * (l1 - l2))) / Abs(a * c - b * b)
+
+
+def ShrinkConicToZero(conic: Matrix) -> Matrix:
+    """Scales a conic section from its center with a factor of zero.
+
+    Turns hyperbolas to line pair conics consisting of their asymptotes, and
+    ellipses to point conics.
+
+    This transformation is only meaningful for central conics: for other
+    conic types the result matrix will have infinite or `nan` elements.
+
+    *Formula*:
+    [research/scale_conic_from_center.py](../src/research/scale_conic_from_center.py
+    """
+    a, _, _, b, c, _, _, _, _ = conic
+    return conic - Matrix.diag([0, 0, conic.det() / (a * c - b * b)])

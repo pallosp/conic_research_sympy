@@ -17,16 +17,20 @@ from lib.central_conic import (
     LinearEccentricity,
     SemiMajorAxis,
     SemiMinorAxis,
+    ShrinkConicToZero,
 )
 from lib.circle import UNIT_CIRCLE, Circle
-from lib.conic import ConicFromFocusAndDirectrix, ConicFromPoly
+from lib.conic import ConicFromFocusAndDirectrix, ConicFromPoly, IdealPoints
+from lib.conic_classification import IsPointConic
 from lib.degenerate_conic import LinePair, PointConic
-from lib.ellipse import Ellipse
+from lib.ellipse import Ellipse, EllipseFromFociAndPoint
+from lib.hyperbola import HyperbolaFromFociAndPoint
 from lib.line import X_AXIS, HorizontalLine
 from lib.matrix import ConicMatrix, IsNonZeroMultiple
 from lib.point import ORIGIN
 from lib.sympy_utils import FactorAbs, FactorRadicals
 from lib.transform import ScaleXY, TransformConic
+from tests.utils import AreProjectiveSetsEqual
 
 
 class TestConicFromFociAndRadius:
@@ -213,3 +217,24 @@ class TestLinearEccentricity:
         line2 = Matrix([4, 5, 6])
         line_pair = LinePair(line1, line2)
         assert LinearEccentricity(line_pair) == 0
+
+
+class TestShrinkToZero:
+    def test_hyperbola(self):
+        hyperbola = HyperbolaFromFociAndPoint((1, 2), (3, 4), (0, 0))
+        shrunk = ShrinkConicToZero(hyperbola)
+        assert shrunk.det() == 0
+        assert ConicCenter(hyperbola) == ConicCenter(shrunk)
+        assert AreProjectiveSetsEqual(IdealPoints(hyperbola), IdealPoints(shrunk))
+
+    def test_circle(self):
+        circle = Circle(symbols("x y"), symbols("r"))
+        shrunk = ShrinkConicToZero(circle)
+        assert IsPointConic(shrunk)
+        assert ConicCenter(shrunk) == (x, y)
+
+    def test_ellipse(self):
+        ellipse = EllipseFromFociAndPoint((1, 2), (3, 4), (0, 0))
+        shrunk = ShrinkConicToZero(ellipse)
+        assert IsPointConic(shrunk)
+        assert ConicCenter(ellipse) == ConicCenter(shrunk)
