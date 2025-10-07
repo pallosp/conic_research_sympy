@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Function, Matrix, sqrt
+from sympy import Abs, Expr, Function, Matrix, sqrt
 
 from lib.conic_classification import IsFiniteConic
 from lib.matrix import ConicMatrix, MaxEigenvalue, MinEigenvalue
@@ -168,3 +168,23 @@ class SemiMinorAxis(Function):
             if det.is_negative:
                 return axes[1]
         return None
+
+
+def LinearEccentricity(conic: Matrix) -> Expr:
+    """Computes the linear eccentricity of a conic section.
+
+    The linear eccentricity is the distance between the center and a focus
+    point. Special cases:
+     - zero for circles and complex radius circles;
+     - a real number for complex ellipses, since they still have real center
+       and foci;
+     - infinity for parabolas;
+     - `nan` for parallel and coincident line pairs;
+     - `nan` for conics containing the ideal line;
+     - zero for all other degenerate conics.
+
+    *Formula*: √|r₁²-r₂²| where r₁ and r₂ are the semi-axis lengths.
+    """
+    a, _, _, b, c, _, _, _, _ = conic
+    l1, l2 = conic[:2, :2].eigenvals(multiple=True)
+    return sqrt(Abs(conic.det() * (l1 - l2))) / Abs(a * c - b * b)

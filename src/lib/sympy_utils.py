@@ -1,4 +1,4 @@
-from sympy import Eq, Expr, Pow
+from sympy import Abs, Eq, Expr, Pow
 
 
 def AddEq(*eqs: Eq) -> Eq:
@@ -47,3 +47,8 @@ def EqChain(*expressions: Expr) -> Eq | Expr:
 def FactorRadicals(expr: Expr) -> Expr:
     """Factors all `Pow` and `sqrt` subexpressions inside `expr`."""
     return expr.replace(Pow, lambda base, exp: Pow(base.factor(), exp))
+
+
+def FactorAbs(expr: Expr) -> Expr:
+    """Factors all `Abs` subexpressions inside `expr`."""
+    return expr.replace(Abs, lambda arg: Abs(arg.factor()))

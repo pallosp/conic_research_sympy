@@ -1,10 +1,20 @@
-from sympy import I, Matrix, nan, symbols
+from sympy import (
+    AppliedPredicate,
+    Expr,
+    I,
+    Matrix,
+    Q,
+    Rational,
+    nan,
+    symbols,
+)
 from sympy.abc import x, y
 
 from lib.central_conic import (
     ConicCenter,
     ConicFromCenterAndPoints,
     ConicFromFociAndRadius,
+    LinearEccentricity,
     SemiMajorAxis,
     SemiMinorAxis,
 )
@@ -15,7 +25,7 @@ from lib.ellipse import Ellipse
 from lib.line import X_AXIS, HorizontalLine
 from lib.matrix import ConicMatrix, IsNonZeroMultiple
 from lib.point import ORIGIN
-from lib.sympy_utils import FactorRadicals
+from lib.sympy_utils import FactorAbs, FactorRadicals
 from lib.transform import ScaleXY, TransformConic
 
 
@@ -141,3 +151,65 @@ class TestSemiAxisLengths:
         conic = ConicMatrix(*symbols("a,b,c,d,e,f"))
         assert isinstance(SemiMajorAxis(conic), SemiMajorAxis)
         assert isinstance(SemiMinorAxis(conic), SemiMinorAxis)
+
+
+class TestLinearEccentricity:
+    def test_symbolic_circle(self):
+        circle = Circle(symbols("x,y", real=True), symbols("r", real=True))
+        assert LinearEccentricity(circle) == 0
+
+    def test_symbolic_complex_circle(self):
+        circle = Circle(symbols("x,y", real=True), symbols("r", real=True) * I)
+        assert LinearEccentricity(circle) == 0
+
+    def test_symbolic_central_conic_standard_form(self):
+        fx, r = symbols("fx r", real=True, nonzero=True)
+        conic = ConicFromFociAndRadius((-fx, 0), (fx, 0), r)
+
+        def SimplifiedLinEcc(conic: Matrix, assumptions: AppliedPredicate) -> Expr:
+            return (
+                FactorAbs(LinearEccentricity(conic).factor())
+                .refine(assumptions)
+                .cancel(r - fx)
+            )
+
+        # ellipse
+        assert SimplifiedLinEcc(conic, Q.positive(fx) & Q.positive(r - fx)) == fx
+        assert SimplifiedLinEcc(-2 * conic, Q.positive(fx) & Q.positive(r - fx)) == fx
+        assert SimplifiedLinEcc(conic, Q.negative(fx) & Q.positive(r + fx)) == -fx
+
+        # hyperbola
+        assert SimplifiedLinEcc(conic, Q.positive(r) & Q.positive(fx - r)) == fx
+        assert SimplifiedLinEcc(-2 * conic, Q.positive(r) & Q.positive(fx - r)) == fx
+        assert SimplifiedLinEcc(conic, Q.negative(fx) & Q.positive(r + fx)) == -fx
+
+    def test_numeric_ellipse(self):
+        ellipse = ConicFromFociAndRadius((1, 2), (4, 6), 5)
+        assert LinearEccentricity(ellipse) == Rational(5, 2)
+
+    def test_numeric_hyperbola(self):
+        hyperbola = ConicFromFociAndRadius((1, 2), (4, 6), 2)
+        assert LinearEccentricity(hyperbola) == Rational(5, 2)
+
+    def test_symbolic_parabola(self):
+        focus = (0, 0)
+        directrix = Matrix(symbols("a b c", positive=True))
+        parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
+        assert LinearEccentricity(parabola).is_infinite
+
+    def test_complex_ellipse(self):
+        complex_ellipse = Ellipse((1, 2), 4 * I, 5 * I)
+        assert LinearEccentricity(complex_ellipse) == 3
+
+    def test_parallel_lines(self):
+        c1, c2 = symbols("c1 c2", real=True)
+        line1 = Matrix([1, 2, c1])
+        line2 = Matrix([1, 2, c2])
+        line_pair = LinePair(line1, line2)
+        assert LinearEccentricity(line_pair) == nan
+
+    def test_crossing_lines(self):
+        line1 = Matrix([1, 2, 3])
+        line2 = Matrix([4, 5, 6])
+        line_pair = LinePair(line1, line2)
+        assert LinearEccentricity(line_pair) == 0

@@ -20,6 +20,7 @@
     * [eval](#central_conic.SemiMajorAxis.eval)
   * [SemiMinorAxis](#central_conic.SemiMinorAxis)
     * [eval](#central_conic.SemiMinorAxis.eval)
+  * [LinearEccentricity](#central_conic.LinearEccentricity)
 * [circle](#circle)
   * [Circle](#circle.Circle)
   * [CircleRadius](#circle.CircleRadius)
@@ -73,6 +74,7 @@
   * [SwapEq](#sympy_utils.SwapEq)
   * [EqChain](#sympy_utils.EqChain)
   * [FactorRadicals](#sympy_utils.FactorRadicals)
+  * [FactorAbs](#sympy_utils.FactorAbs)
 * [conic\_classification](#conic_classification)
   * [IsDegenerate](#conic_classification.IsDegenerate)
   * [IsNonDegenerate](#conic_classification.IsNonDegenerate)
@@ -390,6 +392,28 @@ def eval(cls, conic: Matrix) -> Expr | None
 ```
 
 Internal implementation. Call `SemiMinorAxis(conic)` directly.
+
+<a id="central_conic.LinearEccentricity"></a>
+
+#### LinearEccentricity
+
+```python
+def LinearEccentricity(conic: Matrix) -> Expr
+```
+
+Computes the linear eccentricity of a conic section.
+
+The linear eccentricity is the distance between the center and a focus
+point. Special cases:
+ - zero for circles and complex radius circles;
+ - a real number for complex ellipses, since they still have real center
+   and foci;
+ - infinity for parabolas;
+ - `nan` for parallel and coincident line pairs;
+ - `nan` for conics containing the ideal line;
+ - zero for all other degenerate conics.
+
+*Formula*: √|r₁²-r₂²| where r₁ and r₂ are the semi-axis lengths.
 
 <a id="circle"></a>
 
@@ -1053,6 +1077,16 @@ def FactorRadicals(expr: Expr) -> Expr
 ```
 
 Factors all `Pow` and `sqrt` subexpressions inside `expr`.
+
+<a id="sympy_utils.FactorAbs"></a>
+
+#### FactorAbs
+
+```python
+def FactorAbs(expr: Expr) -> Expr
+```
+
+Factors all `Abs` subexpressions inside `expr`.
 
 <a id="conic_classification"></a>
 
