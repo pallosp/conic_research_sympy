@@ -64,6 +64,7 @@ class SplitToLines(Function):
 
         # Lemma: If a symmetric 3x3 matrix is singular, the diagonal elements
         # of its adjugate matrix (a, c, f) are either all ≥0 or all ≤0.
+        # Proof: research/adjugate_properties.py
         if a.is_nonzero:
             conic = conic + SkewMatrix(adj.col(0) / sqrt(-a))
         elif c.is_nonzero:
