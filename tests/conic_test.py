@@ -99,6 +99,10 @@ class TestConicNormFactor:
         assert ConicNormFactor(line_pair) == 1
         assert ConicNormFactor(-line_pair) == 1
 
+    def test_zero_conic_matrix(self):
+        conic = Matrix.zeros(3, 3)
+        assert ConicNormFactor(conic) == 1
+
 
 class TestEccentricity:
     def test_symbolic(self):
