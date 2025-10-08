@@ -52,6 +52,14 @@ def EllipseFromFociAndPoint(
 ) -> Matrix:
     """Constructs an ellipse from its focus points and an incident point.
 
+    Special cases:
+     - If all three points conicide, returns a zero matrix.
+     - If the foci coincide but the point doesn't the result is a circle.
+     - If the points are collinear but the foci don't coincide, returns a
+       coincident line conic.
+     - If any of the points are ideal points, returns a matrix that contains
+       `nan` elements.
+
     *Formula*:
     [research/ellipse_from_foci_and_point.py](../src/research/ellipse_from_foci_and_point.py)
     """

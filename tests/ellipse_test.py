@@ -1,15 +1,17 @@
-from sympy import factor, pi, simplify, symbols
+from sympy import factor, nan, pi, simplify, symbols
 
 from lib.central_conic import ConicCenter, SemiAxisLengths
-from lib.circle import UNIT_CIRCLE
+from lib.circle import UNIT_CIRCLE, Circle
 from lib.conic import ConicContainsPoint
 from lib.conic_classification import IsEllipse
+from lib.degenerate_conic import DoubleLine
 from lib.ellipse import (
     Ellipse,
     EllipseFromFociAndPoint,
     SteinerEllipse,
     SteinerInellipse,
 )
+from lib.line import LineBetween
 from lib.matrix import IsNonZeroMultiple
 from lib.point import ORIGIN, Centroid, PointToVec3
 
@@ -53,7 +55,7 @@ class TestEllipseFromParams:
 
 
 class TestEllipseFromFociAndPoint:
-    def test_numeric(self):
+    def test_numeric_ellipse(self):
         f1 = (1, 2)
         f2 = (3, 4)
         p = (0, 0)
@@ -62,6 +64,35 @@ class TestEllipseFromFociAndPoint:
         center = [coord.simplify() for coord in ConicCenter(ellipse)]
         assert center == [2, 3]
         assert ConicContainsPoint(ellipse, p)
+
+    def test_collinear_points(self):
+        f1 = (1, 2)
+        f2 = (3, 4)
+        conic = EllipseFromFociAndPoint(f1, f2, (2, 3))
+        assert IsNonZeroMultiple(conic, DoubleLine(LineBetween(f1, f2)))
+        conic = EllipseFromFociAndPoint(f1, f2, (1, 2))
+        assert IsNonZeroMultiple(conic, DoubleLine(LineBetween(f1, f2)))
+
+    def test_coincident_foci(self):
+        f = (2, 3)
+        p = (5, 7)
+        circle = EllipseFromFociAndPoint(f, f, p)
+        assert IsNonZeroMultiple(circle, Circle(f, 5))
+
+    def test_coincident_foci_and_point(self):
+        assert EllipseFromFociAndPoint((1, 2), (1, 2), (1, 2)).is_zero_matrix
+
+    def test_ideal_point_focus(self):
+        f1 = (1, 2)
+        f2 = (3, 4, 0)
+        p = (5, 6)
+        assert nan in EllipseFromFociAndPoint(f1, f2, p)
+
+    def test_ideal_incident_point(self):
+        f1 = (1, 2)
+        f2 = (3, 4)
+        p = (5, 6, 0)
+        assert nan in EllipseFromFociAndPoint(f1, f2, p)
 
 
 class TestSteinerEllipse:
