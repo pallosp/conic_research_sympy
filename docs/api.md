@@ -58,6 +58,7 @@
   * [ConicContainsLine](#conic.ConicContainsLine)
 * [degenerate\_conic](#degenerate_conic)
   * [LinePair](#degenerate_conic.LinePair)
+  * [DoubleLine](#degenerate_conic.DoubleLine)
   * [PointConic](#degenerate_conic.PointConic)
   * [SplitToLines](#degenerate_conic.SplitToLines)
     * [eval](#degenerate_conic.SplitToLines.eval)
@@ -878,6 +879,16 @@ def LinePair(line1: Matrix, line2: Matrix) -> Matrix
 ```
 
 Constructs a conic section from two projective lines.
+
+<a id="degenerate_conic.DoubleLine"></a>
+
+#### DoubleLine
+
+```python
+def DoubleLine(line: Matrix) -> Matrix
+```
+
+Constructs a degenerate conic consisting of two coincident lines.
 
 <a id="degenerate_conic.PointConic"></a>
 

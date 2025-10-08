@@ -13,6 +13,13 @@ def LinePair(line1: Matrix, line2: Matrix) -> Matrix:
     return (line1 * line2.T + line2 * line1.T) / 2
 
 
+def DoubleLine(line: Matrix) -> Matrix:
+    """Constructs a degenerate conic consisting of two coincident lines."""
+    if line.shape != (3, 1):
+        raise ValueError("The line must be a 3-dimensional column vector.")
+    return line * line.T
+
+
 def PointConic(point: Matrix | Sequence[Expr]) -> Matrix:
     """Constructs a conic that degenerates to a single point.
 

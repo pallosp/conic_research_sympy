@@ -1,9 +1,16 @@
+import pytest
 from sympy import I, Matrix, symbols
 
 from lib.circle import Circle
-from lib.conic import IdealPoints
+from lib.conic import ConicFromPoly, IdealPoints
 from lib.conic_classification import IsDegenerate, IsFiniteConic
-from lib.degenerate_conic import ExtractPoint, LinePair, PointConic, SplitToLines
+from lib.degenerate_conic import (
+    DoubleLine,
+    ExtractPoint,
+    LinePair,
+    PointConic,
+    SplitToLines,
+)
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine, VerticalLine
 from lib.matrix import ConicMatrix, IsNonZeroMultiple, IsRealMatrix
 from lib.point import PointToVec3
@@ -11,11 +18,26 @@ from tests.utils import AreProjectiveSetsEqual
 
 
 class TestLinePair:
-    def test_line_pair(self):
+    def test_invalid_argument(self):
+        with pytest.raises(ValueError, match="must be 3-dimensional column vectors"):
+            LinePair(Matrix([1, 2, 3]), Matrix([1, 2, 3]).T)
+        with pytest.raises(ValueError, match="must be 3-dimensional column vectors"):
+            LinePair(Matrix([1, 2, 3]).T, Matrix([1, 2, 3]))
+
+    def test_numeric_line_pair(self):
         double_ideal = ConicMatrix(0, 0, 0, 0, 0, 1)
         assert IsNonZeroMultiple(LinePair(IDEAL_LINE, IDEAL_LINE), double_ideal)
         plus = ConicMatrix(0, 1, 0, 0, 0, 0)
         assert IsNonZeroMultiple(LinePair(X_AXIS, Y_AXIS), plus)
+
+
+class TestDoubleLine:
+    def test_invalid_argument(self):
+        with pytest.raises(ValueError, match="must be a 3-dimensional column vector"):
+            DoubleLine(Matrix([1, 2, 3]).T)
+
+    def test_numeric_line_pair(self):
+        assert DoubleLine(X_AXIS) == ConicFromPoly(symbols("y") ** 2)
 
 
 class TestPointConic:
