@@ -103,6 +103,10 @@ class TestConicNormFactor:
         conic = Matrix.zeros(3, 3)
         assert ConicNormFactor(conic) == 1
 
+    def test_undecidable(self):
+        conic = ConicMatrix(*symbols("a b c d e f", real=True))
+        assert isinstance(ConicNormFactor(conic), ConicNormFactor)
+
 
 class TestEccentricity:
     def test_symbolic(self):
