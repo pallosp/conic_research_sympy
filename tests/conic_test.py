@@ -23,6 +23,7 @@ from lib.intersection import ConicXLine
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine, LineThroughPoint
 from lib.matrix import ConicMatrix, IsNonZeroMultiple, QuadraticForm
 from lib.point import ORIGIN, IdealPoint, PointToVec3
+from lib.transform import TransformConic, Translate
 from tests.utils import AreProjectiveSetsEqual
 
 
@@ -64,12 +65,20 @@ class TestConicThroughPoints:
 
 
 class TestConicNormFactor:
-    def test_parabola(self):
+    def test_parabola_with_focus_at_origin(self):
         focus = ORIGIN
         directrix = Matrix(symbols("a b c", positive=True))
         parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
         assert ConicNormFactor(parabola) == 1
         assert ConicNormFactor(-parabola) == -1
+
+    def test_general_parabola(self):
+        focus = ORIGIN
+        directrix = Matrix(symbols("a b c", positive=True))
+        parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
+        translation = Translate(*symbols("dx dy", real=True))
+        parabola = TransformConic(parabola, translation)
+        assert ConicNormFactor(parabola) == 1
 
     def test_circle(self):
         center = symbols("x y")
