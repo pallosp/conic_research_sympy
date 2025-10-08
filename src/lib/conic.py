@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Function, I, Matrix, Piecewise, Poly, Symbol, abc, sqrt
+from sympy import Expr, Function, I, Matrix, Poly, Symbol, abc, sqrt
 
 from lib.conic_classification import IsPointConic
 from lib.matrix import NonZeroCross, QuadraticForm, SkewMatrix
@@ -123,7 +123,7 @@ class ConicNormFactor(Function):
 def Eccentricity(conic: Matrix) -> Expr:
     """Computes the eccentricity of a conic section.
 
-    The result is ambiguous in case of degenerate conics: evaluate
+    The result is ambiguous in case of line pair conics: evaluate
     `(Eccentricity(conic), Eccentricity(-conic))` to get both values.
 
     *Formula*: https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients<br>
@@ -132,8 +132,8 @@ def Eccentricity(conic: Matrix) -> Expr:
     """
     a, b, c = conic[0], conic[1], conic[4]
     s = sqrt(((a - c) ** 2 + 4 * b**2).factor())
-    det_sign = Piecewise((1, conic.det() >= 0), (-1, True))
-    return sqrt(2 * s / (s - det_sign * (a + c)))
+    norm_sign = ConicNormFactor(conic)
+    return sqrt(2 * s / (s - norm_sign * (a + c)))
 
 
 def FocalAxisDirection(conic: Matrix) -> Matrix:

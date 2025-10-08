@@ -118,26 +118,38 @@ class TestConicNormFactor:
 
 
 class TestEccentricity:
-    def test_symbolic(self):
-        a, b, c, fx, fy, e = symbols("a,b,c,fx,fy,e", nonnegative=True)
-        conic = ConicFromFocusAndDirectrix((fx, fy), Matrix([a, b, c]), e)
-        assert e == Eccentricity(conic).simplify()
+    def test_symbolic_conic_from_focus_and_directrix(self):
+        focus = ORIGIN
+        directrix = Matrix(symbols("a,b,c", positive=True))
+        ecc = symbols("e", positive=True)
+        conic = ConicFromFocusAndDirectrix(focus, directrix, ecc)
+        assert ecc == Eccentricity(conic).simplify()
+        assert ecc == Eccentricity(conic * -2).simplify()
 
-    def test_circle(self):
-        assert Eccentricity(Circle((1, 2), 3)) == 0
-        assert Eccentricity(Circle((1, 2), 3) * -2) == 0
+    def test_symbolic_circle(self):
+        center = symbols("x y", real=True)
+        radius = symbols("r", real=True)
+        assert Eccentricity(Circle(center, radius)) == 0
+        assert Eccentricity(Circle(center, radius) * -2) == 0
 
-    def test_parabola(self):
+    def test_numeric_parabola(self):
         parabola = ConicFromPoly(x * x - y)
         assert Eccentricity(parabola) == 1
         assert Eccentricity(parabola * -2) == 1
 
-    def test_rectangular_hyperbola(self):
+    def test_symbolic_parabola(self):
+        focus = ORIGIN
+        directrix = Matrix(symbols("a,b,c", positive=True))
+        parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
+        assert Eccentricity(parabola) == 1
+        assert Eccentricity(parabola * -2) == 1
+
+    def test_numeric_rectangular_hyperbola(self):
         hyperbola = ConicFromPoly(x * y - 5)
         assert Eccentricity(hyperbola) == sqrt(2)
         assert Eccentricity(hyperbola * -2) == sqrt(2)
 
-    def test_degenerate_conic(self):
+    def test_numeric_degenerate_conic(self):
         conic = LinePair(X_AXIS, Matrix([24, 7, 0]))
         ecc1, ecc2 = Eccentricity(conic), Eccentricity(-conic)
         assert sorted([ecc1, ecc2]) == [Rational(5, 4), Rational(5, 3)]

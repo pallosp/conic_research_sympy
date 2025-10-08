@@ -765,7 +765,7 @@ def Eccentricity(conic: Matrix) -> Expr
 
 Computes the eccentricity of a conic section.
 
-The result is ambiguous in case of degenerate conics: evaluate
+The result is ambiguous in case of line pair conics: evaluate
 `(Eccentricity(conic), Eccentricity(-conic))` to get both values.
 
 *Formula*: https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients<br>
