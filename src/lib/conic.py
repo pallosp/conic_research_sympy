@@ -2,6 +2,7 @@ from collections.abc import Sequence
 
 from sympy import Expr, Function, I, Matrix, Piecewise, Poly, Symbol, abc, sqrt
 
+from lib.conic_classification import IsPointConic
 from lib.matrix import NonZeroCross, QuadraticForm, SkewMatrix
 from lib.point import PointToVec3, PointToXY
 
@@ -77,6 +78,48 @@ def ConicFromFocusAndDirectrix(
     return m1 * eccentricity**2 + m2 * (directrix[0] ** 2 + directrix[1] ** 2)
 
 
+class ConicNormFactor(Function):
+    """When the conic matrix (`C`) is multiplied by this value (`±1`), it will
+    have the following properties:
+
+    - For non-degenerate conics, the conic equation will evaluate to a positive
+      number at the focus point(s), i.e. `(fx fy 1)ᵀ C (fx fy 1) > 0`.
+    - For point conics, the conic equation will evaluate to ≤0 at all finite
+      `(x, y, 1)` points.
+    - For line pair conics, there is no preferred representation: this value will
+      always be 1.
+    - May return an unevaluated `sympy.Function` for symbolic conics whose type
+      or determinant sign cannot be determined.
+    """
+
+    @classmethod
+    def eval(cls, conic: Matrix) -> int | None:
+        """Internal implementation. Call `ConicNormFactor(conic)` directly."""
+        det = conic.det()
+        if det.is_positive:
+            return 1
+        if det.is_negative:
+            return -1
+
+        # degenerate conic
+        if det.is_zero:
+            is_point = IsPointConic(conic)
+
+            # line pair
+            if is_point is False:
+                return 1
+
+            # point conic
+            if is_point is True:
+                diag = conic.diagonal()
+                if any(e.is_positive for e in diag):
+                    return -1
+                if any(e.is_negative for e in diag):
+                    return 1
+
+        return None
+
+
 def Eccentricity(conic: Matrix) -> Expr:
     """Computes the eccentricity of a conic section.
 
@@ -107,8 +150,8 @@ def FocalAxisDirection(conic: Matrix) -> Matrix:
     [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
     """
     a, b, c = conic[0], conic[3], conic[4]
-    sign = Piecewise((1, conic.det() >= 0), (-1, True))
-    x, y = sqrt(sign * (a - c) / 2 + sign * b * I).simplify().as_real_imag()
+    norm_sign = ConicNormFactor(conic)
+    x, y = sqrt(norm_sign * (a - c) / 2 + norm_sign * b * I).simplify().as_real_imag()
     return Matrix([x, y, 0])
 
 

@@ -47,6 +47,8 @@
   * [ConicFromPoly](#conic.ConicFromPoly)
   * [ConicThroughPoints](#conic.ConicThroughPoints)
   * [ConicFromFocusAndDirectrix](#conic.ConicFromFocusAndDirectrix)
+  * [ConicNormFactor](#conic.ConicNormFactor)
+    * [eval](#conic.ConicNormFactor.eval)
   * [Eccentricity](#conic.Eccentricity)
   * [FocalAxisDirection](#conic.FocalAxisDirection)
   * [IdealPoints](#conic.IdealPoints)
@@ -721,6 +723,37 @@ Constructs a conic from its focus, directrix and eccentricity.
 
 *Formula*:
 [research/conic_from_focus_and_directrix.py](../src/research/conic_from_focus_and_directrix.py)
+
+<a id="conic.ConicNormFactor"></a>
+
+## ConicNormFactor Objects
+
+```python
+class ConicNormFactor(Function)
+```
+
+When the conic matrix (`C`) is multiplied by this value (`±1`), it will
+have the following properties:
+
+- For non-degenerate conics, the conic equation will evaluate to a positive
+  number at the focus point(s), i.e. `(fx fy 1)ᵀ C (fx fy 1) > 0`.
+- For point conics, the conic equation will evaluate to ≤0 at all finite
+  `(x, y, 1)` points.
+- For line pair conics, there is no preferred representation: this value will
+  always be 1.
+- May return an unevaluated `sympy.Function` for symbolic conics whose type
+  or determinant sign cannot be determined.
+
+<a id="conic.ConicNormFactor.eval"></a>
+
+#### eval
+
+```python
+@classmethod
+def eval(cls, conic: Matrix) -> int | None
+```
+
+Internal implementation. Call `ConicNormFactor(conic)` directly.
 
 <a id="conic.Eccentricity"></a>
 
