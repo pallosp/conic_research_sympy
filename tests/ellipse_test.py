@@ -1,3 +1,4 @@
+import pytest
 from sympy import factor, nan, pi, simplify, symbols
 
 from lib.central_conic import ConicCenter, SemiAxisLengths
@@ -19,6 +20,14 @@ from lib.point import ORIGIN, Centroid, PointToVec3
 class TestEllipseFromParams:
     def test_unit_circle_ellipse(self):
         assert Ellipse(ORIGIN, 1, 1) == UNIT_CIRCLE
+
+    def test_overspecified(self):
+        with pytest.raises(ValueError, match="not both"):
+            Ellipse(ORIGIN, 1, 1, r1_angle=0, r1_direction=(1, 0))
+
+    def test_wrong_r1_direction(self):
+        with pytest.raises(ValueError, match="must be a 2d vector or an ideal point"):
+            Ellipse(ORIGIN, 1, 1, r1_direction=(1, 1, 1))
 
     def test_center(self):
         center = symbols("x,y")
