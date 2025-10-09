@@ -1,7 +1,7 @@
 from sympy import I, Matrix, Poly, Rational, sqrt, symbols
 from sympy.abc import x, y
 
-from lib.central_conic import ShrinkConicToZero
+from lib.central_conic import ConicFromFociAndRadius, ShrinkConicToZero
 from lib.circle import UNIT_CIRCLE, Circle
 from lib.conic import (
     ConicContainsLine,
@@ -166,6 +166,13 @@ class TestAxisDirection:
         ellipse = Ellipse((6, 5), 4, 3, r1_direction=(2, 1))
         assert IsNonZeroMultiple(FocalAxisDirection(ellipse), (2, 1, 0))
         assert IsNonZeroMultiple(FocalAxisDirection(-ellipse), (2, 1, 0))
+
+    def test_complex_ellipse(self):
+        focus1 = (1, 2)
+        focus2 = (3, 4)
+        ellipse = ConicFromFociAndRadius(focus1, focus2, 5 * I)
+        assert IsNonZeroMultiple(FocalAxisDirection(ellipse), (1, 1, 0))
+        assert IsNonZeroMultiple(FocalAxisDirection(-ellipse), (1, 1, 0))
 
     def test_point_conic(self):
         ellipse = Ellipse((6, 5), 4, 3, r1_direction=(2, 1))
