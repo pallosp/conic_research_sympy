@@ -1122,7 +1122,7 @@ Factors all `Abs` subexpressions inside `expr`.
 class ConicNormFactor(Function)
 ```
 
-When the conic matrix (`C`) is multiplied by this value (`±1`), it will
+When the conic matrix `C` is multiplied by this value (`±1`), it will
 have the following properties:
 
 - For non-degenerate conics, the conic equation will evaluate to a positive

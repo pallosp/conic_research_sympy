@@ -78,6 +78,13 @@ class TestConicNormFactor:
         conic = ConicMatrix(*symbols("a b c d e f", real=True))
         assert isinstance(ConicNormFactor(conic), ConicNormFactor)
 
+    def test_function_properties(self):
+        conic = ConicMatrix(*symbols("a b c d e f", real=True))
+        factor = ConicNormFactor(conic)
+        assert factor.is_nonzero is True
+        assert factor.is_integer is True
+        assert factor.is_positive is None
+
 
 class TestIsDegenerate:
     def test_numeric(self):

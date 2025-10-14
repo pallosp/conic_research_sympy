@@ -5,7 +5,7 @@ from lib.matrix import IsDefinite
 
 
 class ConicNormFactor(Function):
-    """When the conic matrix (`C`) is multiplied by this value (`±1`), it will
+    """When the conic matrix `C` is multiplied by this value (`±1`), it will
     have the following properties:
 
     - For non-degenerate conics, the conic equation will evaluate to a positive
@@ -17,6 +17,8 @@ class ConicNormFactor(Function):
     - May return an unevaluated `sympy.Function` for symbolic conics whose type
       or determinant sign cannot be determined.
     """
+
+    is_odd = True
 
     @classmethod
     def eval(cls, conic: Matrix) -> int | None:
