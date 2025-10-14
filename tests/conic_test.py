@@ -79,6 +79,14 @@ class TestEccentricity:
         assert ecc == Eccentricity(conic).simplify()
         assert ecc == Eccentricity(conic * -2).simplify()
 
+    def test_symbolic_complex_ellipse_from_focus_and_directrix(self):
+        focus = ORIGIN
+        directrix = Matrix(symbols("a,b,c", positive=True))
+        ecc = symbols("e", positive=True) * I
+        ellipse = ConicFromFocusAndDirectrix(focus, directrix, ecc)
+        assert ecc == Eccentricity(ellipse).simplify()
+        assert ecc == Eccentricity(ellipse * -2).simplify()
+
     def test_symbolic_circle(self):
         center = symbols("x y", real=True)
         radius = symbols("r", real=True)
