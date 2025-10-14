@@ -2,7 +2,7 @@ from collections.abc import Sequence
 
 from sympy import Expr, Function, I, Matrix, Poly, Symbol, abc, sqrt
 
-from lib.conic_classification import IsPointConic
+from lib.conic_classification import ConicNormFactor
 from lib.matrix import NonZeroCross, QuadraticForm, SkewMatrix
 from lib.point import PointToVec3, PointToXY
 
@@ -76,48 +76,6 @@ def ConicFromFocusAndDirectrix(
     m1 = directrix * directrix.T
     m2 = Matrix([[-1, 0, fx], [0, -1, fy], [fx, fy, -(fx**2) - fy**2]])
     return m1 * eccentricity**2 + m2 * (directrix[0] ** 2 + directrix[1] ** 2)
-
-
-class ConicNormFactor(Function):
-    """When the conic matrix (`C`) is multiplied by this value (`±1`), it will
-    have the following properties:
-
-    - For non-degenerate conics, the conic equation will evaluate to a positive
-      number at the focus point(s), i.e. `(fx fy 1)ᵀ C (fx fy 1) > 0`.
-    - For point conics, the conic equation will evaluate to ≤0 at all finite
-      `(x, y, 1)` points.
-    - For line pair conics, there is no preferred representation: this value will
-      always be 1.
-    - May return an unevaluated `sympy.Function` for symbolic conics whose type
-      or determinant sign cannot be determined.
-    """
-
-    @classmethod
-    def eval(cls, conic: Matrix) -> int | None:
-        """Internal implementation. Call `ConicNormFactor(conic)` directly."""
-        det = conic.det()
-        if det.is_positive:
-            return 1
-        if det.is_negative:
-            return -1
-
-        # degenerate conic
-        if det.is_zero:
-            is_point = IsPointConic(conic)
-
-            # line pair
-            if is_point is False:
-                return 1
-
-            # point conic
-            if is_point is True:
-                diag = conic.diagonal()
-                if any(e.is_positive for e in diag):
-                    return -1
-                if any(e.is_negative for e in diag):
-                    return 1
-
-        return None
 
 
 def Eccentricity(conic: Matrix) -> Expr:

@@ -1,7 +1,49 @@
-from sympy import Matrix
+from sympy import Function, Matrix
 from sympy.core.logic import fuzzy_and, fuzzy_not, fuzzy_or
 
 from lib.matrix import IsDefinite
+
+
+class ConicNormFactor(Function):
+    """When the conic matrix (`C`) is multiplied by this value (`±1`), it will
+    have the following properties:
+
+    - For non-degenerate conics, the conic equation will evaluate to a positive
+      number at the focus point(s), i.e. `(fx fy 1)ᵀ C (fx fy 1) > 0`.
+    - For point conics, the conic equation will evaluate to ≤0 at all finite
+      `(x, y, 1)` points.
+    - For line pair conics, there is no preferred representation: this value will
+      always be 1.
+    - May return an unevaluated `sympy.Function` for symbolic conics whose type
+      or determinant sign cannot be determined.
+    """
+
+    @classmethod
+    def eval(cls, conic: Matrix) -> int | None:
+        """Internal implementation. Call `ConicNormFactor(conic)` directly."""
+        det = conic.det()
+        if det.is_positive:
+            return 1
+        if det.is_negative:
+            return -1
+
+        # degenerate conic
+        if det.is_zero:
+            is_point = IsPointConic(conic)
+
+            # line pair
+            if is_point is False:
+                return 1
+
+            # point conic
+            if is_point is True:
+                diag = conic.diagonal()
+                if any(e.is_positive for e in diag):
+                    return -1
+                if any(e.is_negative for e in diag):
+                    return 1
+
+        return None
 
 
 def IsDegenerate(conic: Matrix) -> bool | None:

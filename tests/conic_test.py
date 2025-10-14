@@ -9,7 +9,6 @@ from lib.conic import (
     ConicContainsPoint,
     ConicFromFocusAndDirectrix,
     ConicFromPoly,
-    ConicNormFactor,
     ConicThroughPoints,
     Eccentricity,
     FocalAxisDirection,
@@ -18,7 +17,7 @@ from lib.conic import (
     PolePoint,
     ProjectiveConicCenter,
 )
-from lib.degenerate_conic import LinePair, PointConic
+from lib.degenerate_conic import LinePair
 from lib.ellipse import Ellipse
 from lib.intersection import ConicXLine
 from lib.line import (
@@ -30,8 +29,7 @@ from lib.line import (
     LineThroughPoint,
 )
 from lib.matrix import ConicMatrix, IsNonZeroMultiple, QuadraticForm
-from lib.point import ORIGIN, IdealPoint, IdealPointOnLine, PointToVec3
-from lib.transform import TransformConic, Translate
+from lib.point import ORIGIN, IdealPoint, IdealPointOnLine
 from tests.utils import AreProjectiveSetsEqual
 
 
@@ -70,59 +68,6 @@ class TestConicThroughPoints:
         p1, p2, p3, p4, p5 = (0, 0), (0, 0), (1, 0), (0, 1), (1, 1)
         conic = ConicThroughPoints(p1, p2, p3, p4, p5)
         assert conic.is_zero_matrix
-
-
-class TestConicNormFactor:
-    def test_parabola_with_focus_at_origin(self):
-        focus = ORIGIN
-        directrix = Matrix(symbols("a b c", positive=True))
-        parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
-        assert ConicNormFactor(parabola) == 1
-        assert ConicNormFactor(-parabola) == -1
-
-    def test_general_parabola(self):
-        focus = ORIGIN
-        directrix = Matrix(symbols("a b c", positive=True))
-        parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
-        translation = Translate(*symbols("dx dy", real=True))
-        parabola = TransformConic(parabola, translation)
-        assert ConicNormFactor(parabola) == 1
-
-    def test_circle(self):
-        center = symbols("x y")
-        circle = Circle(center, symbols("r", positive=True))
-        assert QuadraticForm(circle, PointToVec3(center)).factor().is_positive
-        assert ConicNormFactor(circle) == 1
-        assert ConicNormFactor(-circle) == -1
-
-    def test_zero_radius_circle(self):
-        center = symbols("x y", real=True)
-        circle = Circle(center, 0)
-        assert QuadraticForm(circle, ORIGIN).is_nonpositive
-        assert ConicNormFactor(circle) == 1
-        assert ConicNormFactor(-circle) == -1
-
-    def test_point_conic(self):
-        point = symbols("x y z", positive=True)
-        conic = PointConic(point)
-        assert QuadraticForm(conic, ORIGIN).is_nonpositive
-        assert ConicNormFactor(conic) == 1
-        assert ConicNormFactor(-conic) == -1
-
-    def test_line_pair(self):
-        line1 = Matrix(symbols("a b c", real=True))
-        line2 = Matrix(symbols("d e f", real=True))
-        line_pair = LinePair(line1, line2)
-        assert ConicNormFactor(line_pair) == 1
-        assert ConicNormFactor(-line_pair) == 1
-
-    def test_zero_conic_matrix(self):
-        conic = Matrix.zeros(3, 3)
-        assert ConicNormFactor(conic) == 1
-
-    def test_undecidable(self):
-        conic = ConicMatrix(*symbols("a b c d e f", real=True))
-        assert isinstance(ConicNormFactor(conic), ConicNormFactor)
 
 
 class TestEccentricity:
