@@ -157,7 +157,7 @@ def FocalAxisDirection(conic: Matrix) -> Matrix:
     """
     a, b, c = conic[0], conic[3], conic[4]
     norm_sign = ConicNormFactor(conic)
-    x, y = sqrt(norm_sign * (a - c) / 2 + norm_sign * b * I).simplify().as_real_imag()
+    x, y = sqrt(norm_sign * ((a - c) / 2 + b * I)).simplify().as_real_imag()
     return Matrix([x, y, 0])
 
 
