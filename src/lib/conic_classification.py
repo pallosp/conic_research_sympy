@@ -1,4 +1,4 @@
-from sympy import Function, Matrix
+from sympy import Expr, Function, Integer, Matrix, S
 from sympy.core.logic import fuzzy_and, fuzzy_not, fuzzy_or
 
 from lib.matrix import IsDefinite
@@ -45,6 +45,16 @@ class ConicNormFactor(Function):
                 if any(e.is_negative for e in diag):
                     return 1
 
+        return None
+
+    def _eval_Abs(self) -> Integer:
+        return S.One
+
+    def _eval_power(self, exponent: Expr) -> Expr | None:
+        if exponent.is_even:
+            return S.One
+        if exponent.is_odd:
+            return self
         return None
 
 

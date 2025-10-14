@@ -1,4 +1,4 @@
-from sympy import I, Matrix, Rational, pi, symbols
+from sympy import Abs, I, Matrix, Rational, pi, symbols
 from sympy.abc import x, y
 
 from lib.circle import COMPLEX_UNIT_CIRCLE, UNIT_CIRCLE, Circle
@@ -84,6 +84,13 @@ class TestConicNormFactor:
         assert factor.is_nonzero is True
         assert factor.is_integer is True
         assert factor.is_positive is None
+
+    def test_simplify(self):
+        conic = ConicMatrix(*symbols("a b c d e f", real=True))
+        f = ConicNormFactor(conic)
+        assert Abs(f) == 1
+        assert f * f == 1
+        assert f**3 == f
 
 
 class TestIsDegenerate:
