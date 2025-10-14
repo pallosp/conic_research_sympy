@@ -107,6 +107,23 @@ class TestEccentricity:
         ecc1, ecc2 = Eccentricity(conic), Eccentricity(-conic)
         assert sorted([ecc1, ecc2]) == [Rational(5, 4), Rational(5, 3)]
 
+    def test_symbolic_ellipse(self):
+        focus = ORIGIN
+        directrix = Matrix(symbols("a,b,c", positive=True))
+        eccentricity = Rational(1, 2)
+        ellipse = ConicFromFocusAndDirectrix(focus, directrix, Rational(1, 2))
+        assert Eccentricity(ellipse).factor() == eccentricity
+        assert Eccentricity(-ellipse).factor() == eccentricity
+
+    def test_point_conic(self):
+        focus = ORIGIN
+        directrix = Matrix(symbols("a,b,c", positive=True))
+        eccentricity = Rational(1, 2)
+        ellipse = ConicFromFocusAndDirectrix(focus, directrix, Rational(1, 2))
+        point_conic = ShrinkConicToZero(ellipse)
+        assert Eccentricity(point_conic).factor() == eccentricity
+        assert Eccentricity(-point_conic).factor() == eccentricity
+
 
 class TestAxisDirection:
     def test_unit_circle(self):
