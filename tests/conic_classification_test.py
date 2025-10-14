@@ -242,6 +242,13 @@ class TestIsComplexEllipse:
         assert IsComplexEllipse(Ellipse(center, *imag_r)) is True
         assert IsComplexEllipse(Ellipse(center, *imag_r, r1_direction=r1_dir)) is True
 
+    def test_symbolic_ellipse_from_focus_and_directrix(self):
+        focus = ORIGIN
+        directrix = Matrix(symbols("a b c", positive=True))
+        eccentricity = symbols("e", positive=True) * I
+        conic = ConicFromFocusAndDirectrix(focus, directrix, eccentricity)
+        assert IsComplexEllipse(conic)
+
     def test_symbolic_point_conics(self):
         zero_circle = Circle(symbols("x,y"), 0)
         assert IsComplexEllipse(zero_circle) is False
