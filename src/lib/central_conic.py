@@ -1,8 +1,8 @@
 from collections.abc import Sequence
 
-from sympy import Abs, Expr, Function, Matrix, sqrt
+from sympy import Abs, Expr, Matrix, sqrt
 
-from lib.conic_classification import IsFiniteConic
+from lib.conic import ConicNormFactor
 from lib.matrix import ConicMatrix, MaxEigenvalue, MinEigenvalue
 from lib.point import PointToXY
 
@@ -92,7 +92,12 @@ def ConicCenter(conic: Matrix) -> tuple[Expr, Expr]:
 
 
 def SemiAxisLengths(conic: Matrix) -> tuple[Expr, Expr]:
-    """Computes the semi-axis lengths of a conic.
+    """Computes the semi-axis lengths of a conic in no specific order.
+
+    To get the semi-focal or semi-transverse axis length (semi-major /
+    semi-minor in case of ellipses), call
+    [PrincipalRadius](#central_conic.PrincipalRadius) or
+    [SecondaryRadius](#central_conic.SecondaryRadius), respectively.
 
     *Formula*: [research/conic_radii.py](../src/research/conic_radii.py)
     """
@@ -103,71 +108,45 @@ def SemiAxisLengths(conic: Matrix) -> tuple[Expr, Expr]:
     )
 
 
-class SemiMajorAxis(Function):
-    """Computes the semi-major axis length i.e. the center-vertex distance of
-    a conic.
+def PrimaryRadius(conic: Matrix) -> Expr:
+    """Computes the center-vertex distance of a conic.
+
+    This corresponds to the semi-major axis length of real ellipses. In case of
+    complex ellipses however the focal axis is the shorter one in terms of
+    absolute value.
 
     The returned value is:
      - a positive number for ellipses and hyperbolas;
      - infinity for parabolas;
      - an imaginary number for complex ellipses;
-     - nan for ideal point conics;
-     - zero for the other degenerate conics.
-
-    Returns an unevaluated `sympy.Function` if we can't tell which axis is
-    longer.
+     - `nan` for ideal point conics;
+     - 0 for the other degenerate conics.
     """
-
-    @classmethod
-    def eval(cls, conic: Matrix) -> Expr | None:
-        """Internal implementation. Call `SemiMajorAxis(conic)` directly."""
-        axes = SemiAxisLengths(conic)
-        finite = IsFiniteConic(conic)
-        if finite is True:
-            if conic[0].is_negative:
-                return axes[1]
-            if conic[0].is_nonnegative:
-                return axes[0]
-        if finite is False:
-            det = conic.det()
-            if det.is_nonnegative:
-                return axes[1]
-            if det.is_negative:
-                return axes[0]
-        return None
+    a, _, _, b, c, _, _, _, _ = conic
+    norm_sign = ConicNormFactor(conic)
+    eigenvalue = (a + c + norm_sign * sqrt((a - c) ** 2 + 4 * b**2)) / 2
+    return sqrt(-conic.det() / (eigenvalue * (a * c - b * b)))
 
 
-class SemiMinorAxis(Function):
-    """Computes the semi-minor axis length of a conic.
+def SecondaryRadius(conic: Matrix) -> Expr:
+    """Computes the semi-conjugate axis length of a conic.
+
+    This corresponds to the semi-minor axis length of real ellipses. In case of
+    of complex ellipses however the conjugate axis is the longer one in terms
+    absolute value. Hyperbolas intersect their conjugate axis at complex points,
+    therefore the secondary radius will be a complex number.
 
     The returned value is:
      - a positive number for ellipses;
      - infinity for parabolas;
      - an imaginary number for hyperbolas and complex ellipses;
-     - nan for ideal point conics;
-     - zero for the other degenerate conics.
-
-    Returns an unevaluated `sympy.Function` if we can't tell which axis is
-    shorter.
+     - `nan` for ideal point conics;
+     - 0 for the other degenerate conics.
     """
-
-    @classmethod
-    def eval(cls, conic: Matrix) -> Expr | None:
-        """Internal implementation. Call `SemiMinorAxis(conic)` directly."""
-        axes = SemiAxisLengths(conic)
-        finite = IsFiniteConic(conic)
-        if finite is True:
-            if conic[0].is_negative:
-                return axes[0]
-            if conic[0].is_nonnegative:
-                return axes[1]
-        if finite is False:
-            det = conic.det()
-            if det.is_nonnegative:
-                return axes[0]
-            if det.is_negative:
-                return axes[1]
-        return None
+    a, _, _, b, c, _, _, _, _ = conic
+    norm_sign = ConicNormFactor(conic)
+    eigenvalue = (a + c - norm_sign * sqrt((a - c) ** 2 + 4 * b**2)) / 2
+    return sqrt(-conic.det() / (eigenvalue * (a * c - b * b)))
 
 
 def LinearEccentricity(conic: Matrix) -> Expr:

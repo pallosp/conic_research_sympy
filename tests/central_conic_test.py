@@ -15,8 +15,8 @@ from lib.central_conic import (
     ConicFromCenterAndPoints,
     ConicFromFociAndRadius,
     LinearEccentricity,
-    SemiMajorAxis,
-    SemiMinorAxis,
+    PrimaryRadius,
+    SecondaryRadius,
     ShrinkConicToZero,
 )
 from lib.circle import UNIT_CIRCLE, Circle
@@ -26,7 +26,7 @@ from lib.degenerate_conic import LinePair, PointConic
 from lib.ellipse import Ellipse, EllipseFromFociAndPoint
 from lib.hyperbola import HyperbolaFromFociAndPoint
 from lib.line import X_AXIS, HorizontalLine
-from lib.matrix import ConicMatrix, IsNonZeroMultiple
+from lib.matrix import IsNonZeroMultiple
 from lib.point import ORIGIN
 from lib.sympy_utils import FactorAbs, FactorRadicals
 from lib.transform import ScaleXY, TransformConic
@@ -98,63 +98,63 @@ class TestSemiAxisLengths:
         center = symbols("x,y")
         r = symbols("r", nonnegative=True)
         circle = Circle(center, r)
-        assert r == SemiMajorAxis(circle)
-        assert r == SemiMinorAxis(circle)
+        assert r == PrimaryRadius(circle)
+        assert r == SecondaryRadius(circle)
 
     def test_ellipse(self):
         ellipse = TransformConic(UNIT_CIRCLE, ScaleXY(2, 3))
-        assert SemiMajorAxis(ellipse) == 3
-        assert SemiMajorAxis(-ellipse) == 3
-        assert SemiMinorAxis(ellipse) == 2
-        assert SemiMinorAxis(-ellipse) == 2
+        assert PrimaryRadius(ellipse) == 3
+        assert PrimaryRadius(-ellipse) == 3
+        assert SecondaryRadius(ellipse) == 2
+        assert SecondaryRadius(-ellipse) == 2
 
     def test_complex_ellipse(self):
         ellipse = Ellipse((1, 2), 3 * I, 4 * I)
-        assert SemiMajorAxis(ellipse) == 4 * I
-        assert SemiMajorAxis(-ellipse) == 4 * I
-        assert SemiMinorAxis(ellipse) == 3 * I
-        assert SemiMinorAxis(-ellipse) == 3 * I
+        assert PrimaryRadius(ellipse) == 3 * I
+        assert PrimaryRadius(-ellipse) == 3 * I
+        assert SecondaryRadius(ellipse) == 4 * I
+        assert SecondaryRadius(-ellipse) == 4 * I
+
+    def test_complex_ellipse_from_foci_and_radius(self):
+        ellipse = ConicFromFociAndRadius((-3, 0), (3, 0), 4 * I)
+        assert PrimaryRadius(ellipse) == 4 * I
+        assert SecondaryRadius(ellipse) == 5 * I
 
     def test_symbolic_hyperbola(self):
         directrix = Matrix(symbols("a,b,c", positive=True))
         hyperbola = ConicFromFocusAndDirectrix((0, 0), directrix, 2)
-        assert FactorRadicals(SemiMajorAxis(hyperbola)).is_real is True
-        assert FactorRadicals(SemiMajorAxis(-hyperbola)).is_real is True
-        assert FactorRadicals(SemiMinorAxis(hyperbola)).is_real is False
-        assert FactorRadicals(SemiMinorAxis(-hyperbola)).is_real is False
+        assert FactorRadicals(PrimaryRadius(hyperbola)).is_real is True
+        assert FactorRadicals(PrimaryRadius(-hyperbola)).is_real is True
+        assert FactorRadicals(SecondaryRadius(hyperbola)).is_real is False
+        assert FactorRadicals(SecondaryRadius(-hyperbola)).is_real is False
 
     def test_parabola(self):
         parabola = ConicFromPoly(x * x - y)
-        assert SemiMajorAxis(parabola).is_infinite
-        assert SemiMajorAxis(-parabola).is_infinite
-        assert SemiMinorAxis(parabola).is_infinite
-        assert SemiMinorAxis(-parabola).is_infinite
+        assert PrimaryRadius(parabola).is_infinite
+        assert PrimaryRadius(-parabola).is_infinite
+        assert SecondaryRadius(parabola).is_infinite
+        assert SecondaryRadius(-parabola).is_infinite
 
     def test_line_pair(self):
         line1 = Matrix(symbols("a b c", real=True))
         line2 = Matrix(symbols("d e f", real=True))
         line_pair = LinePair(line1, line2)
-        assert SemiMajorAxis(line_pair) == 0
-        assert SemiMajorAxis(line_pair) == 0
+        assert PrimaryRadius(line_pair) == 0
+        assert PrimaryRadius(line_pair) == 0
 
     def test_finite_point_conic(self):
         zero_circle = Circle(symbols("x y", real=True), 0)
-        assert SemiMajorAxis(zero_circle) == 0
-        assert SemiMinorAxis(zero_circle) == 0
+        assert PrimaryRadius(zero_circle) == 0
+        assert SecondaryRadius(zero_circle) == 0
 
         finite_point_conic = PointConic(symbols("x,y", real=True))
-        assert SemiMajorAxis(finite_point_conic) == 0
-        assert SemiMinorAxis(finite_point_conic) == 0
+        assert PrimaryRadius(finite_point_conic) == 0
+        assert SecondaryRadius(finite_point_conic) == 0
 
     def test_ideal_point_conic(self):
         ideal_point_conic = PointConic([*symbols("x,y"), 0])
-        assert SemiMajorAxis(ideal_point_conic) == nan
-        assert SemiMinorAxis(ideal_point_conic) == nan
-
-    def test_undecidable(self):
-        conic = ConicMatrix(*symbols("a,b,c,d,e,f"))
-        assert isinstance(SemiMajorAxis(conic), SemiMajorAxis)
-        assert isinstance(SemiMinorAxis(conic), SemiMinorAxis)
+        assert PrimaryRadius(ideal_point_conic) == nan
+        assert SecondaryRadius(ideal_point_conic) == nan
 
 
 class TestLinearEccentricity:

@@ -16,10 +16,8 @@
   * [ConicFromCenterAndPoints](#central_conic.ConicFromCenterAndPoints)
   * [ConicCenter](#central_conic.ConicCenter)
   * [SemiAxisLengths](#central_conic.SemiAxisLengths)
-  * [SemiMajorAxis](#central_conic.SemiMajorAxis)
-    * [eval](#central_conic.SemiMajorAxis.eval)
-  * [SemiMinorAxis](#central_conic.SemiMinorAxis)
-    * [eval](#central_conic.SemiMinorAxis.eval)
+  * [PrimaryRadius](#central_conic.PrimaryRadius)
+  * [SecondaryRadius](#central_conic.SecondaryRadius)
   * [LinearEccentricity](#central_conic.LinearEccentricity)
   * [ShrinkConicToZero](#central_conic.ShrinkConicToZero)
 * [circle](#circle)
@@ -330,72 +328,57 @@ Computes the center point of a conic.
 def SemiAxisLengths(conic: Matrix) -> tuple[Expr, Expr]
 ```
 
-Computes the semi-axis lengths of a conic.
+Computes the semi-axis lengths of a conic in no specific order.
+
+To get the semi-focal or semi-transverse axis length (semi-major /
+semi-minor in case of ellipses), call
+[PrincipalRadius](#central_conic.PrincipalRadius) or
+[SecondaryRadius](#central_conic.SecondaryRadius), respectively.
 
 *Formula*: [research/conic_radii.py](../src/research/conic_radii.py)
 
-<a id="central_conic.SemiMajorAxis"></a>
+<a id="central_conic.PrimaryRadius"></a>
 
-## SemiMajorAxis Objects
+#### PrimaryRadius
 
 ```python
-class SemiMajorAxis(Function)
+def PrimaryRadius(conic: Matrix) -> Expr
 ```
 
-Computes the semi-major axis length i.e. the center-vertex distance of
-a conic.
+Computes the center-vertex distance of a conic.
+
+This corresponds to the semi-major axis length of real ellipses. In case of
+complex ellipses however the focal axis is the shorter one in terms of
+absolute value.
 
 The returned value is:
  - a positive number for ellipses and hyperbolas;
  - infinity for parabolas;
  - an imaginary number for complex ellipses;
- - nan for ideal point conics;
- - zero for the other degenerate conics.
+ - `nan` for ideal point conics;
+ - 0 for the other degenerate conics.
 
-Returns an unevaluated `sympy.Function` if we can't tell which axis is
-longer.
+<a id="central_conic.SecondaryRadius"></a>
 
-<a id="central_conic.SemiMajorAxis.eval"></a>
-
-#### eval
+#### SecondaryRadius
 
 ```python
-@classmethod
-def eval(cls, conic: Matrix) -> Expr | None
+def SecondaryRadius(conic: Matrix) -> Expr
 ```
 
-Internal implementation. Call `SemiMajorAxis(conic)` directly.
+Computes the semi-conjugate axis length of a conic.
 
-<a id="central_conic.SemiMinorAxis"></a>
-
-## SemiMinorAxis Objects
-
-```python
-class SemiMinorAxis(Function)
-```
-
-Computes the semi-minor axis length of a conic.
+This corresponds to the semi-minor axis length of real ellipses. In case of
+of complex ellipses however the conjugate axis is the longer one in terms
+absolute value. Hyperbolas intersect their conjugate axis at complex points,
+therefore the secondary radius will be a complex number.
 
 The returned value is:
  - a positive number for ellipses;
  - infinity for parabolas;
  - an imaginary number for hyperbolas and complex ellipses;
- - nan for ideal point conics;
- - zero for the other degenerate conics.
-
-Returns an unevaluated `sympy.Function` if we can't tell which axis is
-shorter.
-
-<a id="central_conic.SemiMinorAxis.eval"></a>
-
-#### eval
-
-```python
-@classmethod
-def eval(cls, conic: Matrix) -> Expr | None
-```
-
-Internal implementation. Call `SemiMinorAxis(conic)` directly.
+ - `nan` for ideal point conics;
+ - 0 for the other degenerate conics.
 
 <a id="central_conic.LinearEccentricity"></a>
 

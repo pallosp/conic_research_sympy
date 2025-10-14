@@ -2,14 +2,14 @@
 
 from sympy import pprint, simplify, sqrt, symbols
 
-from lib.central_conic import ConicCenter, SemiMajorAxis, SemiMinorAxis
+from lib.central_conic import ConicCenter, PrimaryRadius, SecondaryRadius
 from lib.circle import Circle
 from lib.matrix import ConicMatrix
 
 conic = ConicMatrix(*symbols("a,b,c,d,e,f"))
 
 center = ConicCenter(conic)
-radius_square = SemiMajorAxis(conic) ** 2 + SemiMinorAxis(conic) ** 2
+radius_square = PrimaryRadius(conic) ** 2 + SecondaryRadius(conic) ** 2
 radius = sqrt(radius_square.simplify().factor())
 
 print("\nDirector circle radius:")
