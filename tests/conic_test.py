@@ -1,3 +1,4 @@
+import pytest
 from sympy import I, Matrix, Poly, Rational, sqrt, symbols
 from sympy.abc import x, y
 
@@ -20,9 +21,16 @@ from lib.conic import (
 from lib.degenerate_conic import LinePair, PointConic
 from lib.ellipse import Ellipse
 from lib.intersection import ConicXLine
-from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine, LineThroughPoint
+from lib.line import (
+    IDEAL_LINE,
+    X_AXIS,
+    Y_AXIS,
+    AngleBisector,
+    HorizontalLine,
+    LineThroughPoint,
+)
 from lib.matrix import ConicMatrix, IsNonZeroMultiple, QuadraticForm
-from lib.point import ORIGIN, IdealPoint, PointToVec3
+from lib.point import ORIGIN, IdealPoint, IdealPointOnLine, PointToVec3
 from lib.transform import TransformConic, Translate
 from tests.utils import AreProjectiveSetsEqual
 
@@ -175,10 +183,11 @@ class TestAxisDirection:
         assert IsNonZeroMultiple(FocalAxisDirection(-ellipse), (1, 1, 0))
 
     def test_point_conic(self):
-        ellipse = Ellipse((6, 5), 4, 3, r1_direction=(2, 1))
+        r1_direction = (2, 1, 0)
+        ellipse = Ellipse((6, 5), 4, 3, r1_direction=r1_direction)
         point = ShrinkConicToZero(ellipse)
-        assert IsNonZeroMultiple(FocalAxisDirection(point), (2, 1, 0))
-        assert IsNonZeroMultiple(FocalAxisDirection(-point), (2, 1, 0))
+        assert IsNonZeroMultiple(FocalAxisDirection(point), r1_direction)
+        assert IsNonZeroMultiple(FocalAxisDirection(-point), r1_direction)
 
     def test_hyperbola(self):
         hyperbola = ConicFromPoly(x * y - 1)
@@ -189,11 +198,32 @@ class TestAxisDirection:
         parabola = ConicFromFocusAndDirectrix((1, 2), Matrix([3, 4, 5]), 1)
         assert IsNonZeroMultiple(FocalAxisDirection(parabola), (3, 4, 0))
 
-    def test_degenerate_conic(self):
+    def test_line_pair(self):
         conic = LinePair(X_AXIS, Y_AXIS)
         dir1 = FocalAxisDirection(conic)
         dir2 = FocalAxisDirection(-conic)
         assert AreProjectiveSetsEqual([dir1, dir2], [[1, 1, 0], [1, -1, 0]])
+
+    def test_double_line(self):
+        line_pair = LinePair(X_AXIS, X_AXIS)
+        assert IsNonZeroMultiple(FocalAxisDirection(line_pair), (0, 1, 0))
+        line_pair = LinePair(X_AXIS, -X_AXIS)
+        assert IsNonZeroMultiple(FocalAxisDirection(line_pair), (1, 0, 0))
+
+    @pytest.mark.parametrize(
+        ("line1", "line2"),
+        [
+            (X_AXIS, Y_AXIS),
+            (X_AXIS, -Y_AXIS),
+            (X_AXIS, IDEAL_LINE),
+            (Matrix([1, 2, 3]), Matrix([4, 5, 6])),
+        ],
+    )
+    def test_line_pair_focal_axis_vs_angle_bisector(self, line1: Matrix, line2: Matrix):
+        line_pair = LinePair(line1, line2)
+        axis_dir = FocalAxisDirection(line_pair)
+        bisector = AngleBisector(line1, line2)
+        assert IsNonZeroMultiple(axis_dir, IdealPointOnLine(bisector))
 
 
 class TestIdealPoints:

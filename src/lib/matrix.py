@@ -27,7 +27,7 @@ def IsNonZeroMultiple(
         return True
     return fuzzy_and(
         [
-            (v1.dot(v1) * v2.dot(v2) - v1.dot(v2) ** 2).expand().is_zero,
+            (v1.dot(v1) * v2.dot(v2) - v1.dot(v2) ** 2).simplify().is_zero,
             fuzzy_not(v1_is_zero),
             fuzzy_not(v2_is_zero),
         ],

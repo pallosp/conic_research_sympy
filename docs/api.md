@@ -780,14 +780,20 @@ The result is ambiguous in case of line pair conics: evaluate
 def FocalAxisDirection(conic: Matrix) -> Matrix
 ```
 
-Returns the direction of the focal axis of the conic section, namely the
-ideal point in that direction.
+Returns the direction of the focal axis a.k.a. transverse axis of the
+conic section, namely the ideal point in that direction.
 
-Special cases:
-- Returns `[0, 0, 0]ᵀ` in case of circles.
-- The result is ambiguous in case of degenerate conics: evaluate
-  `(FocalAxisDirection(conic), FocalAxisDirection(-conic))` to get both
-  values.
+Properties:
+- Returns `[0, 0, 0]ᵀ` for circles and
+  [circular conics](#conic_classification.IsCircular).
+- Point conics constructed by
+  [ShrinkConicToZero](#central_conic.ShrinkConicToZero)(ellipse)
+  preserve the axis direction of the original real or complex ellipse.
+- Line pair conics constructed by
+  [ShrinkConicToZero](#central_conic.ShrinkConicToZero)(hyperbola)
+  have no such property.
+- The focal axis of `LinePair(l1, l2)`, and `AngleBisector(l1, l2)` point to
+  the same direction.
 
 *Formula*:
 [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
