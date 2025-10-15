@@ -81,8 +81,25 @@ def ConicFromFocusAndDirectrix(
 def Eccentricity(conic: Matrix) -> Expr:
     """Computes the eccentricity of a conic section.
 
-    The result is ambiguous in case of line pair conics: evaluate
-    `(Eccentricity(conic), Eccentricity(-conic))` to get both values.
+    The result is
+     - 0 for circles and complex circles;
+     - (0..1) for other real ellipses;
+     - imaginary for other complex ellipses;
+     - 1 for parabolas;
+     - >1 for hyperbolas, in particular √2 for rectangular hyperbolas.
+
+    In case of non-degenerate central conics, the eccentricity equals to the
+    ratio of the center-focus distance
+    ([LinearEccentricity](#central_conic.LinearEccentricity))
+    and the center-vertex distance
+    ([PrimaryRadius](#central_conic.PrimaryRadius)).
+
+    The eccentricity of finite point conics constructed by shrinking an ellipse
+    to zero size equals to that of the original ellipse.
+
+    Crossing line pair conics have two different (generalized) focal axes, with
+    two different corresponding eccentricity values. Evaluate
+    `(Eccentricity(conic), Eccentricity(-conic))` to get both.
 
     *Formula*: https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients<br>
     *Own research*:
