@@ -37,12 +37,12 @@ def Ellipse(
         if rest not in ([], [0]):
             raise ValueError("r1_direction must be a 2d vector or an ideal point")
 
-    a = -((r1 * dy) ** 2) - (r2 * dx) ** 2
+    a = -((r1 * dy) ** 2 + (r2 * dx) ** 2)
     b = (r1**2 - r2**2) * dx * dy
-    c = -((r1 * dx) ** 2) - (r2 * dy) ** 2
+    c = -((r1 * dx) ** 2 + (r2 * dy) ** 2)
     d = -a * cx - b * cy
     e = -b * cx - c * cy
-    f = (r1**2 * r2**2) * (dx**2 + dy**2) - d * cx - e * cy
+    f = r1**2 * r2**2 * (dx**2 + dy**2) - d * cx - e * cy
 
     return ConicMatrix(a, b, c, d, e, f)
 
