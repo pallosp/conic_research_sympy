@@ -1,4 +1,4 @@
-from sympy import Abs, I, Matrix, Rational, pi, symbols
+from sympy import Abs, I, Matrix, Rational, pi, sign, symbols
 from sympy.abc import x, y
 
 from lib.circle import IMAGINARY_UNIT_CIRCLE, UNIT_CIRCLE, Circle
@@ -85,12 +85,29 @@ class TestConicNormFactor:
         assert factor.is_integer is True
         assert factor.is_positive is None
 
-    def test_simplify(self):
+    def test_simplify_abs(self):
+        conic = ConicMatrix(*symbols("a b c d e f", real=True))
+        assert Abs(ConicNormFactor(conic)) == 1
+
+    def test_simplify_pow(self):
         conic = ConicMatrix(*symbols("a b c d e f", real=True))
         f = ConicNormFactor(conic)
-        assert Abs(f) == 1
         assert f * f == 1
         assert f**3 == f
+        assert 1 / f == f
+
+    def test_simplify_nondegenerate_conic(self):
+        focus = ORIGIN
+        directrix = Matrix(symbols("a,b,c", positive=True))
+        eccentricity = symbols("e", positive=True)
+        plus_minus_one = (-1) ** symbols("n", integer=True)
+        conic = ConicFromFocusAndDirectrix(focus, directrix, eccentricity)
+        conic *= plus_minus_one
+        # Ideally, ConicNormFactor(conic) should simplify to (-1)ⁿ,
+        # but Sympy 1.14.0 doesn’t recognize that sign((-1)ⁿ) == (-1)ⁿ.
+        f = ConicNormFactor(conic)
+        assert f == sign(plus_minus_one)
+        assert Abs(f) == 1
 
 
 class TestIsDegenerate:

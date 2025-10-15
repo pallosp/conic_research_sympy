@@ -1,4 +1,4 @@
-from sympy import Expr, Function, Integer, Matrix, S
+from sympy import Expr, Function, Integer, Matrix, S, sign
 from sympy.core.logic import fuzzy_and, fuzzy_not, fuzzy_or
 
 from lib.matrix import IsDefinite
@@ -21,13 +21,15 @@ class ConicNormFactor(Function):
     is_odd = True
 
     @classmethod
-    def eval(cls, conic: Matrix) -> int | None:
+    def eval(cls, conic: Matrix) -> int | None:  # noqa: PLR0911
         """Internal implementation. Call `ConicNormFactor(conic)` directly."""
-        det = conic.det()
+        det = conic.det().factor()
         if det.is_positive:
             return 1
         if det.is_negative:
             return -1
+        if det.is_real and det.is_nonzero:
+            return sign(det)
 
         # degenerate conic
         if det.is_zero:
