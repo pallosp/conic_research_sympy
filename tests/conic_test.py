@@ -79,7 +79,7 @@ class TestEccentricity:
         assert ecc == Eccentricity(conic).simplify()
         assert ecc == Eccentricity(conic * -2).simplify()
 
-    def test_symbolic_complex_ellipse_from_focus_and_directrix(self):
+    def test_symbolic_imaginary_ellipse_from_focus_and_directrix(self):
         focus = ORIGIN
         directrix = Matrix(symbols("a,b,c", positive=True))
         ecc = symbols("e", positive=True) * I
@@ -145,7 +145,7 @@ class TestAxisDirection:
         assert IsNonZeroMultiple(FocalAxisDirection(ellipse), (2, 1, 0))
         assert IsNonZeroMultiple(FocalAxisDirection(-ellipse), (2, 1, 0))
 
-    def test_complex_ellipse(self):
+    def test_imaginary_ellipse(self):
         focus1 = (1, 2)
         focus2 = (3, 4)
         ellipse = ConicFromFociAndRadius(focus1, focus2, 5 * I)

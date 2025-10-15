@@ -25,7 +25,7 @@
   * [CircleRadius](#circle.CircleRadius)
   * [DirectorCircle](#circle.DirectorCircle)
   * [UNIT\_CIRCLE](#circle.UNIT_CIRCLE)
-  * [COMPLEX\_UNIT\_CIRCLE](#circle.COMPLEX_UNIT_CIRCLE)
+  * [IMAGINARY\_UNIT\_CIRCLE](#circle.IMAGINARY_UNIT_CIRCLE)
 * [line](#line)
   * [LineContainsPoint](#line.LineContainsPoint)
   * [HorizontalLine](#line.HorizontalLine)
@@ -81,7 +81,7 @@
   * [IsDegenerate](#conic_classification.IsDegenerate)
   * [IsNonDegenerate](#conic_classification.IsNonDegenerate)
   * [IsFiniteConic](#conic_classification.IsFiniteConic)
-  * [IsComplexEllipse](#conic_classification.IsComplexEllipse)
+  * [IsImaginaryEllipse](#conic_classification.IsImaginaryEllipse)
   * [IsEllipse](#conic_classification.IsEllipse)
   * [IsCircle](#conic_classification.IsCircle)
   * [IsParabola](#conic_classification.IsParabola)
@@ -348,13 +348,13 @@ def PrimaryRadius(conic: Matrix) -> Expr
 Computes the center-vertex distance of a conic.
 
 This corresponds to the semi-major axis length of real ellipses. In case of
-complex ellipses however the focal axis is the shorter one in terms of
+imaginary ellipses however the focal axis is the shorter one in terms of
 absolute value.
 
 The returned value is:
  - a positive number for ellipses and hyperbolas;
  - infinity for parabolas;
- - an imaginary number for complex ellipses;
+ - an imaginary number for imaginary ellipses;
  - `nan` for ideal point conics;
  - 0 for the other degenerate conics.
 
@@ -369,14 +369,14 @@ def SecondaryRadius(conic: Matrix) -> Expr
 Computes the semi-conjugate axis length of a conic.
 
 This corresponds to the semi-minor axis length of real ellipses. In case of
-of complex ellipses however the conjugate axis is the longer one in terms
+of imaginary ellipses however the conjugate axis is the longer one in terms
 absolute value. Hyperbolas intersect their conjugate axis at complex points,
 therefore the secondary radius will be a complex number.
 
 The returned value is:
  - a positive number for ellipses;
  - infinity for parabolas;
- - an imaginary number for hyperbolas and complex ellipses;
+ - an imaginary number for hyperbolas and imaginary ellipses;
  - `nan` for ideal point conics;
  - 0 for the other degenerate conics.
 
@@ -392,8 +392,8 @@ Computes the linear eccentricity of a conic section.
 
 The linear eccentricity is the distance between the center and a focus
 point. Special cases:
- - zero for circles and complex radius circles;
- - a real number for complex ellipses, since they still have real center
+ - zero for circles and imaginary circles;
+ - a real number for imaginary ellipses, since they still have real center
    and foci;
  - infinity for parabolas;
  - `nan` for parallel and coincident line pairs;
@@ -469,9 +469,9 @@ circle or Fermat–Apollonius circle.
 
 The circle at the origin with radius 1.
 
-<a id="circle.COMPLEX_UNIT_CIRCLE"></a>
+<a id="circle.IMAGINARY_UNIT_CIRCLE"></a>
 
-#### COMPLEX\_UNIT\_CIRCLE
+#### IMAGINARY\_UNIT\_CIRCLE
 
 The circle at the origin with radius 𝑖.
 
@@ -718,9 +718,9 @@ def Eccentricity(conic: Matrix) -> Expr
 Computes the eccentricity of a conic section.
 
 The result is
- - 0 for circles and complex circles;
+ - 0 for circles and imaginary circles;
  - (0..1) for other real ellipses;
- - imaginary for other complex ellipses;
+ - imaginary for other imaginary ellipses;
  - 1 for parabolas;
  - &gt;1 for hyperbolas, in particular √2 for rectangular hyperbolas.
 
@@ -758,7 +758,7 @@ Properties:
   [circular conics](#conic_classification.IsCircular).
 - Point conics constructed by
   [ShrinkConicToZero](#central_conic.ShrinkConicToZero)(ellipse)
-  preserve the axis direction of the original real or complex ellipse.
+  preserve the axis direction of the original real or imaginary ellipse.
 - Line pair conics constructed by
   [ShrinkConicToZero](#central_conic.ShrinkConicToZero)(hyperbola)
   have no such property.
@@ -806,7 +806,7 @@ Computes the generalized projective center of a conic.
 
 It's equivalent to [ConicCenter](#central_conic.ConicCenter) (returns a
 finite point) for
- - real and complex ellipses
+ - real and imaginary ellipses
  - hyperbolas
  - conics consisting of a single finite (Euclidean) point
  - crossing finite line pairs
@@ -1187,7 +1187,7 @@ def IsNonDegenerate(conic: Matrix) -> bool | None
 
 Tells whether the conic is non-degenerate.
 
-Non-degenerate conics include real or complex ellipses, parabolas and
+Non-degenerate conics include real or imaginary ellipses, parabolas and
 hyperbolas. Returns None if undecidable.
 
 <a id="conic_classification.IsFiniteConic"></a>
@@ -1202,12 +1202,12 @@ Tells whether all points on the conic are finite.
 
 Returns None if undecidable.
 
-<a id="conic_classification.IsComplexEllipse"></a>
+<a id="conic_classification.IsImaginaryEllipse"></a>
 
-#### IsComplexEllipse
+#### IsImaginaryEllipse
 
 ```python
-def IsComplexEllipse(conic: Matrix) -> bool | None
+def IsImaginaryEllipse(conic: Matrix) -> bool | None
 ```
 
 Tells Whether the conic is an ellipse with a real center and imaginary
@@ -1274,7 +1274,7 @@ def IsCircular(conic: Matrix) -> bool | None
 Tells whether there is a single center point around which the conic is
 invariant under all rotations.
 
-Circles, complex circles, zero-radius circles have such circular symmetry.
+Circles, imaginary circles, zero-radius circles have such circular symmetry.
 Double ideal lines are not considered circular. Returns None if undecidable.
 
 <a id="conic_classification.IsLinePair"></a>

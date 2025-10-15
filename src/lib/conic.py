@@ -82,9 +82,9 @@ def Eccentricity(conic: Matrix) -> Expr:
     """Computes the eccentricity of a conic section.
 
     The result is
-     - 0 for circles and complex circles;
+     - 0 for circles and imaginary circles;
      - (0..1) for other real ellipses;
-     - imaginary for other complex ellipses;
+     - imaginary for other imaginary ellipses;
      - 1 for parabolas;
      - &gt;1 for hyperbolas, in particular √2 for rectangular hyperbolas.
 
@@ -121,7 +121,7 @@ def FocalAxisDirection(conic: Matrix) -> Matrix:
       [circular conics](#conic_classification.IsCircular).
     - Point conics constructed by
       [ShrinkConicToZero](#central_conic.ShrinkConicToZero)(ellipse)
-      preserve the axis direction of the original real or complex ellipse.
+      preserve the axis direction of the original real or imaginary ellipse.
     - Line pair conics constructed by
       [ShrinkConicToZero](#central_conic.ShrinkConicToZero)(hyperbola)
       have no such property.
@@ -162,7 +162,7 @@ def ProjectiveConicCenter(conic: Matrix) -> Matrix:
 
     It's equivalent to [ConicCenter](#central_conic.ConicCenter) (returns a
     finite point) for
-     - real and complex ellipses
+     - real and imaginary ellipses
      - hyperbolas
      - conics consisting of a single finite (Euclidean) point
      - crossing finite line pairs

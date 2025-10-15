@@ -112,13 +112,13 @@ def PrimaryRadius(conic: Matrix) -> Expr:
     """Computes the center-vertex distance of a conic.
 
     This corresponds to the semi-major axis length of real ellipses. In case of
-    complex ellipses however the focal axis is the shorter one in terms of
+    imaginary ellipses however the focal axis is the shorter one in terms of
     absolute value.
 
     The returned value is:
      - a positive number for ellipses and hyperbolas;
      - infinity for parabolas;
-     - an imaginary number for complex ellipses;
+     - an imaginary number for imaginary ellipses;
      - `nan` for ideal point conics;
      - 0 for the other degenerate conics.
     """
@@ -132,14 +132,14 @@ def SecondaryRadius(conic: Matrix) -> Expr:
     """Computes the semi-conjugate axis length of a conic.
 
     This corresponds to the semi-minor axis length of real ellipses. In case of
-    of complex ellipses however the conjugate axis is the longer one in terms
+    of imaginary ellipses however the conjugate axis is the longer one in terms
     absolute value. Hyperbolas intersect their conjugate axis at complex points,
     therefore the secondary radius will be a complex number.
 
     The returned value is:
      - a positive number for ellipses;
      - infinity for parabolas;
-     - an imaginary number for hyperbolas and complex ellipses;
+     - an imaginary number for hyperbolas and imaginary ellipses;
      - `nan` for ideal point conics;
      - 0 for the other degenerate conics.
     """
@@ -154,8 +154,8 @@ def LinearEccentricity(conic: Matrix) -> Expr:
 
     The linear eccentricity is the distance between the center and a focus
     point. Special cases:
-     - zero for circles and complex radius circles;
-     - a real number for complex ellipses, since they still have real center
+     - zero for circles and imaginary circles;
+     - a real number for imaginary ellipses, since they still have real center
        and foci;
      - infinity for parabolas;
      - `nan` for parallel and coincident line pairs;

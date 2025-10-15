@@ -1,19 +1,19 @@
 from sympy import Abs, I, Matrix, Rational, pi, symbols
 from sympy.abc import x, y
 
-from lib.circle import COMPLEX_UNIT_CIRCLE, UNIT_CIRCLE, Circle
+from lib.circle import IMAGINARY_UNIT_CIRCLE, UNIT_CIRCLE, Circle
 from lib.conic import ConicFromFocusAndDirectrix, ConicFromPoly, FocalAxisDirection
 from lib.conic_classification import (
     ConicNormFactor,
     IsCircle,
     IsCircular,
-    IsComplexEllipse,
     IsDegenerate,
     IsDoubleLine,
     IsEllipse,
     IsFiniteConic,
     IsFinitePointConic,
     IsHyperbola,
+    IsImaginaryEllipse,
     IsLinePair,
     IsParabola,
     IsPointConic,
@@ -145,9 +145,9 @@ class TestIsFiniteConic:
         circle = Circle(symbols("x,y"), symbols("r", positive=True))
         assert IsFiniteConic(circle) is True
 
-    def test_symbolic_complex_ellipse(self):
-        complex_ellipse = Matrix.diag(symbols("a,c,f", positive=True))
-        assert IsFiniteConic(complex_ellipse) is True
+    def test_symbolic_imaginary_ellipse(self):
+        imaginary_ellipse = Matrix.diag(symbols("a,c,f", positive=True))
+        assert IsFiniteConic(imaginary_ellipse) is True
 
     def test_symbolic_point_conics(self):
         zero_circle = Circle(symbols("x,y"), 0)
@@ -180,8 +180,8 @@ class TestIsEllipse:
     def test_numeric_point(self):
         assert IsEllipse(Circle((1, 2), 0)) is False
 
-    def test_complex_circle(self):
-        assert IsEllipse(COMPLEX_UNIT_CIRCLE) is False
+    def test_imaginary_circle(self):
+        assert IsEllipse(IMAGINARY_UNIT_CIRCLE) is False
 
     def test_undecidable(self):
         assert IsEllipse(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
@@ -190,8 +190,8 @@ class TestIsEllipse:
         center = symbols("x,y")
         assert IsEllipse(Ellipse(center, *symbols("r1,r2", positive=True))) is True
         assert IsEllipse(Ellipse(center, *symbols("r1,r2"))) is None
-        assert IsEllipse(COMPLEX_UNIT_CIRCLE) is False
-        assert IsEllipse(-COMPLEX_UNIT_CIRCLE) is False
+        assert IsEllipse(IMAGINARY_UNIT_CIRCLE) is False
+        assert IsEllipse(-IMAGINARY_UNIT_CIRCLE) is False
 
     def test_point_conic(self):
         point_conic = PointConic(symbols("x,y,z"))
@@ -208,8 +208,8 @@ class TestIsCircle:
         circle_or_point = Circle((x, y), symbols("r", nonnegative=True))
         assert IsCircle(circle_or_point) is None
 
-        complex_circle = Circle((x, y), symbols("r", positive=True) * I)
-        assert IsCircle(complex_circle) is False
+        imaginary_circle = Circle((x, y), symbols("r", positive=True) * I)
+        assert IsCircle(imaginary_circle) is False
 
         double_ideal_line = LinePair(IDEAL_LINE, IDEAL_LINE)
         assert IsCircle(double_ideal_line) is False
@@ -223,38 +223,38 @@ class TestIsCircle:
         assert IsCircle(Ellipse((x, y), r1, r1 + r2)) is False
 
 
-class TestIsComplexEllipse:
-    def test_complex_unit_circle(self):
-        assert IsComplexEllipse(COMPLEX_UNIT_CIRCLE)
-        assert IsComplexEllipse(-COMPLEX_UNIT_CIRCLE)
+class TestIsImaginaryEllipse:
+    def test_imaginary_unit_circle(self):
+        assert IsImaginaryEllipse(IMAGINARY_UNIT_CIRCLE)
+        assert IsImaginaryEllipse(-IMAGINARY_UNIT_CIRCLE)
 
     def test_numeric_ellipse(self):
-        assert IsComplexEllipse(Ellipse((1, 2), 3, 4)) is False
-        assert IsComplexEllipse(Ellipse((1, 2), 3 * I, 4 * I)) is True
+        assert IsImaginaryEllipse(Ellipse((1, 2), 3, 4)) is False
+        assert IsImaginaryEllipse(Ellipse((1, 2), 3 * I, 4 * I)) is True
 
     def test_symbolic_ellipse(self):
         center = symbols("x,y")
         r = symbols("r1,r2", positive=True)
         imag_r = [r[0] * I, r[1] * I]
         r1_dir = symbols("dx,dy", positive=True)
-        assert IsComplexEllipse(Ellipse(center, *r)) is False
-        assert IsComplexEllipse(Ellipse(center, *r, r1_direction=r1_dir)) is False
-        assert IsComplexEllipse(Ellipse(center, *imag_r)) is True
-        assert IsComplexEllipse(Ellipse(center, *imag_r, r1_direction=r1_dir)) is True
+        assert IsImaginaryEllipse(Ellipse(center, *r)) is False
+        assert IsImaginaryEllipse(Ellipse(center, *r, r1_direction=r1_dir)) is False
+        assert IsImaginaryEllipse(Ellipse(center, *imag_r)) is True
+        assert IsImaginaryEllipse(Ellipse(center, *imag_r, r1_direction=r1_dir)) is True
 
     def test_symbolic_ellipse_from_focus_and_directrix(self):
         focus = ORIGIN
         directrix = Matrix(symbols("a b c", positive=True))
         eccentricity = symbols("e", positive=True) * I
         conic = ConicFromFocusAndDirectrix(focus, directrix, eccentricity)
-        assert IsComplexEllipse(conic)
+        assert IsImaginaryEllipse(conic)
 
     def test_symbolic_point_conics(self):
         zero_circle = Circle(symbols("x,y"), 0)
-        assert IsComplexEllipse(zero_circle) is False
+        assert IsImaginaryEllipse(zero_circle) is False
 
         point_conic = PointConic(symbols("x,y,z"))
-        assert IsComplexEllipse(point_conic) is False
+        assert IsImaginaryEllipse(point_conic) is False
 
 
 class TestIsParabola:
@@ -337,7 +337,7 @@ class TestIsCircular:
         ideal_point_conic = PointConic([*symbols("x,y", positive=True), 0])
         assert IsCircular(ideal_point_conic) is False
 
-    def test_complex_circle(self):
+    def test_imaginary_circle(self):
         assert IsCircular(Circle((1, 2), I)) is True
 
     def test_ellipse(self):

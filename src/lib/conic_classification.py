@@ -71,7 +71,7 @@ def IsDegenerate(conic: Matrix) -> bool | None:
 def IsNonDegenerate(conic: Matrix) -> bool | None:
     """Tells whether the conic is non-degenerate.
 
-    Non-degenerate conics include real or complex ellipses, parabolas and
+    Non-degenerate conics include real or imaginary ellipses, parabolas and
     hyperbolas. Returns None if undecidable.
     """
     return conic.det().is_nonzero
@@ -85,7 +85,7 @@ def IsFiniteConic(conic: Matrix) -> bool | None:
     return conic[:2, :2].det().factor().is_positive
 
 
-def IsComplexEllipse(conic: Matrix) -> bool | None:
+def IsImaginaryEllipse(conic: Matrix) -> bool | None:
     """Tells Whether the conic is an ellipse with a real center and imaginary
     radii.
 
@@ -143,7 +143,7 @@ def IsCircular(conic: Matrix) -> bool | None:
     """Tells whether there is a single center point around which the conic is
     invariant under all rotations.
 
-    Circles, complex circles, zero-radius circles have such circular symmetry.
+    Circles, imaginary circles, zero-radius circles have such circular symmetry.
     Double ideal lines are not considered circular. Returns None if undecidable.
     """
     return fuzzy_and(

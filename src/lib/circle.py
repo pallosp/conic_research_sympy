@@ -44,4 +44,4 @@ def DirectorCircle(conic: Matrix) -> Matrix:
 UNIT_CIRCLE = Circle(ORIGIN, 1)
 
 #: The circle at the origin with radius 𝑖.
-COMPLEX_UNIT_CIRCLE = Matrix.eye(3)
+IMAGINARY_UNIT_CIRCLE = Matrix.eye(3)

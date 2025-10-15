@@ -108,14 +108,14 @@ class TestSemiAxisLengths:
         assert SecondaryRadius(ellipse) == 2
         assert SecondaryRadius(-ellipse) == 2
 
-    def test_complex_ellipse(self):
+    def test_imaginary_ellipse(self):
         ellipse = Ellipse((1, 2), 3 * I, 4 * I)
         assert PrimaryRadius(ellipse) == 3 * I
         assert PrimaryRadius(-ellipse) == 3 * I
         assert SecondaryRadius(ellipse) == 4 * I
         assert SecondaryRadius(-ellipse) == 4 * I
 
-    def test_complex_ellipse_from_foci_and_radius(self):
+    def test_imaginary_ellipse_from_foci_and_radius(self):
         ellipse = ConicFromFociAndRadius((-3, 0), (3, 0), 4 * I)
         assert PrimaryRadius(ellipse) == 4 * I
         assert SecondaryRadius(ellipse) == 5 * I
@@ -162,7 +162,7 @@ class TestLinearEccentricity:
         circle = Circle(symbols("x,y", real=True), symbols("r", real=True))
         assert LinearEccentricity(circle) == 0
 
-    def test_symbolic_complex_circle(self):
+    def test_symbolic_imaginary_circle(self):
         circle = Circle(symbols("x,y", real=True), symbols("r", real=True) * I)
         assert LinearEccentricity(circle) == 0
 
@@ -201,9 +201,9 @@ class TestLinearEccentricity:
         parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
         assert LinearEccentricity(parabola).is_infinite
 
-    def test_complex_ellipse(self):
-        complex_ellipse = Ellipse((1, 2), 4 * I, 5 * I)
-        assert LinearEccentricity(complex_ellipse) == 3
+    def test_imaginary_ellipse(self):
+        imaginary_ellipse = Ellipse((1, 2), 4 * I, 5 * I)
+        assert LinearEccentricity(imaginary_ellipse) == 3
 
     def test_parallel_lines(self):
         c1, c2 = symbols("c1 c2", real=True)
