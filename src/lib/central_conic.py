@@ -165,8 +165,8 @@ def LinearEccentricity(conic: Matrix) -> Expr:
     *Formula*: √|r₁²-r₂²| where r₁ and r₂ are the semi-axis lengths.
     """
     a, _, _, b, c, _, _, _, _ = conic
-    l1, l2 = conic[:2, :2].eigenvals(multiple=True)
-    return sqrt(Abs(conic.det() * (l1 - l2))) / Abs(a * c - b * b)
+    eigenvalue_diff = sqrt((a - c) ** 2 + 4 * b**2)
+    return sqrt(Abs(conic.det()) * eigenvalue_diff) / Abs(a * c - b * b)
 
 
 def ShrinkConicToZero(conic: Matrix) -> Matrix:
