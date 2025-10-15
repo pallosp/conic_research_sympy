@@ -18,6 +18,7 @@ class ConicNormFactor(Function):
       or determinant sign cannot be determined.
     """
 
+    # Implies is_real = True, is_integer = True, and is_nonzero = True.
     is_odd = True
 
     @classmethod
