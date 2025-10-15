@@ -722,7 +722,7 @@ The result is
  - (0..1) for other real ellipses;
  - imaginary for other complex ellipses;
  - 1 for parabolas;
- - >1 for hyperbolas, in particular √2 for rectangular hyperbolas.
+ - &gt;1 for hyperbolas, in particular √2 for rectangular hyperbolas.
 
 In case of non-degenerate central conics, the eccentricity equals to the
 ratio of the center-focus distance
@@ -737,7 +737,8 @@ Crossing line pair conics have two different (generalized) focal axes, with
 two different corresponding eccentricity values. Evaluate
 `(Eccentricity(conic), Eccentricity(-conic))` to get both.
 
-*Formula*: https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients<br>
+*Formula*:
+https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients<br>
 *Own research*:
 [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
 
