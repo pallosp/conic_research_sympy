@@ -1,29 +1,29 @@
-[build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
-
-[project]
+[tool.poetry]
 name = "conic_research_sympy"
 version = "0.0.1"
-dependencies = [
-    "sympy==1.14"
-]
-requires-python = ">=3.10"
+description = "Symbolic projective and Euclidean geometry toolkit"
+authors = ["Péter Pallos <pallosp@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "lib", from = "src"}]
 
-[project.optional-dependencies]
-dev = [
-    "pre-commit",
-    "pydoc-markdown",
-    "pytest",
-    "pytest-cov",
-    "ruff"
-]
+[tool.poetry.dependencies]
+python = ">=3.11,<4.0"
+sympy = "1.14"
 
-[tool.setuptools]
-package-dir = {"" = "src"}
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.3.0"
+pydoc-markdown = "^4.8.2"
+pytest = "^8.4.2"
+pytest-cov = "^7.0.0"
+ruff = "^0.14.0"
 
-[tool.setuptools.packages.find]
-where = ["src"]
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
 
 [tool.ruff.lint]
 select = [

@@ -3,19 +3,21 @@ repos:
     rev: v0.12.9
     hooks:
       - id: ruff
+
   - repo: local
     hooks:
       - id: pytest
         name: pytest
-        entry: ./.venv/bin/pytest tests
+        entry: poetry run pytest tests
         language: system
         pass_filenames: false
         always_run: true
+
   - repo: local
     hooks:
       - id: check-docs
         name: Ensure docs/api.md is up to date
-        entry: ./.pre-commit-check-docs.sh
-        additional_dependencies: [pydoc-markdown]
-        language: python
+        entry: poetry run scripts/check-docs.sh
+        additional_dependencies: []
+        language: system
         pass_filenames: false
