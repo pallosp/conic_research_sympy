@@ -5,17 +5,19 @@ from lib.matrix import IsDefinite
 
 
 class ConicNormFactor(Function):
-    """When the conic matrix `C` is multiplied by this value (`±1`), it will
-    have the following properties:
+    """Computes a normalization factor (±1) for a conic matrix `C`.
 
-    - For non-degenerate conics, the conic equation will evaluate to a positive
-      number at the focus point(s), i.e. `(fx fy 1)ᵀ C (fx fy 1) > 0`.
-    - For point conics, the conic equation will evaluate to ≤0 at all finite
-      `(x, y, 1)` points.
-    - For line pair conics, there is no preferred representation: this value will
-      always be 1.
-    - May return an unevaluated `sympy.Function` for symbolic conics whose type
-      or determinant sign cannot be determined.
+    When `C` is multiplied by this factor, the resulting conic has the
+    following properties:
+
+    - *Non-degenerate conics:* the conic equation evaluates to a positive
+      value at the focus point(s), i.e. `[fx fy 1]ᵀ C [fx fy 1] > 0`.
+    - *Point conics:* The conic equation evaluates to ≤0 for all finite
+      points `[x, y, 1]ᵀ`.
+    - *Line-pair conics:* no preferred normalization exists; the factor is
+      always 1.
+    - *Symbolic conics:* may return an unevaluated `sympy.Function` if the
+      conic type or determinant sign cannot be determined.
     """
 
     # Implies is_real = True, is_integer = True, and is_nonzero = True.

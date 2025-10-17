@@ -658,17 +658,15 @@ def ConicFromPoly(poly: Expr | Poly,
                   y: Symbol = abc.y) -> Matrix
 ```
 
-Constructs the 3×3 symmetric matrix representation of a conic section
-from a two-variable quadratic polynomial in the form of
-```
-ax² + bxy + cy² + dx + ey + f
-```
+Constructs a conic matrix from a two-variable quadratic polynomial.
 
-The resulting matrix is:
+Input: `ax² + bxy + cy² + dx + ey + f`
+
+Output:
 ```
-[a, b/2, d/2]
-[b/2, c, e/2]
-[d/2, e/2, f]
+[a,   b/2, d/2]
+[b/2, c,   e/2]
+[d/2, e/2, f  ]
 ```
 
 <a id="conic.ConicThroughPoints"></a>
@@ -1140,17 +1138,19 @@ Factors all `Abs` subexpressions inside `expr`.
 class ConicNormFactor(Function)
 ```
 
-When the conic matrix `C` is multiplied by this value (`±1`), it will
-have the following properties:
+Computes a normalization factor (±1) for a conic matrix `C`.
 
-- For non-degenerate conics, the conic equation will evaluate to a positive
-  number at the focus point(s), i.e. `(fx fy 1)ᵀ C (fx fy 1) > 0`.
-- For point conics, the conic equation will evaluate to ≤0 at all finite
-  `(x, y, 1)` points.
-- For line pair conics, there is no preferred representation: this value will
-  always be 1.
-- May return an unevaluated `sympy.Function` for symbolic conics whose type
-  or determinant sign cannot be determined.
+When `C` is multiplied by this factor, the resulting conic has the
+following properties:
+
+- *Non-degenerate conics:* the conic equation evaluates to a positive
+  value at the focus point(s), i.e. `[fx fy 1]ᵀ C [fx fy 1] > 0`.
+- *Point conics:* The conic equation evaluates to ≤0 for all finite
+  points `[x, y, 1]ᵀ`.
+- *Line-pair conics:* no preferred normalization exists; the factor is
+  always 1.
+- *Symbolic conics:* may return an unevaluated `sympy.Function` if the
+  conic type or determinant sign cannot be determined.
 
 <a id="conic_classification.ConicNormFactor.eval"></a>
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Does a conic in polar form have + or - curvature at a given point?"""
+"""Curvature sign computation for conics in polar form."""
 
 from sympy import Determinant, Matrix, diff, pprint, sign, symbols
 

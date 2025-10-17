@@ -25,6 +25,9 @@ build-backend = "poetry.core.masonry.api"
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 
+[tool.ruff]
+target-version = "py310"  # Enable type unions
+
 [tool.ruff.lint]
 select = [
   "ALL",
@@ -37,7 +40,6 @@ ignore = [
   "D203",  # Incorrect blank line before class
   "D205",  # Blank line required after summary line
   "D213",  # Multi-line docstring should start at the second line
-  "D400",  # Missing summary punctuation
   "D401",  # First line of docstring should be imperative
   "D415",  # Missing closing punctuation
   "EM101",  # Exception message should be a variable, not a raw string

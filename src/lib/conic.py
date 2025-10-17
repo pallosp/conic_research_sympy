@@ -13,17 +13,15 @@ def ConicFromPoly(
     x: Symbol = abc.x,
     y: Symbol = abc.y,
 ) -> Matrix:
-    """Constructs the 3×3 symmetric matrix representation of a conic section
-    from a two-variable quadratic polynomial in the form of
-    ```
-    ax² + bxy + cy² + dx + ey + f
-    ```
+    """Constructs a conic matrix from a two-variable quadratic polynomial.
 
-    The resulting matrix is:
+    Input: `ax² + bxy + cy² + dx + ey + f`
+
+    Output:
     ```
-    [a, b/2, d/2]
-    [b/2, c, e/2]
-    [d/2, e/2, f]
+    [a,   b/2, d/2]
+    [b/2, c,   e/2]
+    [d/2, e/2, f  ]
     ```
     """
     poly = Poly(poly, x, y)
