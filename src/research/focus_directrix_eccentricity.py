@@ -131,7 +131,7 @@ println_indented(ecc_square_eq)
 ecc_square_eq_abc = ecc_square_eq.subs(L, lambda_eq_abc.rhs).subs(eigen_to_abc)
 println_indented(ecc_square_eq_abc)
 
-print(f"{HORIZONTAL_LINE}\n")
+print(HORIZONTAL_LINE)
 
 print("Directrix normal vector a.k.a. focal axis direction:\n")
 
@@ -158,7 +158,7 @@ println_indented(theta_eq)
 println_indented(theta_eq.subs(ecc**2 * L, sign(ecc**2 * L)))
 println_indented(theta_eq.subs(ecc**2 * L, 1 / sign(det)))
 
-print(f"{HORIZONTAL_LINE}\n")
+print(HORIZONTAL_LINE)
 
 print("Directrix equation:\n")
 
@@ -209,7 +209,7 @@ for det_assumption in Q.positive, Q.negative:
         )
         println_indented(Eq(symbols(f"c{index+1}"), c_simplified))
 
-print(f"{HORIZONTAL_LINE}\n")
+print(HORIZONTAL_LINE)
 
 print("Special case: circle\n")
 
@@ -217,7 +217,7 @@ print("  ∜(4B²+(A-C)²) = 0 ==> the c coefficent of the directrix is not vali
 print("  Multiplying all coefficients with that expression however will yield ")
 print("  a'=b'=0, c'≠0, which represents the ideal line.\n")
 
-print(f"{HORIZONTAL_LINE}\n")
+print(HORIZONTAL_LINE)
 
 print("Special case: parabola\n")
 
@@ -285,7 +285,7 @@ println_indented(Eq(symbols("a'"), directrix_a))
 println_indented(Eq(symbols("b'"), directrix_b))
 println_indented(Eq(symbols("c'"), directrix_c))
 
-print(f"{HORIZONTAL_LINE}\n")
+print(HORIZONTAL_LINE)
 
 print("Parabola focus:\n")
 
@@ -335,4 +335,4 @@ fy_value = fy_value.subs(zip(adj_values, adj_symbols, strict=True)).factor()
 fy_value = fy_value.subs(E * det, e_times_det).subs((A + C) * det, a_plus_c_times_det)
 println_indented(EqChain(fy, fy_value.factor().collect(ea)))
 
-print(f"{HORIZONTAL_LINE}\n")
+print(HORIZONTAL_LINE)

@@ -8,7 +8,7 @@ from research.util import println_indented
 
 HORIZONTAL_LINE = "-" * 80
 
-print(f"{HORIZONTAL_LINE}\n")
+print(HORIZONTAL_LINE)
 
 print("Conic matrix\n")
 
@@ -45,7 +45,7 @@ println_indented(
     ),
 )
 
-print(f"{HORIZONTAL_LINE}\n")
+print(HORIZONTAL_LINE)
 
 print("When the matrix is singular, the adjugate's diagonal elements are either all ≥0")
 print("or all ≤0.\n")
@@ -59,4 +59,4 @@ print("Similarly:\n")
 println_indented(Ge(conic.adjugate()[0] * conic.adjugate()[8], 0))
 println_indented(Ge(conic.adjugate()[4] * conic.adjugate()[8], 0))
 
-print(f"{HORIZONTAL_LINE}\n")
+print(HORIZONTAL_LINE)
