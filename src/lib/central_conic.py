@@ -153,7 +153,9 @@ def LinearEccentricity(conic: Matrix) -> Expr:
     """Computes the linear eccentricity of a conic section.
 
     The linear eccentricity is the distance between the center and a focus
-    point. Special cases:
+    point.
+
+    Special cases:
      - zero for circles and imaginary circles;
      - a real number for imaginary ellipses, since they still have real center
        and foci;
@@ -162,7 +164,8 @@ def LinearEccentricity(conic: Matrix) -> Expr:
      - `nan` for conics containing the ideal line;
      - zero for all other degenerate conics.
 
-    *Formula*: √|r₁²-r₂²| where r₁ and r₂ are the semi-axis lengths.
+    *Formula*: `√|r₁²-r₂²|` where `r₁` and `r₂` denote the primary and secondary
+    radii of the conic (i.e., the semi-axis lengths in the case of an ellipse).
     """
     a, _, _, b, c, _, _, _, _ = conic
     eigenvalue_diff = sqrt((a - c) ** 2 + 4 * b**2)
