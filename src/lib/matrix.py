@@ -17,19 +17,24 @@ def IsNonZeroMultiple(
         m1 = Matrix(m1)
     if not isinstance(m2, Matrix):
         m2 = Matrix(m2)
+
     if m1.shape != m2.shape:
         return False
+
+    m1_is_zero = m1.is_zero_matrix
+    m2_is_zero = m2.is_zero_matrix
+    if m1_is_zero and m2_is_zero:
+        return True
+
+    # Linearize the matrices to be able to use dot product.
     v1 = m1.reshape(len(m1), 1)
     v2 = m2.reshape(len(m2), 1)
-    v1_is_zero = v1.is_zero_matrix
-    v2_is_zero = v2.is_zero_matrix
-    if v1_is_zero and v2_is_zero:
-        return True
+
     return fuzzy_and(
         [
             (v1.dot(v1) * v2.dot(v2) - v1.dot(v2) ** 2).simplify().is_zero,
-            fuzzy_not(v1_is_zero),
-            fuzzy_not(v2_is_zero),
+            fuzzy_not(m1_is_zero),
+            fuzzy_not(m2_is_zero),
         ],
     )
 
