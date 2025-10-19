@@ -1146,14 +1146,16 @@ Computes a normalization factor (±1) for a conic matrix `C`.
 When `C` is multiplied by this factor, the resulting conic has the
 following properties:
 
-- *Non-degenerate conics:* the conic equation evaluates to a positive
+- *Non-degenerate conics*: the conic equation evaluates to a positive
   value at the focus point(s), i.e. `[fx fy 1]ᵀ C [fx fy 1] > 0`.
-- *Point conics:* The conic equation evaluates to ≤0 for all finite
+- *Point conics*: The conic equation evaluates to ≤0 for all finite
   points `[x, y, 1]ᵀ`.
-- *Line-pair conics:* no preferred normalization exists; the factor is
+- *Line-pair conics*: no preferred normalization exists; the factor is
   always 1.
-- *Symbolic conics:* may return an unevaluated `sympy.Function` if the
+- *Symbolic conics*: may return an unevaluated `sympy.Function` if the
   conic type or determinant sign cannot be determined.
+- `conic.det() * ConicNormFactor(conic) == Abs(conic.det())` holds for
+  all conic types.
 
 <a id="conic_classification.ConicNormFactor.eval"></a>
 
