@@ -4,6 +4,7 @@ from lib.matrix import (
     ConicMatrix,
     IsDefinite,
     IsNonZeroMultiple,
+    IsPositiveMultiple,
     IsRealMatrix,
     MaxEigenvalue,
     MinEigenvalue,
@@ -14,11 +15,14 @@ from lib.matrix import (
 
 class TestIsNonZeroMultiple:
     def test_vectors(self):
-        assert IsNonZeroMultiple(Matrix([2]), Matrix([3]))
-        assert IsNonZeroMultiple(Matrix([1, 2]), Matrix([-2, -4]))
-        assert IsNonZeroMultiple(Matrix([0, 0]), Matrix([0, 0]))
-        assert not IsNonZeroMultiple(Matrix([1, 2]), Matrix([0, 0]))
-        assert not IsNonZeroMultiple(Matrix([1, 2]), Matrix([2, 1]))
+        assert IsNonZeroMultiple(Matrix([2]), Matrix([3])) is True
+        assert IsNonZeroMultiple(Matrix([1, 2]), Matrix([-2, -4])) is True
+        assert IsNonZeroMultiple(Matrix([1, 2]), Matrix([2, 1])) is False
+
+    def test_zero_vectors(self):
+        assert IsNonZeroMultiple(Matrix([0, 0]), Matrix([0, 0])) is True
+        assert IsNonZeroMultiple(Matrix([1, 2]), Matrix([0, 0])) is False
+        assert IsNonZeroMultiple(Matrix([0, 0]), Matrix([1, 2])) is False
 
     def test_matrices(self):
         matrix_1234 = Matrix([[1, 2], [3, 4]])
@@ -49,9 +53,57 @@ class TestIsNonZeroMultiple:
         assert IsNonZeroMultiple([1, 2], [p, p * 2]) is True
         assert IsNonZeroMultiple([1, 2], [p, p]) is False
 
+        nz = symbols("nz", nonzero=True)
+        assert IsNonZeroMultiple([1, 2], [nz, nz * 2]) is True
+
     def test_undecidable(self):
         x = symbols("x")
         assert IsNonZeroMultiple([1, 2], [x, x * 2]) is None
+
+
+class TestIsPositiveMultiple:
+    def test_vectors(self):
+        assert IsPositiveMultiple(Matrix([2]), Matrix([3])) is True
+        assert IsPositiveMultiple(Matrix([1, 2]), Matrix([-2, -4])) is False
+        assert IsPositiveMultiple(Matrix([1, 2]), Matrix([2, 1])) is False
+
+    def test_zero_vectors(self):
+        assert IsPositiveMultiple(Matrix([0, 0]), Matrix([0, 0])) is True
+        assert IsPositiveMultiple(Matrix([1, 2]), Matrix([0, 0])) is False
+        assert IsPositiveMultiple(Matrix([0, 0]), Matrix([1, 2])) is False
+
+    def test_matrices(self):
+        matrix_1234 = Matrix([[1, 2], [3, 4]])
+        assert IsPositiveMultiple(Matrix([[1, 2]]), Matrix([[1], [2]])) is False
+        assert IsPositiveMultiple(matrix_1234, Matrix([[2, 4], [6, 8]])) is True
+        assert IsPositiveMultiple(matrix_1234, Matrix.zeros(2, 2)) is False
+        assert IsPositiveMultiple(matrix_1234, Matrix([[1, 1], [1, 1]])) is False
+
+    def test_lists(self):
+        assert IsPositiveMultiple([1], [2, 3]) is False
+        assert IsPositiveMultiple([0, 0], [0, 0]) is True
+        assert IsPositiveMultiple([1, 2], [2, 4]) is True
+        assert IsPositiveMultiple([1, 2], [0, 0]) is False
+        assert IsPositiveMultiple([1, 2], [2, 3]) is False
+
+    def test_matrix_vs_list(self):
+        assert IsPositiveMultiple(Matrix([1, 2]), [2, 4]) is True
+        assert IsPositiveMultiple([1, 2], Matrix([2, 4])) is True
+        assert IsPositiveMultiple(Matrix([1, 2]).T, [2, 4]) is False
+        assert IsPositiveMultiple(Matrix([1, 2]), [2, 3]) is False
+        assert IsPositiveMultiple([1, 2], Matrix([2, 3])) is False
+
+    def test_symbolic(self):
+        x = symbols("x", real=True)
+        assert IsPositiveMultiple([x, 1], [-x, -1]) is False
+
+        p = symbols("p", positive=True)
+        assert IsPositiveMultiple([1, 2], [p, p * 2]) is True
+        assert IsPositiveMultiple([1, 2], [p, p]) is False
+
+    def test_undecidable(self):
+        x = symbols("x", real=True)
+        assert IsPositiveMultiple([1, 2], [x, x * 2]) is None
 
 
 class TestEigenvalues:

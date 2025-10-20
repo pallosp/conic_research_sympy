@@ -39,6 +39,39 @@ def IsNonZeroMultiple(
     )
 
 
+def IsPositiveMultiple(
+    m1: Matrix | Sequence[Expr],
+    m2: Matrix | Sequence[Expr],
+) -> bool | None:
+    """Tells whether two matrices are positive scalar multiples of each other.
+
+    Treats lists and tuples as column vectors. Returns None if undecidable.
+    """
+    if not isinstance(m1, Matrix):
+        m1 = Matrix(m1)
+    if not isinstance(m2, Matrix):
+        m2 = Matrix(m2)
+
+    if m1.shape != m2.shape:
+        return False
+
+    m1_is_zero = m1.is_zero_matrix
+    m2_is_zero = m2.is_zero_matrix
+    if m1_is_zero and m2_is_zero:
+        return True
+
+    # Linearize the matrices to be able to use dot product.
+    v1 = m1.reshape(len(m1), 1)
+    v2 = m2.reshape(len(m2), 1)
+
+    return fuzzy_and(
+        [
+            v1.dot(v2).factor().is_positive,
+            (v1.dot(v1) * v2.dot(v2) - v1.dot(v2) ** 2).simplify().is_zero,
+        ],
+    )
+
+
 def MaxEigenvalue(symmetric_matrix_2x2: Matrix) -> Expr:
     """Returns the higher eigenvalue of a 2x2 symmetric matrix."""
     m = symmetric_matrix_2x2

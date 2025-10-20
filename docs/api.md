@@ -2,6 +2,7 @@
 
 * [matrix](#matrix)
   * [IsNonZeroMultiple](#matrix.IsNonZeroMultiple)
+  * [IsPositiveMultiple](#matrix.IsPositiveMultiple)
   * [MaxEigenvalue](#matrix.MaxEigenvalue)
   * [MinEigenvalue](#matrix.MinEigenvalue)
   * [ConicMatrix](#matrix.ConicMatrix)
@@ -145,6 +146,19 @@ def IsNonZeroMultiple(m1: Matrix | Sequence[Expr],
 ```
 
 Tells whether two matrices are non-zero scalar multiples of each other.
+
+Treats lists and tuples as column vectors. Returns None if undecidable.
+
+<a id="matrix.IsPositiveMultiple"></a>
+
+#### IsPositiveMultiple
+
+```python
+def IsPositiveMultiple(m1: Matrix | Sequence[Expr],
+                       m2: Matrix | Sequence[Expr]) -> bool | None
+```
+
+Tells whether two matrices are positive scalar multiples of each other.
 
 Treats lists and tuples as column vectors. Returns None if undecidable.
 
