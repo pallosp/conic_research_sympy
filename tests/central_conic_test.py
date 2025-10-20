@@ -7,10 +7,12 @@ from sympy import (
     Rational,
     nan,
     symbols,
+    zoo,
 )
 from sympy.abc import x, y
 
 from lib.central_conic import (
+    CenterToFocusVector,
     ConicCenter,
     ConicFromCenterAndPoints,
     ConicFromFociAndRadius,
@@ -217,6 +219,34 @@ class TestLinearEccentricity:
         line2 = Matrix([4, 5, 6])
         line_pair = LinePair(line1, line2)
         assert LinearEccentricity(line_pair) == 0
+
+
+class TestCenterToFocusVector:
+    def test_ellipse(self):
+        ellipse = ConicFromFociAndRadius((2, 3), (5, 8), 13)
+        expected_cf = Matrix([Rational(3, 2), Rational(5, 2)])
+        assert CenterToFocusVector(ellipse) == expected_cf
+        assert CenterToFocusVector(-ellipse) == expected_cf
+
+    def test_hyperbola(self):
+        hyperbola = ConicFromFociAndRadius((13, 8), (5, 3), 2)
+        expected_cf = Matrix([-4, -Rational(5, 2)])
+        assert CenterToFocusVector(hyperbola) == expected_cf
+        assert CenterToFocusVector(-hyperbola) == expected_cf
+
+    def test_parabola(self):
+        parabola = ConicFromPoly(x * x - y)
+        assert CenterToFocusVector(parabola) == Matrix([0, zoo])
+        assert CenterToFocusVector(-parabola) == Matrix([0, zoo])
+
+    def test_point_conic(self):
+        assert CenterToFocusVector(PointConic([1, 2])) == Matrix([0, 0])
+
+    def test_crossing_lines(self):
+        line1 = Matrix([1, 2, 3])
+        line2 = Matrix([4, 5, 6])
+        line_pair = LinePair(line1, line2)
+        assert CenterToFocusVector(line_pair) == Matrix([0, 0])
 
 
 class TestShrinkToZero:

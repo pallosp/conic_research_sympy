@@ -20,6 +20,7 @@
   * [PrimaryRadius](#central_conic.PrimaryRadius)
   * [SecondaryRadius](#central_conic.SecondaryRadius)
   * [LinearEccentricity](#central_conic.LinearEccentricity)
+  * [CenterToFocusVector](#central_conic.CenterToFocusVector)
   * [ShrinkConicToZero](#central_conic.ShrinkConicToZero)
 * [circle](#circle)
   * [Circle](#circle.Circle)
@@ -420,6 +421,19 @@ Special cases:
 
 *Formula*: `√|r₁²-r₂²|` where `r₁` and `r₂` denote the primary and secondary
 radii of the conic (i.e., the semi-axis lengths in the case of an ellipse).
+
+<a id="central_conic.CenterToFocusVector"></a>
+
+#### CenterToFocusVector
+
+```python
+def CenterToFocusVector(conic: Matrix) -> Matrix
+```
+
+Returns the 2D vector from a conic's center to one of its foci.
+
+The opposite vector points to the other focus. The result may contain
+infinite or `nan` elements if the conic lacks a finite center.
 
 <a id="central_conic.ShrinkConicToZero"></a>
 

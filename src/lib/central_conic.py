@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Abs, Expr, Matrix, sqrt
+from sympy import Abs, Expr, I, Matrix, sqrt
 
 from lib.conic_classification import ConicNormFactor
 from lib.matrix import ConicMatrix, MaxEigenvalue, MinEigenvalue
@@ -170,6 +170,18 @@ def LinearEccentricity(conic: Matrix) -> Expr:
     a, _, _, b, c, _, _, _, _ = conic
     eigenvalue_diff = sqrt((a - c) ** 2 + 4 * b**2)
     return sqrt(Abs(conic.det()) * eigenvalue_diff) / Abs(a * c - b * b)
+
+
+def CenterToFocusVector(conic: Matrix) -> Matrix:
+    """Returns the 2D vector from a conic's center to one of its foci.
+
+    The opposite vector points to the other focus. The result may contain
+    infinite or `nan` elements if the conic lacks a finite center.
+    """
+    a, _, _, b, c, _, _, _, _ = conic
+    norm_sign = ConicNormFactor(conic)
+    x, y = sqrt(norm_sign * (a - c + 2 * I * b)).simplify().as_real_imag()
+    return Matrix([x, y]) * sqrt(Abs(conic.det())) / (a * c - b * b)
 
 
 def ShrinkConicToZero(conic: Matrix) -> Matrix:
