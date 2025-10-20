@@ -175,13 +175,16 @@ def LinearEccentricity(conic: Matrix) -> Expr:
 def CenterToFocusVector(conic: Matrix) -> Matrix:
     """Returns the 2D vector from a conic's center to one of its foci.
 
-    The opposite vector points to the other focus. The result may contain
-    infinite or `nan` elements if the conic lacks a finite center.
+    The opposite vector points to the other focus.
+
+    The function is only meaningful for central conics. The result vector will
+    contain infinite or `nan` elements when the conic lacks a finite center.
     """
     a, _, _, b, c, _, _, _, _ = conic
     norm_sign = ConicNormFactor(conic)
     x, y = sqrt(norm_sign * (a - c + 2 * I * b)).simplify().as_real_imag()
-    return Matrix([x, y]) * sqrt(Abs(conic.det())) / (a * c - b * b)
+    multiplier = sqrt(Abs(conic.det())) / (a * c - b * b)
+    return Matrix([x, y]).applyfunc(lambda coord: coord * multiplier)
 
 
 def ShrinkConicToZero(conic: Matrix) -> Matrix:

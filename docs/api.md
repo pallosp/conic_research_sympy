@@ -432,8 +432,10 @@ def CenterToFocusVector(conic: Matrix) -> Matrix
 
 Returns the 2D vector from a conic's center to one of its foci.
 
-The opposite vector points to the other focus. The result may contain
-infinite or `nan` elements if the conic lacks a finite center.
+The opposite vector points to the other focus.
+
+The function is only meaningful for central conics. The result vector will
+contain infinite or `nan` elements when the conic lacks a finite center.
 
 <a id="central_conic.ShrinkConicToZero"></a>
 

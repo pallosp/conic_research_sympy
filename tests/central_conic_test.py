@@ -236,11 +236,14 @@ class TestCenterToFocusVector:
 
     def test_parabola(self):
         parabola = ConicFromPoly(x * x - y)
-        assert CenterToFocusVector(parabola) == Matrix([0, zoo])
-        assert CenterToFocusVector(-parabola) == Matrix([0, zoo])
+        assert CenterToFocusVector(parabola) == Matrix([nan, zoo])
+        assert CenterToFocusVector(-parabola) == Matrix([nan, zoo])
 
-    def test_point_conic(self):
+    def test_finite_point_conic(self):
         assert CenterToFocusVector(PointConic([1, 2])) == Matrix([0, 0])
+
+    def test_ideal_point_conic(self):
+        assert CenterToFocusVector(PointConic([2, 1, 0])) == Matrix([nan, nan])
 
     def test_crossing_lines(self):
         line1 = Matrix([1, 2, 3])
