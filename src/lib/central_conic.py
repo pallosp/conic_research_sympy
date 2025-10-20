@@ -180,9 +180,12 @@ def CenterToFocusVector(conic: Matrix) -> Matrix:
     The function is only meaningful for central conics. The result vector will
     contain infinite or `nan` elements when the conic lacks a finite center.
     """
+    # Calculate the focal axis direction.
     a, _, _, b, c, _, _, _, _ = conic
     norm_sign = ConicNormFactor(conic)
     x, y = sqrt(norm_sign * (a - c + 2 * I * b)).simplify().as_real_imag()
+    # Center-to-focus vector = [x, y] / √(x² + y²) * linear eccentricity
+    # The √(x² + y²) = ∜((a-c)² + 4b²) factor vanishes.
     multiplier = sqrt(Abs(conic.det())) / (a * c - b * b)
     return Matrix([x, y]).applyfunc(lambda coord: coord * multiplier)
 
