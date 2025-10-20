@@ -788,10 +788,12 @@ https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficient
 def FocalAxisDirection(conic: Matrix) -> Matrix
 ```
 
-Returns the direction of the focal axis a.k.a. transverse axis of the
-conic section, namely the ideal point in that direction.
+Returns the ideal point representing the direction of a conic's focal axis.
 
 Properties:
+- The focal axis is treated as an undirected line; its angle to the
+  horizontal lies in the (-π/2, π/2] interval. For the full direction of a
+  parabola, use [ParabolaDirection](#parabola.ParabolaDirection) instead.
 - Returns `[0, 0, 0]ᵀ` for circles and
   [circular conics](#conic_classification.IsCircular).
 - Point conics constructed by

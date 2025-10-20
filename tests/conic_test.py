@@ -1,5 +1,5 @@
 import pytest
-from sympy import I, Matrix, Poly, Rational, sqrt, symbols
+from sympy import I, Matrix, Poly, Rational, pi, sqrt, symbols
 from sympy.abc import x, y
 
 from lib.central_conic import ConicFromFociAndRadius, ShrinkConicToZero
@@ -28,8 +28,9 @@ from lib.line import (
     HorizontalLine,
     LineThroughPoint,
 )
-from lib.matrix import ConicMatrix, IsNonZeroMultiple, QuadraticForm
+from lib.matrix import ConicMatrix, IsNonZeroMultiple, IsPositiveMultiple, QuadraticForm
 from lib.point import ORIGIN, IdealPoint, IdealPointOnLine
+from lib.transform import Rotate, TransformConic
 from tests.utils import AreProjectiveSetsEqual
 
 
@@ -167,6 +168,20 @@ class TestAxisDirection:
     def test_parabola(self):
         parabola = ConicFromFocusAndDirectrix((1, 2), Matrix([3, 4, 5]), 1)
         assert IsNonZeroMultiple(FocalAxisDirection(parabola), (3, 4, 0))
+
+    def test_angle_range(self):
+        right_parabola = ConicFromPoly(y**2 - x)
+        up_parabola = ConicFromPoly(x**2 - y)
+        left_parabola = ConicFromPoly(y**2 + x)
+        down_parabola = ConicFromPoly(x**2 + y)
+        nw_parabola = TransformConic(up_parabola, Rotate(pi / 4))
+        sw_parabola = TransformConic(left_parabola, Rotate(pi / 4))
+        assert IsPositiveMultiple(FocalAxisDirection(right_parabola), (1, 0, 0))
+        assert IsPositiveMultiple(FocalAxisDirection(up_parabola), (0, 1, 0))
+        assert IsPositiveMultiple(FocalAxisDirection(left_parabola), (1, 0, 0))
+        assert IsPositiveMultiple(FocalAxisDirection(down_parabola), (0, 1, 0))
+        assert IsPositiveMultiple(FocalAxisDirection(nw_parabola), (1, -1, 0))
+        assert IsPositiveMultiple(FocalAxisDirection(sw_parabola), (1, 1, 0))
 
     def test_line_pair(self):
         conic = LinePair(X_AXIS, Y_AXIS)
