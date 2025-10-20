@@ -37,6 +37,7 @@
   * [LineThroughPoint](#line.LineThroughPoint)
   * [AngleBisector](#line.AngleBisector)
   * [PerpendicularBisector](#line.PerpendicularBisector)
+  * [LineNormal](#line.LineNormal)
   * [AreParallel](#line.AreParallel)
   * [ArePerpendicular](#line.ArePerpendicular)
   * [IDEAL\_LINE](#line.IDEAL_LINE)
@@ -613,6 +614,27 @@ def PerpendicularBisector(point1: Matrix | Sequence[Expr],
 ```
 
 Constructs the perpendicular bisector of two points.
+
+<a id="line.LineNormal"></a>
+
+#### LineNormal
+
+```python
+def LineNormal(line: Matrix,
+               *,
+               toward: Matrix | Sequence[Expr] = None) -> Matrix
+```
+
+Returns the normal vector of a line, represented as an ideal point.
+
+By default, the normal is chosen such that `line·normal > 0`.
+If a `toward` point is provided, the returned vector points toward it in the
+projective sense: `line·normal` and `line·toward` have the same sign.
+For an ordinary Euclidean point (given by its `(x, y)` coordinates), this
+corresponds to the normal vector pointing toward the semiplane containing that
+point.
+
+Returns `[0, 0, 0]ᵀ` if the `toward` point lies on the line.
 
 <a id="line.AreParallel"></a>
 

@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Matrix, sqrt
+from sympy import Expr, Matrix, sign, sqrt
 
 from lib.point import PointToVec3, PointToXY
 
@@ -108,6 +108,28 @@ def PerpendicularBisector(
     x1, y1 = PointToXY(point1)
     x2, y2 = PointToXY(point2)
     return Matrix([x1 - x2, y1 - y2, (x2**2 - x1**2 + y2**2 - y1**2) / 2])
+
+
+def LineNormal(
+    line: Matrix,
+    *,
+    toward: Matrix | Sequence[Expr] = None,
+) -> Matrix:
+    """Returns the normal vector of a line, represented as an ideal point.
+
+    By default, the normal is chosen such that `line·normal > 0`.
+    If a `toward` point is provided, the returned vector points toward it in the
+    projective sense: `line·normal` and `line·toward` have the same sign.
+    For an ordinary Euclidean point (given by its `(x, y)` coordinates), this
+    corresponds to the normal vector pointing toward the semiplane containing that
+    point.
+
+    Returns `[0, 0, 0]ᵀ` if the `toward` point lies on the line.
+    """
+    normal = Matrix([line[0], line[1], 0])
+    if toward is None:
+        return normal
+    return normal * sign(line.dot(PointToVec3(toward)).factor())
 
 
 def AreParallel(line1: Matrix, line2: Matrix) -> bool | None:

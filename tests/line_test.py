@@ -12,6 +12,7 @@ from lib.line import (
     HorizontalLine,
     LineBetween,
     LineContainsPoint,
+    LineNormal,
     LineThroughPoint,
     ParallelLine,
     PerpendicularBisector,
@@ -120,6 +121,18 @@ class TestPerpendicularBisector:
         center = Centroid(point1, point2)
         assert LineContainsPoint(bisector, center)
         assert ArePerpendicular(bisector, LineBetween(point1, point2))
+
+
+class TestLineNormal:
+    def test_numeric(self):
+        line = Matrix([1, 2, 3])
+        assert LineNormal(line) == Matrix([1, 2, 0])
+        assert LineNormal(line, toward=(5, 5)) == Matrix([1, 2, 0])
+        assert LineNormal(line, toward=(-5, -5)) == Matrix([-1, -2, 0])
+        assert LineNormal(line, toward=(-1, -1)) == Matrix([0, 0, 0])
+        assert LineNormal(line, toward=(-5, -5, -1)) == Matrix([-1, -2, 0])
+        assert LineNormal(line, toward=(-1, 0)) == Matrix([1, 2, 0])
+        assert LineNormal(line, toward=(-1, 0, 0)) == Matrix([-1, -2, 0])
 
 
 class TestAreParallel:
