@@ -116,6 +116,7 @@
   * [ParabolaFocusFromAdjugate](#parabola.ParabolaFocusFromAdjugate)
   * [ParabolaFocus](#parabola.ParabolaFocus)
   * [ParabolaVertex](#parabola.ParabolaVertex)
+  * [ParabolaDirection](#parabola.ParabolaDirection)
   * [ParabolaAxis](#parabola.ParabolaAxis)
   * [ParabolaFocalParameter](#parabola.ParabolaFocalParameter)
 * [polar\_conic](#polar_conic)
@@ -1629,6 +1630,23 @@ def ParabolaVertex(parabola: Matrix) -> tuple[Expr, Expr]
 Computes the parabola's vertex.
 
 *Formula*: [research/parabola_vertex.py](../src/research/parabola_vertex.py)
+
+<a id="parabola.ParabolaDirection"></a>
+
+#### ParabolaDirection
+
+```python
+def ParabolaDirection(parabola: Matrix) -> Matrix
+```
+
+Computes the direction of a parabola modulo 2π.
+
+Unlike [FocalAxisDirection](#conic.FocalAxisDirection), which determines
+the direction only modulo π, this function resolves the full orientation.
+
+Returns the ideal point representing the parabola’s direction. This point
+coincides with both the ideal point lying on the parabola and its
+[ProjectiveConicCenter](#conic.ProjectiveConicCenter).
 
 <a id="parabola.ParabolaAxis"></a>
 

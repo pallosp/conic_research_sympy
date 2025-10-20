@@ -1,5 +1,6 @@
 from sympy import Expr, Matrix, sqrt
 
+from lib.conic_classification import IsParabola
 from lib.point import PointToXY
 
 
@@ -69,6 +70,22 @@ def ParabolaVertex(parabola: Matrix) -> tuple[Expr, Expr]:
         fx - (b * e - c * d) / (2 * (a + c) ** 2),
         fy - (b * d - a * e) / (2 * (a + c) ** 2),
     )
+
+
+def ParabolaDirection(parabola: Matrix) -> Matrix:
+    """Computes the direction of a parabola modulo 2π.
+
+    Unlike [FocalAxisDirection](#conic.FocalAxisDirection), which determines
+    the direction only modulo π, this function resolves the full orientation.
+
+    Returns the ideal point representing the parabola’s direction. This point
+    coincides with both the ideal point lying on the parabola and its
+    [ProjectiveConicCenter](#conic.ProjectiveConicCenter).
+    """
+    if IsParabola(parabola) is False:
+        raise ValueError("Not a parabola")
+    x, y, _ = parabola.row(0).cross(parabola.row(1))
+    return Matrix([x, y, 0])
 
 
 def ParabolaAxis(parabola: Matrix) -> Matrix:

@@ -5,16 +5,18 @@ from lib.circle import UNIT_CIRCLE
 from lib.conic import ConicFromFocusAndDirectrix, PolarLine
 from lib.degenerate_conic import LinePair, PointConic
 from lib.distance import PointLineDistance
-from lib.line import IDEAL_LINE, ArePerpendicular, LineContainsPoint
-from lib.matrix import ConicMatrix, IsNonZeroMultiple
+from lib.line import IDEAL_LINE, ArePerpendicular, LineContainsPoint, LineNormal
+from lib.matrix import ConicMatrix, IsNonZeroMultiple, IsPositiveMultiple
 from lib.parabola import (
     ParabolaAxis,
+    ParabolaDirection,
     ParabolaDirectrix,
     ParabolaFocalParameter,
     ParabolaFocus,
     ParabolaVertex,
 )
 from lib.point import ORIGIN, Centroid, PerpendicularFoot
+from lib.transform import Scale, TransformConic
 
 
 class TestParabolaFocusAndDirectrix:
@@ -88,6 +90,27 @@ class TestParabolaVertex:
         foot = PerpendicularFoot(focus, directrix)
         vertex = Centroid(focus, foot)
         assert vertex == ParabolaVertex(parabola)
+
+
+class TestParabolaDirection:
+    def test_numeric_parabola(self):
+        focus = (6, 5)
+        directrix = Matrix([4, 3, 2])
+        parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
+        expected_dir = LineNormal(directrix, toward=focus)
+        assert IsPositiveMultiple(ParabolaDirection(parabola), expected_dir)
+        assert IsPositiveMultiple(ParabolaDirection(-parabola), expected_dir)
+
+        parabola = TransformConic(parabola, Scale(-1))
+        expected_dir = -expected_dir
+        assert IsPositiveMultiple(ParabolaDirection(parabola), expected_dir)
+        assert IsPositiveMultiple(ParabolaDirection(-parabola), expected_dir)
+
+    def test_not_a_parabola(self):
+        with pytest.raises(ValueError, match="Not a parabola"):
+            ParabolaDirection(UNIT_CIRCLE)
+        with pytest.raises(ValueError, match="Not a parabola"):
+            ParabolaDirection(PointConic((1, 2, 0)))
 
 
 class TestParabolaAxis:
