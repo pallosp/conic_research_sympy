@@ -86,8 +86,9 @@ def Eccentricity(conic: Matrix) -> Expr:
      - 1 for parabolas;
      - &gt;1 for hyperbolas, in particular √2 for rectangular hyperbolas.
 
-    In case of non-degenerate central conics, the eccentricity equals to the
-    ratio of the center-focus distance
+    In case of [non-degenerate](#conic_classification.IsNonDegenerate)
+    [central conics](#conic_classification.IsCentralConic), the eccentricity
+    equals to the ratio of the center-focus distance
     ([LinearEccentricity](#central_conic.LinearEccentricity))
     and the center-vertex distance
     ([PrimaryRadius](#central_conic.PrimaryRadius)).

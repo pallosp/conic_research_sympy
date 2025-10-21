@@ -179,8 +179,10 @@ def CenterToFocusVector(conic: Matrix) -> Matrix:
 
     The opposite vector points to the other focus.
 
-    The function is only meaningful for central conics. The result vector will
-    contain infinite or `nan` elements when the conic lacks a finite center.
+    The function is only meaningful for
+    [central conics](#conic_classification.IsCentralConic). The result vector
+    will contain infinite or `nan` elements when the conic lacks a finite
+    center.
     """
     # Calculate the focal axis direction.
     a, _, _, b, c, _, _, _, _ = conic
@@ -198,7 +200,8 @@ def ShrinkConicToZero(conic: Matrix) -> Matrix:
     Turns hyperbolas to line pair conics consisting of their asymptotes, and
     ellipses to point conics.
 
-    This transformation is only meaningful for central conics: for other
+    This transformation is only meaningful for
+    [central conics](#conic_classification.IsCentralConic): for other
     conic types the result matrix will have infinite or `nan` elements.
 
     *Formula*:

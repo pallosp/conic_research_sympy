@@ -437,8 +437,10 @@ Returns the 2D vector from a conic's center to one of its foci.
 
 The opposite vector points to the other focus.
 
-The function is only meaningful for central conics. The result vector will
-contain infinite or `nan` elements when the conic lacks a finite center.
+The function is only meaningful for
+[central conics](#conic_classification.IsCentralConic). The result vector
+will contain infinite or `nan` elements when the conic lacks a finite
+center.
 
 <a id="central_conic.ShrinkConicToZero"></a>
 
@@ -453,7 +455,8 @@ Scales a conic section from its center with a factor of zero.
 Turns hyperbolas to line pair conics consisting of their asymptotes, and
 ellipses to point conics.
 
-This transformation is only meaningful for central conics: for other
+This transformation is only meaningful for
+[central conics](#conic_classification.IsCentralConic): for other
 conic types the result matrix will have infinite or `nan` elements.
 
 *Formula*:
@@ -781,8 +784,9 @@ The result is
  - 1 for parabolas;
  - &gt;1 for hyperbolas, in particular √2 for rectangular hyperbolas.
 
-In case of non-degenerate central conics, the eccentricity equals to the
-ratio of the center-focus distance
+In case of [non-degenerate](#conic_classification.IsNonDegenerate)
+[central conics](#conic_classification.IsCentralConic), the eccentricity
+equals to the ratio of the center-focus distance
 ([LinearEccentricity](#central_conic.LinearEccentricity))
 and the center-vertex distance
 ([PrimaryRadius](#central_conic.PrimaryRadius)).
