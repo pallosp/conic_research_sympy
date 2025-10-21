@@ -4,7 +4,7 @@ from lib.conic_classification import IsParabola
 from lib.point import PointToXY
 
 
-def ParabolaDirectrixFromAdjugate(parabola_adjugate: Matrix) -> Matrix:
+def _ParabolaDirectrixFromAdjugate(parabola_adjugate: Matrix) -> Matrix:
     """Computes the directrix of a parabola represented as the adjugate of a
     conic matrix. See [ParabolaDirectrix](#parabola.ParabolaDirectrix) for the
     details.
@@ -30,10 +30,10 @@ def ParabolaDirectrix(parabola: Matrix) -> Matrix:
     *Formula*:
     [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
     """
-    return ParabolaDirectrixFromAdjugate(parabola.adjugate())
+    return _ParabolaDirectrixFromAdjugate(parabola.adjugate())
 
 
-def ParabolaFocusFromAdjugate(parabola_adjugate: Matrix) -> Matrix:
+def _ParabolaFocusFromAdjugate(parabola_adjugate: Matrix) -> Matrix:
     """Computes the focus of a parabola represented as the adjugate of a
     conic matrix. See [ParabolaFocus](#parabola.ParabolaFocus) for the details.
     """
@@ -56,7 +56,7 @@ def ParabolaFocus(parabola: Matrix) -> Matrix:
     *Formula*:
     [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
     """
-    return ParabolaFocusFromAdjugate(parabola.adjugate())
+    return _ParabolaFocusFromAdjugate(parabola.adjugate())
 
 
 def ParabolaVertex(parabola: Matrix) -> Matrix:
