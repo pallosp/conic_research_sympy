@@ -82,13 +82,15 @@ def ConicFromCenterAndPoints(
     return ConicMatrix(a, b, c, d, e, f)
 
 
-def ConicCenter(conic: Matrix) -> tuple[Expr, Expr]:
+def ConicCenter(conic: Matrix) -> Matrix:
     """Computes the center point of a conic.
+
+    Returns a 2d vector.
 
     *Formula*: [research/conic_center.py](../src/research/conic_center.py)
     """
     x, y, z = conic.col(0).cross(conic.col(1))
-    return (x / z, y / z)
+    return Matrix([x / z, y / z])
 
 
 def SemiAxisLengths(conic: Matrix) -> tuple[Expr, Expr]:

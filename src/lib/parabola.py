@@ -59,17 +59,18 @@ def ParabolaFocus(parabola: Matrix) -> Matrix:
     return ParabolaFocusFromAdjugate(parabola.adjugate())
 
 
-def ParabolaVertex(parabola: Matrix) -> tuple[Expr, Expr]:
+def ParabolaVertex(parabola: Matrix) -> Matrix:
     """Computes the parabola's vertex.
+
+    Returns a 2d vector.
 
     *Formula*: [research/parabola_vertex.py](../src/research/parabola_vertex.py)
     """
     a, _, _, b, c, _, d, e, _ = parabola
-    fx, fy = PointToXY(ParabolaFocus(parabola))
-    return (
-        fx - (b * e - c * d) / (2 * (a + c) ** 2),
-        fy - (b * d - a * e) / (2 * (a + c) ** 2),
-    )
+    focus_x, focus_y = PointToXY(ParabolaFocus(parabola))
+    vertex_x = focus_x - (b * e - c * d) / (2 * (a + c) ** 2)
+    vertex_y = focus_y - (b * d - a * e) / (2 * (a + c) ** 2)
+    return Matrix([vertex_x, vertex_y])
 
 
 def ParabolaDirection(parabola: Matrix) -> Matrix:

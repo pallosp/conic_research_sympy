@@ -43,8 +43,11 @@ def PointToVec3(point: Matrix | Sequence[Expr]) -> Matrix:
     return Matrix(point)
 
 
-def Centroid(*points: Sequence[Expr]) -> tuple[Expr, Expr]:
-    """Computes the centroid of a set of points."""
+def Centroid(*points: Sequence[Expr]) -> Matrix:
+    """Computes the centroid of a set of points.
+
+    Returns a 2d vector.
+    """
     n = len(points)
     if n == 0:
         raise ValueError("At least one point must be provided.")
@@ -53,20 +56,21 @@ def Centroid(*points: Sequence[Expr]) -> tuple[Expr, Expr]:
         x, y = PointToXY(p)
         cx += x
         cy += y
-    return (cx / n, cy / n)
+    return Matrix([cx / n, cy / n])
 
 
 def PerpendicularFoot(
     point: Matrix | Sequence[Expr],
     line: Matrix,
-) -> tuple[Expr, Expr]:
-    """Computes the foot of the perpendicular through `point` to `line`.
+) -> Matrix:
+    """Computes the foot of the perpendicular through a point to a line.
 
-    Returns `(nan, nan)` when `point`, `line` or both are infinite.
+    Returns a 2d vector. Degenerates to `[nan, nan]ᵀ` when `point`, `line` or
+    both are infinite.
 
     *Formula*: https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
     """
     x, y = PointToXY(point)
     a, b, c = line
     f = (a * x + b * y + c) / (a * a + b * b)
-    return (x - a * f, y - b * f)
+    return Matrix([x - a * f, y - b * f])

@@ -1,5 +1,5 @@
 import pytest
-from sympy import factor, nan, pi, simplify, symbols
+from sympy import Matrix, factor, nan, pi, simplify, symbols
 
 from lib.central_conic import ConicCenter, SemiAxisLengths
 from lib.circle import UNIT_CIRCLE, Circle
@@ -30,11 +30,11 @@ class TestEllipseFromParams:
             Ellipse(ORIGIN, 1, 1, r1_direction=(1, 1, 1))
 
     def test_center(self):
-        center = symbols("x,y")
+        center = Matrix(symbols("x,y"))
         r1, r2 = symbols("r1,r2")
         r1_direction = symbols("r1_x,r1_y")
         ellipse = Ellipse(center, r1, r2, r1_direction=r1_direction)
-        assert center == factor(ConicCenter(ellipse))
+        assert center == ConicCenter(ellipse).applyfunc(factor)
 
     def test_axis_direction_vector_length_invariance(self):
         center = symbols("x,y")

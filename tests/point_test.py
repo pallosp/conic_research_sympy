@@ -23,14 +23,15 @@ class TestCentroid:
             Centroid()
 
     def test_one_point(self):
-        assert Centroid((1, 2)) == (1, 2)
-        assert Centroid((6, 4, 2)) == (3, 2)
+        assert Centroid((1, 2)) == Matrix([1, 2])
+        assert Centroid((6, 4, 2)) == Matrix([3, 2])
 
     def test_two_points(self):
-        assert Centroid((1, 2), (3, 4)) == (2, 3)
+        assert Centroid((1, 2), (3, 4)) == Matrix([2, 3])
 
     def test_full_precision(self):
-        assert Centroid((0, 0), (1, 0), (1, 1)) == (Rational(2, 3), Rational(1, 3))
+        expected = Matrix([Rational(2, 3), Rational(1, 3)])
+        assert Centroid((0, 0), (1, 0), (1, 1)) == expected
 
 
 class TestPerpendicularFoot:
@@ -40,6 +41,7 @@ class TestPerpendicularFoot:
         assert IsNonZeroMultiple(PerpendicularFoot(point, line), (3, 1))
 
     def test_ideal_point_or_line(self):
-        assert PerpendicularFoot((1, 2), IDEAL_LINE) == (nan, nan)
-        assert PerpendicularFoot((1, 2, 0), Matrix([1, 2, 3])) == (nan, nan)
-        assert PerpendicularFoot((1, 2, 0), IDEAL_LINE) == (nan, nan)
+        nan_point = Matrix([nan, nan])
+        assert PerpendicularFoot((1, 2), IDEAL_LINE) == nan_point
+        assert PerpendicularFoot((1, 2, 0), Matrix([1, 2, 3])) == nan_point
+        assert PerpendicularFoot((1, 2, 0), IDEAL_LINE) == nan_point

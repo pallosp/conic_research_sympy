@@ -330,10 +330,12 @@ May return
 #### ConicCenter
 
 ```python
-def ConicCenter(conic: Matrix) -> tuple[Expr, Expr]
+def ConicCenter(conic: Matrix) -> Matrix
 ```
 
 Computes the center point of a conic.
+
+Returns a 2d vector.
 
 *Formula*: [research/conic_center.py](../src/research/conic_center.py)
 
@@ -1448,23 +1450,25 @@ Computes the homogeneous coordinates of a projective point.
 #### Centroid
 
 ```python
-def Centroid(*points: Sequence[Expr]) -> tuple[Expr, Expr]
+def Centroid(*points: Sequence[Expr]) -> Matrix
 ```
 
 Computes the centroid of a set of points.
+
+Returns a 2d vector.
 
 <a id="point.PerpendicularFoot"></a>
 
 #### PerpendicularFoot
 
 ```python
-def PerpendicularFoot(point: Matrix | Sequence[Expr],
-                      line: Matrix) -> tuple[Expr, Expr]
+def PerpendicularFoot(point: Matrix | Sequence[Expr], line: Matrix) -> Matrix
 ```
 
-Computes the foot of the perpendicular through `point` to `line`.
+Computes the foot of the perpendicular through a point to a line.
 
-Returns `(nan, nan)` when `point`, `line` or both are infinite.
+Returns a 2d vector. Degenerates to `[nan, nan]ᵀ` when `point`, `line` or
+both are infinite.
 
 *Formula*: https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
 
@@ -1642,10 +1646,12 @@ Special cases for other conic types:
 #### ParabolaVertex
 
 ```python
-def ParabolaVertex(parabola: Matrix) -> tuple[Expr, Expr]
+def ParabolaVertex(parabola: Matrix) -> Matrix
 ```
 
 Computes the parabola's vertex.
+
+Returns a 2d vector.
 
 *Formula*: [research/parabola_vertex.py](../src/research/parabola_vertex.py)
 

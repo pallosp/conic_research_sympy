@@ -92,7 +92,7 @@ class TestConicCenter:
     def test_circle(self):
         x, y, r = symbols("x,y,r")
         circle = Circle((x, y), r)
-        assert (x, y) == ConicCenter(circle)
+        assert ConicCenter(circle) == Matrix([x, y])
 
 
 class TestSemiAxisLengths:
@@ -264,7 +264,7 @@ class TestShrinkToZero:
         circle = Circle(symbols("x y"), symbols("r"))
         shrunk = ShrinkConicToZero(circle)
         assert IsPointConic(shrunk)
-        assert ConicCenter(shrunk) == (x, y)
+        assert ConicCenter(shrunk) == Matrix([x, y])
 
     def test_ellipse(self):
         ellipse = EllipseFromFociAndPoint((1, 2), (3, 4), (0, 0))
