@@ -110,6 +110,18 @@ def SemiAxisLengths(conic: Matrix) -> tuple[Expr, Expr]:
     )
 
 
+def _SelectedRadius(conic: Matrix, eigenvalue_selector: Expr) -> Matrix:
+    """Returns the conic radius corresponding to the selected eigenvalue.
+
+    `eigenvalue_selector` is an expression evaluating to ±1. When positive, the
+    larger, when negative the smaller conic eigenvalue will be used in the
+    radius formula.
+    """
+    a, _, _, b, c, _, _, _, _ = conic
+    eigenvalue = (a + c + eigenvalue_selector * sqrt((a - c) ** 2 + 4 * b**2)) / 2
+    return sqrt(-conic.det() / (eigenvalue * (a * c - b * b)))
+
+
 def PrimaryRadius(conic: Matrix) -> Expr:
     """Computes the center-vertex distance of a conic.
 
@@ -124,10 +136,7 @@ def PrimaryRadius(conic: Matrix) -> Expr:
      - `nan` for ideal point conics;
      - 0 for the other degenerate conics.
     """
-    a, _, _, b, c, _, _, _, _ = conic
-    norm_sign = ConicNormFactor(conic)
-    eigenvalue = (a + c + norm_sign * sqrt((a - c) ** 2 + 4 * b**2)) / 2
-    return sqrt(-conic.det() / (eigenvalue * (a * c - b * b)))
+    return _SelectedRadius(conic, ConicNormFactor(conic))
 
 
 def SecondaryRadius(conic: Matrix) -> Expr:
@@ -145,10 +154,7 @@ def SecondaryRadius(conic: Matrix) -> Expr:
      - `nan` for ideal point conics;
      - 0 for the other degenerate conics.
     """
-    a, _, _, b, c, _, _, _, _ = conic
-    norm_sign = ConicNormFactor(conic)
-    eigenvalue = (a + c - norm_sign * sqrt((a - c) ** 2 + 4 * b**2)) / 2
-    return sqrt(-conic.det() / (eigenvalue * (a * c - b * b)))
+    return _SelectedRadius(conic, -ConicNormFactor(conic))
 
 
 def LinearEccentricity(conic: Matrix) -> Expr:
