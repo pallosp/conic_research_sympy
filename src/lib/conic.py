@@ -93,8 +93,9 @@ def Eccentricity(conic: Matrix) -> Expr:
     and the center-vertex distance
     ([PrimaryRadius](#central_conic.PrimaryRadius)).
 
-    The eccentricity of finite point conics constructed by shrinking an ellipse
-    to zero size equals to that of the original ellipse.
+    The eccentricity of finite point conics constructed by
+    [shrinking an ellipse to zero size](#central_conic.ShrinkConicToZero)
+    equals to that of the original ellipse.
 
     Crossing line pair conics have two different (generalized) focal axes, with
     two different corresponding eccentricity values. Evaluate
@@ -202,7 +203,7 @@ def PolarLine(conic: Matrix, pole_point: Matrix | Sequence[Expr]) -> Matrix:
 def ConicContainsPoint(conic: Matrix, point: Matrix | Sequence[Expr]) -> bool | None:
     """Checks if a point lies on a conic.
 
-    Returns None if undecidable.
+    Returns `None` if undecidable.
     """
     return QuadraticForm(conic, PointToVec3(point)).expand().is_zero
 
@@ -210,7 +211,7 @@ def ConicContainsPoint(conic: Matrix, point: Matrix | Sequence[Expr]) -> bool | 
 def ConicContainsLine(conic: Matrix, line: Matrix) -> bool | None:
     """Checks if a line lies on a conic.
 
-    Returns None if undecidable.
+    Returns `None` if undecidable.
 
     *Formula*:
     [research/conic_line_containment.py](../src/research/conic_line_containment.py)

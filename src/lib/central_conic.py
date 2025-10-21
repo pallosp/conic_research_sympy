@@ -114,8 +114,8 @@ def PrimaryRadius(conic: Matrix) -> Expr:
     """Computes the center-vertex distance of a conic.
 
     This corresponds to the semi-major axis length of real ellipses. In case of
-    imaginary ellipses however the focal axis is the shorter one in terms of
-    absolute value.
+    [imaginary ellipses](#conic_classification.IsImaginaryEllipse) however the
+    focal axis is the shorter one in terms of absolute value.
 
     The returned value is:
      - a positive number for ellipses and hyperbolas;

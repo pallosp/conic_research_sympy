@@ -8,7 +8,7 @@ from lib.point import PointToVec3, PointToXY
 def LineContainsPoint(line: Matrix, point: Matrix | Sequence[Expr]) -> bool | None:
     """Tells whether `point` is on `line`.
 
-    Returns None if undecidable.
+    Returns `None` if undecidable.
     """
     return line.dot(PointToVec3(point)).expand().is_zero
 
@@ -135,7 +135,7 @@ def LineNormal(
 def AreParallel(line1: Matrix, line2: Matrix) -> bool | None:
     """Tells whether line1 and line2 are parallel.
 
-    Returns True if they are parallel, False if not, None if undecidable.
+    Returns `True` if they are parallel, `False` if not, `None` if undecidable.
     Considers the ideal line parallel to everything.
     """
     a1, b1, _ = line1
@@ -146,8 +146,8 @@ def AreParallel(line1: Matrix, line2: Matrix) -> bool | None:
 def ArePerpendicular(line1: Matrix, line2: Matrix) -> bool | None:
     """Tells whether line1 and line2 are perpendicular.
 
-    Returns True if they are perpendicular, False if not, None if undecidable.
-    Considers the ideal line perpendicular to everything.
+    Returns `True` if they are perpendicular, `False` if not, `None` if
+    undecidable. Considers the ideal line perpendicular to everything.
     """
     a1, b1, _ = line1
     a2, b2, _ = line2

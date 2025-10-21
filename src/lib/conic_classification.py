@@ -70,7 +70,7 @@ def IsDegenerate(conic: Matrix) -> bool | None:
 
     Degenerate conics consist of a single projective point or a pair of
     projective lines. The zero matrix is also considered degenerate.
-    Returns None if undecidable.
+    Returns `None` if undecidable.
     """
     return conic.det().is_zero
 
@@ -79,7 +79,7 @@ def IsNonDegenerate(conic: Matrix) -> bool | None:
     """Tells whether the conic is non-degenerate.
 
     Non-degenerate conics include real or imaginary ellipses, parabolas and
-    hyperbolas. Returns None if undecidable.
+    hyperbolas. Returns `None` if undecidable.
     """
     return conic.det().is_nonzero
 
@@ -87,7 +87,7 @@ def IsNonDegenerate(conic: Matrix) -> bool | None:
 def IsCentralConic(conic: Matrix) -> bool | None:
     """Tells whether a conic has a finite center of symmetry.
 
-    Returns None if undecidable.
+    Returns `None` if undecidable.
     """
     return conic[:2, :2].det().is_nonzero
 
@@ -95,24 +95,29 @@ def IsCentralConic(conic: Matrix) -> bool | None:
 def IsFiniteConic(conic: Matrix) -> bool | None:
     """Tells whether all points on the conic are finite.
 
-    Returns None if undecidable.
+    Returns `None` if undecidable.
     """
     return conic[:2, :2].det().factor().is_positive
 
 
 def IsImaginaryEllipse(conic: Matrix) -> bool | None:
-    """Tells Whether the conic is an ellipse with a real center and imaginary
-    radii.
+    """Tells whether the conic is an imaginary ellipse.
 
-    Returns None if undecidable.
+    Imaginary ellipses have real center and focus points, but imaginary radii
+    and eccentricity. In addition, all solutions of their conic equations are
+    points with complex coordinates.
+
+    Returns `None` if undecidable.
     """
     return IsDefinite(conic)
 
 
 def IsEllipse(conic: Matrix) -> bool | None:
-    """Tells whether the conic is an ellipse with real radii.
+    """Tells whether the conic is an ellipse.
 
-    Returns None if undecidable.
+    Returns `False` for
+    [imaginary ellipses](#conic_classification.IsImaginaryEllipse),
+    or `None` if the conic's type is undecidable.
     """
     return fuzzy_and(
         [
@@ -126,7 +131,7 @@ def IsEllipse(conic: Matrix) -> bool | None:
 def IsCircle(conic: Matrix) -> bool | None:
     """Tells whether the conic is a circle.
 
-    Returns None if undecidable.
+    Returns `None` if undecidable.
     """
     a, _, _, b, c, _, _, _, _ = conic
     return fuzzy_and(
@@ -141,7 +146,7 @@ def IsCircle(conic: Matrix) -> bool | None:
 def IsParabola(conic: Matrix) -> bool | None:
     """Tells whether the conic is a parabola.
 
-    Returns None if undecidable.
+    Returns `None` if undecidable.
     """
     return fuzzy_and([IsNonDegenerate(conic), conic[:2, :2].det().is_zero])
 
@@ -149,7 +154,7 @@ def IsParabola(conic: Matrix) -> bool | None:
 def IsHyperbola(conic: Matrix) -> bool | None:
     """Tells whether the conic is a hyperbola.
 
-    Returns None if undecidable.
+    Returns `None` if undecidable.
     """
     return fuzzy_and([IsNonDegenerate(conic), conic[:2, :2].det().is_negative])
 
@@ -159,7 +164,7 @@ def IsCircular(conic: Matrix) -> bool | None:
     invariant under all rotations.
 
     Circles, imaginary circles, zero-radius circles have such circular symmetry.
-    Double ideal lines are not considered circular. Returns None if undecidable.
+    Double ideal lines are not considered circular. Returns `None` if undecidable.
     """
     return fuzzy_and(
         [
@@ -173,7 +178,7 @@ def IsCircular(conic: Matrix) -> bool | None:
 def IsLinePair(conic: Matrix) -> bool | None:
     """Tells whether the conic is the union of two projective lines.
 
-    Returns None if undecidable.
+    Returns `None` if undecidable.
     """
     a, _, _, b, c, _, d, e, f = conic
     return fuzzy_and(
@@ -192,7 +197,7 @@ def IsLinePair(conic: Matrix) -> bool | None:
 def IsDoubleLine(conic: Matrix) -> bool | None:
     """Tells whether the conic consists of two coincident projective lines.
 
-    Returns None if undecidable.
+    Returns `None` if undecidable.
     """
     # The conic represents a double line iff its matrix has rank 1.
     #
@@ -209,7 +214,7 @@ def IsDoubleLine(conic: Matrix) -> bool | None:
 def IsPointConic(conic: Matrix) -> bool | None:
     """Tells whether the conic consists of a single projective point.
 
-    Returns None if undecidable.
+    Returns `None` if undecidable.
 
     A conic is a point conic iff it's degenerate and splits to two lines with
     complex coordinates.
@@ -234,6 +239,6 @@ def IsPointConic(conic: Matrix) -> bool | None:
 def IsFinitePointConic(conic: Matrix) -> bool | None:
     """Tells whether the conic consists of a single finite (Euclidean) point.
 
-    Returns None if undecidable.
+    Returns `None` if undecidable.
     """
     return fuzzy_and([IsDegenerate(conic), IsFiniteConic(conic)])

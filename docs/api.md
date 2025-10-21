@@ -151,7 +151,7 @@ def IsNonZeroMultiple(m1: Matrix | Sequence[Expr],
 
 Tells whether two matrices are non-zero scalar multiples of each other.
 
-Treats lists and tuples as column vectors. Returns None if undecidable.
+Treats lists and tuples as column vectors. Returns `None` if undecidable.
 
 <a id="matrix.IsPositiveMultiple"></a>
 
@@ -164,7 +164,7 @@ def IsPositiveMultiple(m1: Matrix | Sequence[Expr],
 
 Tells whether two matrices are positive scalar multiples of each other.
 
-Treats lists and tuples as column vectors. Returns None if undecidable.
+Treats lists and tuples as column vectors. Returns `None` if undecidable.
 
 <a id="matrix.MaxEigenvalue"></a>
 
@@ -214,7 +214,7 @@ or in expanded form `ax² + 2bxy + cy² + 2dx + 2ey + f = 0`
 def QuadraticForm(sym_matrix: Matrix, vector: Matrix) -> Expr
 ```
 
-Computes the quadratic form for a nxn symmetric matrix and an n-element
+Computes the quadratic form for a n⨯n symmetric matrix and an n-element
 column vector.
 
 Use case: when `sym_matrix` and `vector` represent a conic and a projective
@@ -368,8 +368,8 @@ def PrimaryRadius(conic: Matrix) -> Expr
 Computes the center-vertex distance of a conic.
 
 This corresponds to the semi-major axis length of real ellipses. In case of
-imaginary ellipses however the focal axis is the shorter one in terms of
-absolute value.
+[imaginary ellipses](#conic_classification.IsImaginaryEllipse) however the
+focal axis is the shorter one in terms of absolute value.
 
 The returned value is:
  - a positive number for ellipses and hyperbolas;
@@ -531,7 +531,7 @@ def LineContainsPoint(line: Matrix,
 
 Tells whether `point` is on `line`.
 
-Returns None if undecidable.
+Returns `None` if undecidable.
 
 <a id="line.HorizontalLine"></a>
 
@@ -669,7 +669,7 @@ def AreParallel(line1: Matrix, line2: Matrix) -> bool | None
 
 Tells whether line1 and line2 are parallel.
 
-Returns True if they are parallel, False if not, None if undecidable.
+Returns `True` if they are parallel, `False` if not, `None` if undecidable.
 Considers the ideal line parallel to everything.
 
 <a id="line.ArePerpendicular"></a>
@@ -682,8 +682,8 @@ def ArePerpendicular(line1: Matrix, line2: Matrix) -> bool | None
 
 Tells whether line1 and line2 are perpendicular.
 
-Returns True if they are perpendicular, False if not, None if undecidable.
-Considers the ideal line perpendicular to everything.
+Returns `True` if they are perpendicular, `False` if not, `None` if
+undecidable. Considers the ideal line perpendicular to everything.
 
 <a id="line.IDEAL_LINE"></a>
 
@@ -791,8 +791,9 @@ equals to the ratio of the center-focus distance
 and the center-vertex distance
 ([PrimaryRadius](#central_conic.PrimaryRadius)).
 
-The eccentricity of finite point conics constructed by shrinking an ellipse
-to zero size equals to that of the original ellipse.
+The eccentricity of finite point conics constructed by
+[shrinking an ellipse to zero size](#central_conic.ShrinkConicToZero)
+equals to that of the original ellipse.
 
 Crossing line pair conics have two different (generalized) focal axes, with
 two different corresponding eccentricity values. Evaluate
@@ -921,7 +922,7 @@ def ConicContainsPoint(conic: Matrix,
 
 Checks if a point lies on a conic.
 
-Returns None if undecidable.
+Returns `None` if undecidable.
 
 <a id="conic.ConicContainsLine"></a>
 
@@ -933,7 +934,7 @@ def ConicContainsLine(conic: Matrix, line: Matrix) -> bool | None
 
 Checks if a line lies on a conic.
 
-Returns None if undecidable.
+Returns `None` if undecidable.
 
 *Formula*:
 [research/conic_line_containment.py](../src/research/conic_line_containment.py)
@@ -1242,7 +1243,7 @@ Tells whether the conic is degenerate.
 
 Degenerate conics consist of a single projective point or a pair of
 projective lines. The zero matrix is also considered degenerate.
-Returns None if undecidable.
+Returns `None` if undecidable.
 
 <a id="conic_classification.IsNonDegenerate"></a>
 
@@ -1255,7 +1256,7 @@ def IsNonDegenerate(conic: Matrix) -> bool | None
 Tells whether the conic is non-degenerate.
 
 Non-degenerate conics include real or imaginary ellipses, parabolas and
-hyperbolas. Returns None if undecidable.
+hyperbolas. Returns `None` if undecidable.
 
 <a id="conic_classification.IsCentralConic"></a>
 
@@ -1267,7 +1268,7 @@ def IsCentralConic(conic: Matrix) -> bool | None
 
 Tells whether a conic has a finite center of symmetry.
 
-Returns None if undecidable.
+Returns `None` if undecidable.
 
 <a id="conic_classification.IsFiniteConic"></a>
 
@@ -1279,7 +1280,7 @@ def IsFiniteConic(conic: Matrix) -> bool | None
 
 Tells whether all points on the conic are finite.
 
-Returns None if undecidable.
+Returns `None` if undecidable.
 
 <a id="conic_classification.IsImaginaryEllipse"></a>
 
@@ -1289,10 +1290,13 @@ Returns None if undecidable.
 def IsImaginaryEllipse(conic: Matrix) -> bool | None
 ```
 
-Tells Whether the conic is an ellipse with a real center and imaginary
-radii.
+Tells whether the conic is an imaginary ellipse.
 
-Returns None if undecidable.
+Imaginary ellipses have real center and focus points, but imaginary radii
+and eccentricity. In addition, all solutions of their conic equations are
+points with complex coordinates.
+
+Returns `None` if undecidable.
 
 <a id="conic_classification.IsEllipse"></a>
 
@@ -1302,9 +1306,11 @@ Returns None if undecidable.
 def IsEllipse(conic: Matrix) -> bool | None
 ```
 
-Tells whether the conic is an ellipse with real radii.
+Tells whether the conic is an ellipse.
 
-Returns None if undecidable.
+Returns `False` for
+[imaginary ellipses](#conic_classification.IsImaginaryEllipse),
+or `None` if the conic's type is undecidable.
 
 <a id="conic_classification.IsCircle"></a>
 
@@ -1316,7 +1322,7 @@ def IsCircle(conic: Matrix) -> bool | None
 
 Tells whether the conic is a circle.
 
-Returns None if undecidable.
+Returns `None` if undecidable.
 
 <a id="conic_classification.IsParabola"></a>
 
@@ -1328,7 +1334,7 @@ def IsParabola(conic: Matrix) -> bool | None
 
 Tells whether the conic is a parabola.
 
-Returns None if undecidable.
+Returns `None` if undecidable.
 
 <a id="conic_classification.IsHyperbola"></a>
 
@@ -1340,7 +1346,7 @@ def IsHyperbola(conic: Matrix) -> bool | None
 
 Tells whether the conic is a hyperbola.
 
-Returns None if undecidable.
+Returns `None` if undecidable.
 
 <a id="conic_classification.IsCircular"></a>
 
@@ -1354,7 +1360,7 @@ Tells whether there is a single center point around which the conic is
 invariant under all rotations.
 
 Circles, imaginary circles, zero-radius circles have such circular symmetry.
-Double ideal lines are not considered circular. Returns None if undecidable.
+Double ideal lines are not considered circular. Returns `None` if undecidable.
 
 <a id="conic_classification.IsLinePair"></a>
 
@@ -1366,7 +1372,7 @@ def IsLinePair(conic: Matrix) -> bool | None
 
 Tells whether the conic is the union of two projective lines.
 
-Returns None if undecidable.
+Returns `None` if undecidable.
 
 <a id="conic_classification.IsDoubleLine"></a>
 
@@ -1378,7 +1384,7 @@ def IsDoubleLine(conic: Matrix) -> bool | None
 
 Tells whether the conic consists of two coincident projective lines.
 
-Returns None if undecidable.
+Returns `None` if undecidable.
 
 <a id="conic_classification.IsPointConic"></a>
 
@@ -1390,7 +1396,7 @@ def IsPointConic(conic: Matrix) -> bool | None
 
 Tells whether the conic consists of a single projective point.
 
-Returns None if undecidable.
+Returns `None` if undecidable.
 
 A conic is a point conic iff it's degenerate and splits to two lines with
 complex coordinates.
@@ -1405,7 +1411,7 @@ def IsFinitePointConic(conic: Matrix) -> bool | None
 
 Tells whether the conic consists of a single finite (Euclidean) point.
 
-Returns None if undecidable.
+Returns `None` if undecidable.
 
 <a id="point"></a>
 
@@ -1901,7 +1907,7 @@ Special cases:
  - They are complex conjugates if the line doesn't intersect the conic at
    a real point.
  - Returns an unevaluated `sympy.Function` for symbolic conics.
- - Returns None if the conic contains the entire line.
+ - Returns `None` if the conic contains the entire line.
 
 *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
 section 11.3

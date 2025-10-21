@@ -11,7 +11,7 @@ def IsNonZeroMultiple(
 ) -> bool | None:
     """Tells whether two matrices are non-zero scalar multiples of each other.
 
-    Treats lists and tuples as column vectors. Returns None if undecidable.
+    Treats lists and tuples as column vectors. Returns `None` if undecidable.
     """
     if not isinstance(m1, Matrix):
         m1 = Matrix(m1)
@@ -45,7 +45,7 @@ def IsPositiveMultiple(
 ) -> bool | None:
     """Tells whether two matrices are positive scalar multiples of each other.
 
-    Treats lists and tuples as column vectors. Returns None if undecidable.
+    Treats lists and tuples as column vectors. Returns `None` if undecidable.
     """
     if not isinstance(m1, Matrix):
         m1 = Matrix(m1)
@@ -106,7 +106,7 @@ def ConicMatrix(a: Expr, b: Expr, c: Expr, d: Expr, e: Expr, f: Expr) -> Matrix:
 
 
 def QuadraticForm(sym_matrix: Matrix, vector: Matrix) -> Expr:
-    """Computes the quadratic form for a nxn symmetric matrix and an n-element
+    """Computes the quadratic form for a n⨯n symmetric matrix and an n-element
     column vector.
 
     Use case: when `sym_matrix` and `vector` represent a conic and a projective

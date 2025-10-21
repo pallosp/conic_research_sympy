@@ -26,7 +26,7 @@ def ConicXLine(
      - They are complex conjugates if the line doesn't intersect the conic at
        a real point.
      - Returns an unevaluated `sympy.Function` for symbolic conics.
-     - Returns None if the conic contains the entire line.
+     - Returns `None` if the conic contains the entire line.
 
     *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
     section 11.3
