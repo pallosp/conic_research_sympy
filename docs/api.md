@@ -83,6 +83,7 @@
     * [eval](#conic_classification.ConicNormFactor.eval)
   * [IsDegenerate](#conic_classification.IsDegenerate)
   * [IsNonDegenerate](#conic_classification.IsNonDegenerate)
+  * [IsCentralConic](#conic_classification.IsCentralConic)
   * [IsFiniteConic](#conic_classification.IsFiniteConic)
   * [IsImaginaryEllipse](#conic_classification.IsImaginaryEllipse)
   * [IsEllipse](#conic_classification.IsEllipse)
@@ -1251,6 +1252,18 @@ Tells whether the conic is non-degenerate.
 
 Non-degenerate conics include real or imaginary ellipses, parabolas and
 hyperbolas. Returns None if undecidable.
+
+<a id="conic_classification.IsCentralConic"></a>
+
+#### IsCentralConic
+
+```python
+def IsCentralConic(conic: Matrix) -> bool | None
+```
+
+Tells whether a conic has a finite center of symmetry.
+
+Returns None if undecidable.
 
 <a id="conic_classification.IsFiniteConic"></a>
 

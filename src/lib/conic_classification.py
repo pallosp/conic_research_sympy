@@ -84,6 +84,14 @@ def IsNonDegenerate(conic: Matrix) -> bool | None:
     return conic.det().is_nonzero
 
 
+def IsCentralConic(conic: Matrix) -> bool | None:
+    """Tells whether a conic has a finite center of symmetry.
+
+    Returns None if undecidable.
+    """
+    return conic[:2, :2].det().is_nonzero
+
+
 def IsFiniteConic(conic: Matrix) -> bool | None:
     """Tells whether all points on the conic are finite.
 

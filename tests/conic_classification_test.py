@@ -5,6 +5,7 @@ from lib.circle import IMAGINARY_UNIT_CIRCLE, UNIT_CIRCLE, Circle
 from lib.conic import ConicFromFocusAndDirectrix, ConicFromPoly, FocalAxisDirection
 from lib.conic_classification import (
     ConicNormFactor,
+    IsCentralConic,
     IsCircle,
     IsCircular,
     IsDegenerate,
@@ -136,6 +137,42 @@ class TestIsDegenerate:
 
         point_conic = PointConic(symbols("x,y,z"))
         assert IsDegenerate(point_conic) is True
+
+
+class TestIsCentralConic:
+    def test_symbolic_ellipse(self):
+        ellipse = Ellipse(symbols("x,y"), *symbols("r1,r2", positive=True))
+        assert IsCentralConic(ellipse) is True
+
+    def test_symbolic_parabola(self):
+        directrix = Matrix(symbols("a b c", positive=True))
+        parabola = ConicFromFocusAndDirectrix(ORIGIN, directrix, eccentricity=1)
+        assert IsCentralConic(parabola) is False
+
+    def test_symbolic_finite_point_conic(self):
+        point_conic = PointConic(symbols("x y", real=True))
+        assert IsCentralConic(point_conic) is True
+
+    def test_symbolic_ideal_point_conic(self):
+        ideal_point_conic = PointConic([*symbols("x y", real=True), 0])
+        assert IsCentralConic(ideal_point_conic) is False
+
+    def test_symbolic_crossing_lines(self):
+        line = Matrix(symbols("a b c", positive=True))
+        line_pair = LinePair(line, X_AXIS)
+        assert IsCentralConic(line_pair) is True
+
+    def test_symbolic_parallel_lines(self):
+        a, b = symbols("a b", positive=True)
+        c1, c2 = symbols("c1 c2", real=True)
+        line_pair = LinePair(Matrix([a, b, c1]), Matrix([a, b, c2]))
+        assert IsCentralConic(line_pair) is False
+
+    def test_symbolic_general_line_pair(self):
+        a, b, c = symbols("a b c", positive=True)
+        d, e, f = symbols("d e f", positive=True)
+        line_pair = LinePair(Matrix([a, b, c]), Matrix([d, e, f]))
+        assert IsCentralConic(line_pair) is None
 
 
 class TestIsFiniteConic:
