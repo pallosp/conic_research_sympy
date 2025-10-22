@@ -190,13 +190,36 @@ def CenterToFocusVector(conic: Matrix) -> Matrix:
     will contain infinite or `nan` elements when the conic lacks a finite
     center.
     """
-    # Calculate the focal axis direction.
+    # Calculate the focal axis direction vector.
     a, _, _, b, c, _, _, _, _ = conic
     norm_sign = ConicNormFactor(conic)
     x, y = sqrt(norm_sign * (a - c + 2 * I * b)).simplify().as_real_imag()
+
     # Center-to-focus vector = [x, y] / √(x² + y²) * linear eccentricity
     # The √(x² + y²) = ∜((a-c)² + 4b²) factor vanishes.
     multiplier = sqrt(Abs(conic.det())) / (a * c - b * b)
+    return Matrix([x, y]).applyfunc(lambda coord: coord * multiplier)
+
+
+def CenterToVertexVector(conic: Matrix) -> Matrix:
+    """Returns the 2D vector from a conic's center to one of its vertices.
+
+    The opposite vector points to the other vertex.
+
+    The function is only meaningful for
+    [central conics](#conic_classification.IsCentralConic). The result vector
+    will contain infinite or `nan` elements when the conic lacks a finite
+    center.
+    """
+    # Calculate the focal axis direction vector and its length.
+    a, _, _, b, c, _, _, _, _ = conic
+    norm_sign = ConicNormFactor(conic)
+    x, y = sqrt(norm_sign * (a - c + 2 * I * b)).simplify().as_real_imag()
+
+    # Center-to-vertex vector = [x, y] / √(x² + y²) * primary radius
+    # √(x² + y²) = ∜((a-c)² + 4b²)
+    xy_length = sqrt(sqrt((a - c) ** 2 + 4 * b**2))
+    multiplier = PrimaryRadius(conic) / xy_length
     return Matrix([x, y]).applyfunc(lambda coord: coord * multiplier)
 
 

@@ -13,6 +13,7 @@ from sympy.abc import x, y
 
 from lib.central_conic import (
     CenterToFocusVector,
+    CenterToVertexVector,
     ConicCenter,
     ConicFromCenterAndPoints,
     ConicFromFociAndRadius,
@@ -224,15 +225,15 @@ class TestLinearEccentricity:
 class TestCenterToFocusVector:
     def test_ellipse(self):
         ellipse = ConicFromFociAndRadius((2, 3), (5, 8), 13)
-        expected_cf = Matrix([Rational(3, 2), Rational(5, 2)])
-        assert CenterToFocusVector(ellipse) == expected_cf
-        assert CenterToFocusVector(-ellipse) == expected_cf
+        expected_vec = Matrix([Rational(3, 2), Rational(5, 2)])
+        assert CenterToFocusVector(ellipse) == expected_vec
+        assert CenterToFocusVector(-ellipse) == expected_vec
 
     def test_hyperbola(self):
         hyperbola = ConicFromFociAndRadius((13, 8), (5, 3), 2)
-        expected_cf = Matrix([-4, -Rational(5, 2)])
-        assert CenterToFocusVector(hyperbola) == expected_cf
-        assert CenterToFocusVector(-hyperbola) == expected_cf
+        expected_vec = Matrix([-4, -Rational(5, 2)])
+        assert CenterToFocusVector(hyperbola) == expected_vec
+        assert CenterToFocusVector(-hyperbola) == expected_vec
 
     def test_parabola(self):
         parabola = ConicFromPoly(x * x - y)
@@ -250,6 +251,37 @@ class TestCenterToFocusVector:
         line2 = Matrix([4, 5, 6])
         line_pair = LinePair(line1, line2)
         assert CenterToFocusVector(line_pair) == Matrix([0, 0])
+
+
+class TestCenterToVertexVector:
+    def test_ellipse(self):
+        ellipse = ConicFromFociAndRadius((0, 0), (3, 4), 10)
+        expected_vec = Matrix([6, 8])
+        assert CenterToVertexVector(ellipse) == expected_vec
+        assert CenterToVertexVector(-ellipse) == expected_vec
+
+    def test_hyperbola(self):
+        hyperbola = ConicFromFociAndRadius((0, 0), (9, 12), 5)
+        expected_vec = Matrix([3, 4])
+        assert CenterToVertexVector(hyperbola) == expected_vec
+        assert CenterToVertexVector(-hyperbola) == expected_vec
+
+    def test_parabola(self):
+        parabola = ConicFromPoly(x * x - y)
+        assert CenterToVertexVector(parabola) == Matrix([nan, zoo])
+        assert CenterToVertexVector(-parabola) == Matrix([nan, zoo])
+
+    def test_finite_point_conic(self):
+        assert CenterToVertexVector(PointConic([1, 2])) == Matrix([0, 0])
+
+    def test_ideal_point_conic(self):
+        assert CenterToVertexVector(PointConic([2, 1, 0])) == Matrix([nan, nan])
+
+    def test_crossing_lines(self):
+        line1 = Matrix([1, 2, 3])
+        line2 = Matrix([4, 5, 6])
+        line_pair = LinePair(line1, line2)
+        assert CenterToVertexVector(line_pair) == Matrix([0, 0])
 
 
 class TestShrinkToZero:

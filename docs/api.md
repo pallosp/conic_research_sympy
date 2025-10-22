@@ -21,6 +21,7 @@
   * [SecondaryRadius](#central_conic.SecondaryRadius)
   * [LinearEccentricity](#central_conic.LinearEccentricity)
   * [CenterToFocusVector](#central_conic.CenterToFocusVector)
+  * [CenterToVertexVector](#central_conic.CenterToVertexVector)
   * [ShrinkConicToZero](#central_conic.ShrinkConicToZero)
 * [circle](#circle)
   * [Circle](#circle.Circle)
@@ -434,6 +435,23 @@ def CenterToFocusVector(conic: Matrix) -> Matrix
 Returns the 2D vector from a conic's center to one of its foci.
 
 The opposite vector points to the other focus.
+
+The function is only meaningful for
+[central conics](#conic_classification.IsCentralConic). The result vector
+will contain infinite or `nan` elements when the conic lacks a finite
+center.
+
+<a id="central_conic.CenterToVertexVector"></a>
+
+#### CenterToVertexVector
+
+```python
+def CenterToVertexVector(conic: Matrix) -> Matrix
+```
+
+Returns the 2D vector from a conic's center to one of its vertices.
+
+The opposite vector points to the other vertex.
 
 The function is only meaningful for
 [central conics](#conic_classification.IsCentralConic). The result vector
