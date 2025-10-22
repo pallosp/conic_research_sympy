@@ -9,7 +9,7 @@
 from sympy import Determinant, Eq, Expr, Matrix, symbols
 
 from lib.central_conic import ConicCenter
-from lib.conic import ConicContainsPoint
+from lib.incidence import ConicContainsPoint
 from lib.transform import TransformConic, Translate
 from research.util import println_indented
 

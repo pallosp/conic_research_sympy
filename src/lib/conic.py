@@ -3,7 +3,7 @@ from collections.abc import Sequence
 from sympy import Expr, Function, I, Matrix, Poly, Symbol, abc, sqrt
 
 from lib.conic_classification import ConicNormFactor
-from lib.matrix import NonZeroCross, QuadraticForm, SkewMatrix
+from lib.matrix import NonZeroCross
 from lib.point import PointToVec3, PointToXY
 
 
@@ -198,23 +198,3 @@ def PolarLine(conic: Matrix, pole_point: Matrix | Sequence[Expr]) -> Matrix:
     *Source*: https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line
     """
     return conic * PointToVec3(pole_point)
-
-
-def ConicContainsPoint(conic: Matrix, point: Matrix | Sequence[Expr]) -> bool | None:
-    """Checks if a point lies on a conic.
-
-    Returns `None` if undecidable.
-    """
-    return QuadraticForm(conic, PointToVec3(point)).expand().is_zero
-
-
-def ConicContainsLine(conic: Matrix, line: Matrix) -> bool | None:
-    """Checks if a line lies on a conic.
-
-    Returns `None` if undecidable.
-
-    *Formula*:
-    [research/conic_line_containment.py](../src/research/conic_line_containment.py)
-    """
-    skew = SkewMatrix(line)
-    return (skew * conic * skew).is_zero_matrix

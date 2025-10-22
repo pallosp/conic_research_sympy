@@ -1,7 +1,7 @@
 from sympy import Matrix, pi
 
 from lib.circle import UNIT_CIRCLE
-from lib.conic import ConicContainsPoint
+from lib.incidence import ConicContainsPoint
 from lib.polar_conic import POLAR_UNIT_CIRCLE, ConicFromPolarMatrix, PointAtAngle
 
 

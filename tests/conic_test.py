@@ -5,8 +5,6 @@ from sympy.abc import x, y
 from lib.central_conic import ConicFromFociAndRadius, ShrinkConicToZero
 from lib.circle import UNIT_CIRCLE, Circle
 from lib.conic import (
-    ConicContainsLine,
-    ConicContainsPoint,
     ConicFromFocusAndDirectrix,
     ConicFromPoly,
     ConicThroughPoints,
@@ -19,6 +17,7 @@ from lib.conic import (
 )
 from lib.degenerate_conic import LinePair
 from lib.ellipse import Ellipse
+from lib.incidence import ConicContainsPoint
 from lib.intersection import ConicXLine
 from lib.line import (
     IDEAL_LINE,
@@ -324,53 +323,3 @@ class TestPolePolar:
         assert IsNonZeroMultiple(PolePoint(conic, X_AXIS), (3, 2, 1))
         assert IsNonZeroMultiple(PolePoint(conic, IDEAL_LINE), (3, 2, 1))
         assert PolePoint(conic, HorizontalLine(2)).is_zero_matrix
-
-
-class TestConicContainsPoint:
-    def test_numeric(self):
-        conic = ConicFromPoly(x * y - 6)
-        assert ConicContainsPoint(conic, (3, 2)) is True
-        assert ConicContainsPoint(conic, (1, 0, 0)) is True
-        assert ConicContainsPoint(conic, (1, 1, 0)) is False
-
-    def test_symbolic(self):
-        x, y = symbols("x y", real=True)
-        conic = ConicFromPoly(x * y - 6, x=x, y=y)
-        assert ConicContainsPoint(conic, (x, y)) is None
-        assert ConicContainsPoint(conic, (x, 0, 0)) is True
-        assert ConicContainsPoint(conic, (x, -x)) is False
-
-
-class TestConicContainsLine:
-    def test_circle_symbolic(self):
-        circle = Circle((1, 2), 3)
-        line = Matrix(symbols("a b c", positive=True))
-        assert ConicContainsLine(circle, line) is False
-
-    def test_parabola_symbolic(self):
-        focus = (0, 0)
-        directrix = Matrix(symbols("d1,d2,d3", positive=True))
-        conic = ConicFromFocusAndDirectrix(focus, directrix, 1)
-        line = Matrix(symbols("a,b,c", positive=True))
-        assert ConicContainsLine(conic, line) is False
-
-    def test_line_pair_symbolic(self):
-        line1 = Matrix(symbols("a b c"))
-        line2 = X_AXIS
-        conic = LinePair(line1, line2)
-        assert ConicContainsLine(conic, line1) is True
-        assert ConicContainsLine(conic, line2) is True
-        assert ConicContainsLine(conic, Y_AXIS) is None
-        assert ConicContainsLine(conic, IDEAL_LINE) is None
-
-    def test_coincident_line_pair_numeric(self):
-        conic = LinePair(X_AXIS, X_AXIS)
-        assert ConicContainsLine(conic, X_AXIS) is True
-        assert ConicContainsLine(conic, Y_AXIS) is False
-        assert ConicContainsLine(conic, HorizontalLine(1)) is False
-
-    def test_point_conic_numeric(self):
-        conic = Circle((0, 0), 0)
-        assert ConicContainsLine(conic, X_AXIS) is False
-        assert ConicContainsLine(conic, HorizontalLine(1)) is False
-        assert ConicContainsLine(conic, Matrix([1, I, 0])) is True

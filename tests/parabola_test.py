@@ -5,7 +5,8 @@ from lib.circle import UNIT_CIRCLE
 from lib.conic import ConicFromFocusAndDirectrix, PolarLine
 from lib.degenerate_conic import LinePair, PointConic
 from lib.distance import PointLineDistance
-from lib.line import IDEAL_LINE, ArePerpendicular, LineContainsPoint, LineNormal
+from lib.incidence import LineContainsPoint
+from lib.line import IDEAL_LINE, ArePerpendicular, LineNormal
 from lib.matrix import ConicMatrix, IsNonZeroMultiple, IsPositiveMultiple
 from lib.parabola import (
     ParabolaAxis,

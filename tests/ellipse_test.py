@@ -3,7 +3,6 @@ from sympy import Matrix, factor, nan, pi, simplify, symbols
 
 from lib.central_conic import ConicCenter, SemiAxisLengths
 from lib.circle import UNIT_CIRCLE, Circle
-from lib.conic import ConicContainsPoint
 from lib.conic_classification import IsEllipse
 from lib.degenerate_conic import DoubleLine
 from lib.ellipse import (
@@ -12,6 +11,7 @@ from lib.ellipse import (
     SteinerEllipse,
     SteinerInellipse,
 )
+from lib.incidence import ConicContainsPoint
 from lib.line import LineBetween
 from lib.matrix import IsNonZeroMultiple
 from lib.point import ORIGIN, Centroid, PointToVec3

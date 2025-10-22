@@ -2,6 +2,7 @@ import pytest
 from sympy import Matrix, symbols
 from sympy.abc import x, y
 
+from lib.incidence import LineContainsPoint
 from lib.line import (
     IDEAL_LINE,
     X_AXIS,
@@ -11,7 +12,6 @@ from lib.line import (
     ArePerpendicular,
     HorizontalLine,
     LineBetween,
-    LineContainsPoint,
     LineNormal,
     LineThroughPoint,
     ParallelLine,
@@ -21,20 +21,6 @@ from lib.line import (
 )
 from lib.matrix import IsNonZeroMultiple
 from lib.point import ORIGIN, Centroid, IdealPointOnLine
-
-
-class TestLineContainsPoint:
-    def test_numeric(self):
-        line = Matrix([1, 1, -3])  # x+y=3
-        assert LineContainsPoint(line, (2, 1)) is True
-        assert LineContainsPoint(line, (2, 2)) is False
-
-    def test_symbolic(self):
-        line = Matrix([1, 1, -3])  # x+y=3
-        x = symbols("x")
-        assert LineContainsPoint(line, (x, 3 - x)) is True
-        assert LineContainsPoint(line, (x, 2 - x)) is False
-        assert LineContainsPoint(line, (x, 1)) is None
 
 
 class TestPerpendicularLine:

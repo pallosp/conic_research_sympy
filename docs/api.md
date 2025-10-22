@@ -30,7 +30,6 @@
   * [UNIT\_CIRCLE](#circle.UNIT_CIRCLE)
   * [IMAGINARY\_UNIT\_CIRCLE](#circle.IMAGINARY_UNIT_CIRCLE)
 * [line](#line)
-  * [LineContainsPoint](#line.LineContainsPoint)
   * [HorizontalLine](#line.HorizontalLine)
   * [VerticalLine](#line.VerticalLine)
   * [LineBetween](#line.LineBetween)
@@ -56,8 +55,6 @@
   * [ProjectiveConicCenter](#conic.ProjectiveConicCenter)
   * [PolePoint](#conic.PolePoint)
   * [PolarLine](#conic.PolarLine)
-  * [ConicContainsPoint](#conic.ConicContainsPoint)
-  * [ConicContainsLine](#conic.ConicContainsLine)
 * [degenerate\_conic](#degenerate_conic)
   * [LinePair](#degenerate_conic.LinePair)
   * [DoubleLine](#degenerate_conic.DoubleLine)
@@ -125,6 +122,9 @@
   * [PointAtAngle](#polar_conic.PointAtAngle)
   * [ConicFromPolarMatrix](#polar_conic.ConicFromPolarMatrix)
 * [incidence](#incidence)
+  * [LineContainsPoint](#incidence.LineContainsPoint)
+  * [ConicContainsPoint](#incidence.ConicContainsPoint)
+  * [ConicContainsLine](#incidence.ConicContainsLine)
   * [AreCollinear](#incidence.AreCollinear)
 * [hyperbola](#hyperbola)
   * [HyperbolaFromFociAndPoint](#hyperbola.HyperbolaFromFociAndPoint)
@@ -538,19 +538,6 @@ The circle at the origin with radius 𝑖.
 
 # line
 
-<a id="line.LineContainsPoint"></a>
-
-#### LineContainsPoint
-
-```python
-def LineContainsPoint(line: Matrix,
-                      point: Matrix | Sequence[Expr]) -> bool | None
-```
-
-Tells whether `point` is on `line`.
-
-Returns `None` if undecidable.
-
 <a id="line.HorizontalLine"></a>
 
 #### HorizontalLine
@@ -928,34 +915,6 @@ Computes the polar line of a conic with respect to the given pole point.
 
 *Pole / polar identity*: `conic * pole_point = polar_line`
 *Source*: https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line
-
-<a id="conic.ConicContainsPoint"></a>
-
-#### ConicContainsPoint
-
-```python
-def ConicContainsPoint(conic: Matrix,
-                       point: Matrix | Sequence[Expr]) -> bool | None
-```
-
-Checks if a point lies on a conic.
-
-Returns `None` if undecidable.
-
-<a id="conic.ConicContainsLine"></a>
-
-#### ConicContainsLine
-
-```python
-def ConicContainsLine(conic: Matrix, line: Matrix) -> bool | None
-```
-
-Checks if a line lies on a conic.
-
-Returns `None` if undecidable.
-
-*Formula*:
-[research/conic_line_containment.py](../src/research/conic_line_containment.py)
 
 <a id="degenerate_conic"></a>
 
@@ -1770,6 +1729,47 @@ transformation on the unit circle.
 <a id="incidence"></a>
 
 # incidence
+
+<a id="incidence.LineContainsPoint"></a>
+
+#### LineContainsPoint
+
+```python
+def LineContainsPoint(line: Matrix,
+                      point: Matrix | Sequence[Expr]) -> bool | None
+```
+
+Tells whether `point` is on `line`.
+
+Returns `None` if undecidable.
+
+<a id="incidence.ConicContainsPoint"></a>
+
+#### ConicContainsPoint
+
+```python
+def ConicContainsPoint(conic: Matrix,
+                       point: Matrix | Sequence[Expr]) -> bool | None
+```
+
+Checks if a point lies on a conic.
+
+Returns `None` if undecidable.
+
+<a id="incidence.ConicContainsLine"></a>
+
+#### ConicContainsLine
+
+```python
+def ConicContainsLine(conic: Matrix, line: Matrix) -> bool | None
+```
+
+Checks if a line lies on a conic.
+
+Returns `None` if undecidable.
+
+*Formula*:
+[research/conic_line_containment.py](../src/research/conic_line_containment.py)
 
 <a id="incidence.AreCollinear"></a>
 

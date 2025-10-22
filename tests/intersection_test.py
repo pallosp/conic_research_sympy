@@ -1,8 +1,8 @@
 from sympy import Function, I, Matrix, nan, sqrt, symbols
 
 from lib.circle import UNIT_CIRCLE
-from lib.conic import ConicContainsPoint
 from lib.degenerate_conic import LinePair
+from lib.incidence import ConicContainsPoint
 from lib.intersection import ConicXLine, LineXLine
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine, VerticalLine
 from lib.matrix import ConicMatrix, IsNonZeroMultiple
