@@ -34,17 +34,13 @@ select = [
 ]
 ignore = [
   "D100",  # Missing module docstring
-  "D102",  # Missing method docstring
-  "D103",  # Missing function docstring
   "D104",  # Missing package docstring
   "D203",  # Incorrect blank line before class
   "D205",  # Blank line required after summary line
   "D213",  # Multi-line docstring should start at the second line
   "D401",  # First line of docstring should be imperative
-  "D415",  # Missing closing punctuation
   "EM101",  # Exception message should be a variable, not a raw string
   "ERA001",  # Commented-out code
-  "PLR0913",  # Too many arguments
   "PLR2004",  # Magic value used in comparison
   "RUF002",  # Ambiguous Unicode character in docstring
   "RUF003",  # Ambiguous Unicode character in comment
@@ -53,13 +49,16 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "src/research/*.py" = [
+  "D103",  # Missing function docstring
   "S101",  # Use of `assert` detected
   "T201",  # print statement
   "TID251",  # banned API (configured below)
 ]
 "tests/*.py" = [
   "ANN201",  # Missing return type annotation
-  "D101",  # Missing function docstring
+  "D101",  # Missing class docstring
+  "D102",  # Missing method docstring
+  "D103",  # Missing function docstring
   "S101",  # Use of `assert` detected
 ]
 
