@@ -14,7 +14,7 @@ def TransformLine(line: Matrix, transformation: Matrix) -> Matrix:
 
 
 def Translate(dx: Expr, dy: Expr) -> Matrix:
-    """Computes the transformation matrix for a 2d translation."""
+    """Computes the transformation matrix for a 2D translation."""
     return Matrix([[1, 0, dx], [0, 1, dy], [0, 0, 1]])
 
 

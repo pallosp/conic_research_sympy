@@ -119,7 +119,7 @@ def QuadraticForm(sym_matrix: Matrix, vector: Matrix) -> Expr:
 
 
 def SkewMatrix(vector3: Matrix) -> Matrix:
-    """Creates a skew-symmetric matrix from a 3d vector."""
+    """Creates a skew-symmetric matrix from a 3D vector."""
     x, y, z = vector3
     return Matrix(
         [

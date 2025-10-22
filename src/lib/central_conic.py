@@ -85,7 +85,7 @@ def ConicFromCenterAndPoints(
 def ConicCenter(conic: Matrix) -> Matrix:
     """Computes the center point of a conic.
 
-    Returns a 2d vector.
+    Returns the point's coordinates as a 2D column vector.
 
     *Formula*: [research/conic_center.py](../src/research/conic_center.py)
     """

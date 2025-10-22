@@ -35,7 +35,7 @@ def Ellipse(
     elif r1_direction is not None:
         dx, dy, *rest = r1_direction
         if rest not in ([], [0]):
-            raise ValueError("r1_direction must be a 2d vector or an ideal point")
+            raise ValueError("r1_direction must be a 2D vector or an ideal point")
 
     a = -((r1 * dy) ** 2 + (r2 * dx) ** 2)
     b = (r1**2 - r2**2) * dx * dy

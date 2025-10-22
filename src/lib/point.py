@@ -46,7 +46,7 @@ def PointToVec3(point: Matrix | Sequence[Expr]) -> Matrix:
 def Centroid(*points: Sequence[Expr]) -> Matrix:
     """Computes the centroid of a set of points.
 
-    Returns a 2d vector.
+    Returns the point's coordinates as a 2D column vector.
     """
     n = len(points)
     if n == 0:
@@ -65,8 +65,8 @@ def PerpendicularFoot(
 ) -> Matrix:
     """Computes the foot of the perpendicular through a point to a line.
 
-    Returns a 2d vector. Degenerates to `[nan, nan]ᵀ` when `point`, `line` or
-    both are infinite.
+    Returns the foot point's coordinates as a 2D column vector.
+    Degenerates to `[nan, nan]ᵀ` when `point`, `line` or both are infinite.
 
     *Formula*: https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
     """

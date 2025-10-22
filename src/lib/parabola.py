@@ -62,7 +62,7 @@ def ParabolaFocus(parabola: Matrix) -> Matrix:
 def ParabolaVertex(parabola: Matrix) -> Matrix:
     """Computes the parabola's vertex.
 
-    Returns a 2d vector.
+    Returns the point's coordinates as a 2D column vector.
 
     *Formula*: [research/parabola_vertex.py](../src/research/parabola_vertex.py)
     """

@@ -232,7 +232,7 @@ conic.
 def SkewMatrix(vector3: Matrix) -> Matrix
 ```
 
-Creates a skew-symmetric matrix from a 3d vector.
+Creates a skew-symmetric matrix from a 3D vector.
 
 <a id="matrix.NonZeroCross"></a>
 
@@ -337,7 +337,7 @@ def ConicCenter(conic: Matrix) -> Matrix
 
 Computes the center point of a conic.
 
-Returns a 2d vector.
+Returns the point's coordinates as a 2D column vector.
 
 *Formula*: [research/conic_center.py](../src/research/conic_center.py)
 
@@ -1007,7 +1007,7 @@ class ExtractPoint(Function)
 Extracts the point from a point conic or the intersection of the
 lines from a line pair conic.
 
-Returns `[0, 0, 0]ᵀ` for double line pairs, or an unspecified 3d
+Returns `[0, 0, 0]ᵀ` for double line pairs, or an unspecified 3D
 column vector if the conic is not degenerate. May return an unevaluated
 `sympy.Function` for symbolic conic matrices.
 
@@ -1455,7 +1455,7 @@ def Centroid(*points: Sequence[Expr]) -> Matrix
 
 Computes the centroid of a set of points.
 
-Returns a 2d vector.
+Returns the point's coordinates as a 2D column vector.
 
 <a id="point.PerpendicularFoot"></a>
 
@@ -1467,8 +1467,8 @@ def PerpendicularFoot(point: Matrix | Sequence[Expr], line: Matrix) -> Matrix
 
 Computes the foot of the perpendicular through a point to a line.
 
-Returns a 2d vector. Degenerates to `[nan, nan]ᵀ` when `point`, `line` or
-both are infinite.
+Returns the foot point's coordinates as a 2D column vector.
+Degenerates to `[nan, nan]ᵀ` when `point`, `line` or both are infinite.
 
 *Formula*: https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
 
@@ -1504,7 +1504,7 @@ Applies a projective transformation on a projective line.
 def Translate(dx: Expr, dy: Expr) -> Matrix
 ```
 
-Computes the transformation matrix for a 2d translation.
+Computes the transformation matrix for a 2D translation.
 
 <a id="transform.Rotate"></a>
 
@@ -1628,7 +1628,7 @@ def ParabolaVertex(parabola: Matrix) -> Matrix
 
 Computes the parabola's vertex.
 
-Returns a 2d vector.
+Returns the point's coordinates as a 2D column vector.
 
 *Formula*: [research/parabola_vertex.py](../src/research/parabola_vertex.py)
 

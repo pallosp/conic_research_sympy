@@ -26,7 +26,7 @@ class TestEllipseFromParams:
             Ellipse(ORIGIN, 1, 1, r1_angle=0, r1_direction=(1, 0))
 
     def test_wrong_r1_direction(self):
-        with pytest.raises(ValueError, match="must be a 2d vector or an ideal point"):
+        with pytest.raises(ValueError, match="must be a 2D vector or an ideal point"):
             Ellipse(ORIGIN, 1, 1, r1_direction=(1, 1, 1))
 
     def test_center(self):
