@@ -2,11 +2,11 @@ from collections.abc import Sequence
 
 from sympy import Expr, Matrix
 
-from lib.central_conic import ConicFromFociAndRadius
-from lib.distance import PointPointDistance
+from lib.central_conic import conic_from_foci_and_radius
+from lib.distance import point_point_distance
 
 
-def HyperbolaFromFociAndPoint(
+def hyperbola_from_foci_and_point(
     focus1: Matrix | Sequence[Expr],
     focus2: Matrix | Sequence[Expr],
     point: Matrix | Sequence[Expr],
@@ -16,5 +16,5 @@ def HyperbolaFromFociAndPoint(
     *Formula*:
     [research/conic_from_foci_and_radius.py](../src/research/conic_from_foci_and_radius.py)
     """
-    r = (PointPointDistance(focus1, point) - PointPointDistance(focus2, point)) / 2
-    return ConicFromFociAndRadius(focus1, focus2, r)
+    r = (point_point_distance(focus1, point) - point_point_distance(focus2, point)) / 2
+    return conic_from_foci_and_radius(focus1, focus2, r)

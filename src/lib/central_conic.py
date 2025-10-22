@@ -3,11 +3,11 @@ from collections.abc import Sequence
 from sympy import Abs, Expr, I, Matrix, sqrt
 
 from lib.conic_classification import ConicNormFactor
-from lib.matrix import ConicMatrix, MaxEigenvalue, MinEigenvalue
-from lib.point import PointToXY
+from lib.matrix import conic_matrix, max_eigenvalue, min_eigenvalue
+from lib.point import point_to_xy
 
 
-def ConicFromFociAndRadius(
+def conic_from_foci_and_radius(
     focus1: Matrix | Sequence[Expr],
     focus2: Matrix | Sequence[Expr],
     radius: Expr,
@@ -20,8 +20,8 @@ def ConicFromFociAndRadius(
     *Formula*:
     [research/conic_from_foci_and_radius.py](../src/research/conic_from_foci_and_radius.py)
     """
-    fx1, fy1 = PointToXY(focus1)
-    fx2, fy2 = PointToXY(focus2)
+    fx1, fy1 = point_to_xy(focus1)
+    fx2, fy2 = point_to_xy(focus2)
 
     # center
     cx, cy = (fx1 + fx2) / 2, (fy1 + fy2) / 2
@@ -36,10 +36,10 @@ def ConicFromFociAndRadius(
     e = -cx * b - cy * c
     f = -cx * d - cy * e + (a * c - b * b)
 
-    return ConicMatrix(a, b, c, d, e, f)
+    return conic_matrix(a, b, c, d, e, f)
 
 
-def ConicFromCenterAndPoints(
+def conic_from_center_and_points(
     center: Matrix | Sequence[Expr],
     p1: Matrix | Sequence[Expr],
     p2: Matrix | Sequence[Expr],
@@ -56,10 +56,10 @@ def ConicFromCenterAndPoints(
 
     *Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
     """
-    x, y = PointToXY(center)
-    x1, y1 = PointToXY(p1)
-    x2, y2 = PointToXY(p2)
-    x3, y3 = PointToXY(p3)
+    x, y = point_to_xy(center)
+    x1, y1 = point_to_xy(p1)
+    x2, y2 = point_to_xy(p2)
+    x3, y3 = point_to_xy(p3)
     x1, x2, x3 = x1 - x, x2 - x, x3 - x
     y1, y2, y3 = y1 - y, y2 - y, y3 - y
     m = Matrix(
@@ -79,10 +79,10 @@ def ConicFromCenterAndPoints(
     d = -a * x - b * y
     e = -b * x - c * y
     f = -d * x - e * y - m.det()
-    return ConicMatrix(a, b, c, d, e, f)
+    return conic_matrix(a, b, c, d, e, f)
 
 
-def ConicCenter(conic: Matrix) -> Matrix:
+def conic_center(conic: Matrix) -> Matrix:
     """Computes the center point of a conic.
 
     Returns the point's coordinates as a 2D column vector.
@@ -93,24 +93,24 @@ def ConicCenter(conic: Matrix) -> Matrix:
     return Matrix([x / z, y / z])
 
 
-def SemiAxisLengths(conic: Matrix) -> tuple[Expr, Expr]:
+def semi_axis_lengths(conic: Matrix) -> tuple[Expr, Expr]:
     """Computes the semi-axis lengths of a conic in no specific order.
 
     To get the semi-focal or semi-transverse axis length (semi-major /
     semi-minor in case of ellipses), call
-    [PrincipalRadius](#central_conic.PrincipalRadius) or
-    [SecondaryRadius](#central_conic.SecondaryRadius), respectively.
+    [principal_radius](#central_conic.principal_radius) or
+    [secondary_radius](#central_conic.secondary_radius), respectively.
 
     *Formula*: [research/conic_radii.py](../src/research/conic_radii.py)
     """
     submatrix = conic[:2, :2]
     return (
-        sqrt(-conic.det() / (MinEigenvalue(submatrix) * submatrix.det())),
-        sqrt(-conic.det() / (MaxEigenvalue(submatrix) * submatrix.det())),
+        sqrt(-conic.det() / (min_eigenvalue(submatrix) * submatrix.det())),
+        sqrt(-conic.det() / (max_eigenvalue(submatrix) * submatrix.det())),
     )
 
 
-def _SelectedRadius(conic: Matrix, eigenvalue_selector: Expr) -> Matrix:
+def _selected_radius(conic: Matrix, eigenvalue_selector: Expr) -> Matrix:
     """Returns the conic radius corresponding to the selected eigenvalue.
 
     `eigenvalue_selector` is an expression evaluating to ±1. When positive, the
@@ -122,11 +122,11 @@ def _SelectedRadius(conic: Matrix, eigenvalue_selector: Expr) -> Matrix:
     return sqrt(-conic.det() / (eigenvalue * (a * c - b * b)))
 
 
-def PrimaryRadius(conic: Matrix) -> Expr:
+def primary_radius(conic: Matrix) -> Expr:
     """Computes the center-vertex distance of a conic.
 
     This corresponds to the semi-major axis length of real ellipses. In case of
-    [imaginary ellipses](#conic_classification.IsImaginaryEllipse) however the
+    [imaginary ellipses](#conic_classification.is_imaginary_ellipse) however the
     focal axis is the shorter one in terms of absolute value.
 
     The returned value is:
@@ -136,10 +136,10 @@ def PrimaryRadius(conic: Matrix) -> Expr:
      - `nan` for ideal point conics;
      - 0 for the other degenerate conics.
     """
-    return _SelectedRadius(conic, ConicNormFactor(conic))
+    return _selected_radius(conic, ConicNormFactor(conic))
 
 
-def SecondaryRadius(conic: Matrix) -> Expr:
+def secondary_radius(conic: Matrix) -> Expr:
     """Computes the semi-conjugate axis length of a conic.
 
     This corresponds to the semi-minor axis length of real ellipses. In case of
@@ -154,10 +154,10 @@ def SecondaryRadius(conic: Matrix) -> Expr:
      - `nan` for ideal point conics;
      - 0 for the other degenerate conics.
     """
-    return _SelectedRadius(conic, -ConicNormFactor(conic))
+    return _selected_radius(conic, -ConicNormFactor(conic))
 
 
-def LinearEccentricity(conic: Matrix) -> Expr:
+def linear_eccentricity(conic: Matrix) -> Expr:
     """Computes the linear eccentricity of a conic section.
 
     The linear eccentricity is the distance between the center and a focus
@@ -180,13 +180,13 @@ def LinearEccentricity(conic: Matrix) -> Expr:
     return sqrt(Abs(conic.det()) * eigenvalue_diff) / Abs(a * c - b * b)
 
 
-def CenterToFocusVector(conic: Matrix) -> Matrix:
+def center_to_focus_vector(conic: Matrix) -> Matrix:
     """Returns the 2D vector from a conic's center to one of its foci.
 
     The opposite vector points to the other focus.
 
     The function is only meaningful for
-    [central conics](#conic_classification.IsCentralConic). The result vector
+    [central conics](#conic_classification.is_central_conic). The result vector
     will contain infinite or `nan` elements when the conic lacks a finite
     center.
     """
@@ -201,13 +201,13 @@ def CenterToFocusVector(conic: Matrix) -> Matrix:
     return Matrix([x, y]).applyfunc(lambda coord: coord * multiplier)
 
 
-def CenterToVertexVector(conic: Matrix) -> Matrix:
+def center_to_vertex_vector(conic: Matrix) -> Matrix:
     """Returns the 2D vector from a conic's center to one of its vertices.
 
     The opposite vector points to the other vertex.
 
     The function is only meaningful for
-    [central conics](#conic_classification.IsCentralConic). The result vector
+    [central conics](#conic_classification.is_central_conic). The result vector
     will contain infinite or `nan` elements when the conic lacks a finite
     center.
     """
@@ -219,18 +219,18 @@ def CenterToVertexVector(conic: Matrix) -> Matrix:
     # Center-to-vertex vector = [x, y] / √(x² + y²) * primary radius
     # √(x² + y²) = ∜((a-c)² + 4b²)
     xy_length = sqrt(sqrt((a - c) ** 2 + 4 * b**2))
-    multiplier = PrimaryRadius(conic) / xy_length
+    multiplier = primary_radius(conic) / xy_length
     return Matrix([x, y]).applyfunc(lambda coord: coord * multiplier)
 
 
-def ShrinkConicToZero(conic: Matrix) -> Matrix:
+def shrink_conic_to_zero(conic: Matrix) -> Matrix:
     """Scales a conic section from its center with a factor of zero.
 
     Turns hyperbolas to line pair conics consisting of their asymptotes, and
     ellipses to point conics.
 
     This transformation is only meaningful for
-    [central conics](#conic_classification.IsCentralConic): for other
+    [central conics](#conic_classification.is_central_conic): for other
     conic types the result matrix will have infinite or `nan` elements.
 
     *Formula*:

@@ -19,9 +19,17 @@ from sympy import (
     symbols,
 )
 
-from lib.conic import ConicFromFocusAndDirectrix, ProjectiveConicCenter
-from lib.matrix import ConicMatrix
-from lib.sympy_utils import AddEq, DivEq, EqChain, FactorRadicals, MulEq, SubEq, SwapEq
+from lib.conic import conic_from_focus_and_directrix, projective_conic_center
+from lib.matrix import conic_matrix
+from lib.sympy_utils import (
+    add_eq,
+    div_eq,
+    eq_chain,
+    factor_radicals,
+    mul_eq,
+    sub_eq,
+    swap_eq,
+)
 from research.util import print_indented, println_indented
 
 HORIZONTAL_LINE = "-" * 88
@@ -30,10 +38,10 @@ fx, fy, a, b, c, ecc, L = symbols("x,y,a,b,c,e,lambda", real=True)
 
 focus = (fx, fy)
 directrix = Matrix([a, b, c])
-conic_fde = ConicFromFocusAndDirectrix(focus, directrix, ecc) * L
+conic_fde = conic_from_focus_and_directrix(focus, directrix, ecc) * L
 
 A, B, C, D, E, F = symbols("A,B,C,D,E,F", real=True)
-conic_abc = ConicMatrix(A, B, C, D, E, F)
+conic_abc = conic_matrix(A, B, C, D, E, F)
 
 print(f"\n{HORIZONTAL_LINE}\n")
 
@@ -82,13 +90,13 @@ min_eigen_fde, max_eigen_fde = (
 min_eigen, max_eigen = symbols("min_eigen,max_eigen", real=True, nonzero=True)
 eigenvalue_min_eq_abc = Eq(min_eigen, min_eigen_abc)
 eigenvalue_max_eq_abc = Eq(max_eigen, max_eigen_abc)
-eigenvalue_sum_eq_abc = AddEq(eigenvalue_min_eq_abc, eigenvalue_max_eq_abc)
-eigenvalue_prod_eq_abc = simplify(MulEq(eigenvalue_max_eq_abc, eigenvalue_min_eq_abc))
-eigenvalue_diff_eq_abc = SubEq(eigenvalue_max_eq_abc, eigenvalue_min_eq_abc)
+eigenvalue_sum_eq_abc = add_eq(eigenvalue_min_eq_abc, eigenvalue_max_eq_abc)
+eigenvalue_prod_eq_abc = simplify(mul_eq(eigenvalue_max_eq_abc, eigenvalue_min_eq_abc))
+eigenvalue_diff_eq_abc = sub_eq(eigenvalue_max_eq_abc, eigenvalue_min_eq_abc)
 eigenvalue_min_eq_fde = Eq(min_eigen, min_eigen_fde)
 eigenvalue_max_eq_fde = Eq(max_eigen, max_eigen_fde)
-eigenvalue_sum_eq_fde = factor(AddEq(eigenvalue_min_eq_fde, eigenvalue_max_eq_fde))
-eigenvalue_diff_eq_fde = factor(SubEq(eigenvalue_max_eq_fde, eigenvalue_min_eq_fde))
+eigenvalue_sum_eq_fde = factor(add_eq(eigenvalue_min_eq_fde, eigenvalue_max_eq_fde))
+eigenvalue_diff_eq_fde = factor(sub_eq(eigenvalue_max_eq_fde, eigenvalue_min_eq_fde))
 
 eigenvalue_eqs = [
     eigenvalue_min_eq_abc,
@@ -113,8 +121,8 @@ eigenvalue_diff_eq_fde = Eq(
 )
 println_indented(eigenvalue_diff_eq_fde)
 
-lambda_eq = DivEq(SubEq(eigenvalue_diff_eq_fde, eigenvalue_sum_eq_fde), 2)
-lambda_eq = SwapEq(factor(lambda_eq))
+lambda_eq = div_eq(sub_eq(eigenvalue_diff_eq_fde, eigenvalue_sum_eq_fde), 2)
+lambda_eq = swap_eq(factor(lambda_eq))
 
 println_indented(lambda_eq)
 
@@ -125,7 +133,7 @@ eigen_to_abc = {min_eigen: min_eigen_abc, max_eigen: max_eigen_abc}
 lambda_eq_abc = factor(lambda_eq.subs(eigen_to_abc))
 println_indented(lambda_eq_abc)
 
-ecc_square_eq = SwapEq(DivEq(eigenvalue_diff_eq_fde, L))
+ecc_square_eq = swap_eq(div_eq(eigenvalue_diff_eq_fde, L))
 println_indented(ecc_square_eq)
 
 ecc_square_eq_abc = ecc_square_eq.subs(L, lambda_eq_abc.rhs).subs(eigen_to_abc)
@@ -137,7 +145,7 @@ print("Directrix normal vector a.k.a. focal axis direction:\n")
 
 aa_eq = Eq(a**2, solve(coeff_eq[0], a**2)[0])
 bb_eq = Eq(b**2, solve(coeff_eq[2], b**2)[0])
-ab_eq = SwapEq(DivEq(coeff_eq[1], ecc**2 * L))
+ab_eq = swap_eq(div_eq(coeff_eq[1], ecc**2 * L))
 println_indented(aa_eq)
 println_indented(bb_eq)
 println_indented(ab_eq)
@@ -145,13 +153,13 @@ println_indented(ab_eq)
 print("As a² + b² = 1, substitute a = cos(θ), b = sin(θ)\n")
 
 theta = symbols("theta")
-println_indented(SubEq(aa_eq, bb_eq))
-println_indented(SubEq(aa_eq, bb_eq).subs({a: cos(theta), b: sin(theta)}))
-cos2_eq = SubEq(aa_eq, bb_eq).subs({a: cos(theta), b: sin(theta)}).simplify()
+println_indented(sub_eq(aa_eq, bb_eq))
+println_indented(sub_eq(aa_eq, bb_eq).subs({a: cos(theta), b: sin(theta)}))
+cos2_eq = sub_eq(aa_eq, bb_eq).subs({a: cos(theta), b: sin(theta)}).simplify()
 println_indented(cos2_eq)
-println_indented(MulEq(ab_eq, 2))
-println_indented(MulEq(ab_eq, 2).subs({a: cos(theta), b: sin(theta)}))
-sin2_eq = MulEq(ab_eq, 2).subs({a: cos(theta), b: sin(theta)}).simplify()
+println_indented(mul_eq(ab_eq, 2))
+println_indented(mul_eq(ab_eq, 2).subs({a: cos(theta), b: sin(theta)}))
+sin2_eq = mul_eq(ab_eq, 2).subs({a: cos(theta), b: sin(theta)}).simplify()
 println_indented(sin2_eq)
 theta_eq = Eq(theta, atan2(sin2_eq.rhs, cos2_eq.rhs) / 2)
 println_indented(theta_eq)
@@ -197,12 +205,12 @@ for det_assumption in Q.positive, Q.negative:
             .simplify()
         )
         c_simplified = (
-            FactorRadicals(c_simplified)
+            factor_radicals(c_simplified)
             .subs(max_eigen * min_eigen, eigenvalue_prod_eq_abc.rhs)
             .subs(max_eigen - min_eigen, eigenvalue_diff_eq_abc.rhs)
         )
         c_simplified = (
-            FactorRadicals(c_simplified)
+            factor_radicals(c_simplified)
             .subs(conic_abc.det(), det)
             .subs(((A - C) ** 2).expand(), (A - C) ** 2)
             .refine(det_assumption(det))
@@ -250,7 +258,7 @@ c_solution = c_solution.subs(L, -(A + C)).simplify()
 println_indented(Eq(c, c_solution))
 
 print("\nThe (a, b) vector is parallel to the ideal point's direction\n")
-x, y, _ = ProjectiveConicCenter(conic_abc)
+x, y, _ = projective_conic_center(conic_abc)
 
 a_value = x / sqrt(x * x + y * y)
 println_indented(Eq(a, a_value))
@@ -313,9 +321,9 @@ aa, ba, ca, da, ea, fa = symbols("A_a B_a C_a D_a E_a F_a")
 adj_symbols = Matrix([[aa, ba, da], [ba, ca, ea], [da, ea, fa]])
 adj_values = conic_abc.adjugate()
 
-println_indented(EqChain(symbols("adj"), adj_symbols, adj_values))
+println_indented(eq_chain(symbols("adj"), adj_symbols, adj_values))
 fx_value = fx_value.subs(zip(adj_values, adj_symbols, strict=True))
-println_indented(EqChain(fx, fx_value, fx_value.factor()))
+println_indented(eq_chain(fx, fx_value, fx_value.factor()))
 
 print("Using the parabola determinant identities:\n")
 
@@ -329,10 +337,10 @@ println_indented(Eq(E * det, e_times_det))
 
 fx_value = fx_value.factor()
 fx_value = fx_value.subs(D * det, d_times_det).subs((A + C) * det, a_plus_c_times_det)
-println_indented(EqChain(fx, fx_value.factor().collect(da)))
+println_indented(eq_chain(fx, fx_value.factor().collect(da)))
 
 fy_value = fy_value.subs(zip(adj_values, adj_symbols, strict=True)).factor()
 fy_value = fy_value.subs(E * det, e_times_det).subs((A + C) * det, a_plus_c_times_det)
-println_indented(EqChain(fy, fy_value.factor().collect(ea)))
+println_indented(eq_chain(fy, fy_value.factor().collect(ea)))
 
 print(HORIZONTAL_LINE)

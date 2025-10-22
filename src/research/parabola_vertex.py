@@ -2,12 +2,12 @@
 
 from sympy import Matrix, pprint, simplify, sqrt, symbols
 
-from lib.matrix import ConicMatrix
+from lib.matrix import conic_matrix
 
 print("\nParabola vertex:\n")
 
 a, b, c, d, e, f = symbols("a b c d e f", real=True)
-parabola = ConicMatrix(a, b, c, d, e, f)
+parabola = conic_matrix(a, b, c, d, e, f)
 
 focus = Matrix(symbols("focus.x focus.y"))
 

@@ -2,14 +2,14 @@
 
 from sympy import pprint, simplify, sqrt, symbols
 
-from lib.central_conic import ConicCenter, PrimaryRadius, SecondaryRadius
-from lib.circle import Circle
-from lib.matrix import ConicMatrix
+from lib.central_conic import conic_center, primary_radius, secondary_radius
+from lib.circle import circle
+from lib.matrix import conic_matrix
 
-conic = ConicMatrix(*symbols("a,b,c,d,e,f"))
+conic = conic_matrix(*symbols("a,b,c,d,e,f"))
 
-center = ConicCenter(conic)
-radius_square = PrimaryRadius(conic) ** 2 + SecondaryRadius(conic) ** 2
+center = conic_center(conic)
+radius_square = primary_radius(conic) ** 2 + secondary_radius(conic) ** 2
 radius = sqrt(radius_square.simplify().factor())
 
 print("\nDirector circle radius:")
@@ -17,7 +17,7 @@ det = symbols("det")
 pprint(radius.subs(conic.det(), det))
 
 print("\nDirector circle matrix:")
-director_circle = simplify(Circle(center, radius))
+director_circle = simplify(circle(center, radius))
 pprint(director_circle)
 
 print("\nDirector circle matrix in adjugate form:")

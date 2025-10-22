@@ -6,12 +6,12 @@ from sympy import Expr, Matrix, sympify
 ORIGIN = Matrix([0, 0, 1])
 
 
-def IdealPoint(x: Expr, y: Expr) -> Matrix:
+def ideal_point(x: Expr, y: Expr) -> Matrix:
     """Creates an ideal point at the given direction."""
     return Matrix([x, y, 0])
 
 
-def IdealPointOnLine(line: Matrix) -> Matrix:
+def ideal_point_on_line(line: Matrix) -> Matrix:
     """Returns the coordinates of the ideal point on the line.
 
     The first two coordinates specify the line's direction. The third one is
@@ -22,7 +22,7 @@ def IdealPointOnLine(line: Matrix) -> Matrix:
     return Matrix([line[1], -line[0], 0])
 
 
-def PointToXY(point: Matrix | Sequence[Expr]) -> tuple[Expr, Expr]:
+def point_to_xy(point: Matrix | Sequence[Expr]) -> tuple[Expr, Expr]:
     """Computes the Euclidean coordinates of a projective point."""
     if len(point) not in (2, 3):
         raise ValueError("The point must be a 2D or 3D vector, list or tuple.")
@@ -32,7 +32,7 @@ def PointToXY(point: Matrix | Sequence[Expr]) -> tuple[Expr, Expr]:
     return (x / z, y / z)
 
 
-def PointToVec3(point: Matrix | Sequence[Expr]) -> Matrix:
+def point_to_vec3(point: Matrix | Sequence[Expr]) -> Matrix:
     """Computes the homogeneous coordinates of a projective point."""
     if len(point) not in (2, 3):
         raise ValueError("The point must be a 2D or 3D vector, list or tuple.")
@@ -43,7 +43,7 @@ def PointToVec3(point: Matrix | Sequence[Expr]) -> Matrix:
     return Matrix(point)
 
 
-def Centroid(*points: Sequence[Expr]) -> Matrix:
+def centroid(*points: Sequence[Expr]) -> Matrix:
     """Computes the centroid of a set of points.
 
     Returns the point's coordinates as a 2D column vector.
@@ -53,13 +53,13 @@ def Centroid(*points: Sequence[Expr]) -> Matrix:
         raise ValueError("At least one point must be provided.")
     cx, cy = sympify((0, 0))
     for p in points:
-        x, y = PointToXY(p)
+        x, y = point_to_xy(p)
         cx += x
         cy += y
     return Matrix([cx / n, cy / n])
 
 
-def PerpendicularFoot(
+def perpendicular_foot(
     point: Matrix | Sequence[Expr],
     line: Matrix,
 ) -> Matrix:
@@ -70,7 +70,7 @@ def PerpendicularFoot(
 
     *Formula*: https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
     """
-    x, y = PointToXY(point)
+    x, y = point_to_xy(point)
     a, b, c = line
     f = (a * x + b * y + c) / (a * a + b * b)
     return Matrix([x - a * f, y - b * f])

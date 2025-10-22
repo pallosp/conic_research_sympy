@@ -4,11 +4,11 @@
 
 from sympy import Determinant, Matrix, diff, pprint, sign, symbols
 
-from lib.polar_conic import PointAtAngle
+from lib.polar_conic import point_at_angle
 
 a, b, c, d, e, f, g, h, i, theta = symbols("a,b,c,d,e,f,g,h,i,theta")
 polar_matrix = Matrix([[a, b, c], [d, e, f], [g, h, i]])
-x, y, z = PointAtAngle(polar_matrix, theta)
+x, y, z = point_at_angle(polar_matrix, theta)
 
 # According to https://en.wikipedia.org/wiki/Curvature
 # curvature = (x'y'' - y'x'') / (x'² + y'²)^(3/2)

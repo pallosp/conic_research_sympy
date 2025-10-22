@@ -2,13 +2,13 @@ from collections.abc import Sequence
 
 from sympy import Expr, Matrix, cos, sin
 
-from lib.central_conic import ConicFromFociAndRadius
-from lib.distance import PointPointDistance
-from lib.matrix import ConicMatrix
-from lib.point import PointToXY
+from lib.central_conic import conic_from_foci_and_radius
+from lib.distance import point_point_distance
+from lib.matrix import conic_matrix
+from lib.point import point_to_xy
 
 
-def Ellipse(
+def ellipse(
     center: Matrix | Sequence[Expr],
     r1: Expr,
     r2: Expr,
@@ -26,7 +26,7 @@ def Ellipse(
         raise ValueError("Specify either r1_angle or r1_direction, not both.")
 
     # center
-    cx, cy = PointToXY(center)
+    cx, cy = point_to_xy(center)
 
     # major axis direction
     dx, dy = 1, 0
@@ -44,10 +44,10 @@ def Ellipse(
     e = -b * cx - c * cy
     f = r1**2 * r2**2 * (dx**2 + dy**2) - d * cx - e * cy
 
-    return ConicMatrix(a, b, c, d, e, f)
+    return conic_matrix(a, b, c, d, e, f)
 
 
-def EllipseFromFociAndPoint(
+def ellipse_from_foci_and_point(
     focus1: Matrix | Sequence[Expr],
     focus2: Matrix | Sequence[Expr],
     point: Matrix | Sequence[Expr],
@@ -65,11 +65,11 @@ def EllipseFromFociAndPoint(
     *Formula*:
     [research/ellipse_from_foci_and_point.py](../src/research/ellipse_from_foci_and_point.py)
     """
-    r = (PointPointDistance(focus1, point) + PointPointDistance(focus2, point)) / 2
-    return ConicFromFociAndRadius(focus1, focus2, r)
+    r = (point_point_distance(focus1, point) + point_point_distance(focus2, point)) / 2
+    return conic_from_foci_and_radius(focus1, focus2, r)
 
 
-def SteinerEllipse(
+def steiner_ellipse(
     point1: Matrix | Sequence[Expr],
     point2: Matrix | Sequence[Expr],
     point3: Matrix | Sequence[Expr],
@@ -82,9 +82,9 @@ def SteinerEllipse(
     *Definition*: https://en.wikipedia.org/wiki/Steiner_ellipse<br>
     *Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
     """
-    x1, y1 = PointToXY(point1)
-    x2, y2 = PointToXY(point2)
-    x3, y3 = PointToXY(point3)
+    x1, y1 = point_to_xy(point1)
+    x2, y2 = point_to_xy(point2)
+    x3, y3 = point_to_xy(point3)
     x_row = [x1, x2, x3]
     y_row = [y1, y2, y3]
     dx_row = [x2 - x3, x3 - x1, x1 - x2]
@@ -104,10 +104,10 @@ def SteinerEllipse(
         ).det()
         * 2
     )
-    return ConicMatrix(a, b, c, d, e, f)
+    return conic_matrix(a, b, c, d, e, f)
 
 
-def SteinerInellipse(
+def steiner_inellipse(
     point1: Matrix | Sequence[Expr],
     point2: Matrix | Sequence[Expr],
     point3: Matrix | Sequence[Expr],
@@ -120,9 +120,9 @@ def SteinerInellipse(
     *Definition*: https://en.wikipedia.org/wiki/Steiner_inellipse<br>
     *Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
     """
-    x1, y1 = PointToXY(point1)
-    x2, y2 = PointToXY(point2)
-    x3, y3 = PointToXY(point3)
+    x1, y1 = point_to_xy(point1)
+    x2, y2 = point_to_xy(point2)
+    x3, y3 = point_to_xy(point3)
     x_row = [x1, x2, x3]
     y_row = [y1, y2, y3]
     dx_row = [x2 - x3, x3 - x1, x1 - x2]
@@ -142,4 +142,4 @@ def SteinerInellipse(
         ).det()
         / 2
     )
-    return ConicMatrix(a, b, c, d, e, f)
+    return conic_matrix(a, b, c, d, e, f)

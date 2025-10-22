@@ -3,10 +3,10 @@ from collections.abc import Sequence
 from sympy import Expr, Matrix, Piecewise, nan, sqrt
 from sympy.core.numbers import NaN
 
-from lib.matrix import NonZeroCross, SkewMatrix
+from lib.matrix import NonzeroCross, skew_matrix
 
 
-def LineXLine(line1: Matrix, line2: Matrix) -> Matrix:
+def line_x_line(line1: Matrix, line2: Matrix) -> Matrix:
     """Computes the intersection of two lines.
 
     Returns an ideal point if the lines are parallel, or `[0, 0, 0]ᵀ` if they
@@ -15,7 +15,7 @@ def LineXLine(line1: Matrix, line2: Matrix) -> Matrix:
     return line1.cross(line2)
 
 
-def ConicXLine(
+def conic_x_line(
     conic: Matrix,
     line: Matrix,
 ) -> tuple[Matrix | Sequence[Expr], Matrix | Sequence[Expr]] | NaN:
@@ -31,8 +31,8 @@ def ConicXLine(
     *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
     section 11.3
     """
-    skew_matrix = SkewMatrix(line)
-    m = skew_matrix.T * conic * skew_matrix
+    skew_mat = skew_matrix(line)
+    m = skew_mat.T * conic * skew_mat
     a, b, c = line
     alpha = Piecewise(
         (sqrt(m[5] * m[7] - m[4] * m[8]) / a, a != 0),
@@ -41,8 +41,8 @@ def ConicXLine(
     )
     if alpha == nan:
         return nan
-    intersections = m + alpha * skew_matrix
-    points = NonZeroCross(intersections)
-    if isinstance(points, (NonZeroCross, NaN)):
+    intersections = m + alpha * skew_mat
+    points = NonzeroCross(intersections)
+    if isinstance(points, (NonzeroCross, NaN)):
         return points
     return (points[0], points[1].T)

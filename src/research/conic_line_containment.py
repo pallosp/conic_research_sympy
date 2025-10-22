@@ -33,11 +33,11 @@ The following statements are all equivalent:
 
 from sympy import Matrix, symbols
 
-from lib.conic import PolePoint
-from lib.matrix import ConicMatrix, QuadraticForm, SkewMatrix
+from lib.conic import pole_point
+from lib.matrix import conic_matrix, quadratic_form, skew_matrix
 from research.util import print_indented, println_indented
 
-conic = ConicMatrix(*symbols("a,b,c,d,e,f"))
+conic = conic_matrix(*symbols("a,b,c,d,e,f"))
 line = Matrix(symbols("x,y,z"))
 
 print("\nConic matrix:\n")
@@ -46,14 +46,14 @@ println_indented(conic)
 print("\nLine vector:\n")
 println_indented(line)
 
-skew = SkewMatrix(line)
+skew = skew_matrix(line)
 print("\nThree points on line are the columns of\n")
 println_indented(skew)
 
 print("\nCorresponding quadratic forms:")
 print("(they must be zero if the line lies on the conic)\n")
 for i in range(skew.cols):
-    print_indented(QuadraticForm(conic, skew.col(i)).expand())
+    print_indented(quadratic_form(conic, skew.col(i)).expand())
 
 print("\nskew * conic * skewᵀ:")
 print("(notice that its diagonal elements are the quadratic forms)\n")
@@ -61,4 +61,4 @@ println_indented((skew * conic * skew.T).expand())
 
 print("\nPole point corresponding to the line:")
 print("(must be the zero vector if the line is concurrent to the conic's lines)\n")
-println_indented(PolePoint(conic, line).expand())
+println_indented(pole_point(conic, line).expand())

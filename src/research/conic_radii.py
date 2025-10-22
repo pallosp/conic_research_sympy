@@ -2,25 +2,25 @@
 
 from sympy import Eq, simplify, solve, sqrt, symbols
 
-from lib.central_conic import ConicCenter
-from lib.matrix import ConicMatrix
-from lib.transform import Rotate, TransformConic, Translate
+from lib.central_conic import conic_center
+from lib.matrix import conic_matrix
+from lib.transform import rotate, transform_conic, translate
 from research.util import println_indented
 
 # Bring the conic to the standard form by translating its center to the origin
 # and rotating it to align with the axes.
 
 a, b, c, d, e, f = symbols("a b c d e f")
-conic = ConicMatrix(a, b, c, d, e, f)
+conic = conic_matrix(a, b, c, d, e, f)
 det = conic.det()
 
 # Translate the center to the origin
-cx, cy = ConicCenter(conic)
-conic = simplify(TransformConic(conic, Translate(-cx, -cy)))
+cx, cy = conic_center(conic)
+conic = simplify(transform_conic(conic, translate(-cx, -cy)))
 
 # Rotate with theta
 theta = symbols("theta")
-conic = simplify(TransformConic(conic, Rotate(theta)))
+conic = simplify(transform_conic(conic, rotate(theta)))
 
 # Choose an angle for which the conic will be axis-aligned, i.e. the xy term
 # vanishes.

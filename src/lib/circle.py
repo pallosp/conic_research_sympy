@@ -2,17 +2,17 @@ from collections.abc import Sequence
 
 from sympy import Expr, Matrix, sqrt
 
-from lib.matrix import ConicMatrix
-from lib.point import ORIGIN, PointToXY
+from lib.matrix import conic_matrix
+from lib.point import ORIGIN, point_to_xy
 
 
-def Circle(center: Matrix | Sequence[Expr], radius: Expr) -> Matrix:
+def circle(center: Matrix | Sequence[Expr], radius: Expr) -> Matrix:
     """Creates a circle from its center and radius."""
-    x, y = PointToXY(center)
-    return ConicMatrix(-1, 0, -1, x, y, radius * radius - x * x - y * y)
+    x, y = point_to_xy(center)
+    return conic_matrix(-1, 0, -1, x, y, radius * radius - x * x - y * y)
 
 
-def CircleRadius(circle: Matrix) -> Expr:
+def circle_radius(circle: Matrix) -> Expr:
     """Computes the radius of a circle conic.
 
     The result is not specified if the conic matrix is not a circle.
@@ -23,7 +23,7 @@ def CircleRadius(circle: Matrix) -> Expr:
     return sqrt(-circle.det() * (a + c) / 2) / (a * c - b * b)
 
 
-def DirectorCircle(conic: Matrix) -> Matrix:
+def director_circle(conic: Matrix) -> Matrix:
     """Computes the director circle of a conic. It's also called orthoptic
     circle or Fermat–Apollonius circle.
 
@@ -41,7 +41,7 @@ def DirectorCircle(conic: Matrix) -> Matrix:
 
 
 #: The circle at the origin with radius 1.
-UNIT_CIRCLE = Circle(ORIGIN, 1)
+UNIT_CIRCLE = circle(ORIGIN, 1)
 
 #: The circle at the origin with radius 𝑖.
 IMAGINARY_UNIT_CIRCLE = Matrix.eye(3)

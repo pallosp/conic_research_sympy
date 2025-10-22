@@ -2,7 +2,7 @@ from collections.abc import Sequence
 
 from sympy import Matrix
 
-from lib.matrix import IsNonZeroMultiple
+from lib.matrix import is_nonzero_multiple
 
 
 def AreProjectiveSetsEqual(
@@ -18,7 +18,7 @@ def AreProjectiveSetsEqual(
     for v1 in set1:
         found = False
         for v2 in remaining:
-            if IsNonZeroMultiple(v1, v2):
+            if is_nonzero_multiple(v1, v2):
                 remaining.remove(v2)
                 found = True
                 break

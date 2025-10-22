@@ -4,7 +4,7 @@ from collections.abc import Callable
 
 from sympy import Expr, Matrix, factor, gcd, pi, symbols
 
-from lib.polar_conic import PointAtAngle
+from lib.polar_conic import point_at_angle
 from research.util import println_indented
 
 a, b, c, d, e, f, g, h, i, alpha, beta = symbols("a,b,c,d,e,f,g,h,i,alpha,beta")
@@ -14,10 +14,10 @@ polar_matrix = Matrix([[a, b, c], [d, e, f], [g, h, i]])
 def GetIntersectionOfSecants(end_point_func: Callable[[Expr], Expr]) -> Matrix:
     alpha, beta = symbols("alpha,beta")
 
-    p1 = PointAtAngle(polar_matrix, alpha)
-    p2 = PointAtAngle(polar_matrix, end_point_func(alpha))
-    p3 = PointAtAngle(polar_matrix, beta)
-    p4 = PointAtAngle(polar_matrix, end_point_func(beta))
+    p1 = point_at_angle(polar_matrix, alpha)
+    p2 = point_at_angle(polar_matrix, end_point_func(alpha))
+    p3 = point_at_angle(polar_matrix, beta)
+    p4 = point_at_angle(polar_matrix, end_point_func(beta))
 
     secant1 = p1.cross(p2)
     secant2 = p3.cross(p4)

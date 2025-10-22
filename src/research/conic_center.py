@@ -2,16 +2,17 @@
 
 from sympy import Eq, Matrix, Poly, pprint, solve, symbols
 
-from lib.matrix import ConicMatrix, QuadraticForm
+from lib.matrix import conic_matrix, quadratic_form
 
 x, y, cx, cy = symbols("x y cx cy", real=True)
 
-conic_matrix = ConicMatrix(*symbols("a b c d e f"))
-conic = Poly(QuadraticForm(conic_matrix, Matrix([x, y, 1])), [x, y])
+conic_matrix = conic_matrix(*symbols("a b c d e f"))
+conic = Poly(quadratic_form(conic_matrix, Matrix([x, y, 1])), [x, y])
 
 # Reflect conic to point (cx, cy)
 reflected = Poly(
-    QuadraticForm(conic_matrix, Matrix([2 * cx - x, 2 * cy - y, 1])), [x, y],
+    quadratic_form(conic_matrix, Matrix([2 * cx - x, 2 * cy - y, 1])),
+    [x, y],
 )
 
 # Quadratic part must be invariant under reflection

@@ -2,13 +2,13 @@
 
 from sympy import pprint, symbols
 
-from lib.intersection import ConicXLine
+from lib.intersection import conic_x_line
 from lib.line import IDEAL_LINE
-from lib.matrix import ConicMatrix
+from lib.matrix import conic_matrix
 
 print("\nIdeal points on a conic:\n")
 
-pprint(ConicXLine(ConicMatrix(*symbols("a,b,c,d,e,f")), IDEAL_LINE))
+pprint(conic_x_line(conic_matrix(*symbols("a,b,c,d,e,f")), IDEAL_LINE))
 
 print("\nPotential formulae based on the coefficients' signs:\n")
 
@@ -22,8 +22,8 @@ for a_assumption in [{"zero": True}, {"nonzero": True}]:
             if a.equals(0) and b.equals(0) and c.equals(0):
                 continue
             d, e, f = symbols("d,e,f")
-            conic = ConicMatrix(a, b, c, d, e, f)
-            ideal_points = ConicXLine(conic, IDEAL_LINE)
+            conic = conic_matrix(a, b, c, d, e, f)
+            ideal_points = conic_x_line(conic, IDEAL_LINE)
             if str(ideal_points) not in solutions:
                 solutions.add(str(ideal_points))
                 print()

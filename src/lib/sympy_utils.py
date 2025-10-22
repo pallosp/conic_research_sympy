@@ -1,7 +1,7 @@
 from sympy import Abs, Eq, Expr, Pow
 
 
-def AddEq(*eqs: Eq) -> Eq:
+def add_eq(*eqs: Eq) -> Eq:
     """Adds multiple sympy equations."""
     left = eqs[0].lhs
     right = eqs[0].rhs
@@ -11,44 +11,44 @@ def AddEq(*eqs: Eq) -> Eq:
     return Eq(left, right)
 
 
-def SubEq(eq0: Eq, eq1: Expr | Eq) -> Eq:
+def sub_eq(eq0: Eq, eq1: Expr | Eq) -> Eq:
     """Subtracts a sympy equation or expression from another equation."""
     lhs = eq1.lhs if isinstance(eq1, Eq) else eq1
     rhs = eq1.rhs if isinstance(eq1, Eq) else eq1
     return Eq(eq0.lhs - lhs, eq0.rhs - rhs)
 
 
-def MulEq(eq: Eq, factor: Expr | Eq) -> Eq:
+def mul_eq(eq: Eq, factor: Expr | Eq) -> Eq:
     """Multiplies a sympy equation by a factor or another equation."""
     lhs = factor.lhs if isinstance(factor, Eq) else factor
     rhs = factor.rhs if isinstance(factor, Eq) else factor
     return Eq(eq.lhs * lhs, eq.rhs * rhs)
 
 
-def DivEq(eq: Eq, denom: Expr) -> Eq:
+def div_eq(eq: Eq, denom: Expr) -> Eq:
     """Divides a sympy equation by a denominator."""
     return Eq(eq.lhs / denom, eq.rhs / denom)
 
 
-def SwapEq(eq: Eq) -> Eq:
+def swap_eq(eq: Eq) -> Eq:
     """Swaps the lhs and rhs of a sympy equation."""
     return Eq(eq.rhs, eq.lhs)
 
 
-def EqChain(*expressions: Expr) -> Eq | Expr:
+def eq_chain(*expressions: Expr) -> Eq | Expr:
     """Creates a chain of equations, i.e. `expr_1 = expr_2 = ... = expr_n`."""
     if not expressions:
         raise ValueError("At least one expression is required")
     if len(expressions) == 1:
         return expressions[0]
-    return Eq(EqChain(*expressions[0:-1]), expressions[-1], evaluate=False)
+    return Eq(eq_chain(*expressions[0:-1]), expressions[-1], evaluate=False)
 
 
-def FactorRadicals(expr: Expr) -> Expr:
+def factor_radicals(expr: Expr) -> Expr:
     """Factors all `Pow` and `sqrt` subexpressions inside `expr`."""
     return expr.replace(Pow, lambda base, exp: Pow(base.factor(), exp))
 
 
-def FactorAbs(expr: Expr) -> Expr:
+def factor_abs(expr: Expr) -> Expr:
     """Factors all `Abs` subexpressions inside `expr`."""
     return expr.replace(Abs, lambda arg: Abs(arg.factor()))

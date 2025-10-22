@@ -1,56 +1,57 @@
 from sympy import Matrix, nan, pi, simplify, symbols
 
-from lib.central_conic import ConicCenter
-from lib.circle import Circle
-from lib.line import IDEAL_LINE, X_AXIS, HorizontalLine, LineBetween
-from lib.matrix import ConicMatrix, IsNonZeroMultiple
+from lib.central_conic import conic_center
+from lib.circle import circle
+from lib.line import IDEAL_LINE, X_AXIS, horizontal_line, line_between
+from lib.matrix import conic_matrix, is_nonzero_multiple
 from lib.transform import (
-    ReflectToLine,
-    Rotate,
-    Scale,
-    ScaleXY,
-    TransformationFromSamples,
-    TransformConic,
-    TransformLine,
-    Translate,
+    reflect_to_line,
+    rotate,
+    scale,
+    scale_xy,
+    transform_conic,
+    transform_line,
+    transformation_from_samples,
+    translate,
 )
 
-conic = ConicMatrix(*symbols("a,b,c,d,e,f"))
+conic = conic_matrix(*symbols("a,b,c,d,e,f"))
 
 
 class TestTranslate:
     def test_translate_circle(self):
         x, y, r = symbols("x,y,r")
         dx, dy = symbols("dx,dy")
-        transformation = Translate(dx, dy)
-        circle = Circle((x, y), r)
-        new_circle = TransformConic(circle, transformation)
-        new_center_x, new_center_y = ConicCenter(new_circle)
+        transformation = translate(dx, dy)
+        orig_circle = circle((x, y), r)
+        translated_circle = transform_conic(orig_circle, transformation)
+        new_center_x, new_center_y = conic_center(translated_circle)
         assert new_center_x == x + dx
         assert new_center_y == y + dy
 
     def test_translate_conic(self):
-        center_x, center_y = ConicCenter(conic)
+        center_x, center_y = conic_center(conic)
         dx, dy = symbols("dx,dy")
-        transformation = Translate(dx, dy)
-        new_conic = TransformConic(conic, transformation)
-        new_center_x, new_center_y = ConicCenter(new_conic)
+        transformation = translate(dx, dy)
+        new_conic = transform_conic(conic, transformation)
+        new_center_x, new_center_y = conic_center(new_conic)
         assert dx == simplify(new_center_x - center_x)
         assert dy == simplify(new_center_y - center_y)
 
 
 class TestRotate:
     def test_rotate_circle_around_center(self):
-        x, y, r, theta = symbols("x,y,r,theta")
-        circle = Circle((x, y), r)
-        rotation = Rotate(theta, x, y)
-        new_circle = TransformConic(circle, rotation)
-        assert circle == simplify(new_circle)
+        center = symbols("x,y")
+        r, theta = symbols("r,theta")
+        orig_circle = circle(center, r)
+        rotation = rotate(theta, *center)
+        rotated_circle = transform_conic(orig_circle, rotation)
+        assert orig_circle == simplify(rotated_circle)
 
     def test_rotation_around_point(self):
         x0, y0, theta = symbols("x0,y0,theta")
-        rotation = Rotate(theta, x0, y0)
-        rotation_sequence = Translate(x0, y0) * Rotate(theta) * Translate(-x0, -y0)
+        rotation = rotate(theta, x0, y0)
+        rotation_sequence = translate(x0, y0) * rotate(theta) * translate(-x0, -y0)
         assert simplify(rotation) == simplify(rotation_sequence)
 
 
@@ -58,40 +59,40 @@ class TestReflection:
     def test_reflect_to_finite_line(self):
         axis = Matrix([1, 1, -4])  # x+y=4
         point = Matrix([3, 0, 1])
-        assert ReflectToLine(axis) * point == Matrix([4, 1, 1])
+        assert reflect_to_line(axis) * point == Matrix([4, 1, 1])
 
     def test_reflect_to_ideal_line(self):
-        reflection = ReflectToLine(IDEAL_LINE)
+        reflection = reflect_to_line(IDEAL_LINE)
         assert reflection == Matrix.ones(3, 3) * nan
 
 
 class TestScale:
     def test_scaling_around_point(self):
         x0, y0, s = symbols("x0,y0,s")
-        scaling = Scale(s, x0, y0)
-        scaling_sequence = Translate(x0, y0) * Scale(s) * Translate(-x0, -y0)
+        scaling = scale(s, x0, y0)
+        scaling_sequence = translate(x0, y0) * scale(s) * translate(-x0, -y0)
         assert simplify(scaling) == simplify(scaling_sequence)
 
     def test_scaling_unevenly_around_point(self):
         x0, y0, sx, sy = symbols("x0,y0,sx,sy")
-        scaling = ScaleXY(sx, sy, x0, y0)
-        scaling_sequence = Translate(x0, y0) * ScaleXY(sx, sy) * Translate(-x0, -y0)
+        scaling = scale_xy(sx, sy, x0, y0)
+        scaling_sequence = translate(x0, y0) * scale_xy(sx, sy) * translate(-x0, -y0)
         assert simplify(scaling) == simplify(scaling_sequence)
 
 
 class TestTransformLine:
     def test_rotate_line(self):
-        rotated = TransformLine(X_AXIS, Rotate(pi / 4))
-        assert IsNonZeroMultiple(rotated, LineBetween((0, 0), (1, 1)))
+        rotated = transform_line(X_AXIS, rotate(pi / 4))
+        assert is_nonzero_multiple(rotated, line_between((0, 0), (1, 1)))
 
     def test_translate_line(self):
-        translated = TransformLine(X_AXIS, Translate(1, 2))
-        assert translated == HorizontalLine(2)
+        translated = transform_line(X_AXIS, translate(1, 2))
+        assert translated == horizontal_line(2)
 
 
 class TestTransformationFromSamples:
     def test_rotate_90(self):
         source = ((1, 0), (0, 1), (-1, 0), (0, -1))
         target = ((0, 1), (-1, 0), (0, -1), (1, 0))
-        transform = TransformationFromSamples(source, target)
-        assert transform == Rotate(pi / 2)
+        transform = transformation_from_samples(source, target)
+        assert transform == rotate(pi / 2)

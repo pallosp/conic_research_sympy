@@ -2,48 +2,48 @@ from collections.abc import Sequence
 
 from sympy import Expr, Matrix, sign, sqrt
 
-from lib.point import PointToVec3, PointToXY
+from lib.point import point_to_vec3, point_to_xy
 
 
-def HorizontalLine(y: Expr) -> Matrix:
+def horizontal_line(y: Expr) -> Matrix:
     """Constructs a horizontal line with the given y-coordinate."""
     return Matrix([0, 1, -y])
 
 
-def VerticalLine(x: Expr) -> Matrix:
+def vertical_line(x: Expr) -> Matrix:
     """Constructs a vertical line with the given x-coordinate."""
     return Matrix([-1, 0, x])
 
 
-def LineBetween(
+def line_between(
     point1: Matrix | Sequence[Expr],
     point2: Matrix | Sequence[Expr],
 ) -> Matrix:
     """Connects two projective points with a line."""
-    return PointToVec3(point1).cross(PointToVec3(point2))
+    return point_to_vec3(point1).cross(point_to_vec3(point2))
 
 
-def ParallelLine(
+def parallel_line(
     with_line: Matrix,
     through_point: Matrix | Sequence[Expr],
 ) -> Matrix:
     """Constructs a line through a point parallel to a line."""
-    x, y = PointToXY(through_point)
+    x, y = point_to_xy(through_point)
     a, b, _ = with_line
     return Matrix([a, b, -a * x - b * y])
 
 
-def PerpendicularLine(
+def perpendicular_line(
     to_line: Matrix,
     through_point: Matrix | Sequence[Expr],
 ) -> Matrix:
     """Constructs a line through a point perpendicular to a line."""
-    x, y = PointToXY(through_point)
+    x, y = point_to_xy(through_point)
     a, b, _ = to_line
     return Matrix([-b, a, -b * x + a * y])
 
 
-def LineThroughPoint(
+def line_through_point(
     point: Matrix | Sequence[Expr],
     *,
     direction: Matrix | Sequence[Expr] = None,
@@ -60,7 +60,7 @@ def LineThroughPoint(
     # Exactly one of direction or normal must be specified
     if (direction is None) == (normal is None):
         raise ValueError("Specify exactly one of direction or normal.")
-    x, y = PointToXY(point)
+    x, y = point_to_xy(point)
     if direction is not None:
         dx, dy, *rest = direction
         if rest not in ([], [0]):
@@ -72,7 +72,7 @@ def LineThroughPoint(
     return Matrix([nx, ny, -nx * x - ny * y])
 
 
-def AngleBisector(line1: Matrix, line2: Matrix) -> Matrix:
+def angle_bisector(line1: Matrix, line2: Matrix) -> Matrix:
     """Constructs the angle bisector of two lines.
 
     Chooses the bisector whose points substituted into the lines' equations have
@@ -92,17 +92,17 @@ def AngleBisector(line1: Matrix, line2: Matrix) -> Matrix:
     return line1 * l2 - line2 * l1
 
 
-def PerpendicularBisector(
+def perpendicular_bisector(
     point1: Matrix | Sequence[Expr],
     point2: Matrix | Sequence[Expr],
 ) -> Matrix:
     """Constructs the perpendicular bisector of two points."""
-    x1, y1 = PointToXY(point1)
-    x2, y2 = PointToXY(point2)
+    x1, y1 = point_to_xy(point1)
+    x2, y2 = point_to_xy(point2)
     return Matrix([x1 - x2, y1 - y2, (x2**2 - x1**2 + y2**2 - y1**2) / 2])
 
 
-def LineNormal(
+def line_normal(
     line: Matrix,
     *,
     toward: Matrix | Sequence[Expr] = None,
@@ -121,10 +121,10 @@ def LineNormal(
     normal = Matrix([line[0], line[1], 0])
     if toward is None:
         return normal
-    return normal * sign(line.dot(PointToVec3(toward)).factor())
+    return normal * sign(line.dot(point_to_vec3(toward)).factor())
 
 
-def AreParallel(line1: Matrix, line2: Matrix) -> bool | None:
+def are_parallel(line1: Matrix, line2: Matrix) -> bool | None:
     """Tells whether line1 and line2 are parallel.
 
     Returns `True` if they are parallel, `False` if not, `None` if undecidable.
@@ -135,7 +135,7 @@ def AreParallel(line1: Matrix, line2: Matrix) -> bool | None:
     return (a1 * b2 - a2 * b1).expand().is_zero
 
 
-def ArePerpendicular(line1: Matrix, line2: Matrix) -> bool | None:
+def are_perpendicular(line1: Matrix, line2: Matrix) -> bool | None:
     """Tells whether line1 and line2 are perpendicular.
 
     Returns `True` if they are perpendicular, `False` if not, `None` if
@@ -151,8 +151,8 @@ IDEAL_LINE = Matrix([0, 0, 1])
 
 #: The horizontal line at y=0. Substituting a point at y>0 to the line's
 #: equation will evaluate to a positive value.
-X_AXIS = HorizontalLine(0)
+X_AXIS = horizontal_line(0)
 
 #: The vertical line at x=0. Substituting a point at x<0 to the line's equation
 #: will evaluate to a positive value.
-Y_AXIS = VerticalLine(0)
+Y_AXIS = vertical_line(0)

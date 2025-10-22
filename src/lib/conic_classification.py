@@ -1,7 +1,7 @@
 from sympy import Expr, Function, Integer, Matrix, S, sign
 from sympy.core.logic import fuzzy_and, fuzzy_not, fuzzy_or
 
-from lib.matrix import IsDefinite
+from lib.matrix import is_definite_matrix
 
 
 class ConicNormFactor(Function):
@@ -38,7 +38,7 @@ class ConicNormFactor(Function):
 
         # degenerate conic
         if det.is_zero:
-            is_point = IsPointConic(conic)
+            is_point = is_point_conic(conic)
 
             # line pair
             if is_point is False:
@@ -65,7 +65,7 @@ class ConicNormFactor(Function):
         return None
 
 
-def IsDegenerate(conic: Matrix) -> bool | None:
+def is_degenerate(conic: Matrix) -> bool | None:
     """Tells whether the conic is degenerate.
 
     Degenerate conics consist of a single projective point or a pair of
@@ -75,7 +75,7 @@ def IsDegenerate(conic: Matrix) -> bool | None:
     return conic.det().is_zero
 
 
-def IsNonDegenerate(conic: Matrix) -> bool | None:
+def is_nondegenerate(conic: Matrix) -> bool | None:
     """Tells whether the conic is non-degenerate.
 
     Non-degenerate conics include real or imaginary ellipses, parabolas and
@@ -84,7 +84,7 @@ def IsNonDegenerate(conic: Matrix) -> bool | None:
     return conic.det().is_nonzero
 
 
-def IsCentralConic(conic: Matrix) -> bool | None:
+def is_central_conic(conic: Matrix) -> bool | None:
     """Tells whether a conic has a finite center of symmetry.
 
     Returns `None` if undecidable.
@@ -92,7 +92,7 @@ def IsCentralConic(conic: Matrix) -> bool | None:
     return conic[:2, :2].det().is_nonzero
 
 
-def IsFiniteConic(conic: Matrix) -> bool | None:
+def is_finite_conic(conic: Matrix) -> bool | None:
     """Tells whether all points on the conic are finite.
 
     Returns `None` if undecidable.
@@ -100,7 +100,7 @@ def IsFiniteConic(conic: Matrix) -> bool | None:
     return conic[:2, :2].det().factor().is_positive
 
 
-def IsImaginaryEllipse(conic: Matrix) -> bool | None:
+def is_imaginary_ellipse(conic: Matrix) -> bool | None:
     """Tells whether the conic is an imaginary ellipse.
 
     Imaginary ellipses have real center and focus points, but imaginary radii
@@ -109,26 +109,26 @@ def IsImaginaryEllipse(conic: Matrix) -> bool | None:
 
     Returns `None` if undecidable.
     """
-    return IsDefinite(conic)
+    return is_definite_matrix(conic)
 
 
-def IsEllipse(conic: Matrix) -> bool | None:
+def is_ellipse(conic: Matrix) -> bool | None:
     """Tells whether the conic is an ellipse.
 
     Returns `False` for
-    [imaginary ellipses](#conic_classification.IsImaginaryEllipse),
+    [imaginary ellipses](#conic_classification.is_imaginary_ellipse),
     or `None` if the conic's type is undecidable.
     """
     return fuzzy_and(
         [
-            IsNonDegenerate(conic),
+            is_nondegenerate(conic),
             conic[:2, :2].det().is_positive,
-            fuzzy_not(IsDefinite(conic)),
+            fuzzy_not(is_definite_matrix(conic)),
         ],
     )
 
 
-def IsCircle(conic: Matrix) -> bool | None:
+def is_circle(conic: Matrix) -> bool | None:
     """Tells whether the conic is a circle.
 
     Returns `None` if undecidable.
@@ -143,23 +143,23 @@ def IsCircle(conic: Matrix) -> bool | None:
     )
 
 
-def IsParabola(conic: Matrix) -> bool | None:
+def is_parabola(conic: Matrix) -> bool | None:
     """Tells whether the conic is a parabola.
 
     Returns `None` if undecidable.
     """
-    return fuzzy_and([IsNonDegenerate(conic), conic[:2, :2].det().is_zero])
+    return fuzzy_and([is_nondegenerate(conic), conic[:2, :2].det().is_zero])
 
 
-def IsHyperbola(conic: Matrix) -> bool | None:
+def is_hyperbola(conic: Matrix) -> bool | None:
     """Tells whether the conic is a hyperbola.
 
     Returns `None` if undecidable.
     """
-    return fuzzy_and([IsNonDegenerate(conic), conic[:2, :2].det().is_negative])
+    return fuzzy_and([is_nondegenerate(conic), conic[:2, :2].det().is_negative])
 
 
-def IsCircular(conic: Matrix) -> bool | None:
+def is_circular(conic: Matrix) -> bool | None:
     """Tells whether there is a single center point around which the conic is
     invariant under all rotations.
 
@@ -175,7 +175,7 @@ def IsCircular(conic: Matrix) -> bool | None:
     )
 
 
-def IsLinePair(conic: Matrix) -> bool | None:
+def is_line_pair(conic: Matrix) -> bool | None:
     """Tells whether the conic is the union of two projective lines.
 
     Returns `None` if undecidable.
@@ -183,7 +183,7 @@ def IsLinePair(conic: Matrix) -> bool | None:
     a, _, _, b, c, _, d, e, f = conic
     return fuzzy_and(
         [
-            IsDegenerate(conic),
+            is_degenerate(conic),
             fuzzy_not(conic.is_zero_matrix),
             # If all sqrt subexpressions in SplitToLines' implementation
             # are nonnegative, the conic splits to real lines.
@@ -194,7 +194,7 @@ def IsLinePair(conic: Matrix) -> bool | None:
     )
 
 
-def IsDoubleLine(conic: Matrix) -> bool | None:
+def is_double_line(conic: Matrix) -> bool | None:
     """Tells whether the conic consists of two coincident projective lines.
 
     Returns `None` if undecidable.
@@ -211,7 +211,7 @@ def IsDoubleLine(conic: Matrix) -> bool | None:
     )
 
 
-def IsPointConic(conic: Matrix) -> bool | None:
+def is_point_conic(conic: Matrix) -> bool | None:
     """Tells whether the conic consists of a single projective point.
 
     Returns `None` if undecidable.
@@ -222,7 +222,7 @@ def IsPointConic(conic: Matrix) -> bool | None:
     a, _, _, b, c, _, d, e, f = conic
     return fuzzy_and(
         [
-            IsDegenerate(conic),
+            is_degenerate(conic),
             # If any of the sqrt subexpressions in SplitToLines' implementation
             # are negative, the conic splits to complex lines.
             fuzzy_or(
@@ -236,9 +236,9 @@ def IsPointConic(conic: Matrix) -> bool | None:
     )
 
 
-def IsFinitePointConic(conic: Matrix) -> bool | None:
+def is_finite_point_conic(conic: Matrix) -> bool | None:
     """Tells whether the conic consists of a single finite (Euclidean) point.
 
     Returns `None` if undecidable.
     """
-    return fuzzy_and([IsDegenerate(conic), IsFiniteConic(conic)])
+    return fuzzy_and([is_degenerate(conic), is_finite_conic(conic)])

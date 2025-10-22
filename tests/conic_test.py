@@ -2,34 +2,39 @@ import pytest
 from sympy import I, Matrix, Poly, Rational, pi, sqrt, symbols
 from sympy.abc import x, y
 
-from lib.central_conic import ConicFromFociAndRadius, ShrinkConicToZero
-from lib.circle import UNIT_CIRCLE, Circle
+from lib.central_conic import conic_from_foci_and_radius, shrink_conic_to_zero
+from lib.circle import UNIT_CIRCLE, circle
 from lib.conic import (
-    ConicFromFocusAndDirectrix,
-    ConicFromPoly,
-    ConicThroughPoints,
-    Eccentricity,
-    FocalAxisDirection,
     IdealPoints,
-    PolarLine,
-    PolePoint,
-    ProjectiveConicCenter,
+    conic_from_focus_and_directrix,
+    conic_from_poly,
+    conic_through_points,
+    eccentricity,
+    focal_axis_direction,
+    polar_line,
+    pole_point,
+    projective_conic_center,
 )
-from lib.degenerate_conic import LinePair
-from lib.ellipse import Ellipse
-from lib.incidence import ConicContainsPoint
-from lib.intersection import ConicXLine
+from lib.degenerate_conic import line_pair_conic
+from lib.ellipse import ellipse
+from lib.incidence import conic_contains_point
+from lib.intersection import conic_x_line
 from lib.line import (
     IDEAL_LINE,
     X_AXIS,
     Y_AXIS,
-    AngleBisector,
-    HorizontalLine,
-    LineThroughPoint,
+    angle_bisector,
+    horizontal_line,
+    line_through_point,
 )
-from lib.matrix import ConicMatrix, IsNonZeroMultiple, IsPositiveMultiple, QuadraticForm
-from lib.point import ORIGIN, IdealPoint, IdealPointOnLine
-from lib.transform import Rotate, TransformConic
+from lib.matrix import (
+    conic_matrix,
+    is_nonzero_multiple,
+    is_positive_multiple,
+    quadratic_form,
+)
+from lib.point import ORIGIN, ideal_point, ideal_point_on_line
+from lib.transform import rotate, transform_conic
 from tests.utils import AreProjectiveSetsEqual
 
 
@@ -37,36 +42,36 @@ class TestConicFromPoly:
     def test_expr(self):
         poly = (x + 2) * (3 * y - 4) + x**2
         point = Matrix([x, y, 1])
-        assert poly.equals(QuadraticForm(ConicFromPoly(poly), point))
+        assert poly.equals(quadratic_form(conic_from_poly(poly), point))
 
     def test_poly(self):
-        assert ConicFromPoly(Poly(1 - x * x - y * y)) == UNIT_CIRCLE
+        assert conic_from_poly(Poly(1 - x * x - y * y)) == UNIT_CIRCLE
 
     def test_custom_variables(self):
         cx, cy = symbols("cx cy")
-        assert ConicFromPoly(1 - cx**2 - cy**2, x=cx, y=cy) == UNIT_CIRCLE
+        assert conic_from_poly(1 - cx**2 - cy**2, x=cx, y=cy) == UNIT_CIRCLE
 
 
 class TestConicThroughPoints:
     def test_euclidean_points_no_3_collinear(self):
         p1, p2, p3, p4, p5 = (1, 2), (2, 3), (3, 5), (5, 8), (8, 13)
-        conic = ConicThroughPoints(p1, p2, p3, p4, p5)
+        conic = conic_through_points(p1, p2, p3, p4, p5)
         for p in p1, p2, p3, p4, p5:
-            assert ConicContainsPoint(conic, p)
+            assert conic_contains_point(conic, p)
 
     def test_line_pair(self):
         p1, p2, p3, p4, p5 = (0, 0), (1, 0), (0, 1), (-1, 0), (0, -1)
-        conic = ConicThroughPoints(p1, p2, p3, p4, p5)
-        assert IsNonZeroMultiple(conic, LinePair(X_AXIS, Y_AXIS))
+        conic = conic_through_points(p1, p2, p3, p4, p5)
+        assert is_nonzero_multiple(conic, line_pair_conic(X_AXIS, Y_AXIS))
 
     def four_collinear_points(self):
         p1, p2, p3, p4, p5 = (0, 0), (1, 0), (2, 0), (3, 0), (0, 1)
-        conic = ConicThroughPoints(p1, p2, p3, p4, p5)
+        conic = conic_through_points(p1, p2, p3, p4, p5)
         assert conic.is_zero_matrix
 
     def coincident_points(self):
         p1, p2, p3, p4, p5 = (0, 0), (0, 0), (1, 0), (0, 1), (1, 1)
-        conic = ConicThroughPoints(p1, p2, p3, p4, p5)
+        conic = conic_through_points(p1, p2, p3, p4, p5)
         assert conic.is_zero_matrix
 
 
@@ -75,124 +80,124 @@ class TestEccentricity:
         focus = ORIGIN
         directrix = Matrix(symbols("a,b,c", positive=True))
         ecc = symbols("e", positive=True)
-        conic = ConicFromFocusAndDirectrix(focus, directrix, ecc)
-        assert ecc == Eccentricity(conic).simplify()
-        assert ecc == Eccentricity(conic * -2).simplify()
+        conic = conic_from_focus_and_directrix(focus, directrix, ecc)
+        assert ecc == eccentricity(conic).simplify()
+        assert ecc == eccentricity(conic * -2).simplify()
 
     def test_symbolic_imaginary_ellipse_from_focus_and_directrix(self):
         focus = ORIGIN
         directrix = Matrix(symbols("a,b,c", positive=True))
         ecc = symbols("e", positive=True) * I
-        ellipse = ConicFromFocusAndDirectrix(focus, directrix, ecc)
-        assert ecc == Eccentricity(ellipse).simplify()
-        assert ecc == Eccentricity(ellipse * -2).simplify()
+        ellipse = conic_from_focus_and_directrix(focus, directrix, ecc)
+        assert ecc == eccentricity(ellipse).simplify()
+        assert ecc == eccentricity(ellipse * -2).simplify()
 
     def test_symbolic_circle(self):
         center = symbols("x y", real=True)
         radius = symbols("r", real=True)
-        assert Eccentricity(Circle(center, radius)) == 0
-        assert Eccentricity(Circle(center, radius) * -2) == 0
+        assert eccentricity(circle(center, radius)) == 0
+        assert eccentricity(circle(center, radius) * -2) == 0
 
     def test_numeric_parabola(self):
-        parabola = ConicFromPoly(x * x - y)
-        assert Eccentricity(parabola) == 1
-        assert Eccentricity(parabola * -2) == 1
+        parabola = conic_from_poly(x * x - y)
+        assert eccentricity(parabola) == 1
+        assert eccentricity(parabola * -2) == 1
 
     def test_symbolic_parabola(self):
         focus = ORIGIN
         directrix = Matrix(symbols("a,b,c", positive=True))
-        parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
-        assert Eccentricity(parabola) == 1
-        assert Eccentricity(parabola * -2) == 1
+        parabola = conic_from_focus_and_directrix(focus, directrix, 1)
+        assert eccentricity(parabola) == 1
+        assert eccentricity(parabola * -2) == 1
 
     def test_numeric_rectangular_hyperbola(self):
-        hyperbola = ConicFromPoly(x * y - 5)
-        assert Eccentricity(hyperbola) == sqrt(2)
-        assert Eccentricity(hyperbola * -2) == sqrt(2)
+        hyperbola = conic_from_poly(x * y - 5)
+        assert eccentricity(hyperbola) == sqrt(2)
+        assert eccentricity(hyperbola * -2) == sqrt(2)
 
     def test_numeric_degenerate_conic(self):
-        conic = LinePair(X_AXIS, Matrix([24, 7, 0]))
-        ecc1, ecc2 = Eccentricity(conic), Eccentricity(-conic)
+        conic = line_pair_conic(X_AXIS, Matrix([24, 7, 0]))
+        ecc1, ecc2 = eccentricity(conic), eccentricity(-conic)
         assert sorted([ecc1, ecc2]) == [Rational(5, 4), Rational(5, 3)]
 
     def test_symbolic_ellipse(self):
         focus = ORIGIN
         directrix = Matrix(symbols("a,b,c", positive=True))
-        eccentricity = Rational(1, 2)
-        ellipse = ConicFromFocusAndDirectrix(focus, directrix, Rational(1, 2))
-        assert Eccentricity(ellipse).factor() == eccentricity
-        assert Eccentricity(-ellipse).factor() == eccentricity
+        ecc = Rational(1, 2)
+        ellipse = conic_from_focus_and_directrix(focus, directrix, ecc)
+        assert eccentricity(ellipse).factor() == ecc
+        assert eccentricity(-ellipse).factor() == ecc
 
     def test_point_conic(self):
         focus = ORIGIN
         directrix = Matrix(symbols("a,b,c", positive=True))
-        eccentricity = Rational(1, 2)
-        ellipse = ConicFromFocusAndDirectrix(focus, directrix, Rational(1, 2))
-        point_conic = ShrinkConicToZero(ellipse)
-        assert Eccentricity(point_conic).factor() == eccentricity
-        assert Eccentricity(-point_conic).factor() == eccentricity
+        ecc = Rational(1, 2)
+        ellipse = conic_from_focus_and_directrix(focus, directrix, ecc)
+        point_conic = shrink_conic_to_zero(ellipse)
+        assert eccentricity(point_conic).factor() == ecc
+        assert eccentricity(-point_conic).factor() == ecc
 
 
 class TestAxisDirection:
     def test_unit_circle(self):
-        assert FocalAxisDirection(UNIT_CIRCLE).is_zero_matrix
+        assert focal_axis_direction(UNIT_CIRCLE).is_zero_matrix
 
     def test_symbolic_circle(self):
-        assert FocalAxisDirection(Circle(symbols("x y"), symbols("r"))).is_zero_matrix
+        assert focal_axis_direction(circle(symbols("x y"), symbols("r"))).is_zero_matrix
 
     def test_ellipse(self):
-        ellipse = Ellipse((6, 5), 4, 3, r1_direction=(2, 1))
-        assert IsNonZeroMultiple(FocalAxisDirection(ellipse), (2, 1, 0))
-        assert IsNonZeroMultiple(FocalAxisDirection(-ellipse), (2, 1, 0))
+        rotated_ellipse = ellipse((6, 5), 4, 3, r1_direction=(2, 1))
+        assert is_nonzero_multiple(focal_axis_direction(rotated_ellipse), (2, 1, 0))
+        assert is_nonzero_multiple(focal_axis_direction(-rotated_ellipse), (2, 1, 0))
 
     def test_imaginary_ellipse(self):
         focus1 = (1, 2)
         focus2 = (3, 4)
-        ellipse = ConicFromFociAndRadius(focus1, focus2, 5 * I)
-        assert IsNonZeroMultiple(FocalAxisDirection(ellipse), (1, 1, 0))
-        assert IsNonZeroMultiple(FocalAxisDirection(-ellipse), (1, 1, 0))
+        imag_ellipse = conic_from_foci_and_radius(focus1, focus2, 5 * I)
+        assert is_nonzero_multiple(focal_axis_direction(imag_ellipse), (1, 1, 0))
+        assert is_nonzero_multiple(focal_axis_direction(-imag_ellipse), (1, 1, 0))
 
     def test_point_conic(self):
         r1_direction = (2, 1, 0)
-        ellipse = Ellipse((6, 5), 4, 3, r1_direction=r1_direction)
-        point = ShrinkConicToZero(ellipse)
-        assert IsNonZeroMultiple(FocalAxisDirection(point), r1_direction)
-        assert IsNonZeroMultiple(FocalAxisDirection(-point), r1_direction)
+        rotated_ellipse = ellipse((6, 5), 4, 3, r1_direction=r1_direction)
+        point = shrink_conic_to_zero(rotated_ellipse)
+        assert is_nonzero_multiple(focal_axis_direction(point), r1_direction)
+        assert is_nonzero_multiple(focal_axis_direction(-point), r1_direction)
 
     def test_hyperbola(self):
-        hyperbola = ConicFromPoly(x * y - 1)
-        assert IsNonZeroMultiple(FocalAxisDirection(hyperbola), (1, 1, 0))
-        assert IsNonZeroMultiple(FocalAxisDirection(-hyperbola), (1, 1, 0))
+        hyperbola = conic_from_poly(x * y - 1)
+        assert is_nonzero_multiple(focal_axis_direction(hyperbola), (1, 1, 0))
+        assert is_nonzero_multiple(focal_axis_direction(-hyperbola), (1, 1, 0))
 
     def test_parabola(self):
-        parabola = ConicFromFocusAndDirectrix((1, 2), Matrix([3, 4, 5]), 1)
-        assert IsNonZeroMultiple(FocalAxisDirection(parabola), (3, 4, 0))
+        parabola = conic_from_focus_and_directrix((1, 2), Matrix([3, 4, 5]), 1)
+        assert is_nonzero_multiple(focal_axis_direction(parabola), (3, 4, 0))
 
     def test_angle_range(self):
-        right_parabola = ConicFromPoly(y**2 - x)
-        up_parabola = ConicFromPoly(x**2 - y)
-        left_parabola = ConicFromPoly(y**2 + x)
-        down_parabola = ConicFromPoly(x**2 + y)
-        nw_parabola = TransformConic(up_parabola, Rotate(pi / 4))
-        sw_parabola = TransformConic(left_parabola, Rotate(pi / 4))
-        assert IsPositiveMultiple(FocalAxisDirection(right_parabola), (1, 0, 0))
-        assert IsPositiveMultiple(FocalAxisDirection(up_parabola), (0, 1, 0))
-        assert IsPositiveMultiple(FocalAxisDirection(left_parabola), (1, 0, 0))
-        assert IsPositiveMultiple(FocalAxisDirection(down_parabola), (0, 1, 0))
-        assert IsPositiveMultiple(FocalAxisDirection(nw_parabola), (1, -1, 0))
-        assert IsPositiveMultiple(FocalAxisDirection(sw_parabola), (1, 1, 0))
+        right_parabola = conic_from_poly(y**2 - x)
+        up_parabola = conic_from_poly(x**2 - y)
+        left_parabola = conic_from_poly(y**2 + x)
+        down_parabola = conic_from_poly(x**2 + y)
+        nw_parabola = transform_conic(up_parabola, rotate(pi / 4))
+        sw_parabola = transform_conic(left_parabola, rotate(pi / 4))
+        assert is_positive_multiple(focal_axis_direction(right_parabola), (1, 0, 0))
+        assert is_positive_multiple(focal_axis_direction(up_parabola), (0, 1, 0))
+        assert is_positive_multiple(focal_axis_direction(left_parabola), (1, 0, 0))
+        assert is_positive_multiple(focal_axis_direction(down_parabola), (0, 1, 0))
+        assert is_positive_multiple(focal_axis_direction(nw_parabola), (1, -1, 0))
+        assert is_positive_multiple(focal_axis_direction(sw_parabola), (1, 1, 0))
 
     def test_line_pair(self):
-        conic = LinePair(X_AXIS, Y_AXIS)
-        dir1 = FocalAxisDirection(conic)
-        dir2 = FocalAxisDirection(-conic)
+        conic = line_pair_conic(X_AXIS, Y_AXIS)
+        dir1 = focal_axis_direction(conic)
+        dir2 = focal_axis_direction(-conic)
         assert AreProjectiveSetsEqual([dir1, dir2], [[1, 1, 0], [1, -1, 0]])
 
     def test_double_line(self):
-        line_pair = LinePair(X_AXIS, X_AXIS)
-        assert IsNonZeroMultiple(FocalAxisDirection(line_pair), (0, 1, 0))
-        line_pair = LinePair(X_AXIS, -X_AXIS)
-        assert IsNonZeroMultiple(FocalAxisDirection(line_pair), (1, 0, 0))
+        line_pair = line_pair_conic(X_AXIS, X_AXIS)
+        assert is_nonzero_multiple(focal_axis_direction(line_pair), (0, 1, 0))
+        line_pair = line_pair_conic(X_AXIS, -X_AXIS)
+        assert is_nonzero_multiple(focal_axis_direction(line_pair), (1, 0, 0))
 
     @pytest.mark.parametrize(
         ("line1", "line2"),
@@ -204,122 +209,122 @@ class TestAxisDirection:
         ],
     )
     def test_line_pair_focal_axis_vs_angle_bisector(self, line1: Matrix, line2: Matrix):
-        line_pair = LinePair(line1, line2)
-        axis_dir = FocalAxisDirection(line_pair)
-        bisector = AngleBisector(line1, line2)
-        assert IsNonZeroMultiple(axis_dir, IdealPointOnLine(bisector))
+        line_pair = line_pair_conic(line1, line2)
+        axis_dir = focal_axis_direction(line_pair)
+        bisector = angle_bisector(line1, line2)
+        assert is_nonzero_multiple(axis_dir, ideal_point_on_line(bisector))
 
 
 class TestIdealPoints:
     def test_xy_hyperbola(self):
-        hyperbola = ConicFromPoly(x * y)
+        hyperbola = conic_from_poly(x * y)
         ideal_points = IdealPoints(hyperbola)
-        ideal_x = IdealPoint(1, 0)
-        ideal_y = IdealPoint(0, 1)
+        ideal_x = ideal_point(1, 0)
+        ideal_y = ideal_point(0, 1)
         assert AreProjectiveSetsEqual(ideal_points, [ideal_x, ideal_y])
 
     def test_unit_hyperbola(self):
-        hyperbola = ConicFromPoly(x * x - y * y - 1)
+        hyperbola = conic_from_poly(x * x - y * y - 1)
         ideal_points = IdealPoints(hyperbola)
-        ideal1 = IdealPoint(1, 1)
-        ideal2 = IdealPoint(1, -1)
+        ideal1 = ideal_point(1, 1)
+        ideal2 = ideal_point(1, -1)
         assert AreProjectiveSetsEqual(ideal_points, [ideal1, ideal2])
 
     def test_parabola(self):
-        parabola = ConicFromPoly(x * x - y)
+        parabola = conic_from_poly(x * x - y)
         ideal_points = IdealPoints(parabola)
-        assert IsNonZeroMultiple(ideal_points[0], IdealPoint(0, 1))
-        assert IsNonZeroMultiple(ideal_points[1], IdealPoint(0, 1))
+        assert is_nonzero_multiple(ideal_points[0], ideal_point(0, 1))
+        assert is_nonzero_multiple(ideal_points[1], ideal_point(0, 1))
 
     def test_circle(self):
         ideal_points = IdealPoints(UNIT_CIRCLE)
         assert AreProjectiveSetsEqual(
             ideal_points,
-            [IdealPoint(1, I), IdealPoint(1, -I)],
+            [ideal_point(1, I), ideal_point(1, -I)],
         )
 
 
 class TestProjectiveConicCenter:
     def test_circle(self):
         center = symbols("x,y")
-        circle = Circle(center, symbols("r"))
-        assert ProjectiveConicCenter(circle) == Matrix([*center, 1])
+        symbolic_circle = circle(center, symbols("r"))
+        assert projective_conic_center(symbolic_circle) == Matrix([*center, 1])
 
     def test_ellipse(self):
         center = symbols("x,y")
-        ellipse = Ellipse(
+        symbolic_ellipse = ellipse(
             center,
             symbols("r1", positive=True),
             symbols("r2", positive=True),
             r1_direction=symbols("dx,dy", positive=True),
         )
-        computed_center = ProjectiveConicCenter(ellipse).expand()
-        assert IsNonZeroMultiple(computed_center, Matrix([*center, 1]))
+        computed_center = projective_conic_center(symbolic_ellipse).expand()
+        assert is_nonzero_multiple(computed_center, Matrix([*center, 1]))
 
     def test_parabola(self):
         focus = (0, 0)
         directrix = Matrix(symbols("a,b,c", positive=True))
-        parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
-        center = ProjectiveConicCenter(parabola)
+        parabola = conic_from_focus_and_directrix(focus, directrix, 1)
+        center = projective_conic_center(parabola)
         ideal_point = IdealPoints(parabola)[0]
-        assert IsNonZeroMultiple(center, ideal_point)
+        assert is_nonzero_multiple(center, ideal_point)
 
     def test_parallel_line_pair(self):
-        line1 = HorizontalLine(1)
-        line2 = HorizontalLine(2)
-        line_pair = LinePair(line1, line2)
-        assert ProjectiveConicCenter(line_pair).is_zero_matrix
+        line1 = horizontal_line(1)
+        line2 = horizontal_line(2)
+        line_pair = line_pair_conic(line1, line2)
+        assert projective_conic_center(line_pair).is_zero_matrix
 
     def test_euclidean_and_ideal_line(self):
         line = Matrix(symbols("a,b,c", positive=True))
-        line_pair = LinePair(line, IDEAL_LINE)
-        assert ProjectiveConicCenter(line_pair).is_zero_matrix
+        line_pair = line_pair_conic(line, IDEAL_LINE)
+        assert projective_conic_center(line_pair).is_zero_matrix
 
     def test_ideal_point_conic(self):
-        ideal_point = ConicFromPoly(x * x + 1)
-        assert ProjectiveConicCenter(ideal_point).is_zero_matrix
+        ideal_point = conic_from_poly(x * x + 1)
+        assert projective_conic_center(ideal_point).is_zero_matrix
 
 
 class TestPolePolar:
     def test_pole_polar_reciprocity(self):
-        conic = ConicMatrix(*symbols("a b c d e f"))
+        conic = conic_matrix(*symbols("a b c d e f"))
         pole = Matrix(symbols("x y z"))
-        polar = PolarLine(conic, pole)
-        assert PolePoint(conic, polar).equals(pole * conic.det())
+        polar = polar_line(conic, pole)
+        assert pole_point(conic, polar).equals(pole * conic.det())
 
     def test_polar_of_circle_center(self):
         center = (2, 3)
-        circle = Circle(center, 4)
-        polar_line = PolarLine(circle, center)
-        assert IsNonZeroMultiple(polar_line, IDEAL_LINE)
+        conic = circle(center, 4)
+        polar = polar_line(conic, center)
+        assert is_nonzero_multiple(polar, IDEAL_LINE)
 
     def test_polar_of_point_on_conic(self):
-        hyperbola = ConicFromPoly(x * y - 6)
+        hyperbola = conic_from_poly(x * y - 6)
         point = Matrix([3, 2, 1])
-        polar_line = PolarLine(hyperbola, point)
-        assert point.dot(polar_line) == 0
-        intersections = ConicXLine(hyperbola, polar_line)
+        polar = polar_line(hyperbola, point)
+        assert point.dot(polar) == 0
+        intersections = conic_x_line(hyperbola, polar)
         assert intersections[0] == intersections[1]  # tangent line
 
     def test_pole_of_line_tangent_to_conic(self):
-        circle = Circle((0, 0), 5)
-        tangent_line = LineThroughPoint((3, 4), direction=(-4, 3))
-        pole_point = PolePoint(circle, tangent_line)
-        assert ConicContainsPoint(circle, pole_point)
+        conic = circle((0, 0), 5)
+        tangent_line = line_through_point((3, 4), direction=(-4, 3))
+        pole = pole_point(conic, tangent_line)
+        assert conic_contains_point(conic, pole)
 
     def test_line_pair_conic(self):
-        conic = LinePair(X_AXIS, Y_AXIS)
+        conic = line_pair_conic(X_AXIS, Y_AXIS)
         # one of the lines
-        assert PolePoint(conic, X_AXIS).is_zero_matrix
+        assert pole_point(conic, X_AXIS).is_zero_matrix
         # concurrent line
-        assert PolePoint(conic, Matrix([1, 1, 0])).is_zero_matrix
+        assert pole_point(conic, Matrix([1, 1, 0])).is_zero_matrix
         # any other line
-        assert IsNonZeroMultiple(PolePoint(conic, HorizontalLine(1)), ORIGIN)
-        assert IsNonZeroMultiple(PolePoint(conic, Matrix([1, 2, 3])), ORIGIN)
-        assert IsNonZeroMultiple(PolePoint(conic, IDEAL_LINE), ORIGIN)
+        assert is_nonzero_multiple(pole_point(conic, horizontal_line(1)), ORIGIN)
+        assert is_nonzero_multiple(pole_point(conic, Matrix([1, 2, 3])), ORIGIN)
+        assert is_nonzero_multiple(pole_point(conic, IDEAL_LINE), ORIGIN)
 
     def test_point_conic(self):
-        conic = Circle((3, 2), 0)
-        assert IsNonZeroMultiple(PolePoint(conic, X_AXIS), (3, 2, 1))
-        assert IsNonZeroMultiple(PolePoint(conic, IDEAL_LINE), (3, 2, 1))
-        assert PolePoint(conic, HorizontalLine(2)).is_zero_matrix
+        conic = circle((3, 2), 0)
+        assert is_nonzero_multiple(pole_point(conic, X_AXIS), (3, 2, 1))
+        assert is_nonzero_multiple(pole_point(conic, IDEAL_LINE), (3, 2, 1))
+        assert pole_point(conic, horizontal_line(2)).is_zero_matrix

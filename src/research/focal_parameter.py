@@ -2,19 +2,19 @@
 
 from sympy import sqrt, symbols
 
-from lib.distance import PointLineDistance
-from lib.matrix import ConicMatrix
-from lib.parabola import ParabolaDirectrix, ParabolaFocus
+from lib.distance import point_line_distance
+from lib.matrix import conic_matrix
+from lib.parabola import parabola_directrix, parabola_focus
 from research.util import println_indented
 
 print("\nParabola focal parameter (focus-directrix distance):\n")
 
 a, b, c, d, e, f = symbols("a b c d e f", real=True)
-parabola = ConicMatrix(a, b, c, d, e, f)
+parabola = conic_matrix(a, b, c, d, e, f)
 det = parabola.det().subs(b * b, a * c)
 
 focal_parameter = (
-    PointLineDistance(ParabolaFocus(parabola), ParabolaDirectrix(parabola))
+    point_line_distance(parabola_focus(parabola), parabola_directrix(parabola))
     .subs(b * b, a * c)
     .factor()
     .subs(b * b, a * c)

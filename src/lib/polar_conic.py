@@ -19,14 +19,14 @@ from lib.circle import UNIT_CIRCLE
 POLAR_UNIT_CIRCLE = Matrix.eye(3)
 
 
-def PointAtAngle(polar: Matrix, theta: Expr) -> Matrix:
+def point_at_angle(polar: Matrix, theta: Expr) -> Matrix:
     """Computes the coordinates of the projective point on a polar conic
     corresponding to a certain angle.
     """
     return polar * Matrix([cos(theta), sin(theta), 1])
 
 
-def ConicFromPolarMatrix(polar: Matrix) -> Matrix:
+def conic_from_polar_matrix(polar: Matrix) -> Matrix:
     """Transforms a conic from polar to quadratic form.
 
     The algorithm is essentially applying the polar matrix as a projective

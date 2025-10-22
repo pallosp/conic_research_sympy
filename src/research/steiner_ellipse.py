@@ -8,9 +8,9 @@
 
 from sympy import Determinant, Eq, Expr, Matrix, symbols
 
-from lib.central_conic import ConicCenter
-from lib.incidence import ConicContainsPoint
-from lib.transform import TransformConic, Translate
+from lib.central_conic import conic_center
+from lib.incidence import conic_contains_point
+from lib.transform import transform_conic, translate
 from research.util import println_indented
 
 # Simplification WLOG: let the center point be at (0, 0).
@@ -69,10 +69,10 @@ conic = Matrix(
     ],
 )
 
-assert ConicCenter(conic) == Matrix([0, 0])
-assert ConicContainsPoint(conic, (x1, y1))
-assert ConicContainsPoint(conic, (x2, y2))
-assert ConicContainsPoint(conic, (x3, y3))
+assert conic_center(conic) == Matrix([0, 0])
+assert conic_contains_point(conic, (x1, y1))
+assert conic_contains_point(conic, (x2, y2))
+assert conic_contains_point(conic, (x3, y3))
 
 # Generalization for arbitrary center point (xc, yc)
 #
@@ -103,10 +103,10 @@ substitutions = {
     y3: y3 - yc,
 }
 
-conic = TransformConic(conic.subs(substitutions), Translate(xc, yc))
+conic = transform_conic(conic.subs(substitutions), translate(xc, yc))
 
-assert ConicCenter(conic)[0].equals(xc)
-assert ConicContainsPoint(conic, Matrix([x1, y1, 1]))
+assert conic_center(conic)[0].equals(xc)
+assert conic_contains_point(conic, Matrix([x1, y1, 1]))
 
 # The Steiner ellipse is a special case when xc = (x₁+x₂+x₃)/3 and
 # yc = (y₁+y₂+y₃)/3.

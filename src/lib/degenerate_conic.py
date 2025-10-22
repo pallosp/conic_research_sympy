@@ -2,25 +2,25 @@ from collections.abc import Sequence
 
 from sympy import Expr, Function, Matrix, sqrt
 
-from lib.matrix import ConicMatrix, NonZeroCross, SkewMatrix
-from lib.point import PointToVec3
+from lib.matrix import NonzeroCross, conic_matrix, skew_matrix
+from lib.point import point_to_vec3
 
 
-def LinePair(line1: Matrix, line2: Matrix) -> Matrix:
+def line_pair_conic(line1: Matrix, line2: Matrix) -> Matrix:
     """Constructs a conic section from two projective lines."""
     if line1.shape != (3, 1) or line2.shape != (3, 1):
         raise ValueError("The lines must be 3-dimensional column vectors.")
     return (line1 * line2.T + line2 * line1.T) / 2
 
 
-def DoubleLine(line: Matrix) -> Matrix:
+def double_line_conic(line: Matrix) -> Matrix:
     """Constructs a degenerate conic consisting of two coincident lines."""
     if line.shape != (3, 1):
         raise ValueError("The line must be a 3-dimensional column vector.")
     return line * line.T
 
 
-def PointConic(point: Matrix | Sequence[Expr]) -> Matrix:
+def point_conic(point: Matrix | Sequence[Expr]) -> Matrix:
     """Constructs a conic that degenerates to a single point.
 
     Let the point's homogeneous coordinates be `(x, y, z)` and let
@@ -40,8 +40,8 @@ def PointConic(point: Matrix | Sequence[Expr]) -> Matrix:
     Hint: Use [ExtractPoint](#degenerate_conic.ExtractPoint) to recover the
     point from the resulting conic.
     """
-    x, y, z = PointToVec3(point)
-    return ConicMatrix(
+    x, y, z = point_to_vec3(point)
+    return conic_matrix(
         -y * y - z * z,
         x * y,
         -z * z - x * x,
@@ -73,16 +73,16 @@ class SplitToLines(Function):
         # of its adjugate matrix (a, c, f) are either all ≥0 or all ≤0.
         # Proof: research/adjugate_properties.py
         if a.is_nonzero:
-            conic = conic + SkewMatrix(adj.col(0) / sqrt(-a))
+            conic = conic + skew_matrix(adj.col(0) / sqrt(-a))
         elif c.is_nonzero:
-            conic = conic + SkewMatrix(adj.col(1) / sqrt(-c))
+            conic = conic + skew_matrix(adj.col(1) / sqrt(-c))
         elif f.is_nonzero:
-            conic = conic + SkewMatrix(adj.col(2) / sqrt(-f))
+            conic = conic + skew_matrix(adj.col(2) / sqrt(-f))
         elif not (a.is_zero and c.is_zero and f.is_zero):
             return None
 
-        cross = NonZeroCross(conic)
-        if isinstance(cross, NonZeroCross):
+        cross = NonzeroCross(conic)
+        if isinstance(cross, NonzeroCross):
             return None
         return (cross[0], cross[1].T)
 

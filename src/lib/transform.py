@@ -3,22 +3,22 @@ from collections.abc import Sequence
 from sympy import Expr, Matrix, cos, sin, sympify
 
 
-def TransformConic(conic: Matrix, transformation: Matrix) -> Matrix:
+def transform_conic(conic: Matrix, transformation: Matrix) -> Matrix:
     """Applies a projective transformation on a conic."""
     return transformation.adjugate().T * conic * transformation.adjugate()
 
 
-def TransformLine(line: Matrix, transformation: Matrix) -> Matrix:
+def transform_line(line: Matrix, transformation: Matrix) -> Matrix:
     """Applies a projective transformation on a projective line."""
     return transformation.adjugate().T * line
 
 
-def Translate(dx: Expr, dy: Expr) -> Matrix:
+def translate(dx: Expr, dy: Expr) -> Matrix:
     """Computes the transformation matrix for a 2D translation."""
     return Matrix([[1, 0, dx], [0, 1, dy], [0, 0, 1]])
 
 
-def Rotate(angle: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix:
+def rotate(angle: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix:
     """Computes the transformation matrix for a rotation around a point."""
     cos_angle = cos(angle)
     sin_angle = sin(angle)
@@ -31,7 +31,7 @@ def Rotate(angle: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix:
     )
 
 
-def ReflectToLine(axis: Matrix) -> Matrix:
+def reflect_to_line(axis: Matrix) -> Matrix:
     """Computes the transformation matrix for a reflection to a line.
 
     Returns a `nan` matrix if `axis` is the ideal line.
@@ -49,7 +49,7 @@ def ReflectToLine(axis: Matrix) -> Matrix:
     ).applyfunc(lambda el: el / (a**2 + b**2))
 
 
-def ScaleXY(scale_x: Expr, scale_y: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix:
+def scale_xy(scale_x: Expr, scale_y: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix:
     """Computes the projective transformation matrix for scaling along the x-
     and y-axes.
     """
@@ -62,14 +62,14 @@ def ScaleXY(scale_x: Expr, scale_y: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix:
     )
 
 
-def Scale(scale: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix:
+def scale(scale: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix:
     """Computes the projective transformation matrix for a uniform scaling
     transformation.
     """
-    return ScaleXY(scale, scale, x0, y0)
+    return scale_xy(scale, scale, x0, y0)
 
 
-def TransformationFromSamples(
+def transformation_from_samples(
     source_points: Sequence[tuple[Expr, Expr]],
     target_points: Sequence[tuple[Expr, Expr]],
 ) -> Matrix:

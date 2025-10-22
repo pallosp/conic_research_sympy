@@ -1,73 +1,77 @@
 from sympy import Abs, I, Matrix, Rational, pi, sign, symbols
 from sympy.abc import x, y
 
-from lib.circle import IMAGINARY_UNIT_CIRCLE, UNIT_CIRCLE, Circle
-from lib.conic import ConicFromFocusAndDirectrix, ConicFromPoly, FocalAxisDirection
+from lib.circle import IMAGINARY_UNIT_CIRCLE, UNIT_CIRCLE, circle
+from lib.conic import (
+    conic_from_focus_and_directrix,
+    conic_from_poly,
+    focal_axis_direction,
+)
 from lib.conic_classification import (
     ConicNormFactor,
-    IsCentralConic,
-    IsCircle,
-    IsCircular,
-    IsDegenerate,
-    IsDoubleLine,
-    IsEllipse,
-    IsFiniteConic,
-    IsFinitePointConic,
-    IsHyperbola,
-    IsImaginaryEllipse,
-    IsLinePair,
-    IsParabola,
-    IsPointConic,
+    is_central_conic,
+    is_circle,
+    is_circular,
+    is_degenerate,
+    is_double_line,
+    is_ellipse,
+    is_finite_conic,
+    is_finite_point_conic,
+    is_hyperbola,
+    is_imaginary_ellipse,
+    is_line_pair,
+    is_parabola,
+    is_point_conic,
 )
-from lib.degenerate_conic import LinePair, PointConic
-from lib.ellipse import Ellipse
-from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, HorizontalLine
-from lib.matrix import ConicMatrix, QuadraticForm
-from lib.point import ORIGIN, PointToVec3
-from lib.transform import TransformConic, Translate
+from lib.degenerate_conic import line_pair_conic, point_conic
+from lib.ellipse import ellipse
+from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, horizontal_line
+from lib.matrix import conic_matrix, quadratic_form
+from lib.point import ORIGIN
+from lib.transform import transform_conic, translate
 
 
 class TestConicNormFactor:
     def test_parabola_with_focus_at_origin(self):
         focus = ORIGIN
         directrix = Matrix(symbols("a b c", positive=True))
-        parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
+        parabola = conic_from_focus_and_directrix(focus, directrix, 1)
         assert ConicNormFactor(parabola) == 1
         assert ConicNormFactor(-parabola) == -1
 
     def test_general_parabola(self):
         focus = ORIGIN
         directrix = Matrix(symbols("a b c", positive=True))
-        parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
-        translation = Translate(*symbols("dx dy", real=True))
-        parabola = TransformConic(parabola, translation)
+        parabola = conic_from_focus_and_directrix(focus, directrix, 1)
+        translation = translate(*symbols("dx dy", real=True))
+        parabola = transform_conic(parabola, translation)
         assert ConicNormFactor(parabola) == 1
 
-    def test_circle(self):
-        center = symbols("x y")
-        circle = Circle(center, symbols("r", positive=True))
-        assert QuadraticForm(circle, PointToVec3(center)).factor().is_positive
-        assert ConicNormFactor(circle) == 1
-        assert ConicNormFactor(-circle) == -1
+    def test_symbolic_circle(self):
+        center = [*symbols("x y"), 1]
+        symbolic_circle = circle(center, symbols("r", positive=True))
+        assert quadratic_form(symbolic_circle, Matrix(center)).factor().is_positive
+        assert ConicNormFactor(symbolic_circle) == 1
+        assert ConicNormFactor(-symbolic_circle) == -1
 
     def test_zero_radius_circle(self):
         center = symbols("x y", real=True)
-        circle = Circle(center, 0)
-        assert QuadraticForm(circle, ORIGIN).is_nonpositive
-        assert ConicNormFactor(circle) == 1
-        assert ConicNormFactor(-circle) == -1
+        zero_circle = circle(center, 0)
+        assert quadratic_form(zero_circle, ORIGIN).is_nonpositive
+        assert ConicNormFactor(zero_circle) == 1
+        assert ConicNormFactor(-zero_circle) == -1
 
     def test_point_conic(self):
         point = symbols("x y z", positive=True)
-        conic = PointConic(point)
-        assert QuadraticForm(conic, ORIGIN).is_nonpositive
+        conic = point_conic(point)
+        assert quadratic_form(conic, ORIGIN).is_nonpositive
         assert ConicNormFactor(conic) == 1
         assert ConicNormFactor(-conic) == -1
 
     def test_line_pair(self):
         line1 = Matrix(symbols("a b c", real=True))
         line2 = Matrix(symbols("d e f", real=True))
-        line_pair = LinePair(line1, line2)
+        line_pair = line_pair_conic(line1, line2)
         assert ConicNormFactor(line_pair) == 1
         assert ConicNormFactor(-line_pair) == 1
 
@@ -76,22 +80,22 @@ class TestConicNormFactor:
         assert ConicNormFactor(conic) == 1
 
     def test_undecidable(self):
-        conic = ConicMatrix(*symbols("a b c d e f", real=True))
+        conic = conic_matrix(*symbols("a b c d e f", real=True))
         assert isinstance(ConicNormFactor(conic), ConicNormFactor)
 
     def test_function_properties(self):
-        conic = ConicMatrix(*symbols("a b c d e f", real=True))
+        conic = conic_matrix(*symbols("a b c d e f", real=True))
         factor = ConicNormFactor(conic)
         assert factor.is_nonzero is True
         assert factor.is_integer is True
         assert factor.is_positive is None
 
     def test_simplify_abs(self):
-        conic = ConicMatrix(*symbols("a b c d e f", real=True))
+        conic = conic_matrix(*symbols("a b c d e f", real=True))
         assert Abs(ConicNormFactor(conic)) == 1
 
     def test_simplify_pow(self):
-        conic = ConicMatrix(*symbols("a b c d e f", real=True))
+        conic = conic_matrix(*symbols("a b c d e f", real=True))
         f = ConicNormFactor(conic)
         assert f * f == 1
         assert f**3 == f
@@ -102,7 +106,7 @@ class TestConicNormFactor:
         directrix = Matrix(symbols("a,b,c", positive=True))
         eccentricity = symbols("e", positive=True)
         plus_minus_one = (-1) ** symbols("n", integer=True)
-        conic = ConicFromFocusAndDirectrix(focus, directrix, eccentricity)
+        conic = conic_from_focus_and_directrix(focus, directrix, eccentricity)
         conic *= plus_minus_one
         # Ideally, ConicNormFactor(conic) should simplify to (-1)ⁿ,
         # but Sympy 1.14.0 doesn’t recognize that sign((-1)ⁿ) == (-1)ⁿ.
@@ -113,250 +117,257 @@ class TestConicNormFactor:
 
 class TestIsDegenerate:
     def test_numeric(self):
-        assert IsDegenerate(Circle((1, 2), 0)) is True
-        assert IsDegenerate(UNIT_CIRCLE) is False
+        assert is_degenerate(circle((1, 2), 0)) is True
+        assert is_degenerate(UNIT_CIRCLE) is False
 
     def test_symbolic_conics(self):
-        assert IsDegenerate(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
-        assert IsDegenerate(Matrix.diag(symbols("a,c,f", positive=True))) is False
+        assert is_degenerate(conic_matrix(*symbols("a,b,c,d,e,f"))) is None
+        assert is_degenerate(Matrix.diag(symbols("a,c,f", positive=True))) is False
 
     def test_symbolic_conic_from_focus_and_directrix(self):
         focus = (0, 0)
         directrix = Matrix(symbols("a,b,c", positive=True))
         eccentricity = symbols("e", positive=True)
-        conic = ConicFromFocusAndDirectrix(focus, directrix, eccentricity)
-        assert IsDegenerate(conic) is False
+        conic = conic_from_focus_and_directrix(focus, directrix, eccentricity)
+        assert is_degenerate(conic) is False
 
     def test_symbolic_line_pair(self):
-        line_pair = LinePair(Matrix(symbols("a,b,c")), Matrix(symbols("d,e,f")))
-        assert IsDegenerate(line_pair) is True
+        line1 = Matrix(symbols("a,b,c"))
+        line2 = Matrix(symbols("d,e,f"))
+        line_pair = line_pair_conic(line1, line2)
+        assert is_degenerate(line_pair) is True
 
     def test_symbolic_point_conics(self):
-        zero_circle = Circle(symbols("x,y"), 0)
-        assert IsDegenerate(zero_circle) is True
+        zero_circle = circle(symbols("x,y"), 0)
+        assert is_degenerate(zero_circle) is True
 
-        point_conic = PointConic(symbols("x,y,z"))
-        assert IsDegenerate(point_conic) is True
+        symbolic_point_conic = point_conic(symbols("x,y,z"))
+        assert is_degenerate(symbolic_point_conic) is True
 
 
 class TestIsCentralConic:
     def test_symbolic_ellipse(self):
-        ellipse = Ellipse(symbols("x,y"), *symbols("r1,r2", positive=True))
-        assert IsCentralConic(ellipse) is True
+        center = symbols("x,y")
+        symbolic_ellipse = ellipse(center, *symbols("r1,r2", positive=True))
+        assert is_central_conic(symbolic_ellipse) is True
 
     def test_symbolic_parabola(self):
         directrix = Matrix(symbols("a b c", positive=True))
-        parabola = ConicFromFocusAndDirectrix(ORIGIN, directrix, eccentricity=1)
-        assert IsCentralConic(parabola) is False
+        parabola = conic_from_focus_and_directrix(ORIGIN, directrix, eccentricity=1)
+        assert is_central_conic(parabola) is False
 
     def test_symbolic_finite_point_conic(self):
-        point_conic = PointConic(symbols("x y", real=True))
-        assert IsCentralConic(point_conic) is True
+        symbolic_point_conic = point_conic(symbols("x y", real=True))
+        assert is_central_conic(symbolic_point_conic) is True
 
     def test_symbolic_ideal_point_conic(self):
-        ideal_point_conic = PointConic([*symbols("x y", real=True), 0])
-        assert IsCentralConic(ideal_point_conic) is False
+        ideal_point_conic = point_conic([*symbols("x y", real=True), 0])
+        assert is_central_conic(ideal_point_conic) is False
 
     def test_symbolic_crossing_lines(self):
         line = Matrix(symbols("a b c", positive=True))
-        line_pair = LinePair(line, X_AXIS)
-        assert IsCentralConic(line_pair) is True
+        line_pair = line_pair_conic(line, X_AXIS)
+        assert is_central_conic(line_pair) is True
 
     def test_symbolic_parallel_lines(self):
         a, b = symbols("a b", positive=True)
         c1, c2 = symbols("c1 c2", real=True)
-        line_pair = LinePair(Matrix([a, b, c1]), Matrix([a, b, c2]))
-        assert IsCentralConic(line_pair) is False
+        line_pair = line_pair_conic(Matrix([a, b, c1]), Matrix([a, b, c2]))
+        assert is_central_conic(line_pair) is False
 
     def test_symbolic_general_line_pair(self):
-        a, b, c = symbols("a b c", positive=True)
-        d, e, f = symbols("d e f", positive=True)
-        line_pair = LinePair(Matrix([a, b, c]), Matrix([d, e, f]))
-        assert IsCentralConic(line_pair) is None
+        line1 = Matrix(symbols("a b c", positive=True))
+        line2 = Matrix(symbols("d e f", positive=True))
+        line_pair = line_pair_conic(line1, line2)
+        assert is_central_conic(line_pair) is None
 
 
 class TestIsFiniteConic:
     def test_numeric_point(self):
-        assert IsFiniteConic(Circle((1, 2), 0)) is True
+        assert is_finite_conic(circle((1, 2), 0)) is True
 
     def test_numeric_circle(self):
-        assert IsFiniteConic(UNIT_CIRCLE) is True
-        assert IsFiniteConic(Circle((1, 2), 3)) is True
+        assert is_finite_conic(UNIT_CIRCLE) is True
+        assert is_finite_conic(circle((1, 2), 3)) is True
 
     def test_numeric_parabola(self):
-        assert IsFiniteConic(ConicFromPoly(x * x - y)) is False
+        assert is_finite_conic(conic_from_poly(x * x - y)) is False
 
     def test_numeric_hyperbola(self):
-        assert IsFiniteConic(ConicFromPoly(x * y - 1)) is False
+        assert is_finite_conic(conic_from_poly(x * y - 1)) is False
 
     def test_numeric_line_pair(self):
-        assert IsFiniteConic(LinePair(X_AXIS, Y_AXIS)) is False
+        assert is_finite_conic(line_pair_conic(X_AXIS, Y_AXIS)) is False
 
     def test_symbolic_conic(self):
-        assert IsFiniteConic(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
+        assert is_finite_conic(conic_matrix(*symbols("a,b,c,d,e,f"))) is None
 
     def test_symbolic_circle(self):
-        circle = Circle(symbols("x,y"), symbols("r", positive=True))
-        assert IsFiniteConic(circle) is True
+        center = symbols("x,y")
+        radius = symbols("r", positive=True)
+        symbolic_circle = circle(center, radius)
+        assert is_finite_conic(symbolic_circle) is True
 
     def test_symbolic_imaginary_ellipse(self):
         imaginary_ellipse = Matrix.diag(symbols("a,c,f", positive=True))
-        assert IsFiniteConic(imaginary_ellipse) is True
+        assert is_finite_conic(imaginary_ellipse) is True
 
     def test_symbolic_point_conics(self):
-        zero_circle = Circle(symbols("x,y"), 0)
-        assert IsFiniteConic(zero_circle) is True
+        zero_circle = circle(symbols("x,y"), 0)
+        assert is_finite_conic(zero_circle) is True
 
-        finite_point_conic = PointConic(symbols("x,y", real=True))
-        assert IsFiniteConic(finite_point_conic) is True
+        finite_point_conic = point_conic(symbols("x,y", real=True))
+        assert is_finite_conic(finite_point_conic) is True
 
-        ideal_point_conic = PointConic([*symbols("x,y"), 0])
-        assert IsFiniteConic(ideal_point_conic) is False
+        ideal_point_conic = point_conic([*symbols("x,y"), 0])
+        assert is_finite_conic(ideal_point_conic) is False
 
     def test_symbolic_line_pair(self):
         line1 = Matrix(symbols("a,b,c", real=True))
         line2 = Matrix(symbols("d,e,f", real=True))
-        assert IsFiniteConic(LinePair(line1, line2)) is False
+        assert is_finite_conic(line_pair_conic(line1, line2)) is False
 
 
 class TestIsEllipse:
     def test_numeric_circle(self):
-        assert IsEllipse(UNIT_CIRCLE) is True
-        assert IsEllipse(-UNIT_CIRCLE) is True
-        assert IsEllipse(Circle((1, 2), 0)) is False
+        assert is_ellipse(UNIT_CIRCLE) is True
+        assert is_ellipse(-UNIT_CIRCLE) is True
+        assert is_ellipse(circle((1, 2), 0)) is False
 
     def test_numeric_ellipse(self):
-        assert IsEllipse(Ellipse((1, 2), 3, 4)) is True
+        assert is_ellipse(ellipse((1, 2), 3, 4)) is True
 
     def test_numeric_hyperbola(self):
-        assert IsEllipse(ConicFromPoly(x * y - 1)) is False
+        assert is_ellipse(conic_from_poly(x * y - 1)) is False
 
     def test_numeric_point(self):
-        assert IsEllipse(Circle((1, 2), 0)) is False
+        assert is_ellipse(circle((1, 2), 0)) is False
 
     def test_imaginary_circle(self):
-        assert IsEllipse(IMAGINARY_UNIT_CIRCLE) is False
+        assert is_ellipse(IMAGINARY_UNIT_CIRCLE) is False
 
     def test_undecidable(self):
-        assert IsEllipse(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
+        assert is_ellipse(conic_matrix(*symbols("a,b,c,d,e,f"))) is None
 
     def test_symbolic_ellipse(self):
         center = symbols("x,y")
-        assert IsEllipse(Ellipse(center, *symbols("r1,r2", positive=True))) is True
-        assert IsEllipse(Ellipse(center, *symbols("r1,r2"))) is None
-        assert IsEllipse(IMAGINARY_UNIT_CIRCLE) is False
-        assert IsEllipse(-IMAGINARY_UNIT_CIRCLE) is False
+        assert is_ellipse(ellipse(center, *symbols("r1,r2", positive=True))) is True
+        assert is_ellipse(ellipse(center, *symbols("r1,r2"))) is None
+        assert is_ellipse(IMAGINARY_UNIT_CIRCLE) is False
+        assert is_ellipse(-IMAGINARY_UNIT_CIRCLE) is False
 
     def test_point_conic(self):
-        point_conic = PointConic(symbols("x,y,z"))
-        assert IsEllipse(point_conic) is False
+        symbolic_point_conic = point_conic(symbols("x,y,z"))
+        assert is_ellipse(symbolic_point_conic) is False
 
 
 class TestIsCircle:
     def test_symbolic_circular_conics(self):
         x, y = symbols("x,y", real=True)
 
-        circle = Circle((x, y), symbols("r", positive=True))
-        assert IsCircle(circle) is True
+        symbolic_circle = circle((x, y), symbols("r", positive=True))
+        assert is_circle(symbolic_circle) is True
 
-        circle_or_point = Circle((x, y), symbols("r", nonnegative=True))
-        assert IsCircle(circle_or_point) is None
+        circle_or_point = circle((x, y), symbols("r", nonnegative=True))
+        assert is_circle(circle_or_point) is None
 
-        imaginary_circle = Circle((x, y), symbols("r", positive=True) * I)
-        assert IsCircle(imaginary_circle) is False
+        imaginary_circle = circle((x, y), symbols("r", positive=True) * I)
+        assert is_circle(imaginary_circle) is False
 
-        double_ideal_line = LinePair(IDEAL_LINE, IDEAL_LINE)
-        assert IsCircle(double_ideal_line) is False
+        double_ideal_line = line_pair_conic(IDEAL_LINE, IDEAL_LINE)
+        assert is_circle(double_ideal_line) is False
 
     def test_symbolic_ellipse(self):
         x, y = symbols("x,y", real=True)
         r1, r2 = symbols("r1,r2", positive=True)
 
-        assert IsCircle(Ellipse((x, y), r1, r1)) is True
-        assert IsCircle(Ellipse((x, y), r1, r2)) is None
-        assert IsCircle(Ellipse((x, y), r1, r1 + r2)) is False
+        assert is_circle(ellipse((x, y), r1, r1)) is True
+        assert is_circle(ellipse((x, y), r1, r2)) is None
+        assert is_circle(ellipse((x, y), r1, r1 + r2)) is False
 
 
 class TestIsImaginaryEllipse:
     def test_imaginary_unit_circle(self):
-        assert IsImaginaryEllipse(IMAGINARY_UNIT_CIRCLE)
-        assert IsImaginaryEllipse(-IMAGINARY_UNIT_CIRCLE)
+        assert is_imaginary_ellipse(IMAGINARY_UNIT_CIRCLE)
+        assert is_imaginary_ellipse(-IMAGINARY_UNIT_CIRCLE)
 
     def test_numeric_ellipse(self):
-        assert IsImaginaryEllipse(Ellipse((1, 2), 3, 4)) is False
-        assert IsImaginaryEllipse(Ellipse((1, 2), 3 * I, 4 * I)) is True
+        assert is_imaginary_ellipse(ellipse((1, 2), 3, 4)) is False
+        assert is_imaginary_ellipse(ellipse((1, 2), 3 * I, 4 * I)) is True
 
     def test_symbolic_ellipse(self):
         center = symbols("x,y")
         r = symbols("r1,r2", positive=True)
         imag_r = [r[0] * I, r[1] * I]
         r1_dir = symbols("dx,dy", positive=True)
-        assert IsImaginaryEllipse(Ellipse(center, *r)) is False
-        assert IsImaginaryEllipse(Ellipse(center, *r, r1_direction=r1_dir)) is False
-        assert IsImaginaryEllipse(Ellipse(center, *imag_r)) is True
-        assert IsImaginaryEllipse(Ellipse(center, *imag_r, r1_direction=r1_dir)) is True
+        assert is_imaginary_ellipse(ellipse(center, *r)) is False
+        assert is_imaginary_ellipse(ellipse(center, *r, r1_direction=r1_dir)) is False
+        assert is_imaginary_ellipse(ellipse(center, *imag_r)) is True
+        assert (
+            is_imaginary_ellipse(ellipse(center, *imag_r, r1_direction=r1_dir)) is True
+        )
 
     def test_symbolic_ellipse_from_focus_and_directrix(self):
         focus = ORIGIN
         directrix = Matrix(symbols("a b c", positive=True))
         eccentricity = symbols("e", positive=True) * I
-        conic = ConicFromFocusAndDirectrix(focus, directrix, eccentricity)
-        assert IsImaginaryEllipse(conic)
+        conic = conic_from_focus_and_directrix(focus, directrix, eccentricity)
+        assert is_imaginary_ellipse(conic)
 
     def test_symbolic_point_conics(self):
-        zero_circle = Circle(symbols("x,y"), 0)
-        assert IsImaginaryEllipse(zero_circle) is False
+        zero_circle = circle(symbols("x,y"), 0)
+        assert is_imaginary_ellipse(zero_circle) is False
 
-        point_conic = PointConic(symbols("x,y,z"))
-        assert IsImaginaryEllipse(point_conic) is False
+        symbolic_point_conic = point_conic(symbols("x,y,z"))
+        assert is_imaginary_ellipse(symbolic_point_conic) is False
 
 
 class TestIsParabola:
     def test_numeric(self):
-        assert IsParabola(ConicFromPoly(x * x - y))
-        assert IsParabola(LinePair(X_AXIS, HorizontalLine(1))) is False
-        assert IsParabola(UNIT_CIRCLE) is False
+        assert is_parabola(conic_from_poly(x * x - y))
+        assert is_parabola(line_pair_conic(X_AXIS, horizontal_line(1))) is False
+        assert is_parabola(UNIT_CIRCLE) is False
 
     def test_symbolic(self):
-        assert IsParabola(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
+        assert is_parabola(conic_matrix(*symbols("a,b,c,d,e,f"))) is None
 
     def test_symbolic_focus_and_directrix(self):
         focus = (0, 0)
         directrix = Matrix(symbols("a,b,c", positive=True))
-        parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
-        assert IsParabola(parabola) is True
+        parabola = conic_from_focus_and_directrix(focus, directrix, 1)
+        assert is_parabola(parabola) is True
 
     def test_symbolic_point_conics(self):
-        zero_circle = Circle(symbols("x,y"), 0)
-        assert IsParabola(zero_circle) is False
+        zero_circle = circle(symbols("x,y"), 0)
+        assert is_parabola(zero_circle) is False
 
-        point_conic = PointConic(symbols("x,y,z"))
-        assert IsParabola(point_conic) is False
+        symbolic_point_conic = point_conic(symbols("x,y,z"))
+        assert is_parabola(symbolic_point_conic) is False
 
 
 class TestIsHyperbola:
     def test_numeric(self):
-        assert IsHyperbola(ConicFromPoly(x * y - 1)) is True
-        assert IsHyperbola(ConicFromPoly(x * x - y * y - 1)) is True
-        assert IsHyperbola(ConicFromPoly(x * x - y * y)) is False
-        assert IsHyperbola(UNIT_CIRCLE) is False
+        assert is_hyperbola(conic_from_poly(x * y - 1)) is True
+        assert is_hyperbola(conic_from_poly(x * x - y * y - 1)) is True
+        assert is_hyperbola(conic_from_poly(x * x - y * y)) is False
+        assert is_hyperbola(UNIT_CIRCLE) is False
 
     def test_unspecified(self):
-        assert IsHyperbola(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
+        assert is_hyperbola(conic_matrix(*symbols("a,b,c,d,e,f"))) is None
 
     def test_symbolic_ellipse_or_parabola(self):
         focus = (0, 0)
         # Real line not going through the focus
         directrix = Matrix(symbols("a,b,c", positive=True))
 
-        circle = ConicFromFocusAndDirectrix(focus, directrix, 0)
-        assert IsHyperbola(circle) is False
+        circle = conic_from_focus_and_directrix(focus, directrix, 0)
+        assert is_hyperbola(circle) is False
 
-        ellipse = ConicFromFocusAndDirectrix(focus, directrix, Rational(1, 2))
-        assert IsHyperbola(ellipse) is False
+        ellipse = conic_from_focus_and_directrix(focus, directrix, Rational(1, 2))
+        assert is_hyperbola(ellipse) is False
 
-        parabola = ConicFromFocusAndDirectrix(focus, directrix, 1)
-        assert IsHyperbola(parabola) is False
+        parabola = conic_from_focus_and_directrix(focus, directrix, 1)
+        assert is_hyperbola(parabola) is False
 
     def test_symbolic_hyperbola(self):
         focus = (0, 0)
@@ -364,181 +375,187 @@ class TestIsHyperbola:
         directrix = Matrix(symbols("a,b,c", positive=True))
         # Eccentricity greater than 1
         eccentricity = symbols("e", positive=True) + 1
-        hyperbola = ConicFromFocusAndDirectrix(focus, directrix, eccentricity)
-        assert IsHyperbola(hyperbola) is True
+        hyperbola = conic_from_focus_and_directrix(focus, directrix, eccentricity)
+        assert is_hyperbola(hyperbola) is True
 
     def test_symbolic_point_conics(self):
-        zero_circle = Circle(symbols("x,y"), 0)
-        assert IsHyperbola(zero_circle) is False
+        zero_circle = circle(symbols("x,y"), 0)
+        assert is_hyperbola(zero_circle) is False
 
-        point_conic = PointConic(symbols("x,y,z"))
-        assert IsHyperbola(point_conic) is False
+        symbolic_point_conic = point_conic(symbols("x,y,z"))
+        assert is_hyperbola(symbolic_point_conic) is False
 
 
 class TestIsCircular:
     def test_circle(self):
-        assert IsCircular(UNIT_CIRCLE) is True
-        assert IsCircular(Circle((1, 2), 3)) is True
+        assert is_circular(UNIT_CIRCLE) is True
+        assert is_circular(circle((1, 2), 3)) is True
 
     def test_point_conics(self):
-        zero_circle = Circle((1, 2), 0)
-        assert IsCircular(zero_circle) is True
+        zero_circle = circle((1, 2), 0)
+        assert is_circular(zero_circle) is True
 
-        finite_point_conic = PointConic([3, 2, 1])
-        assert FocalAxisDirection(finite_point_conic).is_zero_matrix is False
-        assert IsCircular(finite_point_conic) is False
+        finite_point_conic = point_conic([3, 2, 1])
+        assert focal_axis_direction(finite_point_conic).is_zero_matrix is False
+        assert is_circular(finite_point_conic) is False
 
-        ideal_point_conic = PointConic([*symbols("x,y", positive=True), 0])
-        assert IsCircular(ideal_point_conic) is False
+        ideal_point_conic = point_conic([*symbols("x,y", positive=True), 0])
+        assert is_circular(ideal_point_conic) is False
 
     def test_imaginary_circle(self):
-        assert IsCircular(Circle((1, 2), I)) is True
+        assert is_circular(circle((1, 2), I)) is True
 
     def test_ellipse(self):
-        assert IsCircular(Ellipse((0, 0), 1, 1)) is True
-        assert IsCircular(Ellipse((0, 0), 1, 1, r1_angle=pi / 4)) is True
-        assert IsCircular(Ellipse((0, 0), 1, 2)) is False
+        assert is_circular(ellipse((0, 0), 1, 1)) is True
+        assert is_circular(ellipse((0, 0), 1, 1, r1_angle=pi / 4)) is True
+        assert is_circular(ellipse((0, 0), 1, 2)) is False
 
     def test_hyperbola(self):
-        assert IsCircular(ConicFromPoly(x * y - 1)) is False
+        assert is_circular(conic_from_poly(x * y - 1)) is False
 
     def test_lines(self):
-        assert IsCircular(LinePair(IDEAL_LINE, IDEAL_LINE)) is False
-        assert IsCircular(LinePair(IDEAL_LINE, X_AXIS)) is False
-        assert IsCircular(LinePair(X_AXIS, X_AXIS)) is False
-        assert IsCircular(LinePair(X_AXIS, Y_AXIS)) is False
+        assert is_circular(line_pair_conic(IDEAL_LINE, IDEAL_LINE)) is False
+        assert is_circular(line_pair_conic(IDEAL_LINE, X_AXIS)) is False
+        assert is_circular(line_pair_conic(X_AXIS, X_AXIS)) is False
+        assert is_circular(line_pair_conic(X_AXIS, Y_AXIS)) is False
 
     def test_symbolic_zero_radius_circle(self):
         r = symbols("r")
-        assert IsCircular(Circle((0, 0), r)) is True
+        assert is_circular(circle((0, 0), r)) is True
 
     def test_symbolic_ellipse(self):
         x, y = symbols("x,y", real=True)
         r1, r2 = symbols("r1,r2", positive=True)
-        assert IsCircular(Ellipse((x, y), r1, r1)) is True
-        assert IsCircular(Ellipse((x, y), r1, r2)) is None
-        assert IsCircular(Ellipse((x, y), r1, r1 + r2)) is False
+        assert is_circular(ellipse((x, y), r1, r1)) is True
+        assert is_circular(ellipse((x, y), r1, r2)) is None
+        assert is_circular(ellipse((x, y), r1, r1 + r2)) is False
 
     def test_symbolic_conics(self):
         pos1, pos2 = symbols("pos1,pos2", positive=True)
         neg = symbols("neg", negative=True)
-        assert IsCircular(ConicFromPoly(pos1 * x**2 + pos1 * y**2)) is True
-        assert IsCircular(ConicFromPoly(pos1 * x**2 + neg * y**2)) is False
-        assert IsCircular(ConicFromPoly(pos1 * x**2 + pos2 * y**2)) is None
+        assert is_circular(conic_from_poly(pos1 * x**2 + pos1 * y**2)) is True
+        assert is_circular(conic_from_poly(pos1 * x**2 + neg * y**2)) is False
+        assert is_circular(conic_from_poly(pos1 * x**2 + pos2 * y**2)) is None
 
 
 class TestIsLinePair:
     def test_zero_matrix(self):
-        assert IsLinePair(Matrix.zeros(3, 3)) is False
+        assert is_line_pair(Matrix.zeros(3, 3)) is False
 
     def test_numeric_line_pair(self):
-        assert IsLinePair(LinePair(X_AXIS, X_AXIS)) is True
-        assert IsLinePair(LinePair(X_AXIS, Y_AXIS)) is True
-        assert IsLinePair(LinePair(X_AXIS, HorizontalLine(1))) is True
-        assert IsLinePair(LinePair(X_AXIS, IDEAL_LINE)) is True
-        assert IsLinePair(LinePair(IDEAL_LINE, IDEAL_LINE)) is True
-        assert IsLinePair(ConicFromPoly(x * x - y * y)) is True
+        assert is_line_pair(line_pair_conic(X_AXIS, X_AXIS)) is True
+        assert is_line_pair(line_pair_conic(X_AXIS, Y_AXIS)) is True
+        assert is_line_pair(line_pair_conic(X_AXIS, horizontal_line(1))) is True
+        assert is_line_pair(line_pair_conic(X_AXIS, IDEAL_LINE)) is True
+        assert is_line_pair(line_pair_conic(IDEAL_LINE, IDEAL_LINE)) is True
+        assert is_line_pair(conic_from_poly(x * x - y * y)) is True
 
     def test_numeric_hyperbola(self):
-        assert IsLinePair(ConicFromPoly(x * y - 1)) is False
+        assert is_line_pair(conic_from_poly(x * y - 1)) is False
 
     def test_numeric_parabola(self):
-        assert IsLinePair(ConicFromPoly(x * x - y)) is False
+        assert is_line_pair(conic_from_poly(x * x - y)) is False
 
     def test_numeric_circle(self):
-        assert IsLinePair(UNIT_CIRCLE) is False
+        assert is_line_pair(UNIT_CIRCLE) is False
 
     def test_undecidable(self):
-        assert IsLinePair(ConicMatrix(*symbols("a,b,c,d,e,f", positive=True))) is None
+        assert (
+            is_line_pair(conic_matrix(*symbols("a,b,c,d,e,f", positive=True))) is None
+        )
 
     def test_symbolic_line_pair(self):
         line_or_zero_vector = Matrix(symbols("a,b,c", real=True))
         line1 = Matrix(symbols("d,e,f", positive=True))
         line2 = Matrix(symbols("g,h,i", positive=True))
-        assert IsLinePair(LinePair(line_or_zero_vector, line1)) is None
-        assert IsLinePair(LinePair(line1, line1)) is True
-        assert IsLinePair(LinePair(line1, line2)) is True
+        assert is_line_pair(line_pair_conic(line_or_zero_vector, line1)) is None
+        assert is_line_pair(line_pair_conic(line1, line1)) is True
+        assert is_line_pair(line_pair_conic(line1, line2)) is True
 
     def test_symbolic_finite_point_conics(self):
-        assert IsLinePair(Circle(symbols("x,y"), 0)) is False
-        assert IsLinePair(PointConic(symbols("x,y", real=True))) is False
+        assert is_line_pair(circle(symbols("x,y"), 0)) is False
+        assert is_line_pair(point_conic(symbols("x,y", real=True))) is False
 
     def test_symbolic_ideal_point_conic(self):
-        ideal_point_conic = PointConic([*symbols("x,y", positive=True), 0])
-        assert IsLinePair(ideal_point_conic) is False
+        ideal_point_conic = point_conic([*symbols("x,y", positive=True), 0])
+        assert is_line_pair(ideal_point_conic) is False
 
 
 class TestIsDoubleLine:
     def test_zero_matrix(self):
-        assert IsDoubleLine(Matrix.zeros(3, 3)) is False
+        assert is_double_line(Matrix.zeros(3, 3)) is False
 
     def test_numeric_line_pair(self):
-        assert IsDoubleLine(LinePair(X_AXIS, X_AXIS)) is True
-        assert IsDoubleLine(LinePair(X_AXIS, Y_AXIS)) is False
-        assert IsDoubleLine(LinePair(X_AXIS, HorizontalLine(1))) is False
-        assert IsDoubleLine(LinePair(X_AXIS, IDEAL_LINE)) is False
-        assert IsDoubleLine(LinePair(IDEAL_LINE, IDEAL_LINE)) is True
+        assert is_double_line(line_pair_conic(X_AXIS, X_AXIS)) is True
+        assert is_double_line(line_pair_conic(X_AXIS, Y_AXIS)) is False
+        assert is_double_line(line_pair_conic(X_AXIS, horizontal_line(1))) is False
+        assert is_double_line(line_pair_conic(X_AXIS, IDEAL_LINE)) is False
+        assert is_double_line(line_pair_conic(IDEAL_LINE, IDEAL_LINE)) is True
 
     def test_symbolic_line_pair(self):
         line_or_zeros = Matrix(symbols("a,b,c", real=True))
         real_line1 = Matrix(symbols("d,e,f", positive=True))
         real_line2 = Matrix(symbols("g,h,i", positive=True))
-        assert IsDoubleLine(LinePair(real_line1, real_line1)) is True
-        assert IsDoubleLine(LinePair(line_or_zeros, line_or_zeros)) is None
-        assert IsDoubleLine(LinePair(real_line1, real_line2)) is None
-        assert IsDoubleLine(LinePair(real_line1, IDEAL_LINE)) is False
+        assert is_double_line(line_pair_conic(real_line1, real_line1)) is True
+        assert is_double_line(line_pair_conic(line_or_zeros, line_or_zeros)) is None
+        assert is_double_line(line_pair_conic(real_line1, real_line2)) is None
+        assert is_double_line(line_pair_conic(real_line1, IDEAL_LINE)) is False
 
     def test_symbolic_point(self):
-        assert IsDoubleLine(Circle(symbols("x,y", real=True), 0)) is False
+        assert is_double_line(circle(symbols("x,y", real=True), 0)) is False
 
 
 class TestIsPointConic:
     def test_zero_matrix(self):
-        assert IsPointConic(Matrix.zeros(3, 3)) is False
+        assert is_point_conic(Matrix.zeros(3, 3)) is False
 
     def test_zero_radius_circle(self):
-        circle = Circle(symbols("x,y"), 0)
-        assert IsPointConic(circle) is True
-        assert IsPointConic(-circle) is True
+        zero_circle = circle(symbols("x,y"), 0)
+        assert is_point_conic(zero_circle) is True
+        assert is_point_conic(-zero_circle) is True
 
     def test_finite_point_conic(self):
-        point = PointConic(symbols("x,y", real=True))
-        assert IsPointConic(point) is True
+        point = point_conic(symbols("x,y", real=True))
+        assert is_point_conic(point) is True
 
     def test_ideal_point_conic(self):
-        point = PointConic([*symbols("x,y", positive=True), 0])
-        assert IsPointConic(point) is True
+        point = point_conic([*symbols("x,y", positive=True), 0])
+        assert is_point_conic(point) is True
 
     def test_line_pair(self):
-        line1 = Matrix(symbols("a1,b1,c1", positive=True))
-        line2 = Matrix(symbols("a2,b2,c2", positive=True))
-        line_pair = LinePair(line1, line2)
-        assert IsPointConic(line_pair) is False
+        line1 = Matrix(symbols("a b c", positive=True))
+        line2 = Matrix(symbols("d e f", positive=True))
+        line_pair = line_pair_conic(line1, line2)
+        assert is_point_conic(line_pair) is False
 
     def test_circle(self):
-        circle = Circle(symbols("x,y"), symbols("r", positive=True))
-        assert IsPointConic(circle) is False
+        center = symbols("x,y")
+        radius = symbols("r", positive=True)
+        symbolic_circle = circle(center, radius)
+        assert is_point_conic(symbolic_circle) is False
 
     def test_circle_undecidable(self):
-        circle = Circle(symbols("x,y"), symbols("r"))
-        assert IsPointConic(circle) is None
+        center = symbols("x,y")
+        radius = symbols("r", nonnegative=True)
+        symbolic_circle = circle(center, radius)
+        assert is_point_conic(symbolic_circle) is None
 
 
 class TestIsFinitePointConic:
     def test_zero_radius_circle(self):
-        assert IsFinitePointConic(Circle(symbols("x,y"), 0)) is True
+        assert is_finite_point_conic(circle(symbols("x,y"), 0)) is True
 
     def test_circle(self):
-        assert IsFinitePointConic(Circle(symbols("x,y"), 1)) is False
+        assert is_finite_point_conic(circle(symbols("x,y"), 1)) is False
 
     def test_ideal_point_conic(self):
-        ideal_point = ConicFromPoly(x * x + 1)
-        assert IsFinitePointConic(ideal_point) is False
+        ideal_point = conic_from_poly(x * x + 1)
+        assert is_finite_point_conic(ideal_point) is False
 
     def test_line_pair(self):
-        assert IsFinitePointConic(LinePair(X_AXIS, Y_AXIS)) is False
-        assert IsFinitePointConic(LinePair(X_AXIS, IDEAL_LINE)) is False
-        assert IsFinitePointConic(LinePair(IDEAL_LINE, IDEAL_LINE)) is False
+        assert is_finite_point_conic(line_pair_conic(X_AXIS, Y_AXIS)) is False
+        assert is_finite_point_conic(line_pair_conic(X_AXIS, IDEAL_LINE)) is False
+        assert is_finite_point_conic(line_pair_conic(IDEAL_LINE, IDEAL_LINE)) is False
 
     def test_undecidable(self):
-        assert IsFinitePointConic(ConicMatrix(*symbols("a,b,c,d,e,f"))) is None
+        assert is_finite_point_conic(conic_matrix(*symbols("a,b,c,d,e,f"))) is None

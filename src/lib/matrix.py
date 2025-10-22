@@ -5,7 +5,7 @@ from sympy.core.logic import fuzzy_and, fuzzy_not
 from sympy.core.numbers import NaN
 
 
-def IsNonZeroMultiple(
+def is_nonzero_multiple(
     m1: Matrix | Sequence[Expr],
     m2: Matrix | Sequence[Expr],
 ) -> bool | None:
@@ -39,7 +39,7 @@ def IsNonZeroMultiple(
     )
 
 
-def IsPositiveMultiple(
+def is_positive_multiple(
     m1: Matrix | Sequence[Expr],
     m2: Matrix | Sequence[Expr],
 ) -> bool | None:
@@ -72,7 +72,7 @@ def IsPositiveMultiple(
     )
 
 
-def MaxEigenvalue(symmetric_matrix_2x2: Matrix) -> Expr:
+def max_eigenvalue(symmetric_matrix_2x2: Matrix) -> Expr:
     """Returns the higher eigenvalue of a 2x2 symmetric matrix."""
     m = symmetric_matrix_2x2
     if m.shape != (2, 2) or m != m.T:
@@ -81,7 +81,7 @@ def MaxEigenvalue(symmetric_matrix_2x2: Matrix) -> Expr:
     return (a + c) / 2 + sqrt((a - c) ** 2 + 4 * b**2) / 2
 
 
-def MinEigenvalue(symmetric_matrix_2x2: Matrix) -> Expr:
+def min_eigenvalue(symmetric_matrix_2x2: Matrix) -> Expr:
     """Returns the lower eigenvalue of a 2x2 symmetric matrix."""
     m = symmetric_matrix_2x2
     if m.shape != (2, 2) or m != m.T:
@@ -90,7 +90,7 @@ def MinEigenvalue(symmetric_matrix_2x2: Matrix) -> Expr:
     return (a + c) / 2 - sqrt((a - c) ** 2 + 4 * b**2) / 2
 
 
-def ConicMatrix(a: Expr, b: Expr, c: Expr, d: Expr, e: Expr, f: Expr) -> Matrix:
+def conic_matrix(a: Expr, b: Expr, c: Expr, d: Expr, e: Expr, f: Expr) -> Matrix:
     """Builds a 3x3 symmetric conic matrix from its elements.
 
     The conic equation looks like this:
@@ -105,7 +105,7 @@ def ConicMatrix(a: Expr, b: Expr, c: Expr, d: Expr, e: Expr, f: Expr) -> Matrix:
     return Matrix([[a, b, d], [b, c, e], [d, e, f]])
 
 
-def QuadraticForm(sym_matrix: Matrix, vector: Matrix) -> Expr:
+def quadratic_form(sym_matrix: Matrix, vector: Matrix) -> Expr:
     """Computes the quadratic form for a n⨯n symmetric matrix and an n-element
     column vector.
 
@@ -118,7 +118,7 @@ def QuadraticForm(sym_matrix: Matrix, vector: Matrix) -> Expr:
     return vector.dot(vector.T * sym_matrix)
 
 
-def SkewMatrix(vector3: Matrix) -> Matrix:
+def skew_matrix(vector3: Matrix) -> Matrix:
     """Creates a skew-symmetric matrix from a 3D vector."""
     x, y, z = vector3
     return Matrix(
@@ -130,7 +130,7 @@ def SkewMatrix(vector3: Matrix) -> Matrix:
     )
 
 
-class NonZeroCross(Function):
+class NonzeroCross(Function):
     """Finds a column and a row in a matrix whose intersection is a non-zero
     element.
 
@@ -153,7 +153,7 @@ class NonZeroCross(Function):
         return None
 
 
-def IsRealMatrix(matrix: Matrix) -> bool | None:
+def is_real_matrix(matrix: Matrix) -> bool | None:
     """Checks if all elements of a matrix are real.
 
     Returns a bool or `None` if undecidable.
@@ -161,7 +161,7 @@ def IsRealMatrix(matrix: Matrix) -> bool | None:
     return fuzzy_and(el.is_real for el in matrix)
 
 
-def IsDefinite(matrix: Matrix) -> bool | None:
+def is_definite_matrix(matrix: Matrix) -> bool | None:
     """Checks if a real matrix is either positive or negative definite.
 
     Returns a bool or `None` if the definitess can't be decided.

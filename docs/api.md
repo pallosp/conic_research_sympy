@@ -1,199 +1,199 @@
 # Table of Contents
 
 * [matrix](#matrix)
-  * [IsNonZeroMultiple](#matrix.IsNonZeroMultiple)
-  * [IsPositiveMultiple](#matrix.IsPositiveMultiple)
-  * [MaxEigenvalue](#matrix.MaxEigenvalue)
-  * [MinEigenvalue](#matrix.MinEigenvalue)
-  * [ConicMatrix](#matrix.ConicMatrix)
-  * [QuadraticForm](#matrix.QuadraticForm)
-  * [SkewMatrix](#matrix.SkewMatrix)
-  * [NonZeroCross](#matrix.NonZeroCross)
-    * [eval](#matrix.NonZeroCross.eval)
-  * [IsRealMatrix](#matrix.IsRealMatrix)
-  * [IsDefinite](#matrix.IsDefinite)
+  * [is\_nonzero\_multiple](#matrix.is_nonzero_multiple)
+  * [is\_positive\_multiple](#matrix.is_positive_multiple)
+  * [max\_eigenvalue](#matrix.max_eigenvalue)
+  * [min\_eigenvalue](#matrix.min_eigenvalue)
+  * [conic\_matrix](#matrix.conic_matrix)
+  * [quadratic\_form](#matrix.quadratic_form)
+  * [skew\_matrix](#matrix.skew_matrix)
+  * [NonzeroCross](#matrix.NonzeroCross)
+    * [eval](#matrix.NonzeroCross.eval)
+  * [is\_real\_matrix](#matrix.is_real_matrix)
+  * [is\_definite\_matrix](#matrix.is_definite_matrix)
 * [central\_conic](#central_conic)
-  * [ConicFromFociAndRadius](#central_conic.ConicFromFociAndRadius)
-  * [ConicFromCenterAndPoints](#central_conic.ConicFromCenterAndPoints)
-  * [ConicCenter](#central_conic.ConicCenter)
-  * [SemiAxisLengths](#central_conic.SemiAxisLengths)
-  * [PrimaryRadius](#central_conic.PrimaryRadius)
-  * [SecondaryRadius](#central_conic.SecondaryRadius)
-  * [LinearEccentricity](#central_conic.LinearEccentricity)
-  * [CenterToFocusVector](#central_conic.CenterToFocusVector)
-  * [CenterToVertexVector](#central_conic.CenterToVertexVector)
-  * [ShrinkConicToZero](#central_conic.ShrinkConicToZero)
+  * [conic\_from\_foci\_and\_radius](#central_conic.conic_from_foci_and_radius)
+  * [conic\_from\_center\_and\_points](#central_conic.conic_from_center_and_points)
+  * [conic\_center](#central_conic.conic_center)
+  * [semi\_axis\_lengths](#central_conic.semi_axis_lengths)
+  * [primary\_radius](#central_conic.primary_radius)
+  * [secondary\_radius](#central_conic.secondary_radius)
+  * [linear\_eccentricity](#central_conic.linear_eccentricity)
+  * [center\_to\_focus\_vector](#central_conic.center_to_focus_vector)
+  * [center\_to\_vertex\_vector](#central_conic.center_to_vertex_vector)
+  * [shrink\_conic\_to\_zero](#central_conic.shrink_conic_to_zero)
 * [circle](#circle)
-  * [Circle](#circle.Circle)
-  * [CircleRadius](#circle.CircleRadius)
-  * [DirectorCircle](#circle.DirectorCircle)
+  * [circle](#circle.circle)
+  * [circle\_radius](#circle.circle_radius)
+  * [director\_circle](#circle.director_circle)
   * [UNIT\_CIRCLE](#circle.UNIT_CIRCLE)
   * [IMAGINARY\_UNIT\_CIRCLE](#circle.IMAGINARY_UNIT_CIRCLE)
 * [line](#line)
-  * [HorizontalLine](#line.HorizontalLine)
-  * [VerticalLine](#line.VerticalLine)
-  * [LineBetween](#line.LineBetween)
-  * [ParallelLine](#line.ParallelLine)
-  * [PerpendicularLine](#line.PerpendicularLine)
-  * [LineThroughPoint](#line.LineThroughPoint)
-  * [AngleBisector](#line.AngleBisector)
-  * [PerpendicularBisector](#line.PerpendicularBisector)
-  * [LineNormal](#line.LineNormal)
-  * [AreParallel](#line.AreParallel)
-  * [ArePerpendicular](#line.ArePerpendicular)
+  * [horizontal\_line](#line.horizontal_line)
+  * [vertical\_line](#line.vertical_line)
+  * [line\_between](#line.line_between)
+  * [parallel\_line](#line.parallel_line)
+  * [perpendicular\_line](#line.perpendicular_line)
+  * [line\_through\_point](#line.line_through_point)
+  * [angle\_bisector](#line.angle_bisector)
+  * [perpendicular\_bisector](#line.perpendicular_bisector)
+  * [line\_normal](#line.line_normal)
+  * [are\_parallel](#line.are_parallel)
+  * [are\_perpendicular](#line.are_perpendicular)
   * [IDEAL\_LINE](#line.IDEAL_LINE)
   * [X\_AXIS](#line.X_AXIS)
   * [Y\_AXIS](#line.Y_AXIS)
 * [conic](#conic)
-  * [ConicFromPoly](#conic.ConicFromPoly)
-  * [ConicThroughPoints](#conic.ConicThroughPoints)
-  * [ConicFromFocusAndDirectrix](#conic.ConicFromFocusAndDirectrix)
-  * [Eccentricity](#conic.Eccentricity)
-  * [FocalAxisDirection](#conic.FocalAxisDirection)
+  * [conic\_from\_poly](#conic.conic_from_poly)
+  * [conic\_through\_points](#conic.conic_through_points)
+  * [conic\_from\_focus\_and\_directrix](#conic.conic_from_focus_and_directrix)
+  * [eccentricity](#conic.eccentricity)
+  * [focal\_axis\_direction](#conic.focal_axis_direction)
   * [IdealPoints](#conic.IdealPoints)
     * [eval](#conic.IdealPoints.eval)
-  * [ProjectiveConicCenter](#conic.ProjectiveConicCenter)
-  * [PolePoint](#conic.PolePoint)
-  * [PolarLine](#conic.PolarLine)
+  * [projective\_conic\_center](#conic.projective_conic_center)
+  * [pole\_point](#conic.pole_point)
+  * [polar\_line](#conic.polar_line)
 * [degenerate\_conic](#degenerate_conic)
-  * [LinePair](#degenerate_conic.LinePair)
-  * [DoubleLine](#degenerate_conic.DoubleLine)
-  * [PointConic](#degenerate_conic.PointConic)
+  * [line\_pair\_conic](#degenerate_conic.line_pair_conic)
+  * [double\_line\_conic](#degenerate_conic.double_line_conic)
+  * [point\_conic](#degenerate_conic.point_conic)
   * [SplitToLines](#degenerate_conic.SplitToLines)
     * [eval](#degenerate_conic.SplitToLines.eval)
   * [ExtractPoint](#degenerate_conic.ExtractPoint)
     * [eval](#degenerate_conic.ExtractPoint.eval)
 * [distance](#distance)
-  * [PointPointDistance](#distance.PointPointDistance)
-  * [PointLineDistance](#distance.PointLineDistance)
-  * [ParallelLineDistance](#distance.ParallelLineDistance)
+  * [point\_point\_distance](#distance.point_point_distance)
+  * [point\_line\_distance](#distance.point_line_distance)
+  * [parallel\_line\_distance](#distance.parallel_line_distance)
 * [sympy\_utils](#sympy_utils)
-  * [AddEq](#sympy_utils.AddEq)
-  * [SubEq](#sympy_utils.SubEq)
-  * [MulEq](#sympy_utils.MulEq)
-  * [DivEq](#sympy_utils.DivEq)
-  * [SwapEq](#sympy_utils.SwapEq)
-  * [EqChain](#sympy_utils.EqChain)
-  * [FactorRadicals](#sympy_utils.FactorRadicals)
-  * [FactorAbs](#sympy_utils.FactorAbs)
+  * [add\_eq](#sympy_utils.add_eq)
+  * [sub\_eq](#sympy_utils.sub_eq)
+  * [mul\_eq](#sympy_utils.mul_eq)
+  * [div\_eq](#sympy_utils.div_eq)
+  * [swap\_eq](#sympy_utils.swap_eq)
+  * [eq\_chain](#sympy_utils.eq_chain)
+  * [factor\_radicals](#sympy_utils.factor_radicals)
+  * [factor\_abs](#sympy_utils.factor_abs)
 * [conic\_classification](#conic_classification)
   * [ConicNormFactor](#conic_classification.ConicNormFactor)
     * [eval](#conic_classification.ConicNormFactor.eval)
-  * [IsDegenerate](#conic_classification.IsDegenerate)
-  * [IsNonDegenerate](#conic_classification.IsNonDegenerate)
-  * [IsCentralConic](#conic_classification.IsCentralConic)
-  * [IsFiniteConic](#conic_classification.IsFiniteConic)
-  * [IsImaginaryEllipse](#conic_classification.IsImaginaryEllipse)
-  * [IsEllipse](#conic_classification.IsEllipse)
-  * [IsCircle](#conic_classification.IsCircle)
-  * [IsParabola](#conic_classification.IsParabola)
-  * [IsHyperbola](#conic_classification.IsHyperbola)
-  * [IsCircular](#conic_classification.IsCircular)
-  * [IsLinePair](#conic_classification.IsLinePair)
-  * [IsDoubleLine](#conic_classification.IsDoubleLine)
-  * [IsPointConic](#conic_classification.IsPointConic)
-  * [IsFinitePointConic](#conic_classification.IsFinitePointConic)
+  * [is\_degenerate](#conic_classification.is_degenerate)
+  * [is\_nondegenerate](#conic_classification.is_nondegenerate)
+  * [is\_central\_conic](#conic_classification.is_central_conic)
+  * [is\_finite\_conic](#conic_classification.is_finite_conic)
+  * [is\_imaginary\_ellipse](#conic_classification.is_imaginary_ellipse)
+  * [is\_ellipse](#conic_classification.is_ellipse)
+  * [is\_circle](#conic_classification.is_circle)
+  * [is\_parabola](#conic_classification.is_parabola)
+  * [is\_hyperbola](#conic_classification.is_hyperbola)
+  * [is\_circular](#conic_classification.is_circular)
+  * [is\_line\_pair](#conic_classification.is_line_pair)
+  * [is\_double\_line](#conic_classification.is_double_line)
+  * [is\_point\_conic](#conic_classification.is_point_conic)
+  * [is\_finite\_point\_conic](#conic_classification.is_finite_point_conic)
 * [point](#point)
   * [ORIGIN](#point.ORIGIN)
-  * [IdealPoint](#point.IdealPoint)
-  * [IdealPointOnLine](#point.IdealPointOnLine)
-  * [PointToXY](#point.PointToXY)
-  * [PointToVec3](#point.PointToVec3)
-  * [Centroid](#point.Centroid)
-  * [PerpendicularFoot](#point.PerpendicularFoot)
+  * [ideal\_point](#point.ideal_point)
+  * [ideal\_point\_on\_line](#point.ideal_point_on_line)
+  * [point\_to\_xy](#point.point_to_xy)
+  * [point\_to\_vec3](#point.point_to_vec3)
+  * [centroid](#point.centroid)
+  * [perpendicular\_foot](#point.perpendicular_foot)
 * [transform](#transform)
-  * [TransformConic](#transform.TransformConic)
-  * [TransformLine](#transform.TransformLine)
-  * [Translate](#transform.Translate)
-  * [Rotate](#transform.Rotate)
-  * [ReflectToLine](#transform.ReflectToLine)
-  * [ScaleXY](#transform.ScaleXY)
-  * [Scale](#transform.Scale)
-  * [TransformationFromSamples](#transform.TransformationFromSamples)
+  * [transform\_conic](#transform.transform_conic)
+  * [transform\_line](#transform.transform_line)
+  * [translate](#transform.translate)
+  * [rotate](#transform.rotate)
+  * [reflect\_to\_line](#transform.reflect_to_line)
+  * [scale\_xy](#transform.scale_xy)
+  * [scale](#transform.scale)
+  * [transformation\_from\_samples](#transform.transformation_from_samples)
 * [parabola](#parabola)
-  * [ParabolaDirectrix](#parabola.ParabolaDirectrix)
-  * [ParabolaFocus](#parabola.ParabolaFocus)
-  * [ParabolaVertex](#parabola.ParabolaVertex)
-  * [ParabolaDirection](#parabola.ParabolaDirection)
-  * [ParabolaAxis](#parabola.ParabolaAxis)
-  * [ParabolaFocalParameter](#parabola.ParabolaFocalParameter)
+  * [parabola\_directrix](#parabola.parabola_directrix)
+  * [parabola\_focus](#parabola.parabola_focus)
+  * [parabola\_vertex](#parabola.parabola_vertex)
+  * [parabola\_direction](#parabola.parabola_direction)
+  * [parabola\_axis](#parabola.parabola_axis)
+  * [parabola\_focal\_parameter](#parabola.parabola_focal_parameter)
 * [polar\_conic](#polar_conic)
   * [POLAR\_UNIT\_CIRCLE](#polar_conic.POLAR_UNIT_CIRCLE)
-  * [PointAtAngle](#polar_conic.PointAtAngle)
-  * [ConicFromPolarMatrix](#polar_conic.ConicFromPolarMatrix)
+  * [point\_at\_angle](#polar_conic.point_at_angle)
+  * [conic\_from\_polar\_matrix](#polar_conic.conic_from_polar_matrix)
 * [incidence](#incidence)
-  * [LineContainsPoint](#incidence.LineContainsPoint)
-  * [ConicContainsPoint](#incidence.ConicContainsPoint)
-  * [ConicContainsLine](#incidence.ConicContainsLine)
-  * [AreCollinear](#incidence.AreCollinear)
+  * [line\_contains\_point](#incidence.line_contains_point)
+  * [conic\_contains\_point](#incidence.conic_contains_point)
+  * [conic\_contains\_line](#incidence.conic_contains_line)
+  * [are\_collinear](#incidence.are_collinear)
 * [hyperbola](#hyperbola)
-  * [HyperbolaFromFociAndPoint](#hyperbola.HyperbolaFromFociAndPoint)
+  * [hyperbola\_from\_foci\_and\_point](#hyperbola.hyperbola_from_foci_and_point)
 * [ellipse](#ellipse)
-  * [Ellipse](#ellipse.Ellipse)
-  * [EllipseFromFociAndPoint](#ellipse.EllipseFromFociAndPoint)
-  * [SteinerEllipse](#ellipse.SteinerEllipse)
-  * [SteinerInellipse](#ellipse.SteinerInellipse)
+  * [ellipse](#ellipse.ellipse)
+  * [ellipse\_from\_foci\_and\_point](#ellipse.ellipse_from_foci_and_point)
+  * [steiner\_ellipse](#ellipse.steiner_ellipse)
+  * [steiner\_inellipse](#ellipse.steiner_inellipse)
 * [intersection](#intersection)
-  * [LineXLine](#intersection.LineXLine)
-  * [ConicXLine](#intersection.ConicXLine)
+  * [line\_x\_line](#intersection.line_x_line)
+  * [conic\_x\_line](#intersection.conic_x_line)
 
 <a id="matrix"></a>
 
 # matrix
 
-<a id="matrix.IsNonZeroMultiple"></a>
+<a id="matrix.is_nonzero_multiple"></a>
 
-#### IsNonZeroMultiple
+#### is\_nonzero\_multiple
 
 ```python
-def IsNonZeroMultiple(m1: Matrix | Sequence[Expr],
-                      m2: Matrix | Sequence[Expr]) -> bool | None
+def is_nonzero_multiple(m1: Matrix | Sequence[Expr],
+                        m2: Matrix | Sequence[Expr]) -> bool | None
 ```
 
 Tells whether two matrices are non-zero scalar multiples of each other.
 
 Treats lists and tuples as column vectors. Returns `None` if undecidable.
 
-<a id="matrix.IsPositiveMultiple"></a>
+<a id="matrix.is_positive_multiple"></a>
 
-#### IsPositiveMultiple
+#### is\_positive\_multiple
 
 ```python
-def IsPositiveMultiple(m1: Matrix | Sequence[Expr],
-                       m2: Matrix | Sequence[Expr]) -> bool | None
+def is_positive_multiple(m1: Matrix | Sequence[Expr],
+                         m2: Matrix | Sequence[Expr]) -> bool | None
 ```
 
 Tells whether two matrices are positive scalar multiples of each other.
 
 Treats lists and tuples as column vectors. Returns `None` if undecidable.
 
-<a id="matrix.MaxEigenvalue"></a>
+<a id="matrix.max_eigenvalue"></a>
 
-#### MaxEigenvalue
+#### max\_eigenvalue
 
 ```python
-def MaxEigenvalue(symmetric_matrix_2x2: Matrix) -> Expr
+def max_eigenvalue(symmetric_matrix_2x2: Matrix) -> Expr
 ```
 
 Returns the higher eigenvalue of a 2x2 symmetric matrix.
 
-<a id="matrix.MinEigenvalue"></a>
+<a id="matrix.min_eigenvalue"></a>
 
-#### MinEigenvalue
+#### min\_eigenvalue
 
 ```python
-def MinEigenvalue(symmetric_matrix_2x2: Matrix) -> Expr
+def min_eigenvalue(symmetric_matrix_2x2: Matrix) -> Expr
 ```
 
 Returns the lower eigenvalue of a 2x2 symmetric matrix.
 
-<a id="matrix.ConicMatrix"></a>
+<a id="matrix.conic_matrix"></a>
 
-#### ConicMatrix
+#### conic\_matrix
 
 ```python
-def ConicMatrix(a: Expr, b: Expr, c: Expr, d: Expr, e: Expr,
-                f: Expr) -> Matrix
+def conic_matrix(a: Expr, b: Expr, c: Expr, d: Expr, e: Expr,
+                 f: Expr) -> Matrix
 ```
 
 Builds a 3x3 symmetric conic matrix from its elements.
@@ -207,12 +207,12 @@ The conic equation looks like this:
 
 or in expanded form `ax² + 2bxy + cy² + 2dx + 2ey + f = 0`
 
-<a id="matrix.QuadraticForm"></a>
+<a id="matrix.quadratic_form"></a>
 
-#### QuadraticForm
+#### quadratic\_form
 
 ```python
-def QuadraticForm(sym_matrix: Matrix, vector: Matrix) -> Expr
+def quadratic_form(sym_matrix: Matrix, vector: Matrix) -> Expr
 ```
 
 Computes the quadratic form for a n⨯n symmetric matrix and an n-element
@@ -224,22 +224,22 @@ conic.
 
 *Formula*: `vᵀ·M·v`
 
-<a id="matrix.SkewMatrix"></a>
+<a id="matrix.skew_matrix"></a>
 
-#### SkewMatrix
+#### skew\_matrix
 
 ```python
-def SkewMatrix(vector3: Matrix) -> Matrix
+def skew_matrix(vector3: Matrix) -> Matrix
 ```
 
 Creates a skew-symmetric matrix from a 3D vector.
 
-<a id="matrix.NonZeroCross"></a>
+<a id="matrix.NonzeroCross"></a>
 
-## NonZeroCross Objects
+## NonzeroCross Objects
 
 ```python
-class NonZeroCross(Function)
+class NonzeroCross(Function)
 ```
 
 Finds a column and a row in a matrix whose intersection is a non-zero
@@ -248,7 +248,7 @@ element.
 Returns an unevaluated `sympy.Function` if none of the elements can be
 proven to be non-zero, or `nan` in case of a zero matrix.
 
-<a id="matrix.NonZeroCross.eval"></a>
+<a id="matrix.NonzeroCross.eval"></a>
 
 #### eval
 
@@ -259,24 +259,24 @@ def eval(cls, matrix: Matrix) -> tuple[Matrix, Matrix] | NaN | None
 
 Internal implementation. Call `NonZeroCross(matrix)` directly.
 
-<a id="matrix.IsRealMatrix"></a>
+<a id="matrix.is_real_matrix"></a>
 
-#### IsRealMatrix
+#### is\_real\_matrix
 
 ```python
-def IsRealMatrix(matrix: Matrix) -> bool | None
+def is_real_matrix(matrix: Matrix) -> bool | None
 ```
 
 Checks if all elements of a matrix are real.
 
 Returns a bool or `None` if undecidable.
 
-<a id="matrix.IsDefinite"></a>
+<a id="matrix.is_definite_matrix"></a>
 
-#### IsDefinite
+#### is\_definite\_matrix
 
 ```python
-def IsDefinite(matrix: Matrix) -> bool | None
+def is_definite_matrix(matrix: Matrix) -> bool | None
 ```
 
 Checks if a real matrix is either positive or negative definite.
@@ -287,14 +287,14 @@ Returns a bool or `None` if the definitess can't be decided.
 
 # central\_conic
 
-<a id="central_conic.ConicFromFociAndRadius"></a>
+<a id="central_conic.conic_from_foci_and_radius"></a>
 
-#### ConicFromFociAndRadius
+#### conic\_from\_foci\_and\_radius
 
 ```python
-def ConicFromFociAndRadius(focus1: Matrix | Sequence[Expr],
-                           focus2: Matrix | Sequence[Expr],
-                           radius: Expr) -> Matrix
+def conic_from_foci_and_radius(focus1: Matrix | Sequence[Expr],
+                               focus2: Matrix | Sequence[Expr],
+                               radius: Expr) -> Matrix
 ```
 
 Computes the ellipse or hyperbola with the given focus points and
@@ -305,15 +305,15 @@ If `radius` is negative, takes its absolute value.
 *Formula*:
 [research/conic_from_foci_and_radius.py](../src/research/conic_from_foci_and_radius.py)
 
-<a id="central_conic.ConicFromCenterAndPoints"></a>
+<a id="central_conic.conic_from_center_and_points"></a>
 
-#### ConicFromCenterAndPoints
+#### conic\_from\_center\_and\_points
 
 ```python
-def ConicFromCenterAndPoints(center: Matrix | Sequence[Expr],
-                             p1: Matrix | Sequence[Expr],
-                             p2: Matrix | Sequence[Expr],
-                             p3: Matrix | Sequence[Expr]) -> Matrix
+def conic_from_center_and_points(center: Matrix | Sequence[Expr],
+                                 p1: Matrix | Sequence[Expr],
+                                 p2: Matrix | Sequence[Expr],
+                                 p3: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 Computes the conic section with the given center and perimeter points.
@@ -327,12 +327,12 @@ May return
 
 *Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
 
-<a id="central_conic.ConicCenter"></a>
+<a id="central_conic.conic_center"></a>
 
-#### ConicCenter
+#### conic\_center
 
 ```python
-def ConicCenter(conic: Matrix) -> Matrix
+def conic_center(conic: Matrix) -> Matrix
 ```
 
 Computes the center point of a conic.
@@ -341,35 +341,35 @@ Returns the point's coordinates as a 2D column vector.
 
 *Formula*: [research/conic_center.py](../src/research/conic_center.py)
 
-<a id="central_conic.SemiAxisLengths"></a>
+<a id="central_conic.semi_axis_lengths"></a>
 
-#### SemiAxisLengths
+#### semi\_axis\_lengths
 
 ```python
-def SemiAxisLengths(conic: Matrix) -> tuple[Expr, Expr]
+def semi_axis_lengths(conic: Matrix) -> tuple[Expr, Expr]
 ```
 
 Computes the semi-axis lengths of a conic in no specific order.
 
 To get the semi-focal or semi-transverse axis length (semi-major /
 semi-minor in case of ellipses), call
-[PrincipalRadius](#central_conic.PrincipalRadius) or
-[SecondaryRadius](#central_conic.SecondaryRadius), respectively.
+[principal_radius](#central_conic.principal_radius) or
+[secondary_radius](#central_conic.secondary_radius), respectively.
 
 *Formula*: [research/conic_radii.py](../src/research/conic_radii.py)
 
-<a id="central_conic.PrimaryRadius"></a>
+<a id="central_conic.primary_radius"></a>
 
-#### PrimaryRadius
+#### primary\_radius
 
 ```python
-def PrimaryRadius(conic: Matrix) -> Expr
+def primary_radius(conic: Matrix) -> Expr
 ```
 
 Computes the center-vertex distance of a conic.
 
 This corresponds to the semi-major axis length of real ellipses. In case of
-[imaginary ellipses](#conic_classification.IsImaginaryEllipse) however the
+[imaginary ellipses](#conic_classification.is_imaginary_ellipse) however the
 focal axis is the shorter one in terms of absolute value.
 
 The returned value is:
@@ -379,12 +379,12 @@ The returned value is:
  - `nan` for ideal point conics;
  - 0 for the other degenerate conics.
 
-<a id="central_conic.SecondaryRadius"></a>
+<a id="central_conic.secondary_radius"></a>
 
-#### SecondaryRadius
+#### secondary\_radius
 
 ```python
-def SecondaryRadius(conic: Matrix) -> Expr
+def secondary_radius(conic: Matrix) -> Expr
 ```
 
 Computes the semi-conjugate axis length of a conic.
@@ -401,12 +401,12 @@ The returned value is:
  - `nan` for ideal point conics;
  - 0 for the other degenerate conics.
 
-<a id="central_conic.LinearEccentricity"></a>
+<a id="central_conic.linear_eccentricity"></a>
 
-#### LinearEccentricity
+#### linear\_eccentricity
 
 ```python
-def LinearEccentricity(conic: Matrix) -> Expr
+def linear_eccentricity(conic: Matrix) -> Expr
 ```
 
 Computes the linear eccentricity of a conic section.
@@ -426,12 +426,12 @@ Special cases:
 *Formula*: `√|r₁²-r₂²|` where `r₁` and `r₂` denote the primary and secondary
 radii of the conic (i.e., the semi-axis lengths in the case of an ellipse).
 
-<a id="central_conic.CenterToFocusVector"></a>
+<a id="central_conic.center_to_focus_vector"></a>
 
-#### CenterToFocusVector
+#### center\_to\_focus\_vector
 
 ```python
-def CenterToFocusVector(conic: Matrix) -> Matrix
+def center_to_focus_vector(conic: Matrix) -> Matrix
 ```
 
 Returns the 2D vector from a conic's center to one of its foci.
@@ -439,16 +439,16 @@ Returns the 2D vector from a conic's center to one of its foci.
 The opposite vector points to the other focus.
 
 The function is only meaningful for
-[central conics](#conic_classification.IsCentralConic). The result vector
+[central conics](#conic_classification.is_central_conic). The result vector
 will contain infinite or `nan` elements when the conic lacks a finite
 center.
 
-<a id="central_conic.CenterToVertexVector"></a>
+<a id="central_conic.center_to_vertex_vector"></a>
 
-#### CenterToVertexVector
+#### center\_to\_vertex\_vector
 
 ```python
-def CenterToVertexVector(conic: Matrix) -> Matrix
+def center_to_vertex_vector(conic: Matrix) -> Matrix
 ```
 
 Returns the 2D vector from a conic's center to one of its vertices.
@@ -456,16 +456,16 @@ Returns the 2D vector from a conic's center to one of its vertices.
 The opposite vector points to the other vertex.
 
 The function is only meaningful for
-[central conics](#conic_classification.IsCentralConic). The result vector
+[central conics](#conic_classification.is_central_conic). The result vector
 will contain infinite or `nan` elements when the conic lacks a finite
 center.
 
-<a id="central_conic.ShrinkConicToZero"></a>
+<a id="central_conic.shrink_conic_to_zero"></a>
 
-#### ShrinkConicToZero
+#### shrink\_conic\_to\_zero
 
 ```python
-def ShrinkConicToZero(conic: Matrix) -> Matrix
+def shrink_conic_to_zero(conic: Matrix) -> Matrix
 ```
 
 Scales a conic section from its center with a factor of zero.
@@ -474,7 +474,7 @@ Turns hyperbolas to line pair conics consisting of their asymptotes, and
 ellipses to point conics.
 
 This transformation is only meaningful for
-[central conics](#conic_classification.IsCentralConic): for other
+[central conics](#conic_classification.is_central_conic): for other
 conic types the result matrix will have infinite or `nan` elements.
 
 *Formula*:
@@ -484,22 +484,22 @@ conic types the result matrix will have infinite or `nan` elements.
 
 # circle
 
-<a id="circle.Circle"></a>
+<a id="circle.circle"></a>
 
-#### Circle
+#### circle
 
 ```python
-def Circle(center: Matrix | Sequence[Expr], radius: Expr) -> Matrix
+def circle(center: Matrix | Sequence[Expr], radius: Expr) -> Matrix
 ```
 
 Creates a circle from its center and radius.
 
-<a id="circle.CircleRadius"></a>
+<a id="circle.circle_radius"></a>
 
-#### CircleRadius
+#### circle\_radius
 
 ```python
-def CircleRadius(circle: Matrix) -> Expr
+def circle_radius(circle: Matrix) -> Expr
 ```
 
 Computes the radius of a circle conic.
@@ -508,12 +508,12 @@ The result is not specified if the conic matrix is not a circle.
 The computation is based on
 [research/director_circle.py](../src/research/director_circle.py).
 
-<a id="circle.DirectorCircle"></a>
+<a id="circle.director_circle"></a>
 
-#### DirectorCircle
+#### director\_circle
 
 ```python
-def DirectorCircle(conic: Matrix) -> Matrix
+def director_circle(conic: Matrix) -> Matrix
 ```
 
 Computes the director circle of a conic. It's also called orthoptic
@@ -538,68 +538,68 @@ The circle at the origin with radius 𝑖.
 
 # line
 
-<a id="line.HorizontalLine"></a>
+<a id="line.horizontal_line"></a>
 
-#### HorizontalLine
+#### horizontal\_line
 
 ```python
-def HorizontalLine(y: Expr) -> Matrix
+def horizontal_line(y: Expr) -> Matrix
 ```
 
 Constructs a horizontal line with the given y-coordinate.
 
-<a id="line.VerticalLine"></a>
+<a id="line.vertical_line"></a>
 
-#### VerticalLine
+#### vertical\_line
 
 ```python
-def VerticalLine(x: Expr) -> Matrix
+def vertical_line(x: Expr) -> Matrix
 ```
 
 Constructs a vertical line with the given x-coordinate.
 
-<a id="line.LineBetween"></a>
+<a id="line.line_between"></a>
 
-#### LineBetween
+#### line\_between
 
 ```python
-def LineBetween(point1: Matrix | Sequence[Expr],
-                point2: Matrix | Sequence[Expr]) -> Matrix
+def line_between(point1: Matrix | Sequence[Expr],
+                 point2: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 Connects two projective points with a line.
 
-<a id="line.ParallelLine"></a>
+<a id="line.parallel_line"></a>
 
-#### ParallelLine
+#### parallel\_line
 
 ```python
-def ParallelLine(with_line: Matrix,
-                 through_point: Matrix | Sequence[Expr]) -> Matrix
+def parallel_line(with_line: Matrix,
+                  through_point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 Constructs a line through a point parallel to a line.
 
-<a id="line.PerpendicularLine"></a>
+<a id="line.perpendicular_line"></a>
 
-#### PerpendicularLine
+#### perpendicular\_line
 
 ```python
-def PerpendicularLine(to_line: Matrix,
-                      through_point: Matrix | Sequence[Expr]) -> Matrix
+def perpendicular_line(to_line: Matrix,
+                       through_point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 Constructs a line through a point perpendicular to a line.
 
-<a id="line.LineThroughPoint"></a>
+<a id="line.line_through_point"></a>
 
-#### LineThroughPoint
+#### line\_through\_point
 
 ```python
-def LineThroughPoint(point: Matrix | Sequence[Expr],
-                     *,
-                     direction: Matrix | Sequence[Expr] = None,
-                     normal: Matrix | Sequence[Expr] = None) -> Matrix
+def line_through_point(point: Matrix | Sequence[Expr],
+                       *,
+                       direction: Matrix | Sequence[Expr] = None,
+                       normal: Matrix | Sequence[Expr] = None) -> Matrix
 ```
 
 Constructs a line through a point with the given direction.
@@ -610,12 +610,12 @@ The direction can be specified as
  - a 2D normal vector: `normal=(nx, ny)`
  - an ideal point on the perpendicular line: `normal=(nx, ny, 0)`
 
-<a id="line.AngleBisector"></a>
+<a id="line.angle_bisector"></a>
 
-#### AngleBisector
+#### angle\_bisector
 
 ```python
-def AngleBisector(line1: Matrix, line2: Matrix) -> Matrix
+def angle_bisector(line1: Matrix, line2: Matrix) -> Matrix
 ```
 
 Constructs the angle bisector of two lines.
@@ -632,25 +632,25 @@ Special cases:
 
 *Formula*: [research/angle_bisector.py](../src/research/angle_bisector.py)
 
-<a id="line.PerpendicularBisector"></a>
+<a id="line.perpendicular_bisector"></a>
 
-#### PerpendicularBisector
+#### perpendicular\_bisector
 
 ```python
-def PerpendicularBisector(point1: Matrix | Sequence[Expr],
-                          point2: Matrix | Sequence[Expr]) -> Matrix
+def perpendicular_bisector(point1: Matrix | Sequence[Expr],
+                           point2: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 Constructs the perpendicular bisector of two points.
 
-<a id="line.LineNormal"></a>
+<a id="line.line_normal"></a>
 
-#### LineNormal
+#### line\_normal
 
 ```python
-def LineNormal(line: Matrix,
-               *,
-               toward: Matrix | Sequence[Expr] = None) -> Matrix
+def line_normal(line: Matrix,
+                *,
+                toward: Matrix | Sequence[Expr] = None) -> Matrix
 ```
 
 Returns the normal vector of a line, represented as an ideal point.
@@ -664,12 +664,12 @@ point.
 
 Returns `[0, 0, 0]ᵀ` if the `toward` point lies on the line.
 
-<a id="line.AreParallel"></a>
+<a id="line.are_parallel"></a>
 
-#### AreParallel
+#### are\_parallel
 
 ```python
-def AreParallel(line1: Matrix, line2: Matrix) -> bool | None
+def are_parallel(line1: Matrix, line2: Matrix) -> bool | None
 ```
 
 Tells whether line1 and line2 are parallel.
@@ -677,12 +677,12 @@ Tells whether line1 and line2 are parallel.
 Returns `True` if they are parallel, `False` if not, `None` if undecidable.
 Considers the ideal line parallel to everything.
 
-<a id="line.ArePerpendicular"></a>
+<a id="line.are_perpendicular"></a>
 
-#### ArePerpendicular
+#### are\_perpendicular
 
 ```python
-def ArePerpendicular(line1: Matrix, line2: Matrix) -> bool | None
+def are_perpendicular(line1: Matrix, line2: Matrix) -> bool | None
 ```
 
 Tells whether line1 and line2 are perpendicular.
@@ -714,15 +714,15 @@ will evaluate to a positive value.
 
 # conic
 
-<a id="conic.ConicFromPoly"></a>
+<a id="conic.conic_from_poly"></a>
 
-#### ConicFromPoly
+#### conic\_from\_poly
 
 ```python
-def ConicFromPoly(poly: Expr | Poly,
-                  *,
-                  x: Symbol = abc.x,
-                  y: Symbol = abc.y) -> Matrix
+def conic_from_poly(poly: Expr | Poly,
+                    *,
+                    x: Symbol = abc.x,
+                    y: Symbol = abc.y) -> Matrix
 ```
 
 Constructs a conic matrix from a two-variable quadratic polynomial.
@@ -736,16 +736,16 @@ Output:
 [d/2, e/2, f  ]
 ```
 
-<a id="conic.ConicThroughPoints"></a>
+<a id="conic.conic_through_points"></a>
 
-#### ConicThroughPoints
+#### conic\_through\_points
 
 ```python
-def ConicThroughPoints(p1: Matrix | Sequence[Expr],
-                       p2: Matrix | Sequence[Expr],
-                       p3: Matrix | Sequence[Expr],
-                       p4: Matrix | Sequence[Expr],
-                       p5: Matrix | Sequence[Expr]) -> Matrix
+def conic_through_points(p1: Matrix | Sequence[Expr],
+                         p2: Matrix | Sequence[Expr],
+                         p3: Matrix | Sequence[Expr],
+                         p4: Matrix | Sequence[Expr],
+                         p5: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 Computes the conic that goes through the given points.
@@ -757,14 +757,14 @@ The result is non-degenerate if no 3 points are collinear.
 *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
 section 10.1
 
-<a id="conic.ConicFromFocusAndDirectrix"></a>
+<a id="conic.conic_from_focus_and_directrix"></a>
 
-#### ConicFromFocusAndDirectrix
+#### conic\_from\_focus\_and\_directrix
 
 ```python
-def ConicFromFocusAndDirectrix(focus: Matrix | Sequence[Expr],
-                               directrix: Matrix,
-                               eccentricity: Expr) -> Matrix
+def conic_from_focus_and_directrix(focus: Matrix | Sequence[Expr],
+                                   directrix: Matrix,
+                                   eccentricity: Expr) -> Matrix
 ```
 
 Constructs a conic from its focus, directrix and eccentricity.
@@ -772,12 +772,12 @@ Constructs a conic from its focus, directrix and eccentricity.
 *Formula*:
 [research/conic_from_focus_and_directrix.py](../src/research/conic_from_focus_and_directrix.py)
 
-<a id="conic.Eccentricity"></a>
+<a id="conic.eccentricity"></a>
 
-#### Eccentricity
+#### eccentricity
 
 ```python
-def Eccentricity(conic: Matrix) -> Expr
+def eccentricity(conic: Matrix) -> Expr
 ```
 
 Computes the eccentricity of a conic section.
@@ -789,32 +789,32 @@ The result is
  - 1 for parabolas;
  - &gt;1 for hyperbolas, in particular √2 for rectangular hyperbolas.
 
-In case of [non-degenerate](#conic_classification.IsNonDegenerate)
-[central conics](#conic_classification.IsCentralConic), the eccentricity
+In case of [non-degenerate](#conic_classification.is_nondegenerate)
+[central conics](#conic_classification.is_central_conic), the eccentricity
 equals to the ratio of the center-focus distance
-([LinearEccentricity](#central_conic.LinearEccentricity))
+([linear_eccentricity](#central_conic.linear_eccentricity))
 and the center-vertex distance
-([PrimaryRadius](#central_conic.PrimaryRadius)).
+([primary_radius](#central_conic.primary_radius)).
 
 The eccentricity of finite point conics constructed by
-[shrinking an ellipse to zero size](#central_conic.ShrinkConicToZero)
+[shrinking an ellipse to zero size](#central_conic.shrink_conic_to_zero)
 equals to that of the original ellipse.
 
 Crossing line pair conics have two different (generalized) focal axes, with
 two different corresponding eccentricity values. Evaluate
-`(Eccentricity(conic), Eccentricity(-conic))` to get both.
+`(eccentricity(conic), eccentricity(-conic))` to get both.
 
 *Formula*:
 https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients<br>
 *Own research*:
 [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
 
-<a id="conic.FocalAxisDirection"></a>
+<a id="conic.focal_axis_direction"></a>
 
-#### FocalAxisDirection
+#### focal\_axis\_direction
 
 ```python
-def FocalAxisDirection(conic: Matrix) -> Matrix
+def focal_axis_direction(conic: Matrix) -> Matrix
 ```
 
 Returns the ideal point representing the direction of a conic's focal axis.
@@ -822,17 +822,17 @@ Returns the ideal point representing the direction of a conic's focal axis.
 Properties:
 - The focal axis is treated as an undirected line; its angle to the
   horizontal lies in the (-π/2, π/2] interval. For the full direction of a
-  parabola, use [ParabolaDirection](#parabola.ParabolaDirection) instead.
+  parabola, use [parabola_direction](#parabola.parabola_direction) instead.
 - Returns `[0, 0, 0]ᵀ` for circles and
-  [circular conics](#conic_classification.IsCircular).
+  [circular conics](#conic_classification.is_circular).
 - Point conics constructed by
-  [ShrinkConicToZero](#central_conic.ShrinkConicToZero)(ellipse)
+  [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(ellipse)
   preserve the axis direction of the original real or imaginary ellipse.
 - Line pair conics constructed by
-  [ShrinkConicToZero](#central_conic.ShrinkConicToZero)(hyperbola)
+  [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(hyperbola)
   have no such property.
-- The focal axis of `LinePair(l1, l2)`, and `AngleBisector(l1, l2)` point to
-  the same direction.
+- The focal axis of `line_pair(l1, l2)`, and `angle_bisector(l1, l2)` point
+  to the same direction.
 
 *Formula*:
 [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
@@ -863,17 +863,17 @@ def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None
 
 Internal implementation. Call `IdealPoints(conic)` directly.
 
-<a id="conic.ProjectiveConicCenter"></a>
+<a id="conic.projective_conic_center"></a>
 
-#### ProjectiveConicCenter
+#### projective\_conic\_center
 
 ```python
-def ProjectiveConicCenter(conic: Matrix) -> Matrix
+def projective_conic_center(conic: Matrix) -> Matrix
 ```
 
 Computes the generalized projective center of a conic.
 
-It's equivalent to [ConicCenter](#central_conic.ConicCenter) (returns a
+It's equivalent to [conic_center](#central_conic.conic_center) (returns a
 finite point) for
  - real and imaginary ellipses
  - hyperbolas
@@ -885,12 +885,12 @@ For parabolas returns the ideal point on it
 
 For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
 
-<a id="conic.PolePoint"></a>
+<a id="conic.pole_point"></a>
 
-#### PolePoint
+#### pole\_point
 
 ```python
-def PolePoint(conic: Matrix, polar_line: Matrix) -> Matrix
+def pole_point(conic: Matrix, polar_line: Matrix) -> Matrix
 ```
 
 Computes the pole point of a conic with respect to the given polar line.
@@ -903,12 +903,12 @@ complex conjugate lines, the pole is
 *Pole / polar identity*: `conic * pole_point = polar_line`<br>
 *Source*: https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line
 
-<a id="conic.PolarLine"></a>
+<a id="conic.polar_line"></a>
 
-#### PolarLine
+#### polar\_line
 
 ```python
-def PolarLine(conic: Matrix, pole_point: Matrix | Sequence[Expr]) -> Matrix
+def polar_line(conic: Matrix, pole_point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 Computes the polar line of a conic with respect to the given pole point.
@@ -920,32 +920,32 @@ Computes the polar line of a conic with respect to the given pole point.
 
 # degenerate\_conic
 
-<a id="degenerate_conic.LinePair"></a>
+<a id="degenerate_conic.line_pair_conic"></a>
 
-#### LinePair
+#### line\_pair\_conic
 
 ```python
-def LinePair(line1: Matrix, line2: Matrix) -> Matrix
+def line_pair_conic(line1: Matrix, line2: Matrix) -> Matrix
 ```
 
 Constructs a conic section from two projective lines.
 
-<a id="degenerate_conic.DoubleLine"></a>
+<a id="degenerate_conic.double_line_conic"></a>
 
-#### DoubleLine
+#### double\_line\_conic
 
 ```python
-def DoubleLine(line: Matrix) -> Matrix
+def double_line_conic(line: Matrix) -> Matrix
 ```
 
 Constructs a degenerate conic consisting of two coincident lines.
 
-<a id="degenerate_conic.PointConic"></a>
+<a id="degenerate_conic.point_conic"></a>
 
-#### PointConic
+#### point\_conic
 
 ```python
-def PointConic(point: Matrix | Sequence[Expr]) -> Matrix
+def point_conic(point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 Constructs a conic that degenerates to a single point.
@@ -1036,13 +1036,13 @@ Internal implementation. Call `ExtractPoint(conic)` directly.
 
 # distance
 
-<a id="distance.PointPointDistance"></a>
+<a id="distance.point_point_distance"></a>
 
-#### PointPointDistance
+#### point\_point\_distance
 
 ```python
-def PointPointDistance(point1: Matrix | Sequence[Expr],
-                       point2: Matrix | Sequence[Expr]) -> Expr
+def point_point_distance(point1: Matrix | Sequence[Expr],
+                         point2: Matrix | Sequence[Expr]) -> Expr
 ```
 
 Computes the signed distance between two points.
@@ -1051,12 +1051,12 @@ Special cases:
  - the distance between finite and ideal points is infinity
  - the distance between two ideal points is `nan`
 
-<a id="distance.PointLineDistance"></a>
+<a id="distance.point_line_distance"></a>
 
-#### PointLineDistance
+#### point\_line\_distance
 
 ```python
-def PointLineDistance(point: Matrix | Sequence[Expr], line: Matrix) -> Expr
+def point_line_distance(point: Matrix | Sequence[Expr], line: Matrix) -> Expr
 ```
 
 Computes the signed distance between a point and a line.
@@ -1065,12 +1065,12 @@ Special cases:
  - the distance between finite points and the ideal line is infinity
  - the distance between ideal points and any projective lines is `nan`
 
-<a id="distance.ParallelLineDistance"></a>
+<a id="distance.parallel_line_distance"></a>
 
-#### ParallelLineDistance
+#### parallel\_line\_distance
 
 ```python
-def ParallelLineDistance(line1: Matrix, line2: Matrix) -> Expr
+def parallel_line_distance(line1: Matrix, line2: Matrix) -> Expr
 ```
 
 Computes the signed distance between two parallel lines.
@@ -1089,82 +1089,82 @@ Special cases:
 
 # sympy\_utils
 
-<a id="sympy_utils.AddEq"></a>
+<a id="sympy_utils.add_eq"></a>
 
-#### AddEq
+#### add\_eq
 
 ```python
-def AddEq(*eqs: Eq) -> Eq
+def add_eq(*eqs: Eq) -> Eq
 ```
 
 Adds multiple sympy equations.
 
-<a id="sympy_utils.SubEq"></a>
+<a id="sympy_utils.sub_eq"></a>
 
-#### SubEq
+#### sub\_eq
 
 ```python
-def SubEq(eq0: Eq, eq1: Expr | Eq) -> Eq
+def sub_eq(eq0: Eq, eq1: Expr | Eq) -> Eq
 ```
 
 Subtracts a sympy equation or expression from another equation.
 
-<a id="sympy_utils.MulEq"></a>
+<a id="sympy_utils.mul_eq"></a>
 
-#### MulEq
+#### mul\_eq
 
 ```python
-def MulEq(eq: Eq, factor: Expr | Eq) -> Eq
+def mul_eq(eq: Eq, factor: Expr | Eq) -> Eq
 ```
 
 Multiplies a sympy equation by a factor or another equation.
 
-<a id="sympy_utils.DivEq"></a>
+<a id="sympy_utils.div_eq"></a>
 
-#### DivEq
+#### div\_eq
 
 ```python
-def DivEq(eq: Eq, denom: Expr) -> Eq
+def div_eq(eq: Eq, denom: Expr) -> Eq
 ```
 
 Divides a sympy equation by a denominator.
 
-<a id="sympy_utils.SwapEq"></a>
+<a id="sympy_utils.swap_eq"></a>
 
-#### SwapEq
+#### swap\_eq
 
 ```python
-def SwapEq(eq: Eq) -> Eq
+def swap_eq(eq: Eq) -> Eq
 ```
 
 Swaps the lhs and rhs of a sympy equation.
 
-<a id="sympy_utils.EqChain"></a>
+<a id="sympy_utils.eq_chain"></a>
 
-#### EqChain
+#### eq\_chain
 
 ```python
-def EqChain(*expressions: Expr) -> Eq | Expr
+def eq_chain(*expressions: Expr) -> Eq | Expr
 ```
 
 Creates a chain of equations, i.e. `expr_1 = expr_2 = ... = expr_n`.
 
-<a id="sympy_utils.FactorRadicals"></a>
+<a id="sympy_utils.factor_radicals"></a>
 
-#### FactorRadicals
+#### factor\_radicals
 
 ```python
-def FactorRadicals(expr: Expr) -> Expr
+def factor_radicals(expr: Expr) -> Expr
 ```
 
 Factors all `Pow` and `sqrt` subexpressions inside `expr`.
 
-<a id="sympy_utils.FactorAbs"></a>
+<a id="sympy_utils.factor_abs"></a>
 
-#### FactorAbs
+#### factor\_abs
 
 ```python
-def FactorAbs(expr: Expr) -> Expr
+def factor_abs(expr: Expr) -> Expr
 ```
 
 Factors all `Abs` subexpressions inside `expr`.
@@ -1208,12 +1208,12 @@ def eval(cls, conic: Matrix) -> int | None
 
 Internal implementation. Call `ConicNormFactor(conic)` directly.
 
-<a id="conic_classification.IsDegenerate"></a>
+<a id="conic_classification.is_degenerate"></a>
 
-#### IsDegenerate
+#### is\_degenerate
 
 ```python
-def IsDegenerate(conic: Matrix) -> bool | None
+def is_degenerate(conic: Matrix) -> bool | None
 ```
 
 Tells whether the conic is degenerate.
@@ -1222,12 +1222,12 @@ Degenerate conics consist of a single projective point or a pair of
 projective lines. The zero matrix is also considered degenerate.
 Returns `None` if undecidable.
 
-<a id="conic_classification.IsNonDegenerate"></a>
+<a id="conic_classification.is_nondegenerate"></a>
 
-#### IsNonDegenerate
+#### is\_nondegenerate
 
 ```python
-def IsNonDegenerate(conic: Matrix) -> bool | None
+def is_nondegenerate(conic: Matrix) -> bool | None
 ```
 
 Tells whether the conic is non-degenerate.
@@ -1235,36 +1235,36 @@ Tells whether the conic is non-degenerate.
 Non-degenerate conics include real or imaginary ellipses, parabolas and
 hyperbolas. Returns `None` if undecidable.
 
-<a id="conic_classification.IsCentralConic"></a>
+<a id="conic_classification.is_central_conic"></a>
 
-#### IsCentralConic
+#### is\_central\_conic
 
 ```python
-def IsCentralConic(conic: Matrix) -> bool | None
+def is_central_conic(conic: Matrix) -> bool | None
 ```
 
 Tells whether a conic has a finite center of symmetry.
 
 Returns `None` if undecidable.
 
-<a id="conic_classification.IsFiniteConic"></a>
+<a id="conic_classification.is_finite_conic"></a>
 
-#### IsFiniteConic
+#### is\_finite\_conic
 
 ```python
-def IsFiniteConic(conic: Matrix) -> bool | None
+def is_finite_conic(conic: Matrix) -> bool | None
 ```
 
 Tells whether all points on the conic are finite.
 
 Returns `None` if undecidable.
 
-<a id="conic_classification.IsImaginaryEllipse"></a>
+<a id="conic_classification.is_imaginary_ellipse"></a>
 
-#### IsImaginaryEllipse
+#### is\_imaginary\_ellipse
 
 ```python
-def IsImaginaryEllipse(conic: Matrix) -> bool | None
+def is_imaginary_ellipse(conic: Matrix) -> bool | None
 ```
 
 Tells whether the conic is an imaginary ellipse.
@@ -1275,62 +1275,62 @@ points with complex coordinates.
 
 Returns `None` if undecidable.
 
-<a id="conic_classification.IsEllipse"></a>
+<a id="conic_classification.is_ellipse"></a>
 
-#### IsEllipse
+#### is\_ellipse
 
 ```python
-def IsEllipse(conic: Matrix) -> bool | None
+def is_ellipse(conic: Matrix) -> bool | None
 ```
 
 Tells whether the conic is an ellipse.
 
 Returns `False` for
-[imaginary ellipses](#conic_classification.IsImaginaryEllipse),
+[imaginary ellipses](#conic_classification.is_imaginary_ellipse),
 or `None` if the conic's type is undecidable.
 
-<a id="conic_classification.IsCircle"></a>
+<a id="conic_classification.is_circle"></a>
 
-#### IsCircle
+#### is\_circle
 
 ```python
-def IsCircle(conic: Matrix) -> bool | None
+def is_circle(conic: Matrix) -> bool | None
 ```
 
 Tells whether the conic is a circle.
 
 Returns `None` if undecidable.
 
-<a id="conic_classification.IsParabola"></a>
+<a id="conic_classification.is_parabola"></a>
 
-#### IsParabola
+#### is\_parabola
 
 ```python
-def IsParabola(conic: Matrix) -> bool | None
+def is_parabola(conic: Matrix) -> bool | None
 ```
 
 Tells whether the conic is a parabola.
 
 Returns `None` if undecidable.
 
-<a id="conic_classification.IsHyperbola"></a>
+<a id="conic_classification.is_hyperbola"></a>
 
-#### IsHyperbola
+#### is\_hyperbola
 
 ```python
-def IsHyperbola(conic: Matrix) -> bool | None
+def is_hyperbola(conic: Matrix) -> bool | None
 ```
 
 Tells whether the conic is a hyperbola.
 
 Returns `None` if undecidable.
 
-<a id="conic_classification.IsCircular"></a>
+<a id="conic_classification.is_circular"></a>
 
-#### IsCircular
+#### is\_circular
 
 ```python
-def IsCircular(conic: Matrix) -> bool | None
+def is_circular(conic: Matrix) -> bool | None
 ```
 
 Tells whether there is a single center point around which the conic is
@@ -1339,36 +1339,36 @@ invariant under all rotations.
 Circles, imaginary circles, zero-radius circles have such circular symmetry.
 Double ideal lines are not considered circular. Returns `None` if undecidable.
 
-<a id="conic_classification.IsLinePair"></a>
+<a id="conic_classification.is_line_pair"></a>
 
-#### IsLinePair
+#### is\_line\_pair
 
 ```python
-def IsLinePair(conic: Matrix) -> bool | None
+def is_line_pair(conic: Matrix) -> bool | None
 ```
 
 Tells whether the conic is the union of two projective lines.
 
 Returns `None` if undecidable.
 
-<a id="conic_classification.IsDoubleLine"></a>
+<a id="conic_classification.is_double_line"></a>
 
-#### IsDoubleLine
+#### is\_double\_line
 
 ```python
-def IsDoubleLine(conic: Matrix) -> bool | None
+def is_double_line(conic: Matrix) -> bool | None
 ```
 
 Tells whether the conic consists of two coincident projective lines.
 
 Returns `None` if undecidable.
 
-<a id="conic_classification.IsPointConic"></a>
+<a id="conic_classification.is_point_conic"></a>
 
-#### IsPointConic
+#### is\_point\_conic
 
 ```python
-def IsPointConic(conic: Matrix) -> bool | None
+def is_point_conic(conic: Matrix) -> bool | None
 ```
 
 Tells whether the conic consists of a single projective point.
@@ -1378,12 +1378,12 @@ Returns `None` if undecidable.
 A conic is a point conic iff it's degenerate and splits to two lines with
 complex coordinates.
 
-<a id="conic_classification.IsFinitePointConic"></a>
+<a id="conic_classification.is_finite_point_conic"></a>
 
-#### IsFinitePointConic
+#### is\_finite\_point\_conic
 
 ```python
-def IsFinitePointConic(conic: Matrix) -> bool | None
+def is_finite_point_conic(conic: Matrix) -> bool | None
 ```
 
 Tells whether the conic consists of a single finite (Euclidean) point.
@@ -1400,22 +1400,22 @@ Returns `None` if undecidable.
 
 The point at (0, 0)
 
-<a id="point.IdealPoint"></a>
+<a id="point.ideal_point"></a>
 
-#### IdealPoint
+#### ideal\_point
 
 ```python
-def IdealPoint(x: Expr, y: Expr) -> Matrix
+def ideal_point(x: Expr, y: Expr) -> Matrix
 ```
 
 Creates an ideal point at the given direction.
 
-<a id="point.IdealPointOnLine"></a>
+<a id="point.ideal_point_on_line"></a>
 
-#### IdealPointOnLine
+#### ideal\_point\_on\_line
 
 ```python
-def IdealPointOnLine(line: Matrix) -> Matrix
+def ideal_point_on_line(line: Matrix) -> Matrix
 ```
 
 Returns the coordinates of the ideal point on the line.
@@ -1425,44 +1425,44 @@ always zero.
 
 If the line is the ideal line, returns `[0, 0, 0]ᵀ`.
 
-<a id="point.PointToXY"></a>
+<a id="point.point_to_xy"></a>
 
-#### PointToXY
+#### point\_to\_xy
 
 ```python
-def PointToXY(point: Matrix | Sequence[Expr]) -> tuple[Expr, Expr]
+def point_to_xy(point: Matrix | Sequence[Expr]) -> tuple[Expr, Expr]
 ```
 
 Computes the Euclidean coordinates of a projective point.
 
-<a id="point.PointToVec3"></a>
+<a id="point.point_to_vec3"></a>
 
-#### PointToVec3
+#### point\_to\_vec3
 
 ```python
-def PointToVec3(point: Matrix | Sequence[Expr]) -> Matrix
+def point_to_vec3(point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 Computes the homogeneous coordinates of a projective point.
 
-<a id="point.Centroid"></a>
+<a id="point.centroid"></a>
 
-#### Centroid
+#### centroid
 
 ```python
-def Centroid(*points: Sequence[Expr]) -> Matrix
+def centroid(*points: Sequence[Expr]) -> Matrix
 ```
 
 Computes the centroid of a set of points.
 
 Returns the point's coordinates as a 2D column vector.
 
-<a id="point.PerpendicularFoot"></a>
+<a id="point.perpendicular_foot"></a>
 
-#### PerpendicularFoot
+#### perpendicular\_foot
 
 ```python
-def PerpendicularFoot(point: Matrix | Sequence[Expr], line: Matrix) -> Matrix
+def perpendicular_foot(point: Matrix | Sequence[Expr], line: Matrix) -> Matrix
 ```
 
 Computes the foot of the perpendicular through a point to a line.
@@ -1476,52 +1476,52 @@ Degenerates to `[nan, nan]ᵀ` when `point`, `line` or both are infinite.
 
 # transform
 
-<a id="transform.TransformConic"></a>
+<a id="transform.transform_conic"></a>
 
-#### TransformConic
+#### transform\_conic
 
 ```python
-def TransformConic(conic: Matrix, transformation: Matrix) -> Matrix
+def transform_conic(conic: Matrix, transformation: Matrix) -> Matrix
 ```
 
 Applies a projective transformation on a conic.
 
-<a id="transform.TransformLine"></a>
+<a id="transform.transform_line"></a>
 
-#### TransformLine
+#### transform\_line
 
 ```python
-def TransformLine(line: Matrix, transformation: Matrix) -> Matrix
+def transform_line(line: Matrix, transformation: Matrix) -> Matrix
 ```
 
 Applies a projective transformation on a projective line.
 
-<a id="transform.Translate"></a>
+<a id="transform.translate"></a>
 
-#### Translate
+#### translate
 
 ```python
-def Translate(dx: Expr, dy: Expr) -> Matrix
+def translate(dx: Expr, dy: Expr) -> Matrix
 ```
 
 Computes the transformation matrix for a 2D translation.
 
-<a id="transform.Rotate"></a>
+<a id="transform.rotate"></a>
 
-#### Rotate
+#### rotate
 
 ```python
-def Rotate(angle: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix
+def rotate(angle: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix
 ```
 
 Computes the transformation matrix for a rotation around a point.
 
-<a id="transform.ReflectToLine"></a>
+<a id="transform.reflect_to_line"></a>
 
-#### ReflectToLine
+#### reflect\_to\_line
 
 ```python
-def ReflectToLine(axis: Matrix) -> Matrix
+def reflect_to_line(axis: Matrix) -> Matrix
 ```
 
 Computes the transformation matrix for a reflection to a line.
@@ -1531,37 +1531,37 @@ Returns a `nan` matrix if `axis` is the ideal line.
 *Formula*:
 [research/reflection_matrix.py](../src/research/reflection_matrix.py)
 
-<a id="transform.ScaleXY"></a>
+<a id="transform.scale_xy"></a>
 
-#### ScaleXY
+#### scale\_xy
 
 ```python
-def ScaleXY(scale_x: Expr,
-            scale_y: Expr,
-            x0: Expr = 0,
-            y0: Expr = 0) -> Matrix
+def scale_xy(scale_x: Expr,
+             scale_y: Expr,
+             x0: Expr = 0,
+             y0: Expr = 0) -> Matrix
 ```
 
 Computes the projective transformation matrix for scaling along the x-
 and y-axes.
 
-<a id="transform.Scale"></a>
+<a id="transform.scale"></a>
 
-#### Scale
+#### scale
 
 ```python
-def Scale(scale: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix
+def scale(scale: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix
 ```
 
 Computes the projective transformation matrix for a uniform scaling
 transformation.
 
-<a id="transform.TransformationFromSamples"></a>
+<a id="transform.transformation_from_samples"></a>
 
-#### TransformationFromSamples
+#### transformation\_from\_samples
 
 ```python
-def TransformationFromSamples(
+def transformation_from_samples(
         source_points: Sequence[tuple[Expr, Expr]],
         target_points: Sequence[tuple[Expr, Expr]]) -> Matrix
 ```
@@ -1576,12 +1576,12 @@ https://franklinta.com/2014/09/08/computing-css-matrix3d-transforms/
 
 # parabola
 
-<a id="parabola.ParabolaDirectrix"></a>
+<a id="parabola.parabola_directrix"></a>
 
-#### ParabolaDirectrix
+#### parabola\_directrix
 
 ```python
-def ParabolaDirectrix(parabola: Matrix) -> Matrix
+def parabola_directrix(parabola: Matrix) -> Matrix
 ```
 
 Computes the directrix of a parabola represented as a conic matrix.
@@ -1598,12 +1598,12 @@ Special cases for other conic types:
 *Formula*:
 [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
 
-<a id="parabola.ParabolaFocus"></a>
+<a id="parabola.parabola_focus"></a>
 
-#### ParabolaFocus
+#### parabola\_focus
 
 ```python
-def ParabolaFocus(parabola: Matrix) -> Matrix
+def parabola_focus(parabola: Matrix) -> Matrix
 ```
 
 Computes the focus of a parabola represented as a conic matrix.
@@ -1618,12 +1618,12 @@ Special cases for other conic types:
 *Formula*:
 [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
 
-<a id="parabola.ParabolaVertex"></a>
+<a id="parabola.parabola_vertex"></a>
 
-#### ParabolaVertex
+#### parabola\_vertex
 
 ```python
-def ParabolaVertex(parabola: Matrix) -> Matrix
+def parabola_vertex(parabola: Matrix) -> Matrix
 ```
 
 Computes the parabola's vertex.
@@ -1632,29 +1632,30 @@ Returns the point's coordinates as a 2D column vector.
 
 *Formula*: [research/parabola_vertex.py](../src/research/parabola_vertex.py)
 
-<a id="parabola.ParabolaDirection"></a>
+<a id="parabola.parabola_direction"></a>
 
-#### ParabolaDirection
+#### parabola\_direction
 
 ```python
-def ParabolaDirection(parabola: Matrix) -> Matrix
+def parabola_direction(parabola: Matrix) -> Matrix
 ```
 
 Computes the direction of a parabola modulo 2π.
 
-Unlike [FocalAxisDirection](#conic.FocalAxisDirection), which determines
-the direction only modulo π, this function resolves the full orientation.
+Unlike [focal_axis_direction](#conic.focal_axis_direction), which
+determines the direction only modulo π, this function resolves the full
+orientation.
 
 Returns the ideal point representing the parabola’s direction. This point
 coincides with both the ideal point lying on the parabola and its
-[ProjectiveConicCenter](#conic.ProjectiveConicCenter).
+[projective_conic_center](#conic.projective_conic_center).
 
-<a id="parabola.ParabolaAxis"></a>
+<a id="parabola.parabola_axis"></a>
 
-#### ParabolaAxis
+#### parabola\_axis
 
 ```python
-def ParabolaAxis(parabola: Matrix) -> Matrix
+def parabola_axis(parabola: Matrix) -> Matrix
 ```
 
 Computes the parabola's focal axis line.
@@ -1668,12 +1669,12 @@ Special cases for other conic types:
 - Raises `ValueError` if the conic provably has 0 or 2 ideal points.
 - Returns an unspecified 3D column vector in all other cases.
 
-<a id="parabola.ParabolaFocalParameter"></a>
+<a id="parabola.parabola_focal_parameter"></a>
 
-#### ParabolaFocalParameter
+#### parabola\_focal\_parameter
 
 ```python
-def ParabolaFocalParameter(parabola: Matrix) -> Expr
+def parabola_focal_parameter(parabola: Matrix) -> Expr
 ```
 
 Computes the parabola's focus-directrix distance.
@@ -1702,23 +1703,23 @@ C(θ) = [d e f] * [sin θ]
 
 The circle at the origin with radius 1, in polar matrix form.
 
-<a id="polar_conic.PointAtAngle"></a>
+<a id="polar_conic.point_at_angle"></a>
 
-#### PointAtAngle
+#### point\_at\_angle
 
 ```python
-def PointAtAngle(polar: Matrix, theta: Expr) -> Matrix
+def point_at_angle(polar: Matrix, theta: Expr) -> Matrix
 ```
 
 Computes the coordinates of the projective point on a polar conic
 corresponding to a certain angle.
 
-<a id="polar_conic.ConicFromPolarMatrix"></a>
+<a id="polar_conic.conic_from_polar_matrix"></a>
 
-#### ConicFromPolarMatrix
+#### conic\_from\_polar\_matrix
 
 ```python
-def ConicFromPolarMatrix(polar: Matrix) -> Matrix
+def conic_from_polar_matrix(polar: Matrix) -> Matrix
 ```
 
 Transforms a conic from polar to quadratic form.
@@ -1730,38 +1731,38 @@ transformation on the unit circle.
 
 # incidence
 
-<a id="incidence.LineContainsPoint"></a>
+<a id="incidence.line_contains_point"></a>
 
-#### LineContainsPoint
+#### line\_contains\_point
 
 ```python
-def LineContainsPoint(line: Matrix,
-                      point: Matrix | Sequence[Expr]) -> bool | None
+def line_contains_point(line: Matrix,
+                        point: Matrix | Sequence[Expr]) -> bool | None
 ```
 
 Tells whether `point` is on `line`.
 
 Returns `None` if undecidable.
 
-<a id="incidence.ConicContainsPoint"></a>
+<a id="incidence.conic_contains_point"></a>
 
-#### ConicContainsPoint
+#### conic\_contains\_point
 
 ```python
-def ConicContainsPoint(conic: Matrix,
-                       point: Matrix | Sequence[Expr]) -> bool | None
+def conic_contains_point(conic: Matrix,
+                         point: Matrix | Sequence[Expr]) -> bool | None
 ```
 
 Checks if a point lies on a conic.
 
 Returns `None` if undecidable.
 
-<a id="incidence.ConicContainsLine"></a>
+<a id="incidence.conic_contains_line"></a>
 
-#### ConicContainsLine
+#### conic\_contains\_line
 
 ```python
-def ConicContainsLine(conic: Matrix, line: Matrix) -> bool | None
+def conic_contains_line(conic: Matrix, line: Matrix) -> bool | None
 ```
 
 Checks if a line lies on a conic.
@@ -1771,12 +1772,12 @@ Returns `None` if undecidable.
 *Formula*:
 [research/conic_line_containment.py](../src/research/conic_line_containment.py)
 
-<a id="incidence.AreCollinear"></a>
+<a id="incidence.are_collinear"></a>
 
-#### AreCollinear
+#### are\_collinear
 
 ```python
-def AreCollinear(*points: Matrix) -> bool | None
+def are_collinear(*points: Matrix) -> bool | None
 ```
 
 Tells whether n points are collinear.
@@ -1791,14 +1792,14 @@ Algorithm:
 
 # hyperbola
 
-<a id="hyperbola.HyperbolaFromFociAndPoint"></a>
+<a id="hyperbola.hyperbola_from_foci_and_point"></a>
 
-#### HyperbolaFromFociAndPoint
+#### hyperbola\_from\_foci\_and\_point
 
 ```python
-def HyperbolaFromFociAndPoint(focus1: Matrix | Sequence[Expr],
-                              focus2: Matrix | Sequence[Expr],
-                              point: Matrix | Sequence[Expr]) -> Matrix
+def hyperbola_from_foci_and_point(focus1: Matrix | Sequence[Expr],
+                                  focus2: Matrix | Sequence[Expr],
+                                  point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 Constructs a hyperbola from its focus points and an incident point.
@@ -1810,12 +1811,12 @@ Constructs a hyperbola from its focus points and an incident point.
 
 # ellipse
 
-<a id="ellipse.Ellipse"></a>
+<a id="ellipse.ellipse"></a>
 
-#### Ellipse
+#### ellipse
 
 ```python
-def Ellipse(center: Matrix | Sequence[Expr],
+def ellipse(center: Matrix | Sequence[Expr],
             r1: Expr,
             r2: Expr,
             *,
@@ -1829,14 +1830,14 @@ direction vector of the first radius or its angle to horizontal.
 *Formula*:
 [research/ellipse_from_params.py](../src/research/ellipse_from_params.py)
 
-<a id="ellipse.EllipseFromFociAndPoint"></a>
+<a id="ellipse.ellipse_from_foci_and_point"></a>
 
-#### EllipseFromFociAndPoint
+#### ellipse\_from\_foci\_and\_point
 
 ```python
-def EllipseFromFociAndPoint(focus1: Matrix | Sequence[Expr],
-                            focus2: Matrix | Sequence[Expr],
-                            point: Matrix | Sequence[Expr]) -> Matrix
+def ellipse_from_foci_and_point(focus1: Matrix | Sequence[Expr],
+                                focus2: Matrix | Sequence[Expr],
+                                point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 Constructs an ellipse from its focus points and an incident point.
@@ -1852,14 +1853,14 @@ Special cases:
 *Formula*:
 [research/ellipse_from_foci_and_point.py](../src/research/ellipse_from_foci_and_point.py)
 
-<a id="ellipse.SteinerEllipse"></a>
+<a id="ellipse.steiner_ellipse"></a>
 
-#### SteinerEllipse
+#### steiner\_ellipse
 
 ```python
-def SteinerEllipse(point1: Matrix | Sequence[Expr],
-                   point2: Matrix | Sequence[Expr],
-                   point3: Matrix | Sequence[Expr]) -> Matrix
+def steiner_ellipse(point1: Matrix | Sequence[Expr],
+                    point2: Matrix | Sequence[Expr],
+                    point3: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 Constructs the Steiner circumellipse for the given points.
@@ -1870,14 +1871,14 @@ centroid.
 *Definition*: https://en.wikipedia.org/wiki/Steiner_ellipse<br>
 *Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
 
-<a id="ellipse.SteinerInellipse"></a>
+<a id="ellipse.steiner_inellipse"></a>
 
-#### SteinerInellipse
+#### steiner\_inellipse
 
 ```python
-def SteinerInellipse(point1: Matrix | Sequence[Expr],
-                     point2: Matrix | Sequence[Expr],
-                     point3: Matrix | Sequence[Expr]) -> Matrix
+def steiner_inellipse(point1: Matrix | Sequence[Expr],
+                      point2: Matrix | Sequence[Expr],
+                      point3: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 Computes the Steiner inellipse for the given points.
@@ -1892,12 +1893,12 @@ triangle's sides at their midpoints.
 
 # intersection
 
-<a id="intersection.LineXLine"></a>
+<a id="intersection.line_x_line"></a>
 
-#### LineXLine
+#### line\_x\_line
 
 ```python
-def LineXLine(line1: Matrix, line2: Matrix) -> Matrix
+def line_x_line(line1: Matrix, line2: Matrix) -> Matrix
 ```
 
 Computes the intersection of two lines.
@@ -1905,12 +1906,12 @@ Computes the intersection of two lines.
 Returns an ideal point if the lines are parallel, or `[0, 0, 0]ᵀ` if they
 coincide.
 
-<a id="intersection.ConicXLine"></a>
+<a id="intersection.conic_x_line"></a>
 
-#### ConicXLine
+#### conic\_x\_line
 
 ```python
-def ConicXLine(
+def conic_x_line(
     conic: Matrix, line: Matrix
 ) -> tuple[Matrix | Sequence[Expr], Matrix | Sequence[Expr]] | NaN
 ```
