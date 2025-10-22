@@ -69,7 +69,7 @@ conic = Matrix(
     ],
 )
 
-assert ConicCenter(conic) == (0, 0)
+assert ConicCenter(conic) == Matrix([0, 0])
 assert ConicContainsPoint(conic, (x1, y1))
 assert ConicContainsPoint(conic, (x2, y2))
 assert ConicContainsPoint(conic, (x3, y3))
