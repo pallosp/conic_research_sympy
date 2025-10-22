@@ -54,7 +54,7 @@ class ConicNormFactor(Function):
 
         return None
 
-    def _eval_Abs(self) -> Integer:
+    def _eval_Abs(self) -> Integer:  # noqa: N802 (invalid-function-name)
         return S.One
 
     def _eval_power(self, exponent: Expr) -> Expr | None:

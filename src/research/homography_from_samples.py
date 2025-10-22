@@ -28,7 +28,7 @@ u0, v0, u1, v1, u2, v2, u3, v3 = symbols("u0,v0,u1,v1,u2,v2,u3,v3")
 # linear equation system where m is a 8x8 matrix below.
 
 
-def GetTransform(
+def get_transform(
     *mappings: list[tuple[tuple[Expr, Expr], tuple[Expr, Expr]]],
 ) -> Matrix:
     (
@@ -67,7 +67,7 @@ mappings = [
     ((-1, -1), (u2, v2)),
     ((1, -1), (u3, v3)),
 ]
-transform = GetTransform(*mappings)
+transform = get_transform(*mappings)
 
 # Sanity checks
 
@@ -95,7 +95,7 @@ mappings = [
     ((-1, 0), (u2, v2)),
     ((0, -1), (u3, v3)),
 ]
-transform = GetTransform(*mappings)
+transform = get_transform(*mappings)
 
 print("Elements of the normalized transformation matrix:\n")
 

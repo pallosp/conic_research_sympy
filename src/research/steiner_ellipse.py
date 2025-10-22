@@ -119,7 +119,7 @@ steiner /= Matrix([[x1, x2, x3], [y1, y2, y3], [1, 1, 1]]).det() / -18
 a, _, _, b, c, _, d, e, f = (elem.factor() for elem in steiner)
 
 
-def PolyAsDet(
+def poly_as_det(
     poly: Expr,
     col1_options: list[Matrix],
     col2_options: list[Matrix],
@@ -168,27 +168,27 @@ col_xy_symmetric = [
 print("\nElements of the Steiner ellipse matrix:\n")
 
 println_indented(
-    Eq(symbols("a"), PolyAsDet(a, col_y_options, col_y_options, [col_ones])),
+    Eq(symbols("a"), poly_as_det(a, col_y_options, col_y_options, [col_ones])),
 )
 println_indented(
-    Eq(symbols("b"), PolyAsDet(b, col_x_options, col_y_options, [col_ones])),
+    Eq(symbols("b"), poly_as_det(b, col_x_options, col_y_options, [col_ones])),
 )
 println_indented(
-    Eq(symbols("c"), PolyAsDet(c, col_x_options, col_x_options, [col_ones])),
+    Eq(symbols("c"), poly_as_det(c, col_x_options, col_x_options, [col_ones])),
 )
 println_indented(
-    Eq(symbols("d"), PolyAsDet(d, col_y_options, col_y_options, col_x_options)),
+    Eq(symbols("d"), poly_as_det(d, col_y_options, col_y_options, col_x_options)),
 )
 println_indented(
-    Eq(symbols("e"), PolyAsDet(e, col_x_options, col_x_options, col_y_options)),
+    Eq(symbols("e"), poly_as_det(e, col_x_options, col_x_options, col_y_options)),
 )
 println_indented(
-    Eq(symbols("f"), PolyAsDet(f, col_x_options, col_xy_symmetric, col_y_options)),
+    Eq(symbols("f"), poly_as_det(f, col_x_options, col_xy_symmetric, col_y_options)),
 )
 println_indented(
     Eq(
         symbols("f") / 2,
-        PolyAsDet(f / 2, col_x_options, [col_xy_asymmetric], col_y_options),
+        poly_as_det(f / 2, col_x_options, [col_xy_asymmetric], col_y_options),
     ),
 )
 
@@ -212,23 +212,23 @@ inellipse_subs = {
 a, b, c, d, e, f = (v.xreplace(inellipse_subs) * 4 for v in [a, b, c, d, e, f])
 
 println_indented(
-    Eq(symbols("a"), PolyAsDet(a, col_y_options, col_y_options, [col_ones])),
+    Eq(symbols("a"), poly_as_det(a, col_y_options, col_y_options, [col_ones])),
 )
 println_indented(
-    Eq(symbols("b"), PolyAsDet(b, col_x_options, col_y_options, [col_ones])),
+    Eq(symbols("b"), poly_as_det(b, col_x_options, col_y_options, [col_ones])),
 )
 println_indented(
-    Eq(symbols("c"), PolyAsDet(c, col_x_options, col_x_options, [col_ones])),
+    Eq(symbols("c"), poly_as_det(c, col_x_options, col_x_options, [col_ones])),
 )
 println_indented(
-    Eq(symbols("d"), PolyAsDet(d, col_y_options, col_y_options, col_x_options)),
+    Eq(symbols("d"), poly_as_det(d, col_y_options, col_y_options, col_x_options)),
 )
 println_indented(
-    Eq(symbols("e"), PolyAsDet(e, col_x_options, col_x_options, col_y_options)),
+    Eq(symbols("e"), poly_as_det(e, col_x_options, col_x_options, col_y_options)),
 )
 println_indented(
     Eq(
         symbols("f") * 2,
-        PolyAsDet(f * 2, col_x_options, col_xy_symmetric, col_y_options),
+        poly_as_det(f * 2, col_x_options, col_xy_symmetric, col_y_options),
     ),
 )

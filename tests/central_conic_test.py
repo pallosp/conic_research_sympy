@@ -33,7 +33,7 @@ from lib.matrix import is_nonzero_multiple
 from lib.point import ORIGIN
 from lib.sympy_utils import factor_abs, factor_radicals
 from lib.transform import scale_xy, transform_conic
-from tests.utils import AreProjectiveSetsEqual
+from tests.utils import are_projective_sets_equal
 
 
 class TestConicFromFociAndRadius:
@@ -175,7 +175,7 @@ class TestLinearEccentricity:
         fx, r = symbols("fx r", real=True, nonzero=True)
         conic = conic_from_foci_and_radius((-fx, 0), (fx, 0), r)
 
-        def SimplifiedLinEcc(conic: Matrix, assumptions: AppliedPredicate) -> Expr:
+        def simplified_lin_ecc(conic: Matrix, assumptions: AppliedPredicate) -> Expr:
             return (
                 factor_abs(linear_eccentricity(conic).factor())
                 .refine(assumptions)
@@ -183,14 +183,14 @@ class TestLinearEccentricity:
             )
 
         # ellipse
-        assert SimplifiedLinEcc(conic, Q.positive(fx) & Q.positive(r - fx)) == fx
-        assert SimplifiedLinEcc(-2 * conic, Q.positive(fx) & Q.positive(r - fx)) == fx
-        assert SimplifiedLinEcc(conic, Q.negative(fx) & Q.positive(r + fx)) == -fx
+        assert simplified_lin_ecc(conic, Q.positive(fx) & Q.positive(r - fx)) == fx
+        assert simplified_lin_ecc(-2 * conic, Q.positive(fx) & Q.positive(r - fx)) == fx
+        assert simplified_lin_ecc(conic, Q.negative(fx) & Q.positive(r + fx)) == -fx
 
         # hyperbola
-        assert SimplifiedLinEcc(conic, Q.positive(r) & Q.positive(fx - r)) == fx
-        assert SimplifiedLinEcc(-2 * conic, Q.positive(r) & Q.positive(fx - r)) == fx
-        assert SimplifiedLinEcc(conic, Q.negative(fx) & Q.positive(r + fx)) == -fx
+        assert simplified_lin_ecc(conic, Q.positive(r) & Q.positive(fx - r)) == fx
+        assert simplified_lin_ecc(-2 * conic, Q.positive(r) & Q.positive(fx - r)) == fx
+        assert simplified_lin_ecc(conic, Q.negative(fx) & Q.positive(r + fx)) == -fx
 
     def test_numeric_ellipse(self):
         ellipse = conic_from_foci_and_radius((1, 2), (4, 6), 5)
@@ -292,7 +292,7 @@ class TestShrinkToZero:
         shrunk = shrink_conic_to_zero(hyperbola)
         assert shrunk.det() == 0
         assert conic_center(hyperbola) == conic_center(shrunk)
-        assert AreProjectiveSetsEqual(IdealPoints(hyperbola), IdealPoints(shrunk))
+        assert are_projective_sets_equal(IdealPoints(hyperbola), IdealPoints(shrunk))
 
     def test_circle(self):
         symbolic_circle = circle(symbols("x y"), symbols("r"))

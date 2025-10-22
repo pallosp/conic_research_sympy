@@ -15,7 +15,7 @@ focus2 = (cx - dx, cy - dy)
 radius = symbols("r", real=True)  # center-vertex distance
 
 
-def ComputeConicFromFociAndRadius(
+def compute_conic_from_foci_and_radius(
     focus1: tuple[Expr, Expr],
     focus2: tuple[Expr, Expr],
     radius: Expr,
@@ -60,11 +60,11 @@ def ComputeConicFromFociAndRadius(
     return conic_matrix
 
 
-ellipse = ComputeConicFromFociAndRadius(focus1, focus2, radius, "Ellipse")
+ellipse = compute_conic_from_foci_and_radius(focus1, focus2, radius, "Ellipse")
 
 print(f"{'-' * 135}\n")
 
-hyperbola = ComputeConicFromFociAndRadius(focus1, focus2, radius, "Hyperbola")
+hyperbola = compute_conic_from_foci_and_radius(focus1, focus2, radius, "Hyperbola")
 
 print(f"{'-' * 135}\n")
 

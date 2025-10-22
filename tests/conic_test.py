@@ -35,7 +35,7 @@ from lib.matrix import (
 )
 from lib.point import ORIGIN, ideal_point, ideal_point_on_line
 from lib.transform import rotate, transform_conic
-from tests.utils import AreProjectiveSetsEqual
+from tests.utils import are_projective_sets_equal
 
 
 class TestConicFromPoly:
@@ -191,7 +191,7 @@ class TestAxisDirection:
         conic = line_pair_conic(X_AXIS, Y_AXIS)
         dir1 = focal_axis_direction(conic)
         dir2 = focal_axis_direction(-conic)
-        assert AreProjectiveSetsEqual([dir1, dir2], [[1, 1, 0], [1, -1, 0]])
+        assert are_projective_sets_equal([dir1, dir2], [[1, 1, 0], [1, -1, 0]])
 
     def test_double_line(self):
         line_pair = line_pair_conic(X_AXIS, X_AXIS)
@@ -221,14 +221,14 @@ class TestIdealPoints:
         ideal_points = IdealPoints(hyperbola)
         ideal_x = ideal_point(1, 0)
         ideal_y = ideal_point(0, 1)
-        assert AreProjectiveSetsEqual(ideal_points, [ideal_x, ideal_y])
+        assert are_projective_sets_equal(ideal_points, [ideal_x, ideal_y])
 
     def test_unit_hyperbola(self):
         hyperbola = conic_from_poly(x * x - y * y - 1)
         ideal_points = IdealPoints(hyperbola)
         ideal1 = ideal_point(1, 1)
         ideal2 = ideal_point(1, -1)
-        assert AreProjectiveSetsEqual(ideal_points, [ideal1, ideal2])
+        assert are_projective_sets_equal(ideal_points, [ideal1, ideal2])
 
     def test_parabola(self):
         parabola = conic_from_poly(x * x - y)
@@ -238,7 +238,7 @@ class TestIdealPoints:
 
     def test_circle(self):
         ideal_points = IdealPoints(UNIT_CIRCLE)
-        assert AreProjectiveSetsEqual(
+        assert are_projective_sets_equal(
             ideal_points,
             [ideal_point(1, I), ideal_point(1, -I)],
         )

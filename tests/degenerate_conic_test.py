@@ -14,7 +14,7 @@ from lib.degenerate_conic import (
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, horizontal_line, vertical_line
 from lib.matrix import conic_matrix, is_nonzero_multiple, is_real_matrix
 from lib.point import point_to_vec3
-from tests.utils import AreProjectiveSetsEqual
+from tests.utils import are_projective_sets_equal
 
 
 class TestLinePair:
@@ -27,7 +27,8 @@ class TestLinePair:
     def test_numeric_line_pair(self):
         double_ideal = conic_matrix(0, 0, 0, 0, 0, 1)
         assert is_nonzero_multiple(
-            line_pair_conic(IDEAL_LINE, IDEAL_LINE), double_ideal,
+            line_pair_conic(IDEAL_LINE, IDEAL_LINE),
+            double_ideal,
         )
         plus = conic_matrix(0, 1, 0, 0, 0, 0)
         assert is_nonzero_multiple(line_pair_conic(X_AXIS, Y_AXIS), plus)
@@ -53,7 +54,7 @@ class TestPointConic:
         point = (1, 2, 0)
         conic = point_conic(point)
         assert is_degenerate(conic) is True
-        assert AreProjectiveSetsEqual(IdealPoints(conic), [point, point])
+        assert are_projective_sets_equal(IdealPoints(conic), [point, point])
         assert is_real_matrix(SplitToLines(conic)[0]) is False
 
 
@@ -61,31 +62,31 @@ class TestSplitToLines:
     def test_horizontal_lines(self):
         lines = [horizontal_line(1), horizontal_line(2)]
         conic = line_pair_conic(*lines)
-        assert AreProjectiveSetsEqual(lines, SplitToLines(conic))
+        assert are_projective_sets_equal(lines, SplitToLines(conic))
 
     def test_vertical_lines(self):
         lines = [vertical_line(1), vertical_line(2)]
         conic = line_pair_conic(*lines)
-        assert AreProjectiveSetsEqual(lines, SplitToLines(conic))
+        assert are_projective_sets_equal(lines, SplitToLines(conic))
 
     def test_double_line(self):
         lines = [Matrix([1, 2, 3])] * 2
         conic = line_pair_conic(*lines)
-        assert AreProjectiveSetsEqual(lines, SplitToLines(conic))
+        assert are_projective_sets_equal(lines, SplitToLines(conic))
 
     def test_double_ideal_line(self):
         lines = [IDEAL_LINE] * 2
         conic = line_pair_conic(*lines)
-        assert AreProjectiveSetsEqual(lines, SplitToLines(conic))
+        assert are_projective_sets_equal(lines, SplitToLines(conic))
 
     def test_general_case(self):
         lines = [Matrix([1, 2, 3]), Matrix([4, 5, 6])]
         conic = line_pair_conic(*lines)
-        assert AreProjectiveSetsEqual(lines, SplitToLines(conic))
+        assert are_projective_sets_equal(lines, SplitToLines(conic))
 
     def test_point_conic(self):
         conic = circle((0, 0), 0)
-        assert AreProjectiveSetsEqual(
+        assert are_projective_sets_equal(
             [Matrix([1, I, 0]), Matrix([1, -I, 0])],
             SplitToLines(conic),
         )

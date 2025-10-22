@@ -6,14 +6,14 @@ from lib.point import perpendicular_foot
 from lib.transform import transformation_from_samples
 
 
-def Reflect(point: tuple[Expr, Expr], axis: Matrix) -> tuple[Expr, Expr]:
+def reflect(point: tuple[Expr, Expr], axis: Matrix) -> tuple[Expr, Expr]:
     foot = perpendicular_foot(point, axis)
     return (2 * foot[0] - point[0], 2 * foot[1] - point[1])
 
 
 axis = Matrix(symbols("a b c"))
 samples = [(1, 0), (0, 1), (-1, 0), (0, -1)]
-transform = transformation_from_samples(samples, [Reflect(s, axis) for s in samples])
+transform = transformation_from_samples(samples, [reflect(s, axis) for s in samples])
 
 print("\nTransformation matrix that reflects to the ax+by+c=0 line:\n")
 pprint(transform.applyfunc(factor))

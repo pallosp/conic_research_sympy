@@ -11,7 +11,7 @@ a, b, c, d, e, f, g, h, i, alpha, beta = symbols("a,b,c,d,e,f,g,h,i,alpha,beta")
 polar_matrix = Matrix([[a, b, c], [d, e, f], [g, h, i]])
 
 
-def GetIntersectionOfSecants(end_point_func: Callable[[Expr], Expr]) -> Matrix:
+def get_intersection_of_secants(end_point_func: Callable[[Expr], Expr]) -> Matrix:
     alpha, beta = symbols("alpha,beta")
 
     p1 = point_at_angle(polar_matrix, alpha)
@@ -34,10 +34,10 @@ print("\nPolar conic matrix:\n")
 println_indented(polar_matrix)
 
 print("Intersections of secants between θ and π-θ:\n")
-println_indented(GetIntersectionOfSecants(lambda angle: pi - angle))
+println_indented(get_intersection_of_secants(lambda angle: pi - angle))
 
 print("Intersections of secants between θ and -θ:\n")
-println_indented(GetIntersectionOfSecants(lambda angle: -angle) * -1)
+println_indented(get_intersection_of_secants(lambda angle: -angle) * -1)
 
 print("Intersections of secants between θ and θ+π:\n")
-println_indented(GetIntersectionOfSecants(lambda angle: angle + pi))
+println_indented(get_intersection_of_secants(lambda angle: angle + pi))

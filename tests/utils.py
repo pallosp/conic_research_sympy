@@ -5,7 +5,7 @@ from sympy import Matrix
 from lib.matrix import is_nonzero_multiple
 
 
-def AreProjectiveSetsEqual(
+def are_projective_sets_equal(
     set1: Sequence[Matrix],
     set2: Sequence[Matrix],
 ) -> bool:
