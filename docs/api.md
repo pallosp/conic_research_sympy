@@ -124,6 +124,8 @@
   * [POLAR\_UNIT\_CIRCLE](#polar_conic.POLAR_UNIT_CIRCLE)
   * [PointAtAngle](#polar_conic.PointAtAngle)
   * [ConicFromPolarMatrix](#polar_conic.ConicFromPolarMatrix)
+* [incidence](#incidence)
+  * [AreCollinear](#incidence.AreCollinear)
 * [hyperbola](#hyperbola)
   * [HyperbolaFromFociAndPoint](#hyperbola.HyperbolaFromFociAndPoint)
 * [ellipse](#ellipse)
@@ -1764,6 +1766,26 @@ Transforms a conic from polar to quadratic form.
 
 The algorithm is essentially applying the polar matrix as a projective
 transformation on the unit circle.
+
+<a id="incidence"></a>
+
+# incidence
+
+<a id="incidence.AreCollinear"></a>
+
+#### AreCollinear
+
+```python
+def AreCollinear(*points: Matrix) -> bool | None
+```
+
+Tells whether n points are collinear.
+
+Returns `None` if undecidable.
+
+Algorithm:
+ - n=3: https://en.wikipedia.org/wiki/Incidence_(geometry)#Collinearity
+ - n>3: https://en.wikipedia.org/wiki/Gram_matrix
 
 <a id="hyperbola"></a>
 
