@@ -126,6 +126,7 @@
   * [conic\_contains\_point](#incidence.conic_contains_point)
   * [conic\_contains\_line](#incidence.conic_contains_line)
   * [are\_collinear](#incidence.are_collinear)
+  * [are\_concurrent](#incidence.are_concurrent)
 * [hyperbola](#hyperbola)
   * [hyperbola\_from\_foci\_and\_point](#hyperbola.hyperbola_from_foci_and_point)
 * [ellipse](#ellipse)
@@ -1784,9 +1785,21 @@ Tells whether n points are collinear.
 
 Returns `None` if undecidable.
 
-Algorithm:
- - n=3: https://en.wikipedia.org/wiki/Incidence_(geometry)#Collinearity
- - n>3: https://en.wikipedia.org/wiki/Gram_matrix
+<a id="incidence.are_concurrent"></a>
+
+#### are\_concurrent
+
+```python
+def are_concurrent(*lines: Matrix) -> bool | None
+```
+
+Tells whether n lines are concurrent, i.e. go through the same point.
+
+Returns `None` if undecidable.
+
+Leverages the projective point-line duality, and uses the collinearity
+formula described at
+https://en.wikipedia.org/wiki/Incidence_(geometry)#Collinearity
 
 <a id="hyperbola"></a>
 

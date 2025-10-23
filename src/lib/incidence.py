@@ -38,14 +38,25 @@ def are_collinear(*points: Matrix) -> bool | None:
     """Tells whether n points are collinear.
 
     Returns `None` if undecidable.
-
-    Algorithm:
-     - n=3: https://en.wikipedia.org/wiki/Incidence_(geometry)#Collinearity
-     - n>3: https://en.wikipedia.org/wiki/Gram_matrix
     """
     if len(points) <= 2:
         return True
-    points_as_matrix = Matrix.hstack(*(point_to_vec3(p) for p in points))
-    if len(points) == 3:
-        return points_as_matrix.det().is_zero
-    return (points_as_matrix * points_as_matrix.T).det().is_zero
+    # Treat projective points as lines.
+    return are_concurrent(*(point_to_vec3(p) for p in points))
+
+
+def are_concurrent(*lines: Matrix) -> bool | None:
+    """Tells whether n lines are concurrent, i.e. go through the same point.
+
+    Returns `None` if undecidable.
+
+    Leverages the projective point-line duality, and uses the collinearity
+    formula described at
+    https://en.wikipedia.org/wiki/Incidence_(geometry)#Collinearity
+    """
+    if len(lines) <= 2:
+        return True
+    lines_as_matrix = Matrix.hstack(*lines)
+    if len(lines) == 3:
+        return lines_as_matrix.det().is_zero
+    return (lines_as_matrix * lines_as_matrix.T).det().is_zero

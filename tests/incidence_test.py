@@ -6,11 +6,12 @@ from lib.conic import conic_from_focus_and_directrix, conic_from_poly
 from lib.degenerate_conic import line_pair_conic
 from lib.incidence import (
     are_collinear,
+    are_concurrent,
     conic_contains_line,
     conic_contains_point,
     line_contains_point,
 )
-from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, horizontal_line
+from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, horizontal_line, line_through_point
 
 
 class TestConicContainsPoint:
@@ -101,3 +102,22 @@ class TestAreCollinear:
         assert are_collinear((1, 2), (1, 2), (3, 4), (5, 7)) is False
         assert are_collinear((1, 2), (3, 4), (5, 6), (7, 8)) is True
         assert are_collinear((1, 2), (3, 4), (5, 6), (7, 9)) is False
+
+
+class TestAreConcurrent:
+
+    def test_symbolic_lines(self):
+        p = symbols("x y")
+        x1, y1, x2, y2, x3, y3, x4, y4 = symbols("x1 y1 x2 y2 x3 y3 x4 y4")
+        line1 = line_through_point(p, direction=(x1, y1))
+        line2 = line_through_point(p, direction=(x2, y2))
+        line3 = line_through_point(p, direction=(x3, y3))
+        line4 = line_through_point(p, direction=(x4, y4))
+        assert are_concurrent(line1, line2, line3) is True
+        assert are_concurrent(line1, line2, line3, line4) is True
+        assert are_concurrent(line1, line2, X_AXIS) is None
+
+    def test_symbolic_triangle(self):
+        line = Matrix(symbols("a b c", positive=True))
+        assert are_concurrent(X_AXIS, Y_AXIS, line) is False
+        assert are_concurrent(X_AXIS, Y_AXIS, line) is False
