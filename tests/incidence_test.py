@@ -11,7 +11,13 @@ from lib.incidence import (
     conic_contains_point,
     line_contains_point,
 )
-from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, horizontal_line, line_through_point
+from lib.line import (
+    IDEAL_LINE,
+    X_AXIS,
+    Y_AXIS,
+    horizontal_line,
+    line_through_point,
+)
 
 
 class TestConicContainsPoint:
@@ -121,3 +127,14 @@ class TestAreConcurrent:
         line = Matrix(symbols("a b c", positive=True))
         assert are_concurrent(X_AXIS, Y_AXIS, line) is False
         assert are_concurrent(X_AXIS, Y_AXIS, line) is False
+
+    def test_symbolic_parallels(self):
+        horiz1 = horizontal_line(symbols("y1", positive=True))
+        horiz2 = horizontal_line(symbols("y2", negative=True))
+        horiz3 = horizontal_line(symbols("y3"))
+        assert are_concurrent(X_AXIS, horiz1, horiz2) is True
+        assert are_concurrent(X_AXIS, horiz1, horiz2, horiz3) is True
+        assert are_concurrent(horiz1, horiz2, Y_AXIS) is False
+        assert are_concurrent(horiz1, horiz2, X_AXIS, Y_AXIS) is False
+        # This is actually False, but Sympy 1.14 can't prove it.
+        assert are_concurrent(horiz1, horiz2, horiz3, Y_AXIS) is None
