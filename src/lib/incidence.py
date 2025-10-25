@@ -1,54 +1,83 @@
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 
-from sympy import Expr, Matrix
+from sympy import Expr, Matrix, expand
 
 from lib.matrix import quadratic_form, skew_matrix
 from lib.point import point_to_vec3
 
 
-def line_contains_point(line: Matrix, point: Matrix | Sequence[Expr]) -> bool | None:
+def line_contains_point(
+    line: Matrix,
+    point: Matrix | Sequence[Expr],
+    *,
+    simplifier: Callable[[Expr], Expr] = expand,
+) -> bool | None:
     """Tells whether `point` is on `line`.
 
-    Returns `None` if undecidable.
+    Takes an optional callback that simplifies the incidence polynomial before
+    it gets compared to zero. Returns `None` if undecidable.
     """
-    return line.dot(point_to_vec3(point)).expand().is_zero
+    return simplifier(line.dot(point_to_vec3(point))).is_zero
 
 
-def conic_contains_point(conic: Matrix, point: Matrix | Sequence[Expr]) -> bool | None:
+def conic_contains_point(
+    conic: Matrix,
+    point: Matrix | Sequence[Expr],
+    *,
+    simplifier: Callable[[Expr], Expr] = expand,
+) -> bool | None:
     """Checks if a point lies on a conic.
 
-    Returns `None` if undecidable.
+    Takes an optional callback that simplifies the incidence polynomial before
+    it gets compared to zero. Returns `None` if undecidable.
     """
-    return quadratic_form(conic, point_to_vec3(point)).expand().is_zero
+    return simplifier(quadratic_form(conic, point_to_vec3(point))).is_zero
 
 
-def conic_contains_line(conic: Matrix, line: Matrix) -> bool | None:
+def conic_contains_line(
+    conic: Matrix,
+    line: Matrix,
+    *,
+    simplifier: Callable[[Expr], Expr] = expand,
+) -> bool | None:
     """Checks if a line lies on a conic.
 
-    Returns `None` if undecidable.
+    Takes an optional callback that simplifies the elements of the containment
+    matrix before it gets compared to zero. Returns `None` if undecidable.
 
     *Formula*:
     [research/conic_line_containment.py](../src/research/conic_line_containment.py)
     """
     skew = skew_matrix(line)
-    return (skew * conic * skew).is_zero_matrix
+    return (skew * conic * skew).applyfunc(simplifier).is_zero_matrix
 
 
-def are_collinear(*points: Matrix) -> bool | None:
+def are_collinear(
+    points: Sequence[Matrix],
+    *,
+    simplifier: Callable[[Expr], Expr] = expand,
+) -> bool | None:
     """Tells whether n points are collinear.
 
-    Returns `None` if undecidable.
+    Takes an optional callback that simplifies the collinearity polynomial
+    before it gets compared to zero Returns `None` if undecidable.
     """
     if len(points) <= 2:
         return True
-    # Treat projective points as lines.
-    return are_concurrent(*(point_to_vec3(p) for p in points))
+    # Convert the points to homogenous coordinates, and treat them as lines.
+    lines = [point_to_vec3(p) for p in points]
+    return are_concurrent(lines, simplifier=simplifier)
 
 
-def are_concurrent(*lines: Matrix) -> bool | None:
+def are_concurrent(
+    lines: Sequence[Matrix],
+    *,
+    simplifier: Callable[[Expr], Expr] = expand,
+) -> bool | None:
     """Tells whether n lines are concurrent, i.e. go through the same point.
 
-    Returns `None` if undecidable.
+    Takes an optional callback that simplifies the concurrence polynomial
+    before it gets compared to zero. Returns `None` if undecidable.
 
     Leverages the projective point-line duality, and uses the collinearity
     formula described at
@@ -59,4 +88,4 @@ def are_concurrent(*lines: Matrix) -> bool | None:
     lines_as_matrix = Matrix.hstack(*lines)
     if len(lines) == 3:
         return lines_as_matrix.det().is_zero
-    return (lines_as_matrix * lines_as_matrix.T).det().is_zero
+    return simplifier((lines_as_matrix * lines_as_matrix.T).det()).is_zero

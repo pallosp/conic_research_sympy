@@ -87,27 +87,27 @@ class TestLineContainsPoint:
 class TestAreCollinear:
 
     def test_less_than_three_points(self):
-        assert are_collinear((1, 2)) is True
-        assert are_collinear((1, 2), (3, 4)) is True
-        assert are_collinear((1, 2), (3, 4, 0)) is True
+        assert are_collinear([(1, 2)]) is True
+        assert are_collinear([(1, 2), (3, 4)]) is True
+        assert are_collinear([(1, 2), (3, 4, 0)]) is True
 
     def test_three_points_numeric(self):
-        assert are_collinear((1, 2), (3, 4), (5, 6)) is True
-        assert are_collinear((1, 2), (3, 4), (5, 7)) is False
-        assert are_collinear((1, 2), (3, 4), (1, 1, 0)) is True
-        assert are_collinear((1, 2), (3, 4), (1, 2, 0)) is False
+        assert are_collinear([(1, 2), (3, 4), (5, 6)]) is True
+        assert are_collinear([(1, 2), (3, 4), (5, 7)]) is False
+        assert are_collinear([(1, 2), (3, 4), (1, 1, 0)]) is True
+        assert are_collinear([(1, 2), (3, 4), (1, 2, 0)]) is False
 
     def test_three_points_symbolic(self):
         x = symbols("x")
-        assert are_collinear((1, 2), (3, 4), (x, x + 1)) is True
-        assert are_collinear((1, 2), (3, 4), (x, x)) is False
-        assert are_collinear((1, 2), (3, 4), symbols("x y")) is None
+        assert are_collinear([(1, 2), (3, 4), (x, x + 1)]) is True
+        assert are_collinear([(1, 2), (3, 4), (x, x)]) is False
+        assert are_collinear([(1, 2), (3, 4), symbols("x y")]) is None
 
     def test_four_points_numeric(self):
-        assert are_collinear((1, 2), (1, 2), (3, 4), (5, 6)) is True
-        assert are_collinear((1, 2), (1, 2), (3, 4), (5, 7)) is False
-        assert are_collinear((1, 2), (3, 4), (5, 6), (7, 8)) is True
-        assert are_collinear((1, 2), (3, 4), (5, 6), (7, 9)) is False
+        assert are_collinear([(1, 2), (1, 2), (3, 4), (5, 6)]) is True
+        assert are_collinear([(1, 2), (1, 2), (3, 4), (5, 7)]) is False
+        assert are_collinear([(1, 2), (3, 4), (5, 6), (7, 8)]) is True
+        assert are_collinear([(1, 2), (3, 4), (5, 6), (7, 9)]) is False
 
 
 class TestAreConcurrent:
@@ -119,22 +119,21 @@ class TestAreConcurrent:
         line2 = line_through_point(p, direction=(x2, y2))
         line3 = line_through_point(p, direction=(x3, y3))
         line4 = line_through_point(p, direction=(x4, y4))
-        assert are_concurrent(line1, line2, line3) is True
-        assert are_concurrent(line1, line2, line3, line4) is True
-        assert are_concurrent(line1, line2, X_AXIS) is None
+        assert are_concurrent([line1, line2, line3]) is True
+        assert are_concurrent([line1, line2, line3, line4]) is True
+        assert are_concurrent([line1, line2, X_AXIS]) is None
 
     def test_symbolic_triangle(self):
         line = Matrix(symbols("a b c", positive=True))
-        assert are_concurrent(X_AXIS, Y_AXIS, line) is False
-        assert are_concurrent(X_AXIS, Y_AXIS, line) is False
+        assert are_concurrent([X_AXIS, Y_AXIS, line]) is False
 
     def test_symbolic_parallels(self):
         horiz1 = horizontal_line(symbols("y1", positive=True))
         horiz2 = horizontal_line(symbols("y2", negative=True))
         horiz3 = horizontal_line(symbols("y3"))
-        assert are_concurrent(X_AXIS, horiz1, horiz2) is True
-        assert are_concurrent(X_AXIS, horiz1, horiz2, horiz3) is True
-        assert are_concurrent(horiz1, horiz2, Y_AXIS) is False
-        assert are_concurrent(horiz1, horiz2, X_AXIS, Y_AXIS) is False
+        assert are_concurrent([X_AXIS, horiz1, horiz2]) is True
+        assert are_concurrent([X_AXIS, horiz1, horiz2, horiz3]) is True
+        assert are_concurrent([horiz1, horiz2, Y_AXIS]) is False
+        assert are_concurrent([horiz1, horiz2, X_AXIS, Y_AXIS]) is False
         # This is actually False, but Sympy 1.14 can't prove it.
-        assert are_concurrent(horiz1, horiz2, horiz3, Y_AXIS) is None
+        assert are_concurrent([horiz1, horiz2, horiz3, Y_AXIS]) is None

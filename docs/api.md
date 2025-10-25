@@ -1737,38 +1737,51 @@ transformation on the unit circle.
 #### line\_contains\_point
 
 ```python
-def line_contains_point(line: Matrix,
-                        point: Matrix | Sequence[Expr]) -> bool | None
+def line_contains_point(
+        line: Matrix,
+        point: Matrix | Sequence[Expr],
+        *,
+        simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
 Tells whether `point` is on `line`.
 
-Returns `None` if undecidable.
+Takes an optional callback that simplifies the incidence polynomial before
+it gets compared to zero. Returns `None` if undecidable.
 
 <a id="incidence.conic_contains_point"></a>
 
 #### conic\_contains\_point
 
 ```python
-def conic_contains_point(conic: Matrix,
-                         point: Matrix | Sequence[Expr]) -> bool | None
+def conic_contains_point(
+        conic: Matrix,
+        point: Matrix | Sequence[Expr],
+        *,
+        simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
 Checks if a point lies on a conic.
 
-Returns `None` if undecidable.
+Takes an optional callback that simplifies the incidence polynomial before
+it gets compared to zero. Returns `None` if undecidable.
 
 <a id="incidence.conic_contains_line"></a>
 
 #### conic\_contains\_line
 
 ```python
-def conic_contains_line(conic: Matrix, line: Matrix) -> bool | None
+def conic_contains_line(
+        conic: Matrix,
+        line: Matrix,
+        *,
+        simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
 Checks if a line lies on a conic.
 
-Returns `None` if undecidable.
+Takes an optional callback that simplifies the elements of the containment
+matrix before it gets compared to zero. Returns `None` if undecidable.
 
 *Formula*:
 [research/conic_line_containment.py](../src/research/conic_line_containment.py)
@@ -1778,24 +1791,30 @@ Returns `None` if undecidable.
 #### are\_collinear
 
 ```python
-def are_collinear(*points: Matrix) -> bool | None
+def are_collinear(points: Sequence[Matrix],
+                  *,
+                  simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
 Tells whether n points are collinear.
 
-Returns `None` if undecidable.
+Takes an optional callback that simplifies the collinearity polynomial
+before it gets compared to zero Returns `None` if undecidable.
 
 <a id="incidence.are_concurrent"></a>
 
 #### are\_concurrent
 
 ```python
-def are_concurrent(*lines: Matrix) -> bool | None
+def are_concurrent(lines: Sequence[Matrix],
+                   *,
+                   simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
 Tells whether n lines are concurrent, i.e. go through the same point.
 
-Returns `None` if undecidable.
+Takes an optional callback that simplifies the concurrence polynomial
+before it gets compared to zero. Returns `None` if undecidable.
 
 Leverages the projective point-line duality, and uses the collinearity
 formula described at
