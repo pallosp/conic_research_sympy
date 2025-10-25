@@ -1,4 +1,4 @@
-from sympy import I, Matrix, symbols
+from sympy import I, Matrix, cos, simplify, sin, symbols
 from sympy.abc import x, y
 
 from lib.circle import circle
@@ -7,6 +7,7 @@ from lib.degenerate_conic import line_pair_conic
 from lib.incidence import (
     are_collinear,
     are_concurrent,
+    are_on_same_conic,
     conic_contains_line,
     conic_contains_point,
     line_contains_point,
@@ -137,3 +138,27 @@ class TestAreConcurrent:
         assert are_concurrent([horiz1, horiz2, X_AXIS, Y_AXIS]) is False
         # This is actually False, but Sympy 1.14 can't prove it.
         assert are_concurrent([horiz1, horiz2, horiz3, Y_AXIS]) is None
+
+
+class TestAreOnSameConic:
+    def test_five_points(self):
+        points = [(0, 1), (1, 2), (3, 5), (8, 13), (21, 34)]
+        assert are_on_same_conic(points) is True
+
+    def test_parabola(self):
+        points = [(x, x * x) for x in range(6)]
+        assert are_on_same_conic(points) is True
+        assert are_on_same_conic([*points[:5], (0, 1, 0)]) is True
+        assert are_on_same_conic([*points[:5], (0, -1, 0)]) is True
+        assert are_on_same_conic([*points[:5], (1, 0, 0)]) is False
+
+    def test_symbolic_line_pair(self):
+        x1, x2, x3, y1, y2, y3 = symbols("x1 x2 x3 y1 y2 y3")
+        points = [(x1, 0), (x2, 0), (x3, 0), (0, y1), (0, y2), (0, y3)]
+        assert are_on_same_conic(points) is True
+
+    def test_custom_simplifier(self):
+        x, y = symbols("x y")
+        points = [[0, 1], [1, 0], [-1, 0], [0, -1], [sin(x), cos(x)], [sin(y), cos(y)]]
+        assert are_on_same_conic(points) is None
+        assert are_on_same_conic(points, simplifier=simplify) is True

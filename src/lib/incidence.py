@@ -14,8 +14,9 @@ def line_contains_point(
 ) -> bool | None:
     """Tells whether `point` is on `line`.
 
-    Takes an optional callback that simplifies the incidence polynomial before
-    it gets compared to zero. Returns `None` if undecidable.
+    Takes an optional `simplifier` callback that simplifies the incidence
+    polynomial before it gets compared to zero. Returns `None` if the result is
+    undecidable.
     """
     return simplifier(line.dot(point_to_vec3(point))).is_zero
 
@@ -28,8 +29,9 @@ def conic_contains_point(
 ) -> bool | None:
     """Checks if a point lies on a conic.
 
-    Takes an optional callback that simplifies the incidence polynomial before
-    it gets compared to zero. Returns `None` if undecidable.
+    Takes an optional `simplifier` callback that simplifies the incidence
+    polynomial before it gets compared to zero. Returns `None` if the result is
+    undecidable.
     """
     return simplifier(quadratic_form(conic, point_to_vec3(point))).is_zero
 
@@ -42,8 +44,9 @@ def conic_contains_line(
 ) -> bool | None:
     """Checks if a line lies on a conic.
 
-    Takes an optional callback that simplifies the elements of the containment
-    matrix before it gets compared to zero. Returns `None` if undecidable.
+    Takes an optional `simplifier` callback that simplifies the elements of the
+    containment matrix before it gets compared to zero. Returns `None` if the
+    result is undecidable.
 
     *Formula*:
     [research/conic_line_containment.py](../src/research/conic_line_containment.py)
@@ -59,8 +62,8 @@ def are_collinear(
 ) -> bool | None:
     """Tells whether n points are collinear.
 
-    Takes an optional callback that simplifies the collinearity polynomial
-    before it gets compared to zero Returns `None` if undecidable.
+    Takes an optional `simplifier` callback that simplifies the collinearity
+    polynomial before it gets compared to zero. Returns `None` if undecidable.
     """
     if len(points) <= 2:
         return True
@@ -89,3 +92,27 @@ def are_concurrent(
     if len(lines) == 3:
         return lines_as_matrix.det().is_zero
     return simplifier((lines_as_matrix * lines_as_matrix.T).det()).is_zero
+
+
+def are_on_same_conic(
+    points: Sequence[Matrix],
+    *,
+    simplifier: Callable[[Expr], Expr] = expand,
+) -> bool | None:
+    """Tells whether n points lie on the same conic section.
+
+    Takes an optional `simplifier` callback that simplifies the incidence
+    polynomial before it gets compared to zero. Returns `None` if undecidable.
+    """
+    if len(points) < 6:
+        return True
+    if len(points) != 6:
+        raise NotImplementedError
+    points = [point_to_vec3(p) for p in points]
+    d = []
+    for p in points[0:2]:
+        for q in points[2:4]:
+            for r in points[4:6]:
+                d.append(Matrix.hstack(p, q, r).det())  # noqa: PERF401
+    incidence_poly = d[0] * d[3] * d[5] * d[6] - d[1] * d[2] * d[4] * d[7]
+    return simplifier(incidence_poly).is_zero

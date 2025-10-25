@@ -127,6 +127,7 @@
   * [conic\_contains\_line](#incidence.conic_contains_line)
   * [are\_collinear](#incidence.are_collinear)
   * [are\_concurrent](#incidence.are_concurrent)
+  * [are\_on\_same\_conic](#incidence.are_on_same_conic)
 * [hyperbola](#hyperbola)
   * [hyperbola\_from\_foci\_and\_point](#hyperbola.hyperbola_from_foci_and_point)
 * [ellipse](#ellipse)
@@ -1746,8 +1747,9 @@ def line_contains_point(
 
 Tells whether `point` is on `line`.
 
-Takes an optional callback that simplifies the incidence polynomial before
-it gets compared to zero. Returns `None` if undecidable.
+Takes an optional `simplifier` callback that simplifies the incidence
+polynomial before it gets compared to zero. Returns `None` if the result is
+undecidable.
 
 <a id="incidence.conic_contains_point"></a>
 
@@ -1763,8 +1765,9 @@ def conic_contains_point(
 
 Checks if a point lies on a conic.
 
-Takes an optional callback that simplifies the incidence polynomial before
-it gets compared to zero. Returns `None` if undecidable.
+Takes an optional `simplifier` callback that simplifies the incidence
+polynomial before it gets compared to zero. Returns `None` if the result is
+undecidable.
 
 <a id="incidence.conic_contains_line"></a>
 
@@ -1780,8 +1783,9 @@ def conic_contains_line(
 
 Checks if a line lies on a conic.
 
-Takes an optional callback that simplifies the elements of the containment
-matrix before it gets compared to zero. Returns `None` if undecidable.
+Takes an optional `simplifier` callback that simplifies the elements of the
+containment matrix before it gets compared to zero. Returns `None` if the
+result is undecidable.
 
 *Formula*:
 [research/conic_line_containment.py](../src/research/conic_line_containment.py)
@@ -1798,8 +1802,8 @@ def are_collinear(points: Sequence[Matrix],
 
 Tells whether n points are collinear.
 
-Takes an optional callback that simplifies the collinearity polynomial
-before it gets compared to zero Returns `None` if undecidable.
+Takes an optional `simplifier` callback that simplifies the collinearity
+polynomial before it gets compared to zero. Returns `None` if undecidable.
 
 <a id="incidence.are_concurrent"></a>
 
@@ -1819,6 +1823,22 @@ before it gets compared to zero. Returns `None` if undecidable.
 Leverages the projective point-line duality, and uses the collinearity
 formula described at
 https://en.wikipedia.org/wiki/Incidence_(geometry)#Collinearity
+
+<a id="incidence.are_on_same_conic"></a>
+
+#### are\_on\_same\_conic
+
+```python
+def are_on_same_conic(
+        points: Sequence[Matrix],
+        *,
+        simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+```
+
+Tells whether n points lie on the same conic section.
+
+Takes an optional `simplifier` callback that simplifies the incidence
+polynomial before it gets compared to zero. Returns `None` if undecidable.
 
 <a id="hyperbola"></a>
 
