@@ -1,0 +1,56 @@
+#!/usr/bin/env python
+
+from sympy import Determinant, Expr, I, Matrix, factor, symbols
+
+from lib.incidence import are_on_same_conic
+from lib.point import point_to_xy
+from research.util import println_indented
+
+
+def richter_gebert_poly(p1: Matrix, p2: Matrix, p3: Matrix, p4: Matrix) -> Expr:
+    i, j = Matrix([-I, 1, 0]), Matrix([I, 1, 0])
+    poly = None
+
+    def save_and_expand_poly(p: Expr) -> Expr:
+        nonlocal poly
+        poly = p
+        return p.expand()
+
+    are_on_same_conic([p1, p2, p3, p4, i, j], simplifier=save_and_expand_poly)
+    return poly
+
+
+def concircularity_matrix(p1: Matrix, p2: Matrix, p3: Matrix, p4: Matrix) -> Expr:
+    x1, y1 = point_to_xy(p1)
+    x2, y2 = point_to_xy(p2)
+    x3, y3 = point_to_xy(p3)
+    x4, y4 = point_to_xy(p4)
+
+    return Matrix(
+        [
+            [x1, y1, x1**2 + y1**2, 1],
+            [x2, y2, x2**2 + y2**2, 1],
+            [x3, y3, x3**2 + y3**2, 1],
+            [x4, y4, x4**2 + y4**2, 1],
+        ],
+    )
+
+
+p1 = Matrix(symbols("x1 y1 z1"))
+p2 = Matrix(symbols("x2 y2 z2"))
+p3 = Matrix(symbols("x3 y3 z3"))
+p4 = Matrix(symbols("x4 y4 z4"))
+
+print("\nRichter-Gebert cocircularity polynomial:\n")
+
+poly1 = richter_gebert_poly(p1, p2, p3, p4)
+println_indented(poly1)
+
+print("Concircularity determinant:\n")
+
+m = concircularity_matrix(p1, p2, p3, p4)
+println_indented(Determinant(m))
+
+print("Their ratio:\n")
+
+println_indented(factor(poly1.expand() / m.det()))
