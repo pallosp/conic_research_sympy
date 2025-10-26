@@ -128,6 +128,7 @@
   * [are\_collinear](#incidence.are_collinear)
   * [are\_concurrent](#incidence.are_concurrent)
   * [are\_on\_same\_conic](#incidence.are_on_same_conic)
+  * [are\_cocircular](#incidence.are_cocircular)
 * [hyperbola](#hyperbola)
   * [hyperbola\_from\_foci\_and\_point](#hyperbola.hyperbola_from_foci_and_point)
 * [ellipse](#ellipse)
@@ -1835,10 +1836,34 @@ def are_on_same_conic(
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-Tells whether n points lie on the same conic section.
+Tells whether up to 6 points lie on the same conic section.
 
 Takes an optional `simplifier` callback that simplifies the incidence
 polynomial before it gets compared to zero. Returns `None` if undecidable.
+
+*Formula*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
+section 10.2 (Conics and Cross-Ratios)
+
+<a id="incidence.are_cocircular"></a>
+
+#### are\_cocircular
+
+```python
+def are_cocircular(points: Sequence[Matrix],
+                   *,
+                   simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+```
+
+Tells whether up to 4 points lie on the same circle.
+
+Note that four collinear points, as well as three collinear points and an
+arbitrary ideal point are also considered cocircular.
+
+Takes an optional `simplifier` callback that simplifies the incidence
+polynomial before it gets compared to zero. Returns `None` if undecidable.
+
+*Formula*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
+section 18.2 (Cocircularity)
 
 <a id="hyperbola"></a>
 

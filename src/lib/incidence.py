@@ -1,6 +1,6 @@
 from collections.abc import Callable, Sequence
 
-from sympy import Expr, Matrix, expand
+from sympy import Expr, I, Matrix, expand
 
 from lib.matrix import quadratic_form, skew_matrix
 from lib.point import point_to_vec3
@@ -99,14 +99,17 @@ def are_on_same_conic(
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
-    """Tells whether n points lie on the same conic section.
+    """Tells whether up to 6 points lie on the same conic section.
 
     Takes an optional `simplifier` callback that simplifies the incidence
     polynomial before it gets compared to zero. Returns `None` if undecidable.
+
+    *Formula*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
+    section 10.2 (Conics and Cross-Ratios)
     """
     if len(points) < 6:
         return True
-    if len(points) != 6:
+    if len(points) > 6:
         raise NotImplementedError
     points = [point_to_vec3(p) for p in points]
     d = []
@@ -116,3 +119,27 @@ def are_on_same_conic(
                 d.append(Matrix.hstack(p, q, r).det())  # noqa: PERF401
     incidence_poly = d[0] * d[3] * d[5] * d[6] - d[1] * d[2] * d[4] * d[7]
     return simplifier(incidence_poly).is_zero
+
+
+def are_cocircular(
+    points: Sequence[Matrix],
+    *,
+    simplifier: Callable[[Expr], Expr] = expand,
+) -> bool | None:
+    """Tells whether up to 4 points lie on the same circle.
+
+    Note that four collinear points, as well as three collinear points and an
+    arbitrary ideal point are also considered cocircular.
+
+    Takes an optional `simplifier` callback that simplifies the incidence
+    polynomial before it gets compared to zero. Returns `None` if undecidable.
+
+    *Formula*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
+    section 18.2 (Cocircularity)
+    """
+    if len(points) < 4:
+        return True
+    if len(points) > 4:
+        raise NotImplementedError
+    i, j = Matrix([-I, 1, 0]), Matrix([I, 1, 0])
+    return are_on_same_conic([*points, i, j], simplifier=simplifier)

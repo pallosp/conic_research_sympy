@@ -5,6 +5,7 @@ from lib.circle import circle
 from lib.conic import conic_from_focus_and_directrix, conic_from_poly
 from lib.degenerate_conic import line_pair_conic
 from lib.incidence import (
+    are_cocircular,
     are_collinear,
     are_concurrent,
     are_on_same_conic,
@@ -162,3 +163,31 @@ class TestAreOnSameConic:
         points = [[0, 1], [1, 0], [-1, 0], [0, -1], [sin(x), cos(x)], [sin(y), cos(y)]]
         assert are_on_same_conic(points) is None
         assert are_on_same_conic(points, simplifier=simplify) is True
+
+
+class TestAreCocircular:
+
+    def test_three_points(self):
+        x1, y1, x2, y2, x3, y3 = symbols("x1 y1 x2 y2 x3 y3")
+        assert are_cocircular([(x1, y1), (x2, y2), (x3, y3)]) is True
+
+    def test_four_points_two_coincident(self):
+        x1, y1, x2, y2, x3, y3 = symbols("x1 y1 x2 y2 x3 y3")
+        assert are_cocircular([(x1, y1), (x2, y2), (x3, y3), (x1, y1)]) is True
+
+    def test_four_different_points(self):
+        assert are_cocircular([(1, 0), (0, 1), (-1, 0), (0, -1)]) is True
+        assert are_cocircular([(1, 0), (0, 1), (-1, 0), (0, -2)]) is False
+        x = symbols("x")
+        assert are_cocircular([(1, 0), (0, 1), (-1, 0), (0, x)]) is None
+
+    def test_four_collinear_points(self):
+        assert are_cocircular([(0, 0), (1, 0), (2, 0), (3, 0)]) is True
+
+    def test_collinear_points_plus_an_ideal_point(self):
+        ideal_point = [*symbols("x y", nonzero=True), 0]
+        assert are_cocircular([(0, 0), (1, 0), (2, 0), ideal_point]) is True
+
+    def test_triangle_plus_an_ideal_point(self):
+        ideal_point = [*symbols("x y", nonzero=True), 0]
+        assert are_cocircular([(1, 0), (0, 0), (0, 1), ideal_point]) is False
