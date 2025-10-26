@@ -1,4 +1,6 @@
-from sympy import Expr, Function, Integer, Matrix, S, sign
+from collections.abc import Callable
+
+from sympy import Expr, Function, Integer, Matrix, S, factor, sign
 from sympy.core.logic import fuzzy_and, fuzzy_not, fuzzy_or
 
 from lib.matrix import is_definite_matrix
@@ -65,39 +67,66 @@ class ConicNormFactor(Function):
         return None
 
 
-def is_degenerate(conic: Matrix) -> bool | None:
+def is_degenerate(
+    conic: Matrix,
+    *,
+    simplifier: Callable[[Expr], Expr] = lambda expr: expr,
+) -> bool | None:
     """Tells whether the conic is degenerate.
 
     Degenerate conics consist of a single projective point or a pair of
     projective lines. The zero matrix is also considered degenerate.
-    Returns `None` if undecidable.
+
+    Takes an optional `simplifier` callback that simplifies the conic matrix
+    determinant before it gets compared to zero. Returns `None` if the result
+    is undecidable.
     """
-    return conic.det().is_zero
+    return simplifier(conic.det()).is_zero
 
 
-def is_nondegenerate(conic: Matrix) -> bool | None:
+def is_nondegenerate(
+    conic: Matrix,
+    *,
+    simplifier: Callable[[Expr], Expr] = lambda expr: expr,
+) -> bool | None:
     """Tells whether the conic is non-degenerate.
 
     Non-degenerate conics include real or imaginary ellipses, parabolas and
-    hyperbolas. Returns `None` if undecidable.
+    hyperbolas.
+
+    Takes an optional `simplifier` callback that simplifies the conic matrix
+    determinant before it gets compared to zero. Returns `None` if the result
+    is undecidable.
     """
-    return conic.det().is_nonzero
+    return simplifier(conic.det()).is_nonzero
 
 
-def is_central_conic(conic: Matrix) -> bool | None:
+def is_central_conic(
+    conic: Matrix,
+    *,
+    simplifier: Callable[[Expr], Expr] = lambda expr: expr,
+) -> bool | None:
     """Tells whether a conic has a finite center of symmetry.
 
-    Returns `None` if undecidable.
+    Takes an optional `simplifier` callback that simplifies the central
+    conicness polynomial before it gets compared to zero. Returns `None` if
+    the result is undecidable.
     """
-    return conic[:2, :2].det().is_nonzero
+    return simplifier(conic[:2, :2].det()).is_nonzero
 
 
-def is_finite_conic(conic: Matrix) -> bool | None:
+def is_finite_conic(
+    conic: Matrix,
+    *,
+    simplifier: Callable[[Expr], Expr] = factor,
+) -> bool | None:
     """Tells whether all points on the conic are finite.
 
-    Returns `None` if undecidable.
+    Takes an optional `simplifier` callback that simplifies the finiteness
+    polynomial before it gets compared to zero. Returns `None` if the result
+    is undecidable.
     """
-    return conic[:2, :2].det().factor().is_positive
+    return simplifier(conic[:2, :2].det()).is_positive
 
 
 def is_imaginary_ellipse(conic: Matrix) -> bool | None:

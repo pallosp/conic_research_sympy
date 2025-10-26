@@ -1216,51 +1216,74 @@ Internal implementation. Call `ConicNormFactor(conic)` directly.
 #### is\_degenerate
 
 ```python
-def is_degenerate(conic: Matrix) -> bool | None
+def is_degenerate(
+        conic: Matrix,
+        *,
+        simplifier: Callable[[Expr], Expr] = lambda expr: expr) -> bool | None
 ```
 
 Tells whether the conic is degenerate.
 
 Degenerate conics consist of a single projective point or a pair of
 projective lines. The zero matrix is also considered degenerate.
-Returns `None` if undecidable.
+
+Takes an optional `simplifier` callback that simplifies the conic matrix
+determinant before it gets compared to zero. Returns `None` if the result
+is undecidable.
 
 <a id="conic_classification.is_nondegenerate"></a>
 
 #### is\_nondegenerate
 
 ```python
-def is_nondegenerate(conic: Matrix) -> bool | None
+def is_nondegenerate(
+        conic: Matrix,
+        *,
+        simplifier: Callable[[Expr], Expr] = lambda expr: expr) -> bool | None
 ```
 
 Tells whether the conic is non-degenerate.
 
 Non-degenerate conics include real or imaginary ellipses, parabolas and
-hyperbolas. Returns `None` if undecidable.
+hyperbolas.
+
+Takes an optional `simplifier` callback that simplifies the conic matrix
+determinant before it gets compared to zero. Returns `None` if the result
+is undecidable.
 
 <a id="conic_classification.is_central_conic"></a>
 
 #### is\_central\_conic
 
 ```python
-def is_central_conic(conic: Matrix) -> bool | None
+def is_central_conic(
+        conic: Matrix,
+        *,
+        simplifier: Callable[[Expr], Expr] = lambda expr: expr) -> bool | None
 ```
 
 Tells whether a conic has a finite center of symmetry.
 
-Returns `None` if undecidable.
+Takes an optional `simplifier` callback that simplifies the central
+conicness polynomial before it gets compared to zero. Returns `None` if
+the result is undecidable.
 
 <a id="conic_classification.is_finite_conic"></a>
 
 #### is\_finite\_conic
 
 ```python
-def is_finite_conic(conic: Matrix) -> bool | None
+def is_finite_conic(
+        conic: Matrix,
+        *,
+        simplifier: Callable[[Expr], Expr] = factor) -> bool | None
 ```
 
 Tells whether all points on the conic are finite.
 
-Returns `None` if undecidable.
+Takes an optional `simplifier` callback that simplifies the finiteness
+polynomial before it gets compared to zero. Returns `None` if the result
+is undecidable.
 
 <a id="conic_classification.is_imaginary_ellipse"></a>
 
