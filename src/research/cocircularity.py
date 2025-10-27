@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+import time
+from collections.abc import Sequence
+
 from sympy import Determinant, Expr, I, Matrix, factor, symbols
 
 from lib.incidence import are_on_same_conic
@@ -36,21 +39,40 @@ def concircularity_matrix(p1: Matrix, p2: Matrix, p3: Matrix, p4: Matrix) -> Exp
     )
 
 
+def benchmark_cocircularity_expr_ms(expr: Expr, coordinates: Sequence[Expr]) -> int:
+    start = time.time()
+    expr = expr.subs(
+        zip(
+            coordinates,
+            (0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 1),
+            strict=True,
+        ),
+    )
+    _ = expr.doit().is_zero
+    return int((time.time() - start) * 1000)
+
+
 p1 = Matrix(symbols("x1 y1 z1"))
 p2 = Matrix(symbols("x2 y2 z2"))
 p3 = Matrix(symbols("x3 y3 z3"))
 p4 = Matrix(symbols("x4 y4 z4"))
+coordinates = list(p1) + list(p2) + list(p3) + list(p4)
 
 print("\nRichter-Gebert cocircularity polynomial:\n")
 
-poly1 = richter_gebert_poly(p1, p2, p3, p4)
-println_indented(poly1)
+poly = richter_gebert_poly(p1, p2, p3, p4)
+println_indented(poly)
+time_ms = benchmark_cocircularity_expr_ms(poly, coordinates)
+print(f"  Its evaluation took {time_ms}ms.\n")
 
-print("Concircularity determinant:\n")
+print("Cocircularity determinant:\n")
 
 m = concircularity_matrix(p1, p2, p3, p4)
-println_indented(Determinant(m))
+cocircularity_det = Determinant(m)
+println_indented(cocircularity_det)
+time_ms = benchmark_cocircularity_expr_ms(cocircularity_det, coordinates)
+print(f"  Its evaluation took {time_ms}ms.\n")
 
 print("Their ratio:\n")
 
-println_indented(factor(poly1.expand() / m.det()))
+println_indented(factor(poly.expand() / m.det()))
