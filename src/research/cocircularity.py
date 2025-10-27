@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import itertools
 import time
 from collections.abc import Sequence
 
@@ -19,12 +20,12 @@ def richter_gebert_poly(p1: Matrix, p2: Matrix, p3: Matrix, p4: Matrix) -> Expr:
     i, j = Matrix([-I, 1, 0]), Matrix([I, 1, 0])
     poly = None
 
-    def save_and_expand_poly(p: Expr) -> Expr:
+    def save_poly(p: Expr) -> Expr:
         nonlocal poly
         poly = p
-        return p.expand()
+        return p
 
-    are_on_same_conic([p1, p2, p3, p4, i, j], simplifier=save_and_expand_poly)
+    are_on_same_conic([p1, p2, p3, p4, i, j], simplifier=save_poly)
     return poly
 
 
@@ -54,40 +55,40 @@ def cocircularity_matrix(p1: Matrix, p2: Matrix, p3: Matrix, p4: Matrix) -> Expr
     )
 
 
-def benchmark_cocircularity_expr_ms(expr: Expr, coordinates: Sequence[Expr]) -> int:
+def benchmark_cocircularity_expr_ms(
+    expr: Expr, substitutions: Sequence[tuple[Expr, Expr]],
+) -> float:
     start = time.time()
-    expr = expr.subs(
-        zip(
-            coordinates,
-            (0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 1),
-            strict=True,
-        ),
-    )
-    _ = expr.doit().is_zero
-    return int((time.time() - start) * 1000)
+    _ = expr.subs(substitutions).doit().is_zero
+    return int((time.time() - start) * 10000) / 10
 
 
-p1 = Matrix(symbols("x1 y1 z1"))
-p2 = Matrix(symbols("x2 y2 z2"))
-p3 = Matrix(symbols("x3 y3 z3"))
-p4 = Matrix(symbols("x4 y4 z4"))
-coordinates = list(p1) + list(p2) + list(p3) + list(p4)
+points = [Matrix(symbols(f"x{i} y{i} z{i}")) for i in range(1, 5)]
+coordinates = list(itertools.chain.from_iterable(points))
+substitutions = [
+    (coordinates[i], [0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 1][i]) for i in range(12)
+]
+
 
 print("\nRichter-Gebert cocircularity polynomial:\n")
 
-poly = richter_gebert_poly(p1, p2, p3, p4)
-println_indented(poly)
-time_ms = benchmark_cocircularity_expr_ms(poly, coordinates)
-print(f"  Its evaluation took {time_ms}ms.\n")
+poly = richter_gebert_poly(*points)
+print(f"  {poly}\n")
+time_ms = benchmark_cocircularity_expr_ms(poly, substitutions)
+print(f"  Its evaluation for integer coordinates took {time_ms} ms.")
+time_ms = benchmark_cocircularity_expr_ms(poly, [])
+print(f"  Its evaluation for symbolic points took {time_ms} ms.")
 
-print("Cocircularity determinant:\n")
+print("\nCocircularity determinant:\n")
 
-m = cocircularity_matrix(p1, p2, p3, p4)
+m = cocircularity_matrix(*points)
 cocircularity_det = Determinant(m)
 println_indented(cocircularity_det)
-time_ms = benchmark_cocircularity_expr_ms(cocircularity_det, coordinates)
-print(f"  Its evaluation took {time_ms}ms.\n")
+time_ms = benchmark_cocircularity_expr_ms(cocircularity_det, substitutions)
+print(f"  Its evaluation for integer coordinates took {time_ms} ms.")
+time_ms = benchmark_cocircularity_expr_ms(cocircularity_det, [])
+print(f"  Its evaluation for symbolic points took {time_ms} ms.")
 
-print("Their ratio:\n")
+print("\nRatio of the two polynomials:\n")
 
 println_indented(factor(poly.expand() / m.det()))
