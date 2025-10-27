@@ -1,4 +1,6 @@
-from sympy import I, Matrix, cos, simplify, sin, symbols
+import itertools
+
+from sympy import I, Matrix, cos, simplify, sin, sqrt, symbols
 from sympy.abc import x, y
 
 from lib.circle import circle
@@ -181,6 +183,10 @@ class TestAreCocircular:
         x = symbols("x")
         assert are_cocircular([(1, 0), (0, 1), (-1, 0), (0, x)]) is None
 
+    def test_five_cocircular_points(self):
+        cocircular_points = [(2, 0), (0, 2), (-2, 0), (0, -2), (sqrt(2), sqrt(2))]
+        assert are_cocircular(cocircular_points) is True
+
     def test_four_collinear_points(self):
         assert are_cocircular([(0, 0), (1, 0), (2, 0), (3, 0)]) is True
 
@@ -191,3 +197,7 @@ class TestAreCocircular:
     def test_triangle_plus_an_ideal_point(self):
         ideal_point = [*symbols("x y", nonzero=True), 0]
         assert are_cocircular([(1, 0), (0, 0), (0, 1), ideal_point]) is False
+
+    def test_parallel_lines(self):
+        parallel_lines = list(itertools.product([0, 1, 2], [0, 1]))
+        assert are_cocircular(parallel_lines) is False

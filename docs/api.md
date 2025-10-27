@@ -1877,16 +1877,18 @@ def are_cocircular(points: Sequence[Matrix],
                    simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-Tells whether up to 4 points lie on the same circle.
+Tells whether n points lie on the same circle.
 
 Note that four collinear points, as well as three collinear points and an
 arbitrary ideal point are also considered cocircular.
 
-Takes an optional `simplifier` callback that simplifies the incidence
-polynomial before it gets compared to zero. Returns `None` if undecidable.
+Takes an optional `simplifier` callback that simplifies the cocircularity
+determinant before it gets compared to zero. Returns `None` if undecidable.
 
-*Formula*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
-section 18.2 (Cocircularity)
+*Formula*: [Measuring cocircularity in a point set](
+https://egc23.web.uah.es/wp-content/uploads/2023/06/EGC23_paper_20.pdf)
+*Own research*:
+[research/cocircularity.py](../src/research/cocircularity.py)
 
 <a id="hyperbola"></a>
 

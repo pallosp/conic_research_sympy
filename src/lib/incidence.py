@@ -1,6 +1,6 @@
 from collections.abc import Callable, Sequence
 
-from sympy import Expr, I, Matrix, expand
+from sympy import Expr, Matrix, expand
 
 from lib.matrix import quadratic_form, skew_matrix
 from lib.point import point_to_vec3
@@ -126,20 +126,29 @@ def are_cocircular(
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
-    """Tells whether up to 4 points lie on the same circle.
+    """Tells whether n points lie on the same circle.
 
     Note that four collinear points, as well as three collinear points and an
     arbitrary ideal point are also considered cocircular.
 
-    Takes an optional `simplifier` callback that simplifies the incidence
-    polynomial before it gets compared to zero. Returns `None` if undecidable.
+    Takes an optional `simplifier` callback that simplifies the cocircularity
+    determinant before it gets compared to zero. Returns `None` if undecidable.
 
-    *Formula*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
-    section 18.2 (Cocircularity)
+    *Formula*: [Measuring cocircularity in a point set](
+    https://egc23.web.uah.es/wp-content/uploads/2023/06/EGC23_paper_20.pdf)
+    *Own research*:
+    [research/cocircularity.py](../src/research/cocircularity.py)
     """
     if len(points) < 4:
         return True
+
+    cc_matrix_elements = []
+    for p in points:
+        x, y, z = point_to_vec3(p)
+        cc_matrix_elements.append([x * z, y * z, x**2 + y**2, z**2])
+
+    cocircularity_matrix = Matrix(cc_matrix_elements)
     if len(points) > 4:
-        raise NotImplementedError
-    i, j = Matrix([-I, 1, 0]), Matrix([I, 1, 0])
-    return are_on_same_conic([*points, i, j], simplifier=simplifier)
+        cocircularity_matrix = cocircularity_matrix.T * cocircularity_matrix
+
+    return simplifier(cocircularity_matrix.det()).is_zero
