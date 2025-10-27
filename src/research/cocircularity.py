@@ -2,7 +2,7 @@
 
 import itertools
 import time
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 
 from sympy import Determinant, Expr, I, Matrix, factor, symbols
 
@@ -55,12 +55,17 @@ def cocircularity_matrix(p1: Matrix, p2: Matrix, p3: Matrix, p4: Matrix) -> Expr
     )
 
 
-def benchmark_cocircularity_expr_ms(
-    expr: Expr, substitutions: Sequence[tuple[Expr, Expr]],
-) -> float:
+def measure_ms(func: Callable) -> float:
     start = time.time()
-    _ = expr.subs(substitutions).doit().is_zero
+    func()
     return int((time.time() - start) * 10000) / 10
+
+
+def eval_cocircularity_expr(
+    expr: Expr,
+    substitutions: Sequence[tuple[Expr, Expr]],
+) -> float:
+    _ = expr.subs(substitutions).doit().is_zero
 
 
 points = [Matrix(symbols(f"x{i} y{i} z{i}")) for i in range(1, 5)]
@@ -74,9 +79,11 @@ print("\nRichter-Gebert cocircularity polynomial:\n")
 
 poly = richter_gebert_poly(*points)
 print(f"  {poly}\n")
-time_ms = benchmark_cocircularity_expr_ms(poly, substitutions)
+time_ms = measure_ms(lambda: richter_gebert_poly(*points))
+print(f"  Its creation took {time_ms} ms.")
+time_ms = measure_ms(lambda: eval_cocircularity_expr(poly, substitutions))
 print(f"  Its evaluation for integer coordinates took {time_ms} ms.")
-time_ms = benchmark_cocircularity_expr_ms(poly, [])
+time_ms = measure_ms(lambda: poly.expand().is_zero)
 print(f"  Its evaluation for symbolic points took {time_ms} ms.")
 
 print("\nCocircularity determinant:\n")
@@ -84,9 +91,11 @@ print("\nCocircularity determinant:\n")
 m = cocircularity_matrix(*points)
 cocircularity_det = Determinant(m)
 println_indented(cocircularity_det)
-time_ms = benchmark_cocircularity_expr_ms(cocircularity_det, substitutions)
+time_ms = measure_ms(lambda: cocircularity_matrix(*points))
+print(f"  Its creation took {time_ms} ms.")
+time_ms = measure_ms(lambda: eval_cocircularity_expr(cocircularity_det, substitutions))
 print(f"  Its evaluation for integer coordinates took {time_ms} ms.")
-time_ms = benchmark_cocircularity_expr_ms(cocircularity_det, [])
+time_ms = measure_ms(lambda: eval_cocircularity_expr(cocircularity_det, []))
 print(f"  Its evaluation for symbolic points took {time_ms} ms.")
 
 print("\nRatio of the two polynomials:\n")
