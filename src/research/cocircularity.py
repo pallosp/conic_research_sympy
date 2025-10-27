@@ -28,7 +28,7 @@ def richter_gebert_poly(p1: Matrix, p2: Matrix, p3: Matrix, p4: Matrix) -> Expr:
     return poly
 
 
-def concircularity_matrix(p1: Matrix, p2: Matrix, p3: Matrix, p4: Matrix) -> Expr:
+def cocircularity_matrix(p1: Matrix, p2: Matrix, p3: Matrix, p4: Matrix) -> Expr:
     """Tells whether p1, p2, p3 and p4 are cocircular.
 
     Uses the cocircularity determinant described in the paper
@@ -82,7 +82,7 @@ print(f"  Its evaluation took {time_ms}ms.\n")
 
 print("Cocircularity determinant:\n")
 
-m = concircularity_matrix(p1, p2, p3, p4)
+m = cocircularity_matrix(p1, p2, p3, p4)
 cocircularity_det = Determinant(m)
 println_indented(cocircularity_det)
 time_ms = benchmark_cocircularity_expr_ms(cocircularity_det, coordinates)
