@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from typing import override
 
 from sympy import Expr, Function, Integer, Matrix, S, factor, sign
 from sympy.core.logic import fuzzy_and, fuzzy_not, fuzzy_or
@@ -56,9 +57,11 @@ class ConicNormFactor(Function):
 
         return None
 
-    def _eval_Abs(self) -> Integer:  # noqa: N802 (invalid-function-name)
+    @override
+    def _eval_Abs(self) -> Integer:
         return S.One
 
+    @override
     def _eval_power(self, exponent: Expr) -> Expr | None:
         if exponent.is_even:
             return S.One

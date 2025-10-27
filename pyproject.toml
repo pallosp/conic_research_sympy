@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [{include = "lib", from = "src"}]
 
 [tool.poetry.dependencies]
-python = ">=3.11,<4.0"
+python = ">=3.12,<4.0"  # @override requires Python 3.12+
 sympy = "1.14"
 
 [tool.poetry.group.dev.dependencies]
