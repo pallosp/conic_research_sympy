@@ -1886,7 +1886,7 @@ Takes an optional `simplifier` callback that simplifies the cocircularity
 determinant before it gets compared to zero. Returns `None` if undecidable.
 
 *Formula*: [Measuring cocircularity in a point set](
-https://egc23.web.uah.es/wp-content/uploads/2023/06/EGC23_paper_20.pdf)
+https://egc23.web.uah.es/wp-content/uploads/2023/06/EGC23_paper_20.pdf)<br>
 *Own research*:
 [research/cocircularity.py](../src/research/cocircularity.py)
 
