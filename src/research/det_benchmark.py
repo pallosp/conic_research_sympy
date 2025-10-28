@@ -3,7 +3,7 @@
 import time
 from collections.abc import Callable, Sequence
 
-from sympy import Expr, Matrix, symbols
+from sympy import Expr, Matrix, S, sqrt, symbols
 
 
 def measure_det(
@@ -45,6 +45,14 @@ for method in methods:
     sizes = [4, 6, 8, 10]
     benchmark_group(sizes, lambda i: 1234 // (i + 1), "int", method, expand=False)
     print()
+
+for method in [m for m in methods if m != "domain-ge"]:
+    benchmark_group([6], lambda i: S.One / (i + 1), "rational", method, expand=False)
+print()
+
+for method in [m for m in methods if m != "domain-ge"]:
+    benchmark_group([4], lambda i: 1 + sqrt(i), "1+√i", method, expand=False)
+print()
 
 # The default bareiss algorithm is ruled out for general slowness,
 # and lu is ruled out for expansion slowness.
