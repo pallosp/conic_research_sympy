@@ -4,6 +4,7 @@ from lib.matrix import (
     NonzeroCross,
     conic_matrix,
     is_definite_matrix,
+    is_full_rank,
     is_nonzero_multiple,
     is_positive_multiple,
     is_real_matrix,
@@ -210,3 +211,39 @@ class TestIsDefinite:
         assert is_definite_matrix(Matrix([[a, b, d], [b, c, e], [d, e, f]])) is None
         assert is_definite_matrix(Matrix([[a, b, d], [b, c, e], [d, e, 0]])) is False
         assert is_definite_matrix(Matrix([[0, b, d], [b, c, e], [d, e, f]])) is False
+
+
+class TestIsFullRank:
+    def test_numeric_square_matrix(self):
+        assert is_full_rank(Matrix([[1, 2], [3, 4]])) is True
+        assert is_full_rank(Matrix([[1, 2], [2, 4]])) is False
+
+    def test_numeric_rect_matrix(self):
+        assert is_full_rank(Matrix([[0, 1, 2], [1, 2, 3]])) is True
+        assert is_full_rank(Matrix([[0, 1, 2], [1, 2, 3]]).T) is True
+        assert is_full_rank(Matrix([[1, 2, 3], [2, 4, 6]])) is False
+        assert is_full_rank(Matrix([[1, 2, 3], [2, 4, 6]]).T) is False
+
+    def test_symbolic_square_matrix(self):
+        x = symbols("x")
+        assert is_full_rank(Matrix([[x, x + 1], [x + 1, x + 2]])) is True
+        assert is_full_rank(Matrix([[x, 2 * x], [3, 6]])) is False
+
+    def test_symbolic_rect_matrix(self):
+        x = symbols("x")
+
+        full_rank_matrix = Matrix([[x, x + 1, x + 2], [x + 1, x + 2, x + 3]])
+        assert is_full_rank(full_rank_matrix) is True
+        assert is_full_rank(full_rank_matrix.T) is True
+
+        lin_dep_matrix = Matrix([[x, x * 2, x * 3], [2, 4, 6]])
+        assert is_full_rank(lin_dep_matrix) is False
+        assert is_full_rank(lin_dep_matrix.T) is False
+
+    def test_custom_simplifier(self):
+        x, y = symbols("x y", real=True)
+        m = Matrix([[1, sqrt(x)], [sqrt(y), sqrt(x * y)]])
+
+        # The determinant can only be simplified to 0 when x ≥ 0 and y ≥ 0
+        assert is_full_rank(m) is None
+        assert is_full_rank(m, simplifier=lambda e: e.powsimp(force=True)) is False

@@ -1,6 +1,6 @@
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 
-from sympy import Expr, Function, Matrix, nan, sqrt
+from sympy import Expr, Function, Matrix, expand, nan, sqrt
 from sympy.core.logic import fuzzy_and, fuzzy_not
 from sympy.core.numbers import NaN
 
@@ -196,3 +196,28 @@ def is_definite_matrix(matrix: Matrix) -> bool | None:
     # A matrix is positive definite iff all leading principal minors > 0
     size = matrix.rows
     return fuzzy_and(matrix[:i, :i].det().is_positive for i in range(1, size + 1))
+
+
+def is_full_rank(
+    matrix: Matrix,
+    *,
+    simplifier: Callable[[Expr], Expr] = expand,
+) -> bool | None:
+    """Tells whether a matrix has full rank.
+
+    Takes an optional `simplifier` callback that simplifies the determinant
+    before it gets compared to zero. Returns `None` if the result is
+    undecidable.
+    """
+    rows, cols = matrix.shape
+    if all(el.is_Rational for el in matrix):
+        return matrix.rank() == min(rows, cols)
+
+    if cols < rows:
+        matrix = matrix.T * matrix
+    elif cols > rows:
+        matrix = matrix * matrix.T
+
+    # The Laplace method is usually faster for symbolic matrices than the
+    # default Bareiss algorithm.
+    return simplifier(matrix.det("laplace")).is_nonzero

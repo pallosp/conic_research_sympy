@@ -1,8 +1,9 @@
 from collections.abc import Callable, Sequence
 
 from sympy import Expr, Matrix, expand
+from sympy.core.logic import fuzzy_not
 
-from lib.matrix import quadratic_form, skew_matrix
+from lib.matrix import is_full_rank, quadratic_form, skew_matrix
 from lib.point import point_to_vec3
 
 
@@ -148,7 +149,5 @@ def are_cocircular(
         cc_matrix_elements.append([x * z, y * z, x**2 + y**2, z**2])
 
     cocircularity_matrix = Matrix(cc_matrix_elements)
-    if len(points) > 4:
-        cocircularity_matrix = cocircularity_matrix.T * cocircularity_matrix
 
-    return simplifier(cocircularity_matrix.det()).is_zero
+    return fuzzy_not(is_full_rank(cocircularity_matrix, simplifier=simplifier))

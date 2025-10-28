@@ -12,6 +12,7 @@
     * [eval](#matrix.NonzeroCross.eval)
   * [is\_real\_matrix](#matrix.is_real_matrix)
   * [is\_definite\_matrix](#matrix.is_definite_matrix)
+  * [is\_full\_rank](#matrix.is_full_rank)
 * [central\_conic](#central_conic)
   * [conic\_from\_foci\_and\_radius](#central_conic.conic_from_foci_and_radius)
   * [conic\_from\_center\_and\_points](#central_conic.conic_from_center_and_points)
@@ -285,6 +286,22 @@ def is_definite_matrix(matrix: Matrix) -> bool | None
 Checks if a real matrix is either positive or negative definite.
 
 Returns a bool or `None` if the definitess can't be decided.
+
+<a id="matrix.is_full_rank"></a>
+
+#### is\_full\_rank
+
+```python
+def is_full_rank(matrix: Matrix,
+                 *,
+                 simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+```
+
+Tells whether a matrix has full rank.
+
+Takes an optional `simplifier` callback that simplifies the determinant
+before it gets compared to zero. Returns `None` if the result is
+undecidable.
 
 <a id="central_conic"></a>
 
