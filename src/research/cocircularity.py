@@ -4,7 +4,7 @@ import itertools
 import time
 from collections.abc import Callable, Sequence
 
-from sympy import Determinant, Expr, I, Matrix, factor, symbols
+from sympy import Determinant, Expr, I, Matrix, S, factor, sqrt, symbols
 
 from lib.incidence import are_on_same_conic
 from lib.point import point_to_xy
@@ -70,21 +70,26 @@ def eval_cocircularity_expr(
 
 points = [Matrix(symbols(f"x{i} y{i} z{i}")) for i in range(1, 5)]
 coordinates = list(itertools.chain.from_iterable(points))
-substitutions = [
-    (coordinates[i], [0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 1][i]) for i in range(12)
-]
+rational_substitutions = [(coordinates[i], S.One / i) for i in range(12)]
+sqrt_substitutions = [(coordinates[i], 1 + sqrt(i)) for i in range(12)]
 
 
 print("\nRichter-Gebert cocircularity polynomial:\n")
 
 poly = richter_gebert_poly(*points)
 print(f"  {poly}\n")
+
 time_ms = measure_ms(lambda: richter_gebert_poly(*points))
-print(f"  Its creation took {time_ms} ms.")
-time_ms = measure_ms(lambda: eval_cocircularity_expr(poly, substitutions))
-print(f"  Its evaluation for integer coordinates took {time_ms} ms.")
+print(f"  Creation: {time_ms} ms.")
+
+time_ms = measure_ms(lambda: poly.subs(rational_substitutions).expand().is_zero)
+print(f"  Evaluation (rational coordinates): {time_ms} ms.")
+
+time_ms = measure_ms(lambda: poly.subs(sqrt_substitutions).expand().is_zero)
+print(f"  Evaluation (radical coordinates): {time_ms} ms.")
+
 time_ms = measure_ms(lambda: poly.expand().is_zero)
-print(f"  Its evaluation for symbolic points took {time_ms} ms.")
+print(f"  Evaluation (symbolic coordinates): {time_ms} ms.")
 
 print("\nCocircularity determinant:\n")
 
@@ -92,11 +97,19 @@ m = cocircularity_matrix(*points)
 cocircularity_det = Determinant(m)
 println_indented(cocircularity_det)
 time_ms = measure_ms(lambda: cocircularity_matrix(*points))
-print(f"  Its creation took {time_ms} ms.")
-time_ms = measure_ms(lambda: eval_cocircularity_expr(cocircularity_det, substitutions))
-print(f"  Its evaluation for integer coordinates took {time_ms} ms.")
-time_ms = measure_ms(lambda: eval_cocircularity_expr(cocircularity_det, []))
-print(f"  Its evaluation for symbolic points took {time_ms} ms.")
+print(f"  Creation: {time_ms} ms.")
+
+time_ms = measure_ms(lambda: m.subs(rational_substitutions).det().is_zero)
+print(f"  Evaluation (rational coordinates): {time_ms} ms.")
+
+time_ms = measure_ms(lambda: m.subs(sqrt_substitutions).det().is_zero)
+print(f"  Evaluation (radical coordinates): {time_ms} ms.")
+
+time_ms = measure_ms(lambda: m.subs(sqrt_substitutions).det("laplace").expand().is_zero)
+print(f"  Evaluation (radical coordinates, laplace): {time_ms} ms.")
+
+time_ms = measure_ms(lambda: m.det("laplace").expand().is_zero)
+print(f"  Evaluation (symbolic coordinates, laplace): {time_ms} ms.")
 
 print("\nRatio of the two polynomials:\n")
 
