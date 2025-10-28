@@ -168,13 +168,23 @@ class TestIsDegenerate:
 class TestIsCentralConic:
     def test_symbolic_ellipse(self):
         center = symbols("x,y")
-        symbolic_ellipse = ellipse(center, *symbols("r1,r2", positive=True))
+        symbolic_ellipse = ellipse(
+            center,
+            *symbols("r1,r2", positive=True),
+            r1_direction=symbols("dx dy", positive=True),
+        )
         assert is_central_conic(symbolic_ellipse) is True
 
     def test_symbolic_parabola(self):
         directrix = Matrix(symbols("a b c", positive=True))
         parabola = conic_from_focus_and_directrix(ORIGIN, directrix, eccentricity=1)
         assert is_central_conic(parabola) is False
+
+    def test_symbolic_hyperbola(self):
+        directrix = Matrix(symbols("a b c", positive=True))
+        ecc = 1 + symbols("e", positive=True)
+        hyperbola = conic_from_focus_and_directrix(ORIGIN, directrix, eccentricity=ecc)
+        assert is_central_conic(hyperbola) is True
 
     def test_symbolic_finite_point_conic(self):
         symbolic_point_conic = point_conic(symbols("x y", real=True))
@@ -193,6 +203,11 @@ class TestIsCentralConic:
         a, b = symbols("a b", positive=True)
         c1, c2 = symbols("c1 c2", real=True)
         line_pair = line_pair_conic(Matrix([a, b, c1]), Matrix([a, b, c2]))
+        assert is_central_conic(line_pair) is False
+
+    def test_symbolic_finite_plus_ideal_line(self):
+        line = Matrix(symbols("a b c", positive=True))
+        line_pair = line_pair_conic(line, IDEAL_LINE)
         assert is_central_conic(line_pair) is False
 
     def test_symbolic_general_line_pair(self):
