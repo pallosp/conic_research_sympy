@@ -75,8 +75,6 @@
   * [div\_eq](#sympy_utils.div_eq)
   * [swap\_eq](#sympy_utils.swap_eq)
   * [eq\_chain](#sympy_utils.eq_chain)
-  * [factor\_radicals](#sympy_utils.factor_radicals)
-  * [factor\_abs](#sympy_utils.factor_abs)
 * [conic\_classification](#conic_classification)
   * [ConicNormFactor](#conic_classification.ConicNormFactor)
     * [eval](#conic_classification.ConicNormFactor.eval)
@@ -1168,26 +1166,6 @@ def eq_chain(*expressions: Expr) -> Eq | Expr
 ```
 
 Creates a chain of equations, i.e. `expr_1 = expr_2 = ... = expr_n`.
-
-<a id="sympy_utils.factor_radicals"></a>
-
-#### factor\_radicals
-
-```python
-def factor_radicals(expr: Expr) -> Expr
-```
-
-Factors all `Pow` and `sqrt` subexpressions inside `expr`.
-
-<a id="sympy_utils.factor_abs"></a>
-
-#### factor\_abs
-
-```python
-def factor_abs(expr: Expr) -> Expr
-```
-
-Factors all `Abs` subexpressions inside `expr`.
 
 <a id="conic_classification"></a>
 

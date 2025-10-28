@@ -1,14 +1,4 @@
-from sympy import (
-    AppliedPredicate,
-    Expr,
-    I,
-    Matrix,
-    Q,
-    Rational,
-    nan,
-    symbols,
-    zoo,
-)
+from sympy import AppliedPredicate, Expr, I, Matrix, Q, Rational, nan, symbols, zoo
 from sympy.abc import x, y
 
 from lib.central_conic import (
@@ -31,7 +21,6 @@ from lib.hyperbola import hyperbola_from_foci_and_point
 from lib.line import X_AXIS, horizontal_line
 from lib.matrix import is_nonzero_multiple
 from lib.point import ORIGIN
-from lib.sympy_utils import factor_abs, factor_radicals
 from lib.transform import scale_xy, transform_conic
 from tests.utils import are_projective_sets_equal
 
@@ -126,10 +115,10 @@ class TestSemiAxisLengths:
     def test_symbolic_hyperbola(self):
         directrix = Matrix(symbols("a,b,c", positive=True))
         hyperbola = conic_from_focus_and_directrix((0, 0), directrix, 2)
-        assert factor_radicals(primary_radius(hyperbola)).is_real is True
-        assert factor_radicals(primary_radius(-hyperbola)).is_real is True
-        assert factor_radicals(secondary_radius(hyperbola)).is_real is False
-        assert factor_radicals(secondary_radius(-hyperbola)).is_real is False
+        assert primary_radius(hyperbola).factor(deep=True).is_real is True
+        assert primary_radius(-hyperbola).factor(deep=True).is_real is True
+        assert secondary_radius(hyperbola).factor(deep=True).is_real is False
+        assert secondary_radius(-hyperbola).factor(deep=True).is_real is False
 
     def test_parabola(self):
         parabola = conic_from_poly(x * x - y)
@@ -177,7 +166,8 @@ class TestLinearEccentricity:
 
         def simplified_lin_ecc(conic: Matrix, assumptions: AppliedPredicate) -> Expr:
             return (
-                factor_abs(linear_eccentricity(conic).factor())
+                linear_eccentricity(conic)
+                .factor(deep=True)
                 .refine(assumptions)
                 .cancel(r - fx)
             )

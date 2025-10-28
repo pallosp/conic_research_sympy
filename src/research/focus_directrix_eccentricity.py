@@ -3,6 +3,7 @@
 
 from sympy import (
     Eq,
+    Expr,
     Matrix,
     Piecewise,
     Pow,
@@ -25,12 +26,17 @@ from lib.sympy_utils import (
     add_eq,
     div_eq,
     eq_chain,
-    factor_radicals,
     mul_eq,
     sub_eq,
     swap_eq,
 )
 from research.util import print_indented, println_indented
+
+
+def factor_radicals(expr: Expr) -> Expr:
+    """Factors all `Pow` and `sqrt` subexpressions inside `expr`."""
+    return expr.replace(Pow, lambda base, exp: Pow(base.factor(), exp))
+
 
 HORIZONTAL_LINE = "-" * 88
 
