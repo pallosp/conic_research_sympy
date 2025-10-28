@@ -20,6 +20,7 @@ from lib.conic_classification import (
     is_hyperbola,
     is_imaginary_ellipse,
     is_line_pair,
+    is_nondegenerate,
     is_parabola,
     is_point_conic,
 )
@@ -120,9 +121,12 @@ class TestIsDegenerate:
         assert is_degenerate(circle((1, 2), 0)) is True
         assert is_degenerate(UNIT_CIRCLE) is False
 
-    def test_symbolic_conics(self):
+    def test_general_symbolic_conic(self):
         assert is_degenerate(conic_matrix(*symbols("a,b,c,d,e,f"))) is None
+        assert is_nondegenerate(conic_matrix(*symbols("a,b,c,d,e,f"))) is None
+
         assert is_degenerate(Matrix.diag(symbols("a,c,f", positive=True))) is False
+        assert is_nondegenerate(Matrix.diag(symbols("a,c,f", positive=True))) is True
 
     def test_symbolic_conic_from_focus_and_directrix(self):
         focus = (0, 0)
@@ -130,6 +134,22 @@ class TestIsDegenerate:
         eccentricity = symbols("e", positive=True)
         conic = conic_from_focus_and_directrix(focus, directrix, eccentricity)
         assert is_degenerate(conic) is False
+
+        # focus lies on directrix
+        directrix = Matrix([*symbols("a,b"), 0])
+        conic = conic_from_focus_and_directrix(focus, directrix, eccentricity)
+        assert is_degenerate(conic) is True
+
+    def test_symbolic_conic_from_center_and_radii(self):
+        center = symbols("x y")
+        r1, r2 = symbols("r1 r2", nonzero=True)
+        r1_direction = symbols("dx dy", positive=True)
+        conic = ellipse(center, r1, r2, r1_direction=r1_direction)
+        assert is_degenerate(conic) is False
+
+        # zero radius
+        conic = ellipse(center, r1, 0, r1_direction=r1_direction)
+        assert is_degenerate(conic) is True
 
     def test_symbolic_line_pair(self):
         line1 = Matrix(symbols("a,b,c"))
