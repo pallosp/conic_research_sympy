@@ -25,7 +25,7 @@ from lib.conic_classification import (
     is_point_conic,
 )
 from lib.degenerate_conic import line_pair_conic, point_conic
-from lib.ellipse import ellipse
+from lib.ellipse import ellipse, ellipse_from_foci_and_point
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, horizontal_line
 from lib.matrix import conic_matrix, quadratic_form
 from lib.point import ORIGIN
@@ -166,13 +166,20 @@ class TestIsDegenerate:
 
 
 class TestIsCentralConic:
-    def test_symbolic_ellipse(self):
+    def test_symbolic_ellipse_from_center_and_radii(self):
         center = symbols("x,y")
         symbolic_ellipse = ellipse(
             center,
             *symbols("r1,r2", positive=True),
             r1_direction=symbols("dx dy", positive=True),
         )
+        assert is_central_conic(symbolic_ellipse) is True
+
+    def test_symbolic_ellipse_from_foci_and_point(self):
+        focus1 = ORIGIN
+        focus2 = Matrix(symbols("fx fx", positive=True))
+        point = Matrix(symbols("x y", negative=True))
+        symbolic_ellipse = ellipse_from_foci_and_point(focus1, focus2, point)
         assert is_central_conic(symbolic_ellipse) is True
 
     def test_symbolic_parabola(self):
