@@ -1,5 +1,15 @@
 import pytest
-from sympy import I, Matrix, Poly, Rational, pi, sqrt, symbols
+from sympy import (
+    I,
+    Matrix,
+    Poly,
+    Rational,
+    exp,
+    log,
+    pi,
+    sqrt,
+    symbols,
+)
 from sympy.abc import x, y
 
 from lib.central_conic import conic_from_foci_and_radius, shrink_conic_to_zero
@@ -10,6 +20,7 @@ from lib.conic import (
     conic_from_poly,
     conic_through_points,
     eccentricity,
+    focal_axis,
     focal_axis_direction,
     polar_line,
     pole_point,
@@ -26,6 +37,7 @@ from lib.line import (
     angle_bisector,
     horizontal_line,
     line_through_point,
+    perpendicular_line,
 )
 from lib.matrix import (
     conic_matrix,
@@ -213,6 +225,61 @@ class TestAxisDirection:
         axis_dir = focal_axis_direction(line_pair)
         bisector = angle_bisector(line1, line2)
         assert is_nonzero_multiple(axis_dir, ideal_point_on_line(bisector))
+
+
+class TestFocalAxis:
+    def test_conic_from_focus_and_directrix(self):
+        focus = (0, 0)
+        directrix = Matrix(symbols("a,b,c", positive=True))
+        ecc = symbols("e", positive=True)
+        conic = conic_from_focus_and_directrix(focus, directrix, ecc)
+        expected = perpendicular_line(directrix, focus)
+        axis = focal_axis(conic).applyfunc(
+            lambda coord: coord.expand()
+            .factor()
+            .rewrite(log)
+            .factor(deep=True)
+            .rewrite(exp)
+            .factor(),
+        )
+        assert is_nonzero_multiple(axis, expected)
+
+    def test_symbolic_circle(self):
+        symbolic_circle = circle(symbols("x y"), symbols("r"))
+        assert focal_axis(symbolic_circle).is_zero_matrix
+
+    def test_ellipse(self):
+        rotated_ellipse = ellipse((6, 5), 4, 3, r1_direction=(2, 1))
+        expected = line_through_point((6, 5), direction=(2, 1))
+        assert is_nonzero_multiple(focal_axis(rotated_ellipse), expected)
+
+    def test_zero_ellipse(self):
+        r1_direction = symbols("x y", nonzero=True)
+        rotated_ellipse = ellipse((4, 3), 2, 1, r1_direction=r1_direction)
+        ellipse_axis = focal_axis(rotated_ellipse)
+        point_conic = shrink_conic_to_zero(rotated_ellipse)
+        point_conic_axis = focal_axis(point_conic)
+        assert ellipse_axis == point_conic_axis
+
+    def test_line_pair(self):
+        line1 = Matrix([1, 2, 3])
+        line2 = Matrix([4, 5, 6])
+        assert is_nonzero_multiple(
+            focal_axis(line_pair_conic(line1, line2)),
+            angle_bisector(line1, line2),
+        )
+        assert is_nonzero_multiple(
+            focal_axis(line_pair_conic(line1, -line2)),
+            angle_bisector(line1, -line2),
+        )
+
+    def test_point_conic(self):
+        r1_direction = (2, 1, 0)
+        rotated_ellipse = ellipse((6, 5), 4, 3, r1_direction=r1_direction)
+        point = shrink_conic_to_zero(rotated_ellipse)
+        expected = line_through_point((6, 5), direction=r1_direction)
+        assert is_nonzero_multiple(focal_axis(point), expected)
+        assert is_nonzero_multiple(focal_axis(-point), expected)
 
 
 class TestIdealPoints:

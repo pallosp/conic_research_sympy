@@ -139,6 +139,25 @@ def focal_axis_direction(conic: Matrix) -> Matrix:
     return Matrix([x, y, 0])
 
 
+def focal_axis(conic: Matrix) -> Matrix:
+    """Returns the axis of symmetry going through conic's focus point(s).
+
+    Properties:
+    - Returns `[0, 0, 0]ᵀ` for circles and
+      [circular conics](#conic_classification.is_circular).
+    - Point conics constructed by
+      [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(ellipse)
+      preserve the focal axis of the original real or imaginary ellipse.
+    - Line pair conics constructed by
+      [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(hyperbola)
+      have no such property.
+    - The focal axis of `line_pair(l1, l2)`, and `angle_bisector(l1, l2)`
+      coincide.
+    """
+    x, y, _ = focal_axis_direction(conic)
+    return polar_line(conic, (-y, x, 0))
+
+
 class IdealPoints(Function):
     """Computes the ideal points on a conic section.
 

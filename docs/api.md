@@ -51,6 +51,7 @@
   * [conic\_from\_focus\_and\_directrix](#conic.conic_from_focus_and_directrix)
   * [eccentricity](#conic.eccentricity)
   * [focal\_axis\_direction](#conic.focal_axis_direction)
+  * [focal\_axis](#conic.focal_axis)
   * [IdealPoints](#conic.IdealPoints)
     * [eval](#conic.IdealPoints.eval)
   * [projective\_conic\_center](#conic.projective_conic_center)
@@ -854,6 +855,28 @@ Properties:
 
 *Formula*:
 [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
+
+<a id="conic.focal_axis"></a>
+
+#### focal\_axis
+
+```python
+def focal_axis(conic: Matrix) -> Matrix
+```
+
+Returns the axis of symmetry going through conic's focus point(s).
+
+Properties:
+- Returns `[0, 0, 0]ᵀ` for circles and
+  [circular conics](#conic_classification.is_circular).
+- Point conics constructed by
+  [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(ellipse)
+  preserve the focal axis of the original real or imaginary ellipse.
+- Line pair conics constructed by
+  [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(hyperbola)
+  have no such property.
+- The focal axis of `line_pair(l1, l2)`, and `angle_bisector(l1, l2)`
+  coincide.
 
 <a id="conic.IdealPoints"></a>
 
