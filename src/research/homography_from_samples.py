@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sympy import Expr, Matrix, factor, symbols, sympify
+from sympy import Expr, Matrix, factor, gcd, symbols, sympify
 
 from research.util import print_indented
 
@@ -101,4 +101,25 @@ print("Elements of the normalized transformation matrix:\n")
 
 transform *= transform[0].as_numer_denom()[1]
 for el in transform:
+    print_indented(el)
+
+################################################################################
+
+print(
+    "\nElements of the transformation matrix "
+    "mapping the (±1, ±1) square to (uᵢ,vᵢ,wᵢ):\n",
+)
+
+w0, w1, w2, w3 = symbols("w0 w1 w2 w3")
+
+mappings = [
+    ((1, 1), (u0 / w0, v0 / w0)),
+    ((1, -1), (u1 / w1, v1 / w1)),
+    ((-1, 1), (u2 / w2, v2 / w2)),
+    ((-1, -1), (u3 / w3, v3 / w3)),
+]
+
+t = get_transform(*mappings)
+t /= gcd(t[0], t[1])
+for el in t:
     print_indented(el)
