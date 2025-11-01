@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from itertools import chain, combinations
+
 from sympy import Expr, Matrix, factor, gcd, symbols, sympify
 
 from research.util import print_indented
@@ -114,12 +116,22 @@ w0, w1, w2, w3 = symbols("w0 w1 w2 w3")
 
 mappings = [
     ((1, 1), (u0 / w0, v0 / w0)),
-    ((1, -1), (u1 / w1, v1 / w1)),
-    ((-1, 1), (u2 / w2, v2 / w2)),
-    ((-1, -1), (u3 / w3, v3 / w3)),
+    ((-1, 1), (u1 / w1, v1 / w1)),
+    ((-1, -1), (u2 / w2, v2 / w2)),
+    ((1, -1), (u3 / w3, v3 / w3)),
 ]
 
 t = get_transform(*mappings)
 t /= gcd(t[0], t[1])
+
+collectibles = [
+    a * b
+    for a, b in chain(
+        combinations([u0, u1, u2, u3], 2),
+        combinations([v0, v1, v2, v3], 2),
+        combinations([w0, w1, w2, w3], 2),
+    )
+]
+
 for el in t:
-    print_indented(el)
+    print_indented(el.collect(collectibles))
