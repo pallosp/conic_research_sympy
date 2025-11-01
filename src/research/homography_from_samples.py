@@ -2,8 +2,9 @@
 
 from itertools import chain, combinations
 
-from sympy import Expr, Matrix, factor, gcd, symbols, sympify
+from sympy import Expr, Matrix, factor, gcd, pi, symbols, sympify
 
+from lib.transform import rotate, scale
 from research.util import print_indented
 
 """Calculates the transformation that maps (xᵢ,yᵢ) to (uᵢ,vᵢ) for i=0..3.
@@ -74,10 +75,10 @@ transform = get_transform(*mappings)
 # Sanity checks
 
 scale2 = transform.subs({u0: 2, v0: 2, u1: -2, v1: 2, u2: -2, v2: -2, u3: 2, v3: -2})
-assert scale2 == Matrix.diag([2, 2, 1])
+assert scale2 == scale(2)
 
 rot90 = transform.subs({u0: -1, v0: 1, u1: -1, v1: -1, u2: 1, v2: -1, u3: 1, v3: 1})
-assert rot90 == Matrix([[0, -1, 0], [1, 0, 0], [0, 0, 1]])
+assert rot90 == rotate(pi / 2)
 
 # The transformation matrix
 
