@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from collections.abc import Sequence
 from itertools import chain, combinations
 
 from sympy import Expr, Matrix, factor, gcd, pi, symbols, sympify
@@ -31,15 +32,13 @@ u0, v0, u1, v1, u2, v2, u3, v3 = symbols("u0,v0,u1,v1,u2,v2,u3,v3")
 # linear equation system where m is a 8x8 matrix below.
 
 
-def get_transform(
-    *mappings: list[tuple[tuple[Expr, Expr], tuple[Expr, Expr]]],
+def transformation_from_samples(
+    source_points: Sequence[tuple[Expr, Expr]],
+    target_points: Sequence[tuple[Expr, Expr]],
 ) -> Matrix:
-    (
-        ((x0, y0), (u0, v0)),
-        ((x1, y1), (u1, v1)),
-        ((x2, y2), (u2, v2)),
-        ((x3, y3), (u3, v3)),
-    ) = mappings
+    (x0, y0), (x1, y1), (x2, y2), (x3, y3) = source_points
+    (u0, v0), (u1, v1), (u2, v2), (u3, v3) = target_points
+
     m = Matrix(
         [
             [x0, y0, 1, 0, 0, 0, -u0 * x0, -u0 * y0],
@@ -64,13 +63,9 @@ def get_transform(
 
 print("\nTransformation to map the (±1, ±1) square to the (uᵢ,vᵢ) quadrilateral.")
 
-mappings = [
-    ((1, 1), (u0, v0)),
-    ((-1, 1), (u1, v1)),
-    ((-1, -1), (u2, v2)),
-    ((1, -1), (u3, v3)),
-]
-transform = get_transform(*mappings)
+horizontal_square = [(1, 1), (-1, 1), (-1, -1), (1, -1)]
+target = [(u0, v0), (u1, v1), (u2, v2), (u3, v3)]
+transform = transformation_from_samples(horizontal_square, target)
 
 # Sanity checks
 
@@ -92,13 +87,8 @@ for el in transform:
 
 print("\nTransformation to map the |x|+|y|=1 square to the (uᵢ,vᵢ) quadrilateral.")
 
-mappings = [
-    ((1, 0), (u0, v0)),
-    ((0, 1), (u1, v1)),
-    ((-1, 0), (u2, v2)),
-    ((0, -1), (u3, v3)),
-]
-transform = get_transform(*mappings)
+diamond = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+transform = transformation_from_samples(diamond, target)
 
 print("Elements of the normalized transformation matrix:\n")
 
@@ -114,15 +104,13 @@ print(
 )
 
 w0, w1, w2, w3 = symbols("w0 w1 w2 w3")
-
-mappings = [
-    ((1, 1), (u0 / w0, v0 / w0)),
-    ((-1, 1), (u1 / w1, v1 / w1)),
-    ((-1, -1), (u2 / w2, v2 / w2)),
-    ((1, -1), (u3 / w3, v3 / w3)),
+homogeneous_target = [
+    (u0 / w0, v0 / w0),
+    (u1 / w1, v1 / w1),
+    (u2 / w2, v2 / w2),
+    (u3 / w3, v3 / w3),
 ]
-
-t = get_transform(*mappings)
+t = transformation_from_samples(horizontal_square, homogeneous_target)
 t /= gcd(t[0], t[1])
 
 collectibles = [
