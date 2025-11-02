@@ -161,4 +161,4 @@ def transformation_from_samples(
 
     t1 = _transformation_from_square_to_quad(source_points)
     t2 = _transformation_from_square_to_quad(target_points)
-    return t1.inv() * t2
+    return t2 * t1.inv()

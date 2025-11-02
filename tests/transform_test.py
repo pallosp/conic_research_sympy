@@ -104,8 +104,23 @@ class TestTransformationFromSamples:
         transform = transformation_from_samples(source, target)
         assert transform == rotate(pi / 2)
 
-    def test_z_greater_than_one(self):
-        source = ((1, 0, 1), (0, 2, 2), (-3, 0, 3), (0, -4, 4))
-        target = ((0, 4, 4), (-3, 0, 3), (0, -2, 2), (1, 0, 1))
+    def test_translate(self):
+        source = ((0, 0), (1, 0), (0, 1), (1, 1))
+        target = ((2, 1), (3, 1), (2, 2), (3, 2))
         transform = transformation_from_samples(source, target)
-        assert transform == rotate(pi / 2)
+        assert transform == translate(2, 1)
+
+    def test_translate_homogeneous_coordinates(self):
+        source = ((0, 0), (-2, 0, -2), (0, 1), (1, 1))
+        target = ((-4, -2, -2), (3, 1), (2, 2), (3, 2))
+        transform = transformation_from_samples(source, target)
+        assert transform == translate(2, 1)
+
+    def test_circle_to_hyperbola(self):
+        circle = ((1, 0), (0, 1), (-1, 0), (0, -1))
+        hyperbola = ((1, 0, 1), (1, 1, 0), (-1, 0, 1), (1, -1, 0))
+        transform = transformation_from_samples(circle, hyperbola)
+        for source, expected in zip(circle, hyperbola, strict=True):
+            transformed = transform_point(source, transform)
+            assert is_nonzero_multiple(transformed, expected)
+        assert transform == Matrix([[0, 0, 1], [0, 1, 0], [1, 0, 0]])
