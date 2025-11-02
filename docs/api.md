@@ -110,7 +110,7 @@
   * [reflect\_to\_line](#transform.reflect_to_line)
   * [scale\_xy](#transform.scale_xy)
   * [scale](#transform.scale)
-  * [transformation\_from\_samples](#transform.transformation_from_samples)
+  * [homography\_from\_samples](#transform.homography_from_samples)
 * [parabola](#parabola)
   * [parabola\_directrix](#parabola.parabola_directrix)
   * [parabola\_focus](#parabola.parabola_focus)
@@ -1617,12 +1617,12 @@ def scale(scale: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix
 Computes the projective transformation matrix for a uniform scaling
 transformation.
 
-<a id="transform.transformation_from_samples"></a>
+<a id="transform.homography_from_samples"></a>
 
-#### transformation\_from\_samples
+#### homography\_from\_samples
 
 ```python
-def transformation_from_samples(
+def homography_from_samples(
         source_points: Sequence[Matrix | Sequence[Expr]],
         target_points: Sequence[Matrix | Sequence[Expr]]) -> Matrix
 ```

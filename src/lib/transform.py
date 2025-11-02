@@ -83,7 +83,7 @@ def scale(scale: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix:
     return scale_xy(scale, scale, x0, y0)
 
 
-def transformation_from_samples(
+def homography_from_samples(
     source_points: Sequence[Matrix | Sequence[Expr]],
     target_points: Sequence[Matrix | Sequence[Expr]],
 ) -> Matrix:

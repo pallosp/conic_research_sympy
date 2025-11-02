@@ -5,6 +5,7 @@ from lib.circle import circle
 from lib.line import IDEAL_LINE, X_AXIS, horizontal_line, line_between
 from lib.matrix import conic_matrix, is_nonzero_multiple
 from lib.transform import (
+    homography_from_samples,
     reflect_to_line,
     rotate,
     scale,
@@ -12,7 +13,6 @@ from lib.transform import (
     transform_conic,
     transform_line,
     transform_point,
-    transformation_from_samples,
     translate,
 )
 
@@ -97,29 +97,29 @@ class TestTransformLine:
         assert translated == horizontal_line(2)
 
 
-class TestTransformationFromSamples:
+class TestHomographyFromSamples:
     def test_rotate_90(self):
         source = ((1, 0), (0, 1), (-1, 0), (0, -1))
         target = ((0, 1), (-1, 0), (0, -1), (1, 0))
-        transform = transformation_from_samples(source, target)
+        transform = homography_from_samples(source, target)
         assert transform == rotate(pi / 2)
 
     def test_translate(self):
         source = ((0, 0), (1, 0), (0, 1), (1, 1))
         target = ((2, 1), (3, 1), (2, 2), (3, 2))
-        transform = transformation_from_samples(source, target)
+        transform = homography_from_samples(source, target)
         assert transform == translate(2, 1)
 
     def test_translate_homogeneous_coordinates(self):
         source = ((0, 0), (-2, 0, -2), (0, 1), (1, 1))
         target = ((-4, -2, -2), (3, 1), (2, 2), (3, 2))
-        transform = transformation_from_samples(source, target)
+        transform = homography_from_samples(source, target)
         assert transform == translate(2, 1)
 
     def test_circle_to_hyperbola(self):
         circle = ((1, 0), (0, 1), (-1, 0), (0, -1))
         hyperbola = ((1, 0, 1), (1, 1, 0), (-1, 0, 1), (1, -1, 0))
-        transform = transformation_from_samples(circle, hyperbola)
+        transform = homography_from_samples(circle, hyperbola)
         for source, expected in zip(circle, hyperbola, strict=True):
             transformed = transform_point(source, transform)
             assert is_nonzero_multiple(transformed, expected)

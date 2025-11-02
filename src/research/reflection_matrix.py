@@ -3,7 +3,7 @@
 from sympy import Expr, Matrix, factor, pprint, symbols
 
 from lib.point import perpendicular_foot
-from lib.transform import transformation_from_samples
+from lib.transform import homography_from_samples
 
 
 def reflect(point: tuple[Expr, Expr], axis: Matrix) -> tuple[Expr, Expr]:
@@ -13,7 +13,7 @@ def reflect(point: tuple[Expr, Expr], axis: Matrix) -> tuple[Expr, Expr]:
 
 axis = Matrix(symbols("a b c"))
 samples = [(1, 0), (0, 1), (-1, 0), (0, -1)]
-transform = transformation_from_samples(samples, [reflect(s, axis) for s in samples])
+transform = homography_from_samples(samples, [reflect(s, axis) for s in samples])
 
 print("\nTransformation matrix that reflects to the ax+by+c=0 line:\n")
 pprint(transform.applyfunc(factor))

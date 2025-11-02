@@ -5,7 +5,7 @@ from itertools import chain, combinations
 
 from sympy import Determinant, Expr, MatMul, Matrix, S, factor, gcd, pi, symbols
 
-from lib.transform import rotate, scale, transformation_from_samples
+from lib.transform import homography_from_samples, rotate, scale
 from research.util import print_indented
 
 """Calculates the transformation that maps (xᵢ,yᵢ) to (uᵢ,vᵢ) for i=0..3.
@@ -144,7 +144,7 @@ print_indented(MatMul(left, right))
 print("\nTransformation from (1,0,0), (0,1,0), (0,0,1), (1,1,1) to (uᵢ,vᵢ,wᵢ):\n")
 
 special_source_points = ((1, 0, 0), (0, 1, 0), (0, 0, 1), (1, 1, 1))
-t = transformation_from_samples(special_source_points, homogeneous_target)
+t = homography_from_samples(special_source_points, homogeneous_target)
 t *= w0 * w1 * w2 * w3
 for el in t:
     print_indented(el)
