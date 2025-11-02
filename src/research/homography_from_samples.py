@@ -3,7 +3,7 @@
 from collections.abc import Sequence
 from itertools import chain, combinations
 
-from sympy import Expr, Matrix, factor, gcd, pi, symbols, sympify
+from sympy import Expr, Matrix, S, factor, gcd, pi, symbols
 
 from lib.transform import rotate, scale
 from research.util import print_indented
@@ -52,7 +52,7 @@ def transformation_from_samples(
         ],
     )
     uv = Matrix([u0, v0, u1, v1, u2, v2, u3, v3])
-    coefficients = [*list(m.inv() * uv), sympify(1)]
+    coefficients = [*list(m.inv() * uv), S.One]
     return Matrix(3, 3, coefficients).applyfunc(factor)
 
 

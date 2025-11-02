@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Matrix, sympify
+from sympy import Expr, Matrix, S, sympify
 
 #: The point at (0, 0)
 ORIGIN = Matrix([0, 0, 1])
@@ -51,7 +51,7 @@ def centroid(*points: Sequence[Expr]) -> Matrix:
     n = len(points)
     if n == 0:
         raise ValueError("At least one point must be provided.")
-    cx, cy = sympify((0, 0))
+    cx, cy = S.Zero, S.Zero
     for p in points:
         x, y = point_to_xy(p)
         cx += x
