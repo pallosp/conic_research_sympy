@@ -5,14 +5,26 @@ from sympy import Expr, Matrix, cos, sin
 from lib.point import point_to_vec3
 
 
-def transform_conic(conic: Matrix, transformation: Matrix) -> Matrix:
-    """Applies a projective transformation on a conic."""
-    return transformation.adjugate().T * conic * transformation.adjugate()
+def transform_point(
+    point: Matrix | Sequence[Expr],
+    transformation: Matrix,
+) -> Matrix:
+    """Applies a projective transformation to a projective point.
+
+    Returns a 3D column vector even if the input point is specified with only
+    two coordinates.
+    """
+    return transformation * point_to_vec3(point)
 
 
 def transform_line(line: Matrix, transformation: Matrix) -> Matrix:
-    """Applies a projective transformation on a projective line."""
+    """Applies a projective transformation to a projective line."""
     return transformation.adjugate().T * line
+
+
+def transform_conic(conic: Matrix, transformation: Matrix) -> Matrix:
+    """Applies a projective transformation to a conic."""
+    return transformation.adjugate().T * conic * transformation.adjugate()
 
 
 def translate(dx: Expr, dy: Expr) -> Matrix:

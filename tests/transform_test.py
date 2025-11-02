@@ -11,6 +11,7 @@ from lib.transform import (
     scale_xy,
     transform_conic,
     transform_line,
+    transform_point,
     transformation_from_samples,
     translate,
 )
@@ -78,6 +79,12 @@ class TestScale:
         scaling = scale_xy(sx, sy, x0, y0)
         scaling_sequence = translate(x0, y0) * scale_xy(sx, sy) * translate(-x0, -y0)
         assert simplify(scaling) == simplify(scaling_sequence)
+
+
+class TestTransformPoint:
+    def test_translate(self):
+        assert transform_point((1, 2), translate(3, 5)) == Matrix([4, 7, 1])
+        assert transform_point((1, 2, 0), translate(3, 5)) == Matrix([1, 2, 0])
 
 
 class TestTransformLine:

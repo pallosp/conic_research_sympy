@@ -102,8 +102,9 @@
   * [centroid](#point.centroid)
   * [perpendicular\_foot](#point.perpendicular_foot)
 * [transform](#transform)
-  * [transform\_conic](#transform.transform_conic)
+  * [transform\_point](#transform.transform_point)
   * [transform\_line](#transform.transform_line)
+  * [transform\_conic](#transform.transform_conic)
   * [translate](#transform.translate)
   * [rotate](#transform.rotate)
   * [reflect\_to\_line](#transform.reflect_to_line)
@@ -1522,15 +1523,19 @@ Degenerates to `[nan, nan]ᵀ` when `point`, `line` or both are infinite.
 
 # transform
 
-<a id="transform.transform_conic"></a>
+<a id="transform.transform_point"></a>
 
-#### transform\_conic
+#### transform\_point
 
 ```python
-def transform_conic(conic: Matrix, transformation: Matrix) -> Matrix
+def transform_point(point: Matrix | Sequence[Expr],
+                    transformation: Matrix) -> Matrix
 ```
 
-Applies a projective transformation on a conic.
+Applies a projective transformation to a projective point.
+
+Returns a 3D column vector even if the input point is specified with only
+two coordinates.
 
 <a id="transform.transform_line"></a>
 
@@ -1540,7 +1545,17 @@ Applies a projective transformation on a conic.
 def transform_line(line: Matrix, transformation: Matrix) -> Matrix
 ```
 
-Applies a projective transformation on a projective line.
+Applies a projective transformation to a projective line.
+
+<a id="transform.transform_conic"></a>
+
+#### transform\_conic
+
+```python
+def transform_conic(conic: Matrix, transformation: Matrix) -> Matrix
+```
+
+Applies a projective transformation to a conic.
 
 <a id="transform.translate"></a>
 
