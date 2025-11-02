@@ -96,3 +96,9 @@ class TestTransformationFromSamples:
         target = ((0, 1), (-1, 0), (0, -1), (1, 0))
         transform = transformation_from_samples(source, target)
         assert transform == rotate(pi / 2)
+
+    def test_z_greater_than_one(self):
+        source = ((1, 0, 1), (0, 2, 2), (-3, 0, 3), (0, -4, 4))
+        target = ((0, 4, 4), (-3, 0, 3), (0, -2, 2), (1, 0, 1))
+        transform = transformation_from_samples(source, target)
+        assert transform == rotate(pi / 2)

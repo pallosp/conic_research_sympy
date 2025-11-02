@@ -1606,15 +1606,18 @@ transformation.
 
 ```python
 def transformation_from_samples(
-        source_points: Sequence[tuple[Expr, Expr]],
-        target_points: Sequence[tuple[Expr, Expr]]) -> Matrix
+        source_points: Sequence[Matrix | Sequence[Expr]],
+        target_points: Sequence[Matrix | Sequence[Expr]]) -> Matrix
 ```
 
-Computes the transformation matrix that maps one quadrilateral to
-another.
+Computes the transformation that maps one quadrilateral to another.
+
+Takes 4 projective source and 4 projective target points. Both the source
+and the target quadrilaterals must be non-degenerate. Returns a 3x3
+projective transformation matrix.
 
 *Algorithm*:
-https://franklinta.com/2014/09/08/computing-css-matrix3d-transforms/
+[research/homography_from_samples.py](../src/research/homography_from_samples.py)
 
 <a id="parabola"></a>
 
