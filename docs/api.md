@@ -139,6 +139,8 @@
 * [intersection](#intersection)
   * [line\_x\_line](#intersection.line_x_line)
   * [conic\_x\_line](#intersection.conic_x_line)
+* [transform\_classes](#transform_classes)
+  * [is\_affine\_transform](#transform_classes.is_affine_transform)
 
 <a id="matrix"></a>
 
@@ -2050,4 +2052,20 @@ Special cases:
 
 *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
 section 11.3
+
+<a id="transform_classes"></a>
+
+# transform\_classes
+
+<a id="transform_classes.is_affine_transform"></a>
+
+#### is\_affine\_transform
+
+```python
+def is_affine_transform(transformation: Matrix) -> bool | None
+```
+
+Tells whether a transformation matrix is an affine transformation.
+
+Returns None if undecidable.
 
