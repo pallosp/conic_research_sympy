@@ -95,49 +95,13 @@ def _transformation_from_square_to_quad(target_points: Sequence[Matrix]) -> Matr
     where each target point is a 3d column vector with homogeneous coordinates.
     Returns a 3x3 projective transformation matrix.
     """
-    x0, y0, z0 = target_points[0]
-    x1, y1, z1 = target_points[1]
-    x2, y2, z2 = target_points[2]
-    x3, y3, z3 = target_points[3]
-    coeffs = [
-        x0 * x2 * (-y1 * z3 + y3 * z1)
-        + x0 * x3 * (y1 * z2 - y2 * z1)
-        + x1 * x2 * (y0 * z3 - y3 * z0)
-        + x1 * x3 * (-y0 * z2 + y2 * z0),
-        x0 * x1 * (y2 * z3 - y3 * z2)
-        + x0 * x2 * (-y1 * z3 + y3 * z1)
-        + x1 * x3 * (y0 * z2 - y2 * z0)
-        + x2 * x3 * (-y0 * z1 + y1 * z0),
-        x0 * x1 * (y2 * z3 - y3 * z2)
-        + x0 * x3 * (y1 * z2 - y2 * z1)
-        + x1 * x2 * (-y0 * z3 + y3 * z0)
-        + x2 * x3 * (y0 * z1 - y1 * z0),
-        y0 * y2 * (x1 * z3 - x3 * z1)
-        + y0 * y3 * (-x1 * z2 + x2 * z1)
-        + y1 * y2 * (-x0 * z3 + x3 * z0)
-        + y1 * y3 * (x0 * z2 - x2 * z0),
-        y0 * y1 * (-x2 * z3 + x3 * z2)
-        + y0 * y2 * (x1 * z3 - x3 * z1)
-        + y1 * y3 * (-x0 * z2 + x2 * z0)
-        + y2 * y3 * (x0 * z1 - x1 * z0),
-        y0 * y1 * (-x2 * z3 + x3 * z2)
-        + y0 * y3 * (-x1 * z2 + x2 * z1)
-        + y1 * y2 * (x0 * z3 - x3 * z0)
-        + y2 * y3 * (-x0 * z1 + x1 * z0),
-        z0 * z2 * (-x1 * y3 + x3 * y1)
-        + z0 * z3 * (x1 * y2 - x2 * y1)
-        + z1 * z2 * (x0 * y3 - x3 * y0)
-        + z1 * z3 * (-x0 * y2 + x2 * y0),
-        z0 * z1 * (x2 * y3 - x3 * y2)
-        + z0 * z2 * (-x1 * y3 + x3 * y1)
-        + z1 * z3 * (x0 * y2 - x2 * y0)
-        + z2 * z3 * (-x0 * y1 + x1 * y0),
-        z0 * z1 * (x2 * y3 - x3 * y2)
-        + z0 * z3 * (x1 * y2 - x2 * y1)
-        + z1 * z2 * (-x0 * y3 + x3 * y0)
-        + z2 * z3 * (x0 * y1 - x1 * y0),
+    det0, det1, det2 = [
+        Matrix.hstack(*[target_points[j] for j in range(4) if j != i]).det()
+        for i in range(3)
     ]
-    return Matrix(3, 3, coeffs)
+    return Matrix.hstack(*target_points[:3]) * Matrix(
+        [[det0, 0, det0], [-det1, det1, 0], [0, -det2, det2]],
+    )
 
 
 def transformation_from_samples(

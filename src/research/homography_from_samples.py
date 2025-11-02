@@ -3,7 +3,7 @@
 from collections.abc import Sequence
 from itertools import chain, combinations
 
-from sympy import Expr, Matrix, S, factor, gcd, pi, symbols
+from sympy import Determinant, Expr, MatMul, Matrix, S, factor, gcd, pi, symbols
 
 from lib.transform import rotate, scale
 from research.util import print_indented
@@ -124,3 +124,15 @@ collectibles = [
 
 for el in t:
     print_indented(el.collect(collectibles))
+
+print("\nExpressed with determinants:\n")
+
+points = Matrix([[u0, u1, u2, u3], [v0, v1, v2, v3], [w0, w1, w2, w3]])
+dets = [Determinant(points[:, [j for j in range(4) if j != i]]) for i in range(4)]
+det_values = [det.doit() for det in dets]
+
+left = points[:, :3]
+right = (left.inv() * t).applyfunc(factor)
+right = right.applyfunc(lambda el: el.subs(zip(det_values, dets, strict=True)))
+
+print_indented(MatMul(left, right))
