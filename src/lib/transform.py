@@ -83,27 +83,6 @@ def scale(scale: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix:
     return scale_xy(scale, scale, x0, y0)
 
 
-def _transformation_from_square_to_quad(target_points: Sequence[Matrix]) -> Matrix:
-    """Computes the transformation that maps a square to a quadrilateral.
-
-    It maps in particular
-    - (1, 1) to `target_points[0]`
-    - (-1, 1) to `target_points[1]`
-    - (-1, -1) to `target_points[2]`
-    - (1, -1) to `target_points[3]`
-
-    where each target point is a 3d column vector with homogeneous coordinates.
-    Returns a 3x3 projective transformation matrix.
-    """
-    det0, det1, det2 = [
-        Matrix.hstack(*[target_points[j] for j in range(4) if j != i]).det()
-        for i in range(3)
-    ]
-    return Matrix.hstack(*target_points[:3]) * Matrix(
-        [[det0, 0, det0], [-det1, det1, 0], [0, -det2, det2]],
-    )
-
-
 def transformation_from_samples(
     source_points: Sequence[Matrix | Sequence[Expr]],
     target_points: Sequence[Matrix | Sequence[Expr]],
@@ -114,15 +93,23 @@ def transformation_from_samples(
     and the target quadrilaterals must be non-degenerate. Returns a 3x3
     projective transformation matrix.
 
-    *Algorithm*:
+    *Research*:
     [research/homography_from_samples.py](../src/research/homography_from_samples.py)
     """
     if len(source_points) != 4 or len(target_points) != 4:
         raise ValueError("Exactly 4 source and 4 target points are required")
 
-    source_points = [point_to_vec3(p) for p in source_points]
-    target_points = [point_to_vec3(p) for p in target_points]
+    # 3x4 matrices of the source and target points
+    s = Matrix.hstack(*[point_to_vec3(p) for p in source_points])
+    t = Matrix.hstack(*[point_to_vec3(p) for p in target_points])
 
-    t1 = _transformation_from_square_to_quad(source_points)
-    t2 = _transformation_from_square_to_quad(target_points)
-    return t2 * t1.inv()
+    # Determinants of s and t without columns 0, 1 or 2
+    s0, s1, s2 = [s[:, [j for j in range(4) if j != i]].det() for i in range(3)]
+    t0, t1, t2 = [t[:, [j for j in range(4) if j != i]].det() for i in range(3)]
+
+    # Step 1: transform the source points to (1,0,0), (0,1,0), (0,0,1), (1,1,1).
+    # Step 2: transform (1,0,0), (0,1,0), (0,0,1), (1,1,1) to the target points.
+    #
+    # The intermediade points could be anything, but this specific selection
+    # results in very simple transformation matrices for both steps.
+    return t[:, :3] * Matrix.diag([t0 / s0, t1 / s1, t2 / s2]) * s[:, :3].inv()

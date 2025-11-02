@@ -5,7 +5,7 @@ from itertools import chain, combinations
 
 from sympy import Determinant, Expr, MatMul, Matrix, S, factor, gcd, pi, symbols
 
-from lib.transform import rotate, scale
+from lib.transform import rotate, scale, transformation_from_samples
 from research.util import print_indented
 
 """Calculates the transformation that maps (xᵢ,yᵢ) to (uᵢ,vᵢ) for i=0..3.
@@ -32,7 +32,7 @@ u0, v0, u1, v1, u2, v2, u3, v3 = symbols("u0,v0,u1,v1,u2,v2,u3,v3")
 # linear equation system where m is a 8x8 matrix below.
 
 
-def transformation_from_samples(
+def transformation_from_2d_samples(
     source_points: Sequence[tuple[Expr, Expr]],
     target_points: Sequence[tuple[Expr, Expr]],
 ) -> Matrix:
@@ -65,7 +65,7 @@ print("\nTransformation to map the (±1, ±1) square to the (uᵢ,vᵢ) quadrila
 
 horizontal_square = [(1, 1), (-1, 1), (-1, -1), (1, -1)]
 target = [(u0, v0), (u1, v1), (u2, v2), (u3, v3)]
-transform = transformation_from_samples(horizontal_square, target)
+transform = transformation_from_2d_samples(horizontal_square, target)
 
 # Sanity checks
 
@@ -88,7 +88,7 @@ for el in transform:
 print("\nTransformation to map the |x|+|y|=1 square to the (uᵢ,vᵢ) quadrilateral.")
 
 diamond = [(1, 0), (0, 1), (-1, 0), (0, -1)]
-transform = transformation_from_samples(diamond, target)
+transform = transformation_from_2d_samples(diamond, target)
 
 print("Elements of the normalized transformation matrix:\n")
 
@@ -110,7 +110,7 @@ homogeneous_target = [
     (u2 / w2, v2 / w2),
     (u3 / w3, v3 / w3),
 ]
-t = transformation_from_samples(horizontal_square, homogeneous_target)
+t = transformation_from_2d_samples(horizontal_square, homogeneous_target)
 t /= gcd(t[0], t[1])
 
 collectibles = [
@@ -125,6 +125,8 @@ collectibles = [
 for el in t:
     print_indented(el.collect(collectibles))
 
+################################################################################
+
 print("\nExpressed with determinants:\n")
 
 points = Matrix([[u0, u1, u2, u3], [v0, v1, v2, v3], [w0, w1, w2, w3]])
@@ -136,3 +138,13 @@ right = (left.inv() * t).applyfunc(factor)
 right = right.applyfunc(lambda el: el.subs(zip(det_values, dets, strict=True)))
 
 print_indented(MatMul(left, right))
+
+################################################################################
+
+print("\nTransformation from (1,0,0), (0,1,0), (0,0,1), (1,1,1) to (uᵢ,vᵢ,wᵢ):\n")
+
+special_source_points = ((1, 0, 0), (0, 1, 0), (0, 0, 1), (1, 1, 1))
+t = transformation_from_samples(special_source_points, homogeneous_target)
+t *= w0 * w1 * w2 * w3
+for el in t:
+    print_indented(el)

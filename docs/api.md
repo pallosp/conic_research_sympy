@@ -1633,7 +1633,7 @@ Takes 4 projective source and 4 projective target points. Both the source
 and the target quadrilaterals must be non-degenerate. Returns a 3x3
 projective transformation matrix.
 
-*Algorithm*:
+*Research*:
 [research/homography_from_samples.py](../src/research/homography_from_samples.py)
 
 <a id="parabola"></a>
