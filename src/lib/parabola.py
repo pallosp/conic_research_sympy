@@ -1,6 +1,6 @@
 from sympy import Expr, Matrix, sqrt
 
-from lib.conic_classification import is_parabola
+from lib.conic_classes import is_parabola
 from lib.point import point_to_xy
 
 

@@ -65,6 +65,23 @@
     * [eval](#degenerate_conic.SplitToLines.eval)
   * [ExtractPoint](#degenerate_conic.ExtractPoint)
     * [eval](#degenerate_conic.ExtractPoint.eval)
+* [conic\_classes](#conic_classes)
+  * [ConicNormFactor](#conic_classes.ConicNormFactor)
+    * [eval](#conic_classes.ConicNormFactor.eval)
+  * [is\_degenerate](#conic_classes.is_degenerate)
+  * [is\_nondegenerate](#conic_classes.is_nondegenerate)
+  * [is\_central\_conic](#conic_classes.is_central_conic)
+  * [is\_finite\_conic](#conic_classes.is_finite_conic)
+  * [is\_imaginary\_ellipse](#conic_classes.is_imaginary_ellipse)
+  * [is\_ellipse](#conic_classes.is_ellipse)
+  * [is\_circle](#conic_classes.is_circle)
+  * [is\_parabola](#conic_classes.is_parabola)
+  * [is\_hyperbola](#conic_classes.is_hyperbola)
+  * [is\_circular](#conic_classes.is_circular)
+  * [is\_line\_pair](#conic_classes.is_line_pair)
+  * [is\_double\_line](#conic_classes.is_double_line)
+  * [is\_point\_conic](#conic_classes.is_point_conic)
+  * [is\_finite\_point\_conic](#conic_classes.is_finite_point_conic)
 * [distance](#distance)
   * [point\_point\_distance](#distance.point_point_distance)
   * [point\_line\_distance](#distance.point_line_distance)
@@ -76,23 +93,6 @@
   * [div\_eq](#sympy_utils.div_eq)
   * [swap\_eq](#sympy_utils.swap_eq)
   * [eq\_chain](#sympy_utils.eq_chain)
-* [conic\_classification](#conic_classification)
-  * [ConicNormFactor](#conic_classification.ConicNormFactor)
-    * [eval](#conic_classification.ConicNormFactor.eval)
-  * [is\_degenerate](#conic_classification.is_degenerate)
-  * [is\_nondegenerate](#conic_classification.is_nondegenerate)
-  * [is\_central\_conic](#conic_classification.is_central_conic)
-  * [is\_finite\_conic](#conic_classification.is_finite_conic)
-  * [is\_imaginary\_ellipse](#conic_classification.is_imaginary_ellipse)
-  * [is\_ellipse](#conic_classification.is_ellipse)
-  * [is\_circle](#conic_classification.is_circle)
-  * [is\_parabola](#conic_classification.is_parabola)
-  * [is\_hyperbola](#conic_classification.is_hyperbola)
-  * [is\_circular](#conic_classification.is_circular)
-  * [is\_line\_pair](#conic_classification.is_line_pair)
-  * [is\_double\_line](#conic_classification.is_double_line)
-  * [is\_point\_conic](#conic_classification.is_point_conic)
-  * [is\_finite\_point\_conic](#conic_classification.is_finite_point_conic)
 * [point](#point)
   * [ORIGIN](#point.ORIGIN)
   * [ideal\_point](#point.ideal_point)
@@ -1073,6 +1073,250 @@ def eval(cls, degenerate_conic: Matrix) -> Matrix | None
 
 Internal implementation. Call `ExtractPoint(conic)` directly.
 
+<a id="conic_classes"></a>
+
+# conic\_classes
+
+<a id="conic_classes.ConicNormFactor"></a>
+
+## ConicNormFactor Objects
+
+```python
+class ConicNormFactor(Function)
+```
+
+Computes a normalization factor (±1) for a conic matrix `C`.
+
+When `C` is multiplied by this factor, the resulting conic has the
+following properties:
+
+- *Non-degenerate conics*: the conic equation evaluates to a positive
+  value at the focus point(s), i.e. `[fx fy 1]ᵀ C [fx fy 1] > 0`.
+- *Point conics*: The conic equation evaluates to ≤0 for all finite
+  points `[x, y, 1]ᵀ`.
+- *Line-pair conics*: no preferred normalization exists; the factor is
+  always 1.
+- *Symbolic conics*: may return an unevaluated `sympy.Function` if the
+  conic type or determinant sign cannot be determined.
+- `conic.det() * ConicNormFactor(conic) == Abs(conic.det())` holds for
+  all conic types.
+
+<a id="conic_classes.ConicNormFactor.eval"></a>
+
+#### eval
+
+```python
+@classmethod
+def eval(cls, conic: Matrix) -> int | None
+```
+
+Internal implementation. Call `ConicNormFactor(conic)` directly.
+
+<a id="conic_classes.is_degenerate"></a>
+
+#### is\_degenerate
+
+```python
+def is_degenerate(
+        conic: Matrix,
+        *,
+        simplifier: Callable[[Expr], Expr] = lambda expr: expr) -> bool | None
+```
+
+Tells whether the conic is degenerate.
+
+Degenerate conics consist of a single projective point or a pair of
+projective lines. The zero matrix is also considered degenerate.
+
+Takes an optional `simplifier` callback that simplifies the conic matrix
+determinant before it gets compared to zero. Returns `None` if the result
+is undecidable.
+
+<a id="conic_classes.is_nondegenerate"></a>
+
+#### is\_nondegenerate
+
+```python
+def is_nondegenerate(
+        conic: Matrix,
+        *,
+        simplifier: Callable[[Expr], Expr] = lambda expr: expr) -> bool | None
+```
+
+Tells whether the conic is non-degenerate.
+
+Non-degenerate conics include real or imaginary ellipses, parabolas and
+hyperbolas.
+
+Takes an optional `simplifier` callback that simplifies the conic matrix
+determinant before it gets compared to zero. Returns `None` if the result
+is undecidable.
+
+<a id="conic_classes.is_central_conic"></a>
+
+#### is\_central\_conic
+
+```python
+def is_central_conic(
+        conic: Matrix,
+        *,
+        simplifier: Callable[[Expr], Expr] = lambda expr: expr) -> bool | None
+```
+
+Tells whether a conic has a finite center of symmetry.
+
+Takes an optional `simplifier` callback that simplifies the central
+conicness polynomial before it gets compared to zero. Returns `None` if
+the result is undecidable.
+
+<a id="conic_classes.is_finite_conic"></a>
+
+#### is\_finite\_conic
+
+```python
+def is_finite_conic(
+        conic: Matrix,
+        *,
+        simplifier: Callable[[Expr], Expr] = factor) -> bool | None
+```
+
+Tells whether all points on the conic are finite.
+
+Takes an optional `simplifier` callback that simplifies the finiteness
+polynomial before it gets compared to zero. Returns `None` if the result
+is undecidable.
+
+<a id="conic_classes.is_imaginary_ellipse"></a>
+
+#### is\_imaginary\_ellipse
+
+```python
+def is_imaginary_ellipse(conic: Matrix) -> bool | None
+```
+
+Tells whether the conic is an imaginary ellipse.
+
+Imaginary ellipses have real center and focus points, but imaginary radii
+and eccentricity. In addition, all solutions of their conic equations are
+points with complex coordinates.
+
+Returns `None` if undecidable.
+
+<a id="conic_classes.is_ellipse"></a>
+
+#### is\_ellipse
+
+```python
+def is_ellipse(conic: Matrix) -> bool | None
+```
+
+Tells whether the conic is an ellipse.
+
+Returns `False` for
+[imaginary ellipses](#conic_classification.is_imaginary_ellipse),
+or `None` if the conic's type is undecidable.
+
+<a id="conic_classes.is_circle"></a>
+
+#### is\_circle
+
+```python
+def is_circle(conic: Matrix) -> bool | None
+```
+
+Tells whether the conic is a circle.
+
+Returns `None` if undecidable.
+
+<a id="conic_classes.is_parabola"></a>
+
+#### is\_parabola
+
+```python
+def is_parabola(conic: Matrix) -> bool | None
+```
+
+Tells whether the conic is a parabola.
+
+Returns `None` if undecidable.
+
+<a id="conic_classes.is_hyperbola"></a>
+
+#### is\_hyperbola
+
+```python
+def is_hyperbola(conic: Matrix) -> bool | None
+```
+
+Tells whether the conic is a hyperbola.
+
+Returns `None` if undecidable.
+
+<a id="conic_classes.is_circular"></a>
+
+#### is\_circular
+
+```python
+def is_circular(conic: Matrix) -> bool | None
+```
+
+Tells whether there is a single center point around which the conic is
+invariant under all rotations.
+
+Circles, imaginary circles, zero-radius circles have such circular symmetry.
+Double ideal lines are not considered circular. Returns `None` if undecidable.
+
+<a id="conic_classes.is_line_pair"></a>
+
+#### is\_line\_pair
+
+```python
+def is_line_pair(conic: Matrix) -> bool | None
+```
+
+Tells whether the conic is the union of two projective lines.
+
+Returns `None` if undecidable.
+
+<a id="conic_classes.is_double_line"></a>
+
+#### is\_double\_line
+
+```python
+def is_double_line(conic: Matrix) -> bool | None
+```
+
+Tells whether the conic consists of two coincident projective lines.
+
+Returns `None` if undecidable.
+
+<a id="conic_classes.is_point_conic"></a>
+
+#### is\_point\_conic
+
+```python
+def is_point_conic(conic: Matrix) -> bool | None
+```
+
+Tells whether the conic consists of a single projective point.
+
+Returns `None` if undecidable.
+
+A conic is a point conic iff it's degenerate and splits to two lines with
+complex coordinates.
+
+<a id="conic_classes.is_finite_point_conic"></a>
+
+#### is\_finite\_point\_conic
+
+```python
+def is_finite_point_conic(conic: Matrix) -> bool | None
+```
+
+Tells whether the conic consists of a single finite (Euclidean) point.
+
+Returns `None` if undecidable.
+
 <a id="distance"></a>
 
 # distance
@@ -1189,250 +1433,6 @@ def eq_chain(*expressions: Expr) -> Eq | Expr
 ```
 
 Creates a chain of equations, i.e. `expr_1 = expr_2 = ... = expr_n`.
-
-<a id="conic_classification"></a>
-
-# conic\_classification
-
-<a id="conic_classification.ConicNormFactor"></a>
-
-## ConicNormFactor Objects
-
-```python
-class ConicNormFactor(Function)
-```
-
-Computes a normalization factor (±1) for a conic matrix `C`.
-
-When `C` is multiplied by this factor, the resulting conic has the
-following properties:
-
-- *Non-degenerate conics*: the conic equation evaluates to a positive
-  value at the focus point(s), i.e. `[fx fy 1]ᵀ C [fx fy 1] > 0`.
-- *Point conics*: The conic equation evaluates to ≤0 for all finite
-  points `[x, y, 1]ᵀ`.
-- *Line-pair conics*: no preferred normalization exists; the factor is
-  always 1.
-- *Symbolic conics*: may return an unevaluated `sympy.Function` if the
-  conic type or determinant sign cannot be determined.
-- `conic.det() * ConicNormFactor(conic) == Abs(conic.det())` holds for
-  all conic types.
-
-<a id="conic_classification.ConicNormFactor.eval"></a>
-
-#### eval
-
-```python
-@classmethod
-def eval(cls, conic: Matrix) -> int | None
-```
-
-Internal implementation. Call `ConicNormFactor(conic)` directly.
-
-<a id="conic_classification.is_degenerate"></a>
-
-#### is\_degenerate
-
-```python
-def is_degenerate(
-        conic: Matrix,
-        *,
-        simplifier: Callable[[Expr], Expr] = lambda expr: expr) -> bool | None
-```
-
-Tells whether the conic is degenerate.
-
-Degenerate conics consist of a single projective point or a pair of
-projective lines. The zero matrix is also considered degenerate.
-
-Takes an optional `simplifier` callback that simplifies the conic matrix
-determinant before it gets compared to zero. Returns `None` if the result
-is undecidable.
-
-<a id="conic_classification.is_nondegenerate"></a>
-
-#### is\_nondegenerate
-
-```python
-def is_nondegenerate(
-        conic: Matrix,
-        *,
-        simplifier: Callable[[Expr], Expr] = lambda expr: expr) -> bool | None
-```
-
-Tells whether the conic is non-degenerate.
-
-Non-degenerate conics include real or imaginary ellipses, parabolas and
-hyperbolas.
-
-Takes an optional `simplifier` callback that simplifies the conic matrix
-determinant before it gets compared to zero. Returns `None` if the result
-is undecidable.
-
-<a id="conic_classification.is_central_conic"></a>
-
-#### is\_central\_conic
-
-```python
-def is_central_conic(
-        conic: Matrix,
-        *,
-        simplifier: Callable[[Expr], Expr] = lambda expr: expr) -> bool | None
-```
-
-Tells whether a conic has a finite center of symmetry.
-
-Takes an optional `simplifier` callback that simplifies the central
-conicness polynomial before it gets compared to zero. Returns `None` if
-the result is undecidable.
-
-<a id="conic_classification.is_finite_conic"></a>
-
-#### is\_finite\_conic
-
-```python
-def is_finite_conic(
-        conic: Matrix,
-        *,
-        simplifier: Callable[[Expr], Expr] = factor) -> bool | None
-```
-
-Tells whether all points on the conic are finite.
-
-Takes an optional `simplifier` callback that simplifies the finiteness
-polynomial before it gets compared to zero. Returns `None` if the result
-is undecidable.
-
-<a id="conic_classification.is_imaginary_ellipse"></a>
-
-#### is\_imaginary\_ellipse
-
-```python
-def is_imaginary_ellipse(conic: Matrix) -> bool | None
-```
-
-Tells whether the conic is an imaginary ellipse.
-
-Imaginary ellipses have real center and focus points, but imaginary radii
-and eccentricity. In addition, all solutions of their conic equations are
-points with complex coordinates.
-
-Returns `None` if undecidable.
-
-<a id="conic_classification.is_ellipse"></a>
-
-#### is\_ellipse
-
-```python
-def is_ellipse(conic: Matrix) -> bool | None
-```
-
-Tells whether the conic is an ellipse.
-
-Returns `False` for
-[imaginary ellipses](#conic_classification.is_imaginary_ellipse),
-or `None` if the conic's type is undecidable.
-
-<a id="conic_classification.is_circle"></a>
-
-#### is\_circle
-
-```python
-def is_circle(conic: Matrix) -> bool | None
-```
-
-Tells whether the conic is a circle.
-
-Returns `None` if undecidable.
-
-<a id="conic_classification.is_parabola"></a>
-
-#### is\_parabola
-
-```python
-def is_parabola(conic: Matrix) -> bool | None
-```
-
-Tells whether the conic is a parabola.
-
-Returns `None` if undecidable.
-
-<a id="conic_classification.is_hyperbola"></a>
-
-#### is\_hyperbola
-
-```python
-def is_hyperbola(conic: Matrix) -> bool | None
-```
-
-Tells whether the conic is a hyperbola.
-
-Returns `None` if undecidable.
-
-<a id="conic_classification.is_circular"></a>
-
-#### is\_circular
-
-```python
-def is_circular(conic: Matrix) -> bool | None
-```
-
-Tells whether there is a single center point around which the conic is
-invariant under all rotations.
-
-Circles, imaginary circles, zero-radius circles have such circular symmetry.
-Double ideal lines are not considered circular. Returns `None` if undecidable.
-
-<a id="conic_classification.is_line_pair"></a>
-
-#### is\_line\_pair
-
-```python
-def is_line_pair(conic: Matrix) -> bool | None
-```
-
-Tells whether the conic is the union of two projective lines.
-
-Returns `None` if undecidable.
-
-<a id="conic_classification.is_double_line"></a>
-
-#### is\_double\_line
-
-```python
-def is_double_line(conic: Matrix) -> bool | None
-```
-
-Tells whether the conic consists of two coincident projective lines.
-
-Returns `None` if undecidable.
-
-<a id="conic_classification.is_point_conic"></a>
-
-#### is\_point\_conic
-
-```python
-def is_point_conic(conic: Matrix) -> bool | None
-```
-
-Tells whether the conic consists of a single projective point.
-
-Returns `None` if undecidable.
-
-A conic is a point conic iff it's degenerate and splits to two lines with
-complex coordinates.
-
-<a id="conic_classification.is_finite_point_conic"></a>
-
-#### is\_finite\_point\_conic
-
-```python
-def is_finite_point_conic(conic: Matrix) -> bool | None
-```
-
-Tells whether the conic consists of a single finite (Euclidean) point.
-
-Returns `None` if undecidable.
 
 <a id="point"></a>
 

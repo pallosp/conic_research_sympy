@@ -3,7 +3,7 @@ from sympy import I, Matrix, symbols
 
 from lib.circle import circle
 from lib.conic import IdealPoints, conic_from_poly
-from lib.conic_classification import is_degenerate, is_finite_conic
+from lib.conic_classes import is_degenerate, is_finite_conic
 from lib.degenerate_conic import (
     ExtractPoint,
     SplitToLines,

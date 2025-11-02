@@ -3,7 +3,7 @@ from sympy import Matrix, factor, nan, pi, simplify, symbols
 
 from lib.central_conic import conic_center, semi_axis_lengths
 from lib.circle import UNIT_CIRCLE, circle
-from lib.conic_classification import is_ellipse
+from lib.conic_classes import is_ellipse
 from lib.degenerate_conic import double_line_conic
 from lib.ellipse import (
     ellipse,

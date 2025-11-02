@@ -2,7 +2,7 @@ from collections.abc import Sequence
 
 from sympy import Abs, Expr, I, Matrix, sqrt
 
-from lib.conic_classification import ConicNormFactor
+from lib.conic_classes import ConicNormFactor
 from lib.matrix import conic_matrix, max_eigenvalue, min_eigenvalue
 from lib.point import point_to_xy
 

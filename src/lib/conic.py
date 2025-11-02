@@ -2,7 +2,7 @@ from collections.abc import Sequence
 
 from sympy import Expr, Function, I, Matrix, Poly, Symbol, abc, sqrt
 
-from lib.conic_classification import ConicNormFactor
+from lib.conic_classes import ConicNormFactor
 from lib.matrix import NonzeroCross
 from lib.point import point_to_vec3, point_to_xy
 

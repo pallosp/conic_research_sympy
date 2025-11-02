@@ -7,7 +7,7 @@ from lib.conic import (
     conic_from_poly,
     focal_axis_direction,
 )
-from lib.conic_classification import (
+from lib.conic_classes import (
     ConicNormFactor,
     is_central_conic,
     is_circle,
