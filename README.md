@@ -1,24 +1,24 @@
 # Calculating with conics (research project)
 
-This project provides a symbolic framework for working with classic Euclidean
+This project provides a symbolic framework for working with classical Euclidean
 and projective geometry in 2D. Built on top of [SymPy](https://www.sympy.org/),
 it offers tools to construct, transform, and analyze geometric entities such as
-points, lines, and conics in projective space.
+points, lines, and conics in projective space. It adapts several algorithms from
+Jürgen Richter-Gebert’s Projective Geometry book. The framework is useful for
+both symbolic and numeric computations, educational purposes, and geometric
+reasoning.
 
 The API supports:
 
-- Conic representation in quadratic and polar forms
-- Constructing conics from 5 points, focus/directrix, center/radii, and more
+- Conic representation in quadratic and polar form
+- Constructing conics from five points, focus/directrix, center/radii, and more
 - Line and point operations including bisectors, parallels, perpendiculars, etc.
 - Geometric transformations like translation, scaling, and rotation in
   projective space
-- Conic classification (e.g., ellipse, parabola, hyperbola, degenerate)
-- Distance computations
-
-The library is based on foundational projective geometry principles, with
-several algorithms adapted from Jürgen Richter-Gebert’s Projective Geometry
-book. It's useful for symbolic computations, educational purposes, and geometric
-reasoning.
+- Conic classification (e.g., ellipse, parabola, hyperbola, degenerate cases)
+- Computation of conic properties (e.g. focus, eccentricity, asymptotes,
+  vertices, ideal points)
+- Incidence and distance calculations
 
 [Complete API reference](docs/api.md)
 
