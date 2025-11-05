@@ -132,6 +132,7 @@
   * [are\_cocircular](#incidence.are_cocircular)
 * [hyperbola](#hyperbola)
   * [hyperbola\_from\_foci\_and\_point](#hyperbola.hyperbola_from_foci_and_point)
+  * [asymptote\_focal\_axis\_angle](#hyperbola.asymptote_focal_axis_angle)
 * [ellipse](#ellipse)
   * [ellipse](#ellipse.ellipse)
   * [ellipse\_from\_foci\_and\_point](#ellipse.ellipse_from_foci_and_point)
@@ -1946,6 +1947,37 @@ Constructs a hyperbola from its focus points and an incident point.
 
 *Formula*:
 [research/conic_from_foci_and_radius.py](../src/research/conic_from_foci_and_radius.py)
+
+<a id="hyperbola.asymptote_focal_axis_angle"></a>
+
+#### asymptote\_focal\_axis\_angle
+
+```python
+def asymptote_focal_axis_angle(hyperbola: Matrix) -> Expr
+```
+
+Computes the angle between the axis and an asymptote of a hyperbola.
+
+Return values for other conics:
+- *non-degenarate conics*
+  - parabolas: 0
+  - real and imaginary circles: infinity
+  - other real ellipses: imaginary angle (`acos(x)`; `x > 1`)
+  - non-circular complex ellipses: complex angle
+- *point conics*
+  - zero-radius circles: infinity
+  - non-circular finite point conics: imaginary angle
+  - ideal point conics: 0
+- *line pairs*
+   - crossing lines: positive angle; α or π/2-α depending on the lines'
+     directions
+   - parallel lines in the same direction: π/2
+   - parallel lines in the opposite direction: 0
+   - conics containis the ideal line: `nan`
+
+*Research*:
+[research/asymptote_angle.py](../src/research/asymptote_angle.py)<br>
+*Formula*: `acos(1 / eccentricity)`
 
 <a id="ellipse"></a>
 

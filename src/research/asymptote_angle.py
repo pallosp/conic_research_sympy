@@ -38,5 +38,6 @@ println_indented(
         -cos_f1_limit,
         -cos_f1_limit.subs(cos_f1, solution),
         -cos_f1_limit.subs(cos_f1, solution).doit(),
+        1 / symbols("eccentricity"),
     ),
 )

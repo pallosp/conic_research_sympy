@@ -1,8 +1,15 @@
-from sympy import sqrt, symbols
+from sympy import I, Rational, acos, nan, pi, sqrt, symbols
+from sympy.abc import x, y
 
+from lib.circle import circle
 from lib.conic import conic_from_poly
-from lib.hyperbola import hyperbola_from_foci_and_point
+from lib.degenerate_conic import line_pair_conic, point_conic
+from lib.ellipse import ellipse
+from lib.hyperbola import asymptote_focal_axis_angle, hyperbola_from_foci_and_point
+from lib.line import IDEAL_LINE, X_AXIS, horizontal_line
 from lib.matrix import is_nonzero_multiple
+from lib.point import ORIGIN
+from lib.transform import rotate, transform_line
 
 
 class TestHyperbolaFromFociAndPoint:
@@ -14,3 +21,63 @@ class TestHyperbolaFromFociAndPoint:
         hyperbola = hyperbola_from_foci_and_point(f1, f2, p)
         x, y = symbols("x y")
         assert is_nonzero_multiple(hyperbola, conic_from_poly(x * y - 4))
+
+
+class TestFocalAxisAsymptoteAngle:
+    def test_hyperbola(self):
+        hyperbola = conic_from_poly(x * y - 1)
+        assert asymptote_focal_axis_angle(hyperbola) == pi / 4
+        assert asymptote_focal_axis_angle(-hyperbola) == pi / 4
+
+    def test_parabola(self):
+        parabola = conic_from_poly(x * x - y)
+        assert asymptote_focal_axis_angle(parabola) == 0
+
+    def test_circle(self):
+        a_circle = circle((1, 2), 3)
+        assert asymptote_focal_axis_angle(a_circle).is_infinite
+
+    def test_ellipse(self):
+        standard_ellipse = ellipse(ORIGIN, 5, 3)
+        angle = asymptote_focal_axis_angle(standard_ellipse)
+        # As of 2025-11-04 angle.is_imaginary evaluates to None.
+        # Tracking issue: https://github.com/sympy/sympy/issues/28541
+        assert angle.evalf().is_imaginary
+        assert angle == acos(Rational(5, 4))
+
+    def test_complex_ellipse(self):
+        complex_ellipse = ellipse(ORIGIN, 5 * I, 3 * I)
+        angle = asymptote_focal_axis_angle(complex_ellipse)
+        assert angle == acos(3 * I / 4)
+
+    def test_crossing_lines(self):
+        line = transform_line(X_AXIS, rotate(pi / 3))
+        line_pair = line_pair_conic(X_AXIS, line)
+        angle = asymptote_focal_axis_angle(line_pair)
+        assert angle == pi / 3
+        angle = asymptote_focal_axis_angle(-line_pair)
+        assert angle == pi / 6
+
+    def test_parallel_lines(self):
+        line_pair = line_pair_conic(horizontal_line(1), horizontal_line(2))
+        assert asymptote_focal_axis_angle(line_pair) == pi / 2
+        assert asymptote_focal_axis_angle(-line_pair) == 0
+
+    def test_conics_containing_the_ideal_line(self):
+        line_pair = line_pair_conic(X_AXIS, IDEAL_LINE)
+        assert asymptote_focal_axis_angle(line_pair) == nan
+        assert asymptote_focal_axis_angle(-line_pair) == nan
+
+        double_ideal_line = line_pair_conic(IDEAL_LINE, IDEAL_LINE)
+        assert asymptote_focal_axis_angle(double_ideal_line) == nan
+
+    def test_finite_point_conic(self):
+        zero_circle = circle((1, 2), 0)
+        assert asymptote_focal_axis_angle(zero_circle).is_infinite
+
+        finite_point_conic = point_conic((1, 2))
+        assert asymptote_focal_axis_angle(finite_point_conic).evalf().is_imaginary
+
+    def test_ideal_point_conic(self):
+        ideal_point_conic = point_conic((1, 2, 0))
+        assert asymptote_focal_axis_angle(ideal_point_conic) == 0
