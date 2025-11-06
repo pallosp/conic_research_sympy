@@ -1,9 +1,9 @@
-
-from sympy import I, Rational, acos, nan, pi, sqrt, symbols
+import pytest
+from sympy import I, Matrix, Rational, acos, nan, pi, sqrt, symbols
 from sympy.abc import x, y
 
 from lib.circle import circle
-from lib.conic import conic_from_poly
+from lib.conic import conic_from_poly, focal_axis_direction, projective_conic_center
 from lib.degenerate_conic import line_pair_conic, point_conic
 from lib.ellipse import ellipse
 from lib.hyperbola import (
@@ -11,10 +11,10 @@ from lib.hyperbola import (
     asymptote_focal_axis_angle,
     hyperbola_from_foci_and_point,
 )
-from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, horizontal_line
+from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, horizontal_line, line_through_point
 from lib.matrix import is_nonzero_multiple
 from lib.point import ORIGIN
-from lib.transform import rotate, transform_line
+from lib.transform import rotate, transform_line, transform_point
 
 
 class TestHyperbolaFromFociAndPoint:
@@ -86,6 +86,34 @@ class TestFocalAxisAsymptoteAngle:
     def test_ideal_point_conic(self):
         ideal_point_conic = point_conic((1, 2, 0))
         assert asymptote_focal_axis_angle(ideal_point_conic) == 0
+
+
+class TestAsymptoteAngleVsIdealPoints:
+
+    @pytest.mark.parametrize(
+        "conic",
+        [
+            conic_from_poly(x * y - 1),
+            ellipse(ORIGIN, 1, 2, r1_direction=(3, 4)),
+            ellipse(ORIGIN, I, 2 * I, r1_direction=(3, 4)),
+            point_conic((1, 2)),
+            line_pair_conic(X_AXIS, Matrix([1, 1, -1])),
+        ],
+    )
+    def test_angle_vs_asymptote_conic_consistency(self, conic: Matrix):
+        axis_dir = focal_axis_direction(conic)
+        rotation = rotate(asymptote_focal_axis_angle(conic))
+        center = projective_conic_center(conic)
+        asymptote_dir1 = transform_point(axis_dir, rotation)
+        asymptote_dir2 = transform_point(axis_dir, rotation.inv())
+        asymptotes = [
+            line_through_point(center, direction=asymptote_dir1),
+            line_through_point(center, direction=asymptote_dir2),
+        ]
+        assert is_nonzero_multiple(
+            line_pair_conic(*asymptotes),
+            asymptote_conic(conic),
+        )
 
 
 class TestAsymptoteConic:
