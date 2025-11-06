@@ -234,7 +234,7 @@ def shrink_conic_to_zero(conic: Matrix) -> Matrix:
     conic types the result matrix will have infinite or `nan` elements.
 
     *Formula*:
-    [research/scale_conic_from_center.py](../src/research/scale_conic_from_center.py
+    [research/scale_conic_from_center.py](../src/research/scale_conic_from_center.py)
     """
     a, _, _, b, c, _, _, _, _ = conic
     return conic - Matrix.diag([0, 0, conic.det() / (a * c - b * b)])

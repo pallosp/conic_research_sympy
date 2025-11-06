@@ -133,6 +133,7 @@
 * [hyperbola](#hyperbola)
   * [hyperbola\_from\_foci\_and\_point](#hyperbola.hyperbola_from_foci_and_point)
   * [asymptote\_focal\_axis\_angle](#hyperbola.asymptote_focal_axis_angle)
+  * [asymptote\_conic](#hyperbola.asymptote_conic)
 * [ellipse](#ellipse)
   * [ellipse](#ellipse.ellipse)
   * [ellipse\_from\_foci\_and\_point](#ellipse.ellipse_from_foci_and_point)
@@ -501,7 +502,7 @@ This transformation is only meaningful for
 conic types the result matrix will have infinite or `nan` elements.
 
 *Formula*:
-[research/scale_conic_from_center.py](../src/research/scale_conic_from_center.py
+[research/scale_conic_from_center.py](../src/research/scale_conic_from_center.py)
 
 <a id="circle"></a>
 
@@ -1978,6 +1979,20 @@ Return values for other conics:
 *Research*:
 [research/asymptote_angle.py](../src/research/asymptote_angle.py)<br>
 *Formula*: `acos(1 / eccentricity)`
+
+<a id="hyperbola.asymptote_conic"></a>
+
+#### asymptote\_conic
+
+```python
+def asymptote_conic(hyperbola: Matrix) -> Matrix
+```
+
+Computes the line pair conic representing the hyperbola's asymptotes.
+
+Turns ellipses into point conics at their center, preserving the axis
+directions. The function is equivalent to
+[shrink_conic_to_zero](#central_conic.shrink_conic_to_zero).
 
 <a id="ellipse"></a>
 

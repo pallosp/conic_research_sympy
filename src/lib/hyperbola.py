@@ -2,9 +2,7 @@ from collections.abc import Sequence
 
 from sympy import Expr, Matrix, acos, sqrt
 
-from lib.central_conic import (
-    conic_from_foci_and_radius,
-)
+from lib.central_conic import conic_from_foci_and_radius, shrink_conic_to_zero
 from lib.conic_classes import ConicNormFactor
 from lib.distance import point_point_distance
 
@@ -51,3 +49,13 @@ def asymptote_focal_axis_angle(hyperbola: Matrix) -> Expr:
     s = sqrt(((a - c) ** 2 + 4 * b**2).factor())
     norm_sign = ConicNormFactor(hyperbola)
     return acos(sqrt((s - norm_sign * (a + c)) / (2 * s)))
+
+
+def asymptote_conic(hyperbola: Matrix) -> Matrix:
+    """Computes the line pair conic representing the hyperbola's asymptotes.
+
+    Turns ellipses into point conics at their center, preserving the axis
+    directions. The function is equivalent to
+    [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero).
+    """
+    return shrink_conic_to_zero(hyperbola)

@@ -1,3 +1,4 @@
+
 from sympy import I, Rational, acos, nan, pi, sqrt, symbols
 from sympy.abc import x, y
 
@@ -5,8 +6,12 @@ from lib.circle import circle
 from lib.conic import conic_from_poly
 from lib.degenerate_conic import line_pair_conic, point_conic
 from lib.ellipse import ellipse
-from lib.hyperbola import asymptote_focal_axis_angle, hyperbola_from_foci_and_point
-from lib.line import IDEAL_LINE, X_AXIS, horizontal_line
+from lib.hyperbola import (
+    asymptote_conic,
+    asymptote_focal_axis_angle,
+    hyperbola_from_foci_and_point,
+)
+from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, horizontal_line
 from lib.matrix import is_nonzero_multiple
 from lib.point import ORIGIN
 from lib.transform import rotate, transform_line
@@ -81,3 +86,11 @@ class TestFocalAxisAsymptoteAngle:
     def test_ideal_point_conic(self):
         ideal_point_conic = point_conic((1, 2, 0))
         assert asymptote_focal_axis_angle(ideal_point_conic) == 0
+
+
+class TestAsymptoteConic:
+
+    def test_hyperbola(self):
+        hyperbola = conic_from_poly(1 - x * y)
+        asymptotes = asymptote_conic(hyperbola)
+        assert asymptotes == line_pair_conic(X_AXIS, Y_AXIS)
