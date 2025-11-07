@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sympy import Abs, Matrix, exp, expand_complex, gcd, log, sqrt, symbols
+from sympy import Abs, Matrix, Ne, exp, expand_complex, gcd, log, sqrt, symbols
 from sympy.abc import x, y
 
 from lib.conic import IdealPoints, conic_from_poly, focal_axis_direction
@@ -79,9 +79,11 @@ def ideal_points_from_asymptotes(
     for point in ideal_point_1, ideal_point_2:
         pt = simplify_coord(point)
         pt /= gcd(*pt[:2]).factor()
+        pt = pt.subs(1 / (eigen_plus - eigen_minus), 1)
         if expand:
             pt = pt.subs(eigen_plus, (a + c + sqrt(eigen_diff_square)) / 2).subs(
-                eigen_minus, (a + c - sqrt(eigen_diff_square)) / 2,
+                eigen_minus,
+                (a + c - sqrt(eigen_diff_square)) / 2,
             )
 
         ret.append(pt)
@@ -92,7 +94,7 @@ def ideal_points_from_asymptotes(
 conic = conic_matrix(*symbols("a b c d e f", real=True))
 println_indented(ideal_points_from_asymptotes(conic, expand=False)[0])
 
-print("\nVerification for concrete conics:\n")
+print("Verification for concrete conics:\n")
 
 conics = [
     conic_from_poly(x * x - y * y - 1),
@@ -112,3 +114,10 @@ for conic_example in conics:
     assert any(is_nonzero_multiple(ip1[0], p) for p in ip2)
     assert any(is_nonzero_multiple(ip1[1], p) for p in ip2)
     println_indented(eq_chain(ip1, ip2))
+
+print("The formula breaks down for circles:\n")
+
+circle = conic_from_poly(x * x + y * y - 1)
+expected = IdealPoints(circle)[0]
+actual = ip_formula[0].subs(zip(conic, circle, strict=True))
+println_indented(Ne(expected, actual, evaluate=False))
