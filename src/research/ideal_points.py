@@ -1,15 +1,6 @@
 #!/usr/bin/env python
 
-from sympy import (
-    Abs,
-    Matrix,
-    exp,
-    expand_complex,
-    gcd,
-    log,
-    sqrt,
-    symbols,
-)
+from sympy import Abs, Matrix, exp, expand_complex, gcd, log, sqrt, symbols
 from sympy.abc import x, y
 
 from lib.conic import IdealPoints, conic_from_poly, focal_axis_direction
@@ -58,37 +49,39 @@ def ideal_points_from_asymptotes(
     ideal_point_1 = transform_point(axis_dir, rotation1)
     ideal_point_2 = transform_point(axis_dir, rotation2)
 
-    n, p = symbols("lambda^- lambda^+", real=True)
-    p_minus_n = symbols("pmn", nonzero=True)
+    eigen_minus, eigen_plus = symbols("lambda^- lambda^+", real=True)
     a, _, _, b, c, _, _, _, _ = conic
     eigen_diff_square = (a - c) ** 2 + 4 * b**2
 
     def simplify_coord(point: Matrix) -> Matrix:
+        eigen_diff = symbols("eigen_diff", nonzero=True)
         return point.applyfunc(
             lambda coord: (
-                coord.subs(ConicNormFactor(conic), (p - n) / Abs(p - n))
-                .subs(eigen_diff_square.expand(), (p - n) ** 2)
-                .subs(eigen_diff_square, (p - n) ** 2)
-                .subs(a + c, p + n)
+                coord.subs(
+                    ConicNormFactor(conic),
+                    (eigen_plus - eigen_minus) / Abs(eigen_plus - eigen_minus),
+                )
+                .subs(eigen_diff_square.expand(), (eigen_plus - eigen_minus) ** 2)
+                .subs(eigen_diff_square, (eigen_plus - eigen_minus) ** 2)
+                .subs(a + c, eigen_plus + eigen_minus)
                 .factor(deep=True)
                 .rewrite(log)
                 .factor(deep=True)
-                .subs(eigen_diff_square.expand(), (p - n) ** 2)
-                .subs(p - n, p_minus_n)
+                .subs(eigen_diff_square.expand(), (eigen_plus - eigen_minus) ** 2)
+                .subs(eigen_plus - eigen_minus, eigen_diff)
                 .rewrite(exp)
                 .simplify()
+                .subs(eigen_diff, eigen_plus - eigen_minus)
             ),
         )
 
     ret = []
     for point in ideal_point_1, ideal_point_2:
         pt = simplify_coord(point)
-        pt /= gcd(*pt[:2]).factor() / 2 / p_minus_n
+        pt /= gcd(*pt[:2]).factor()
         if expand:
-            pt = (
-                pt.subs(p_minus_n, p - n)
-                .subs(p, (a + c + sqrt(eigen_diff_square)) / 2)
-                .subs(n, (a + c - sqrt(eigen_diff_square)) / 2)
+            pt = pt.subs(eigen_plus, (a + c + sqrt(eigen_diff_square)) / 2).subs(
+                eigen_minus, (a + c - sqrt(eigen_diff_square)) / 2,
             )
 
         ret.append(pt)
