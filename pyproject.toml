@@ -8,7 +8,10 @@ readme = "README.md"
 packages = [{include = "lib", from = "src"}]
 
 [tool.poetry.dependencies]
-python = ">=3.12,<4.0"  # @override requires Python 3.12+
+# - @override requires Python 3.12+
+# - pydoc-markdown breaks in Python 3.14. Tracking issue:
+#   https://github.com/NiklasRosenstein/pydoc-markdown/issues/348
+python = ">=3.12,<3.14"
 sympy = "1.14"
 
 [tool.poetry.group.dev.dependencies]
