@@ -28,9 +28,12 @@ The API supports:
 
 ```sh
 git clone https://github.com/pallosp/conic_research_sympy
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e '.[dev]'
+poetry env use 3.13
+poetry install
+poetry run pre-commit install
+
+# Optionally
+`poetry env activate`
 ```
 
 ### Useful commands
