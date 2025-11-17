@@ -145,6 +145,7 @@
 * [transform\_classes](#transform_classes)
   * [is\_homography](#transform_classes.is_homography)
   * [is\_affine\_transform](#transform_classes.is_affine_transform)
+  * [is\_similarity](#transform_classes.is_similarity)
 
 <a id="matrix"></a>
 
@@ -2143,4 +2144,21 @@ def is_affine_transform(transformation: Matrix) -> bool | None
 Tells whether a transformation matrix is an affine transformation.
 
 Returns None if undecidable.
+
+<a id="transform_classes.is_similarity"></a>
+
+#### is\_similarity
+
+```python
+def is_similarity(
+        transformation: Matrix,
+        *,
+        simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
+```
+
+Tells whether a transformation matrix is a similarity transformation.
+
+Takes an optional `simplifier` callback that simplifies the similarity
+polynomials before they get compared to zero. Returns `None` if the result
+is undecidable.
 
