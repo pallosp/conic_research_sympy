@@ -59,12 +59,13 @@ def is_similarity(
     if transformation.shape != (3, 3):
         return False
 
-    a, b, _, c, d, _, _, _, _ = transformation
+    a, b, _, d, e, _, _, _, _ = transformation
 
     return fuzzy_and(
         [
             is_affine_transform(transformation, simplifier=simplifier),
-            simplifier(a**2 + c**2 - b**2 - d**2).is_zero,
-            simplifier(a * b + c * d).is_zero,
+            simplifier(a * a - e * e).is_zero,
+            simplifier(b * b - d * d).is_zero,
+            simplifier(a * b + d * e).is_zero,
         ],
     )
