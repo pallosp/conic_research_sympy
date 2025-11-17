@@ -1,7 +1,12 @@
 from sympy import Matrix, expand, simplify, symbols
 
-from lib.transform import reflect_to_line, rotate, translate
-from lib.transform_classes import is_affine_transform, is_homography, is_similarity
+from lib.transform import reflect_to_line, rotate, scale, translate
+from lib.transform_classes import (
+    is_affine_transform,
+    is_congruence,
+    is_homography,
+    is_similarity,
+)
 
 
 class TestIsHomography:
@@ -50,6 +55,10 @@ class TestIsAffineTransform:
 
     def test_rotate(self):
         t = rotate(symbols("a"), symbols("x"), symbols("y"))
+        assert is_affine_transform(t) is True
+
+    def test_scalar_multiple_of_affinity_matrix(self):
+        t = translate(1, 2) * -3
         assert is_affine_transform(t) is True
 
     def test_simplifier(self):
@@ -119,3 +128,52 @@ class TestIsSimilarity:
         assert is_similarity(t) is True
         assert is_similarity(t, simplifier=expand) is None
         assert is_similarity(t, simplifier=simplify) is True
+
+
+class TestIsCongruence:
+    def test_general_matrix(self):
+        t = Matrix(3, 3, symbols("a b c d e f g h i"))
+        assert is_congruence(t) is None
+
+    def test_non_3x3_matrix(self):
+        t = Matrix(2, 2, symbols("a b c d"))
+        assert is_congruence(t) is False
+
+    def test_similarity_not_congruence(self):
+        # Uniform scaling is similarity but not congruence
+        t = scale(2)
+        assert is_similarity(t) is True
+        assert is_congruence(t) is False
+
+    def test_translate(self):
+        t = translate(1, 2)
+        assert is_congruence(t) is True
+
+    def test_rotate(self):
+        t = rotate(symbols("theta"))
+        assert is_congruence(t) is True
+
+    def test_reflection(self):
+        axis = Matrix(symbols("a b c", positive=True))
+        t = reflect_to_line(axis)
+        assert is_congruence(t) is True
+
+    def test_scalar_multiple_of_congruence_matrix(self):
+        t = translate(1, 2) * -3
+        assert is_congruence(t) is True
+
+    def test_symbolic_congruence(self):
+        theta, x, y = symbols("theta x y")
+        t = rotate(theta, x, y)
+        assert is_congruence(t) is True
+
+    def test_simplifier(self):
+        t = rotate(symbols("theta"))
+        assert is_congruence(t) is True
+        assert is_congruence(t, simplifier=expand) is None
+        assert is_congruence(t, simplifier=simplify) is True
+
+    def test_negative_determinant_congruence(self):
+        # A reflection combined with a rotation, should still be a congruence
+        t = rotate(symbols("theta")) * Matrix([[-1, 0, 0], [0, 1, 0], [0, 0, 1]])
+        assert is_congruence(t) is True

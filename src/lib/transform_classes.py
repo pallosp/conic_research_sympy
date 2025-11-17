@@ -59,13 +59,37 @@ def is_similarity(
     if transformation.shape != (3, 3):
         return False
 
-    a, b, _, d, e, _, _, _, _ = transformation
+    a, b, c, d = transformation[:2, :2]
 
     return fuzzy_and(
         [
             is_affine_transform(transformation, simplifier=simplifier),
-            simplifier(a * a - e * e).is_zero,
-            simplifier(b * b - d * d).is_zero,
-            simplifier(a * b + d * e).is_zero,
+            simplifier(a * a - d * d).is_zero,
+            simplifier(b * b - c * c).is_zero,
+            simplifier(a * b + c * d).is_zero,
+        ],
+    )
+
+
+def is_congruence(
+    transformation: Matrix,
+    *,
+    simplifier: Callable[[Expr], Expr] = simplify,
+) -> bool | None:
+    """Tells whether a transformation matrix is a congruence transformation.
+
+    Takes an optional `simplifier` callback that simplifies the congruence
+    checking polynomials before they get compared to zero. Returns `None` if the
+    result is undecidable.
+    """
+    if transformation.shape != (3, 3):
+        return False
+
+    a, b, *_, i = transformation
+
+    return fuzzy_and(
+        [
+            is_similarity(transformation, simplifier=simplifier),
+            simplifier(a * a + b * b - i * i).is_zero,
         ],
     )

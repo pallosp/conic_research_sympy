@@ -146,6 +146,7 @@
   * [is\_homography](#transform_classes.is_homography)
   * [is\_affine\_transform](#transform_classes.is_affine_transform)
   * [is\_similarity](#transform_classes.is_similarity)
+  * [is\_congruence](#transform_classes.is_congruence)
 
 <a id="matrix"></a>
 
@@ -2169,6 +2170,23 @@ def is_similarity(
 Tells whether a transformation matrix is a similarity transformation.
 
 Takes an optional `simplifier` callback that simplifies the similarity
+checking polynomials before they get compared to zero. Returns `None` if the
+result is undecidable.
+
+<a id="transform_classes.is_congruence"></a>
+
+#### is\_congruence
+
+```python
+def is_congruence(
+        transformation: Matrix,
+        *,
+        simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
+```
+
+Tells whether a transformation matrix is a congruence transformation.
+
+Takes an optional `simplifier` callback that simplifies the congruence
 checking polynomials before they get compared to zero. Returns `None` if the
 result is undecidable.
 
