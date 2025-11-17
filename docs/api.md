@@ -2126,24 +2126,34 @@ section 11.3
 #### is\_homography
 
 ```python
-def is_homography(transformation: Matrix) -> bool | None
+def is_homography(
+        transformation: Matrix,
+        *,
+        simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
 ```
 
 Tells whether a transformation matrix is a homography.
 
-Returns None if undecidable.
+Takes an optional `simplifier` callback that simplifies the determinant
+before it gets compared to zero. Returns `None` if the result is
+undecidable.
 
 <a id="transform_classes.is_affine_transform"></a>
 
 #### is\_affine\_transform
 
 ```python
-def is_affine_transform(transformation: Matrix) -> bool | None
+def is_affine_transform(
+        transformation: Matrix,
+        *,
+        simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
 ```
 
 Tells whether a transformation matrix is an affine transformation.
 
-Returns None if undecidable.
+Takes an optional `simplifier` callback that simplifies the affinity
+checking polynomials before they get compared to zero. Returns `None` if
+undecidable.
 
 <a id="transform_classes.is_similarity"></a>
 
@@ -2159,6 +2169,6 @@ def is_similarity(
 Tells whether a transformation matrix is a similarity transformation.
 
 Takes an optional `simplifier` callback that simplifies the similarity
-polynomials before they get compared to zero. Returns `None` if the result
-is undecidable.
+checking polynomials before they get compared to zero. Returns `None` if the
+result is undecidable.
 

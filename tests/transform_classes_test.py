@@ -1,4 +1,4 @@
-from sympy import Matrix, symbols
+from sympy import Matrix, expand, simplify, symbols
 
 from lib.transform import reflect_to_line, rotate, translate
 from lib.transform_classes import is_affine_transform, is_homography, is_similarity
@@ -23,6 +23,12 @@ class TestIsHomography:
         t = Matrix(2, 2, symbols("a b c d"))
         assert is_homography(t) is False
 
+    def test_simplifier(self):
+        t = rotate(symbols("theta"))
+        assert is_homography(t) is True
+        assert is_homography(t, simplifier=expand) is None
+        assert is_homography(t, simplifier=simplify) is True
+
 
 class TestIsAffineTransform:
 
@@ -45,6 +51,12 @@ class TestIsAffineTransform:
     def test_rotate(self):
         t = rotate(symbols("a"), symbols("x"), symbols("y"))
         assert is_affine_transform(t) is True
+
+    def test_simplifier(self):
+        t = rotate(symbols("theta"))
+        assert is_affine_transform(t) is True
+        assert is_affine_transform(t, simplifier=expand) is None
+        assert is_affine_transform(t, simplifier=simplify) is True
 
 
 class TestIsSimilarity:
@@ -101,3 +113,9 @@ class TestIsSimilarity:
         axis = Matrix(symbols("a b c", positive=True))
         t = reflect_to_line(axis)
         assert is_similarity(t) is True
+
+    def test_simplifier(self):
+        t = rotate(symbols("theta"))
+        assert is_similarity(t) is True
+        assert is_similarity(t, simplifier=expand) is None
+        assert is_similarity(t, simplifier=simplify) is True

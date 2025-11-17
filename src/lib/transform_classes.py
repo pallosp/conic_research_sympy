@@ -4,31 +4,43 @@ from sympy import Expr, Matrix, simplify
 from sympy.core.logic import fuzzy_and
 
 
-def is_homography(transformation: Matrix) -> bool | None:
+def is_homography(
+    transformation: Matrix,
+    *,
+    simplifier: Callable[[Expr], Expr] = simplify,
+) -> bool | None:
     """Tells whether a transformation matrix is a homography.
 
-    Returns None if undecidable.
+    Takes an optional `simplifier` callback that simplifies the determinant
+    before it gets compared to zero. Returns `None` if the result is
+    undecidable.
     """
     return fuzzy_and(
         [
             transformation.shape == (3, 3),
-            transformation.det().simplify().is_nonzero,
+            simplifier(transformation.det()).is_nonzero,
         ],
     )
 
 
-def is_affine_transform(transformation: Matrix) -> bool | None:
+def is_affine_transform(
+    transformation: Matrix,
+    *,
+    simplifier: Callable[[Expr], Expr] = simplify,
+) -> bool | None:
     """Tells whether a transformation matrix is an affine transformation.
 
-    Returns None if undecidable.
+    Takes an optional `simplifier` callback that simplifies the affinity
+    checking polynomials before they get compared to zero. Returns `None` if
+    undecidable.
     """
     row2 = transformation.row(2)
     return fuzzy_and(
         [
-            is_homography(transformation),
-            row2[0].is_zero,
-            row2[1].is_zero,
-            row2[2].is_nonzero,
+            is_homography(transformation, simplifier=simplifier),
+            simplifier(row2[0]).is_zero,
+            simplifier(row2[1]).is_zero,
+            simplifier(row2[2]).is_nonzero,
         ],
     )
 
@@ -41,8 +53,8 @@ def is_similarity(
     """Tells whether a transformation matrix is a similarity transformation.
 
     Takes an optional `simplifier` callback that simplifies the similarity
-    polynomials before they get compared to zero. Returns `None` if the result
-    is undecidable.
+    checking polynomials before they get compared to zero. Returns `None` if the
+    result is undecidable.
     """
     if transformation.shape != (3, 3):
         return False
@@ -51,7 +63,7 @@ def is_similarity(
 
     return fuzzy_and(
         [
-            is_affine_transform(transformation),
+            is_affine_transform(transformation, simplifier=simplifier),
             simplifier(a**2 + c**2 - b**2 - d**2).is_zero,
             simplifier(a * b + c * d).is_zero,
         ],
