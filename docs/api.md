@@ -143,6 +143,7 @@
   * [line\_x\_line](#intersection.line_x_line)
   * [conic\_x\_line](#intersection.conic_x_line)
 * [transform\_classes](#transform_classes)
+  * [is\_homography](#transform_classes.is_homography)
   * [is\_affine\_transform](#transform_classes.is_affine_transform)
 
 <a id="matrix"></a>
@@ -2118,6 +2119,18 @@ section 11.3
 <a id="transform_classes"></a>
 
 # transform\_classes
+
+<a id="transform_classes.is_homography"></a>
+
+#### is\_homography
+
+```python
+def is_homography(transformation: Matrix) -> bool | None
+```
+
+Tells whether a transformation matrix is a homography.
+
+Returns None if undecidable.
 
 <a id="transform_classes.is_affine_transform"></a>
 
