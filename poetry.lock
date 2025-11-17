@@ -1315,5 +1315,5 @@ platformdirs = ">=3.5.1"
 
 [metadata]
 lock-version = "2.1"
-python-versions = ">=3.12,<4.0"
-content-hash = "6dd163159b2665102251dd20676383f911e962ef21ab914c57663079aa5e5f0a"
+python-versions = ">=3.12,<3.14"
+content-hash = "a3cae9a6e3b1e7b5598d6a7234f592cb5876adc2955b643197b56819928c3ae8"
