@@ -14,7 +14,7 @@ sympy = "1.14"
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.3.0"
 pydoc-markdown = "^4.8.2"
-pytest = "^8.4.2"
+pytest = "^9.0.1"
 pytest-cov = "^7.0.0"
 ruff = "^0.14.2"
 
