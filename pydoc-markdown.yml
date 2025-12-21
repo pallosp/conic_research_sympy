@@ -14,3 +14,4 @@ renderer:
     type: github
     repo: pallosp/conic_research_sympy
   source_format: "[(source)]({url})"
+  add_method_class_prefix: true
