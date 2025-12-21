@@ -16,7 +16,7 @@ from sympy import Expr, Matrix, cos, sin
 from lib.circle import UNIT_CIRCLE
 
 #: The circle at the origin with radius 1, in polar matrix form.
-POLAR_UNIT_CIRCLE = Matrix.eye(3)
+POLAR_UNIT_CIRCLE: Matrix = Matrix.eye(3)
 
 
 def point_at_angle(polar: Matrix, theta: Expr) -> Matrix:

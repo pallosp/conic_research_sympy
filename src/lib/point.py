@@ -3,7 +3,7 @@ from collections.abc import Sequence
 from sympy import Expr, Matrix, S, sympify
 
 #: The point at (0, 0)
-ORIGIN = Matrix([0, 0, 1])
+ORIGIN: Matrix = Matrix([0, 0, 1])
 
 
 def ideal_point(x: Expr, y: Expr) -> Matrix:
