@@ -1,4 +1,8 @@
+from typing import override
+
 from sympy import Expr, Function, I, Integer, Matrix, S, sign, sqrt
+
+from lib.conic_classes import is_point_conic
 
 
 class ConicNormFactor(Function):
@@ -25,8 +29,6 @@ class ConicNormFactor(Function):
     @classmethod
     def eval(cls, conic: Matrix) -> int | None:  # noqa: PLR0911
         """Internal implementation. Call `ConicNormFactor(conic)` directly."""
-        from lib.conic_classes import is_point_conic  # noqa: PLC0415
-
         det = conic.det().factor()
         if det.is_positive:
             return 1
@@ -53,7 +55,8 @@ class ConicNormFactor(Function):
 
         return None
 
-    def _eval_Abs(self) -> Integer:  # noqa: N802
+    @override
+    def _eval_Abs(self) -> Integer:
         return S.One
 
     def _eval_power(self, exponent: Expr) -> Expr | None:

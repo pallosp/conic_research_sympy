@@ -1633,7 +1633,7 @@ Degenerates to `[nan, nan]ᵀ` when `point`, `line` or both are infinite.
 class ConicNormFactor(Function)
 ```
 
-([source](../src/lib/conic_direction.py#L4))
+([source](../src/lib/conic_direction.py#L8))
 
 Computes a normalization factor (±1) for a conic matrix `C`.
 
@@ -1660,7 +1660,7 @@ following properties:
 def eval(cls, conic: Matrix) -> int | None
 ```
 
-([source](../src/lib/conic_direction.py#L26))
+([source](../src/lib/conic_direction.py#L30))
 
 Internal implementation. Call `ConicNormFactor(conic)` directly.
 
@@ -1672,7 +1672,7 @@ Internal implementation. Call `ConicNormFactor(conic)` directly.
 def focal_axis_direction(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/conic_direction.py#L67))
+([source](../src/lib/conic_direction.py#L70))
 
 Returns the ideal point representing the direction of a conic's focal axis.
 
