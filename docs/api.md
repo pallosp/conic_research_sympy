@@ -253,7 +253,7 @@ def skew_matrix(vector3: Matrix) -> Matrix
 
 ([source](../src/lib/matrix.py#L128))
 
-Creates a skew-symmetric matrix from a 3D vector.
+Creates a skew-symmetric matrix from a 3D column vector.
 
 <a id="matrix.NonzeroCross"></a>
 
@@ -263,7 +263,7 @@ Creates a skew-symmetric matrix from a 3D vector.
 class NonzeroCross(Function)
 ```
 
-([source](../src/lib/matrix.py#L140))
+([source](../src/lib/matrix.py#L133))
 
 Finds a column and a row in a matrix whose intersection is a non-zero
 element.
@@ -280,7 +280,7 @@ proven to be non-zero, or `nan` in case of a zero matrix.
 def eval(cls, matrix: Matrix) -> tuple[Matrix, Matrix] | NaN | None
 ```
 
-([source](../src/lib/matrix.py#L149))
+([source](../src/lib/matrix.py#L142))
 
 Internal implementation. Call `NonZeroCross(matrix)` directly.
 
@@ -292,7 +292,7 @@ Internal implementation. Call `NonZeroCross(matrix)` directly.
 def is_real_matrix(matrix: Matrix) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L163))
+([source](../src/lib/matrix.py#L156))
 
 Checks if all elements of a matrix are real.
 
@@ -306,7 +306,7 @@ Returns a bool or `None` if undecidable.
 def is_definite_matrix(matrix: Matrix) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L171))
+([source](../src/lib/matrix.py#L164))
 
 Checks if a real matrix is either positive or negative definite.
 
@@ -322,7 +322,7 @@ def is_full_rank(matrix: Matrix,
                  simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L201))
+([source](../src/lib/matrix.py#L194))
 
 Tells whether a matrix has full rank.
 

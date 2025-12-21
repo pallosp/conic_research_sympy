@@ -126,15 +126,8 @@ def quadratic_form(sym_matrix: Matrix, vector: Matrix) -> Expr:
 
 
 def skew_matrix(vector3: Matrix) -> Matrix:
-    """Creates a skew-symmetric matrix from a 3D vector."""
-    x, y, z = vector3
-    return Matrix(
-        [
-            [0, -z, y],
-            [z, 0, -x],
-            [-y, x, 0],
-        ],
-    )
+    """Creates a skew-symmetric matrix from a 3D column vector."""
+    return vector3.hat()
 
 
 class NonzeroCross(Function):
