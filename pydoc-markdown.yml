@@ -11,7 +11,7 @@ renderer:
   filename: docs/api.md
   render_toc: true
   source_linker:
-    type: github
-    repo: pallosp/conic_research_sympy
-  source_format: "[(source)]({url})"
+    type: git
+    url_template: ../{path}#L{lineno}
+  source_format: ([source]({url}))
   add_method_class_prefix: true
