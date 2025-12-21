@@ -19,9 +19,9 @@ def conic_from_poly(
 
     Output:
     ```
-    [a,   b/2, d/2]
-    [b/2, c,   e/2]
-    [d/2, e/2, f  ]
+    ⎡a    b/2  d/2⎤
+    ⎢b/2  c    e/2⎥
+    ⎣d/2  e/2  f  ⎦
     ```
     """
     poly = Poly(poly, x, y)

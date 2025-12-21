@@ -827,9 +827,9 @@ Input: `ax² + bxy + cy² + dx + ey + f`
 
 Output:
 ```
-[a,   b/2, d/2]
-[b/2, c,   e/2]
-[d/2, e/2, f  ]
+⎡a    b/2  d/2⎤
+⎢b/2  c    e/2⎥
+⎣d/2  e/2  f  ⎦
 ```
 
 <a id="conic.conic_through_points"></a>
@@ -1960,9 +1960,9 @@ each point is the image of a point on the unit circle (`x² + y² = 1`) under a
 projective transformation:
 
 ```
-       [a b c]   [cos θ]
-C(θ) = [d e f] * [sin θ]
-       [g h i]   [  1  ]
+       ⎡a  b  c⎤   ⎡cos θ⎤
+C(θ) = ⎢d  e  f⎥ * ⎢sin θ⎥
+       ⎣g  h  i⎦   ⎣  1  ⎦
 ```
 
 <a id="polar_conic.POLAR_UNIT_CIRCLE"></a>

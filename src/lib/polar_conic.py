@@ -5,9 +5,9 @@ each point is the image of a point on the unit circle (`x² + y² = 1`) under a
 projective transformation:
 
 ```
-       [a b c]   [cos θ]
-C(θ) = [d e f] * [sin θ]
-       [g h i]   [  1  ]
+       ⎡a  b  c⎤   ⎡cos θ⎤
+C(θ) = ⎢d  e  f⎥ * ⎢sin θ⎥
+       ⎣g  h  i⎦   ⎣  1  ⎦
 ```
 """
 
