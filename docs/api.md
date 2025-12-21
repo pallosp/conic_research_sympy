@@ -257,7 +257,7 @@ Creates a skew-symmetric matrix from a 3D vector.
 
 <a id="matrix.NonzeroCross"></a>
 
-## NonzeroCross Objects
+## NonzeroCross
 
 ```python
 class NonzeroCross(Function)
@@ -938,7 +938,7 @@ Properties:
 
 <a id="conic.IdealPoints"></a>
 
-## IdealPoints Objects
+## IdealPoints
 
 ```python
 class IdealPoints(Function)
@@ -1084,7 +1084,7 @@ point from the resulting conic.
 
 <a id="degenerate_conic.SplitToLines"></a>
 
-## SplitToLines Objects
+## SplitToLines
 
 ```python
 class SplitToLines(Function)
@@ -1117,7 +1117,7 @@ Internal implementation. Call `SplitToLines(conic)` directly.
 
 <a id="degenerate_conic.ExtractPoint"></a>
 
-## ExtractPoint Objects
+## ExtractPoint
 
 ```python
 class ExtractPoint(Function)
@@ -1627,7 +1627,7 @@ Degenerates to `[nan, nan]ᵀ` when `point`, `line` or both are infinite.
 
 <a id="conic_direction.ConicNormFactor"></a>
 
-## ConicNormFactor Objects
+## ConicNormFactor
 
 ```python
 class ConicNormFactor(Function)
