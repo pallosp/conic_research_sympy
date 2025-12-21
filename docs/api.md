@@ -162,6 +162,8 @@ def is_nonzero_multiple(m1: Matrix | Sequence[Expr],
                         m2: Matrix | Sequence[Expr]) -> bool | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/matrix.py#L8)
+
 Tells whether two matrices are non-zero scalar multiples of each other.
 
 Treats lists and tuples as column vectors. Returns `None` if undecidable.
@@ -175,6 +177,8 @@ def is_positive_multiple(m1: Matrix | Sequence[Expr],
                          m2: Matrix | Sequence[Expr]) -> bool | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/matrix.py#L42)
+
 Tells whether two matrices are positive scalar multiples of each other.
 
 Treats lists and tuples as column vectors. Returns `None` if undecidable.
@@ -187,6 +191,8 @@ Treats lists and tuples as column vectors. Returns `None` if undecidable.
 def max_eigenvalue(symmetric_matrix_2x2: Matrix) -> Expr
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/matrix.py#L75)
+
 Returns the higher eigenvalue of a 2x2 symmetric matrix.
 
 <a id="matrix.min_eigenvalue"></a>
@@ -196,6 +202,8 @@ Returns the higher eigenvalue of a 2x2 symmetric matrix.
 ```python
 def min_eigenvalue(symmetric_matrix_2x2: Matrix) -> Expr
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/matrix.py#L84)
 
 Returns the lower eigenvalue of a 2x2 symmetric matrix.
 
@@ -207,6 +215,8 @@ Returns the lower eigenvalue of a 2x2 symmetric matrix.
 def conic_matrix(a: Expr, b: Expr, c: Expr, d: Expr, e: Expr,
                  f: Expr) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/matrix.py#L93)
 
 Builds a 3x3 symmetric conic matrix from its elements.
 
@@ -227,6 +237,8 @@ or in expanded form `ax² + 2bxy + cy² + 2dx + 2ey + f = 0`
 def quadratic_form(sym_matrix: Matrix, vector: Matrix) -> Expr
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/matrix.py#L115)
+
 Computes the quadratic form for a n⨯n symmetric matrix and an n-element
 column vector.
 
@@ -244,6 +256,8 @@ conic.
 def skew_matrix(vector3: Matrix) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/matrix.py#L128)
+
 Creates a skew-symmetric matrix from a 3D vector.
 
 <a id="matrix.NonzeroCross"></a>
@@ -253,6 +267,8 @@ Creates a skew-symmetric matrix from a 3D vector.
 ```python
 class NonzeroCross(Function)
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/matrix.py#L140)
 
 Finds a column and a row in a matrix whose intersection is a non-zero
 element.
@@ -269,6 +285,8 @@ proven to be non-zero, or `nan` in case of a zero matrix.
 def eval(cls, matrix: Matrix) -> tuple[Matrix, Matrix] | NaN | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/matrix.py#L149)
+
 Internal implementation. Call `NonZeroCross(matrix)` directly.
 
 <a id="matrix.is_real_matrix"></a>
@@ -278,6 +296,8 @@ Internal implementation. Call `NonZeroCross(matrix)` directly.
 ```python
 def is_real_matrix(matrix: Matrix) -> bool | None
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/matrix.py#L163)
 
 Checks if all elements of a matrix are real.
 
@@ -290,6 +310,8 @@ Returns a bool or `None` if undecidable.
 ```python
 def is_definite_matrix(matrix: Matrix) -> bool | None
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/matrix.py#L171)
 
 Checks if a real matrix is either positive or negative definite.
 
@@ -304,6 +326,8 @@ def is_full_rank(matrix: Matrix,
                  *,
                  simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/matrix.py#L201)
 
 Tells whether a matrix has full rank.
 
@@ -325,6 +349,8 @@ def conic_from_foci_and_radius(focus1: Matrix | Sequence[Expr],
                                radius: Expr) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/central_conic.py#L10)
+
 Computes the ellipse or hyperbola with the given focus points and
 radius, i.e. center-vertex distance.
 
@@ -343,6 +369,8 @@ def conic_from_center_and_points(center: Matrix | Sequence[Expr],
                                  p2: Matrix | Sequence[Expr],
                                  p3: Matrix | Sequence[Expr]) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/central_conic.py#L42)
 
 Computes the conic section with the given center and perimeter points.
 
@@ -363,6 +391,8 @@ May return
 def conic_center(conic: Matrix) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/central_conic.py#L85)
+
 Computes the center point of a conic.
 
 Returns the point's coordinates as a 2D column vector.
@@ -376,6 +406,8 @@ Returns the point's coordinates as a 2D column vector.
 ```python
 def semi_axis_lengths(conic: Matrix) -> tuple[Expr, Expr]
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/central_conic.py#L96)
 
 Computes the semi-axis lengths of a conic in no specific order.
 
@@ -393,6 +425,8 @@ semi-minor in case of ellipses), call
 ```python
 def primary_radius(conic: Matrix) -> Expr
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/central_conic.py#L125)
 
 Computes the center-vertex distance of a conic.
 
@@ -415,6 +449,8 @@ The returned value is:
 def secondary_radius(conic: Matrix) -> Expr
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/central_conic.py#L142)
+
 Computes the semi-conjugate axis length of a conic.
 
 This corresponds to the semi-minor axis length of real ellipses. In case of
@@ -436,6 +472,8 @@ The returned value is:
 ```python
 def linear_eccentricity(conic: Matrix) -> Expr
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/central_conic.py#L160)
 
 Computes the linear eccentricity of a conic section.
 
@@ -462,6 +500,8 @@ radii of the conic (i.e., the semi-axis lengths in the case of an ellipse).
 def center_to_focus_vector(conic: Matrix) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/central_conic.py#L183)
+
 Returns the 2D vector from a conic's center to one of its foci.
 
 The opposite vector points to the other focus.
@@ -479,6 +519,8 @@ center.
 def center_to_vertex_vector(conic: Matrix) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/central_conic.py#L203)
+
 Returns the 2D vector from a conic's center to one of its vertices.
 
 The opposite vector points to the other vertex.
@@ -495,6 +537,8 @@ center.
 ```python
 def shrink_conic_to_zero(conic: Matrix) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/central_conic.py#L223)
 
 Scales a conic section from its center with a factor of zero.
 
@@ -520,6 +564,8 @@ conic types the result matrix will have infinite or `nan` elements.
 def circle(center: Matrix | Sequence[Expr], radius: Expr) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/circle.py#L9)
+
 Creates a circle from its center and radius.
 
 <a id="circle.circle_radius"></a>
@@ -529,6 +575,8 @@ Creates a circle from its center and radius.
 ```python
 def circle_radius(circle: Matrix) -> Expr
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/circle.py#L15)
 
 Computes the radius of a circle conic.
 
@@ -543,6 +591,8 @@ The computation is based on
 ```python
 def director_circle(conic: Matrix) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/circle.py#L26)
 
 Computes the director circle of a conic. It's also called orthoptic
 circle or Fermat–Apollonius circle.
@@ -574,6 +624,8 @@ The circle at the origin with radius 𝑖.
 def horizontal_line(y: Expr) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/line.py#L8)
+
 Constructs a horizontal line with the given y-coordinate.
 
 <a id="line.vertical_line"></a>
@@ -583,6 +635,8 @@ Constructs a horizontal line with the given y-coordinate.
 ```python
 def vertical_line(x: Expr) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/line.py#L13)
 
 Constructs a vertical line with the given x-coordinate.
 
@@ -595,6 +649,8 @@ def line_between(point1: Matrix | Sequence[Expr],
                  point2: Matrix | Sequence[Expr]) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/line.py#L18)
+
 Connects two projective points with a line.
 
 <a id="line.parallel_line"></a>
@@ -606,6 +662,8 @@ def parallel_line(with_line: Matrix,
                   through_point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/line.py#L26)
+
 Constructs a line through a point parallel to a line.
 
 <a id="line.perpendicular_line"></a>
@@ -616,6 +674,8 @@ Constructs a line through a point parallel to a line.
 def perpendicular_line(to_line: Matrix,
                        through_point: Matrix | Sequence[Expr]) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/line.py#L36)
 
 Constructs a line through a point perpendicular to a line.
 
@@ -629,6 +689,8 @@ def line_through_point(point: Matrix | Sequence[Expr],
                        direction: Matrix | Sequence[Expr] = None,
                        normal: Matrix | Sequence[Expr] = None) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/line.py#L46)
 
 Constructs a line through a point with the given direction.
 
@@ -645,6 +707,8 @@ The direction can be specified as
 ```python
 def angle_bisector(line1: Matrix, line2: Matrix) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/line.py#L75)
 
 Constructs the angle bisector of two lines.
 
@@ -669,6 +733,8 @@ def perpendicular_bisector(point1: Matrix | Sequence[Expr],
                            point2: Matrix | Sequence[Expr]) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/line.py#L95)
+
 Constructs the perpendicular bisector of two points.
 
 <a id="line.line_normal"></a>
@@ -680,6 +746,8 @@ def line_normal(line: Matrix,
                 *,
                 toward: Matrix | Sequence[Expr] = None) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/line.py#L105)
 
 Returns the normal vector of a line, represented as an ideal point.
 
@@ -700,6 +768,8 @@ Returns `[0, 0, 0]ᵀ` if the `toward` point lies on the line.
 def are_parallel(line1: Matrix, line2: Matrix) -> bool | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/line.py#L127)
+
 Tells whether line1 and line2 are parallel.
 
 Returns `True` if they are parallel, `False` if not, `None` if undecidable.
@@ -712,6 +782,8 @@ Considers the ideal line parallel to everything.
 ```python
 def are_perpendicular(line1: Matrix, line2: Matrix) -> bool | None
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/line.py#L138)
 
 Tells whether line1 and line2 are perpendicular.
 
@@ -753,6 +825,8 @@ def conic_from_poly(poly: Expr | Poly,
                     y: Symbol = abc.y) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic.py#L10)
+
 Constructs a conic matrix from a two-variable quadratic polynomial.
 
 Input: `ax² + bxy + cy² + dx + ey + f`
@@ -776,6 +850,8 @@ def conic_through_points(p1: Matrix | Sequence[Expr],
                          p5: Matrix | Sequence[Expr]) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic.py#L37)
+
 Computes the conic that goes through the given points.
 
 Returns the conic matrix, or a zero matrix if the result is ambiguous.
@@ -795,6 +871,8 @@ def conic_from_focus_and_directrix(focus: Matrix | Sequence[Expr],
                                    eccentricity: Expr) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic.py#L63)
+
 Constructs a conic from its focus, directrix and eccentricity.
 
 *Formula*:
@@ -807,6 +885,8 @@ Constructs a conic from its focus, directrix and eccentricity.
 ```python
 def eccentricity(conic: Matrix) -> Expr
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic.py#L79)
 
 Computes the eccentricity of a conic section.
 
@@ -845,6 +925,8 @@ https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficient
 def focal_axis(conic: Matrix) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic.py#L115)
+
 Returns the axis of symmetry going through conic's focus point(s).
 
 Properties:
@@ -867,6 +949,8 @@ Properties:
 class IdealPoints(Function)
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic.py#L134)
+
 Computes the ideal points on a conic section.
 
 Returns two points. Special cases:
@@ -883,6 +967,8 @@ Returns two points. Special cases:
 def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic.py#L144)
+
 Internal implementation. Call `IdealPoints(conic)` directly.
 
 <a id="conic.projective_conic_center"></a>
@@ -892,6 +978,8 @@ Internal implementation. Call `IdealPoints(conic)` directly.
 ```python
 def projective_conic_center(conic: Matrix) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic.py#L154)
 
 Computes the generalized projective center of a conic.
 
@@ -915,6 +1003,8 @@ For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
 def pole_point(conic: Matrix, polar_line: Matrix) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic.py#L172)
+
 Computes the pole point of a conic with respect to the given polar line.
 
 If the conic is degenerate, i.e. it factors into `l₁` and `l₂` real or
@@ -933,6 +1023,8 @@ complex conjugate lines, the pole is
 def polar_line(conic: Matrix, pole_point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic.py#L186)
+
 Computes the polar line of a conic with respect to the given pole point.
 
 *Pole / polar identity*: `conic * pole_point = polar_line`
@@ -950,6 +1042,8 @@ Computes the polar line of a conic with respect to the given pole point.
 def line_pair_conic(line1: Matrix, line2: Matrix) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/degenerate_conic.py#L9)
+
 Constructs a conic section from two projective lines.
 
 <a id="degenerate_conic.double_line_conic"></a>
@@ -960,6 +1054,8 @@ Constructs a conic section from two projective lines.
 def double_line_conic(line: Matrix) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/degenerate_conic.py#L16)
+
 Constructs a degenerate conic consisting of two coincident lines.
 
 <a id="degenerate_conic.point_conic"></a>
@@ -969,6 +1065,8 @@ Constructs a degenerate conic consisting of two coincident lines.
 ```python
 def point_conic(point: Matrix | Sequence[Expr]) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/degenerate_conic.py#L23)
 
 Constructs a conic that degenerates to a single point.
 
@@ -997,6 +1095,8 @@ point from the resulting conic.
 class SplitToLines(Function)
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/degenerate_conic.py#L54)
+
 Splits a degenerate conic into two lines.
 
 Special cases:
@@ -1016,6 +1116,8 @@ section 11.1
 def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/degenerate_conic.py#L67)
+
 Internal implementation. Call `SplitToLines(conic)` directly.
 
 <a id="degenerate_conic.ExtractPoint"></a>
@@ -1025,6 +1127,8 @@ Internal implementation. Call `SplitToLines(conic)` directly.
 ```python
 class ExtractPoint(Function)
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/degenerate_conic.py#L90)
 
 Extracts the point from a point conic or the intersection of the
 lines from a line pair conic.
@@ -1052,6 +1156,8 @@ at least one of these is a non-zero vector.
 def eval(cls, degenerate_conic: Matrix) -> Matrix | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/degenerate_conic.py#L110)
+
 Internal implementation. Call `ExtractPoint(conic)` directly.
 
 <a id="conic_classes"></a>
@@ -1068,6 +1174,8 @@ def is_degenerate(
         *,
         simplifier: Callable[[Expr], Expr] = lambda expr: expr) -> bool | None
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic_classes.py#L9)
 
 Tells whether the conic is degenerate.
 
@@ -1089,6 +1197,8 @@ def is_nondegenerate(
         simplifier: Callable[[Expr], Expr] = lambda expr: expr) -> bool | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic_classes.py#L26)
+
 Tells whether the conic is non-degenerate.
 
 Non-degenerate conics include real or imaginary ellipses, parabolas and
@@ -1109,6 +1219,8 @@ def is_central_conic(
         simplifier: Callable[[Expr], Expr] = lambda expr: expr) -> bool | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic_classes.py#L43)
+
 Tells whether a conic has a finite center of symmetry.
 
 Takes an optional `simplifier` callback that simplifies the central
@@ -1126,6 +1238,8 @@ def is_finite_conic(
         simplifier: Callable[[Expr], Expr] = factor) -> bool | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic_classes.py#L57)
+
 Tells whether all points on the conic are finite.
 
 Takes an optional `simplifier` callback that simplifies the finiteness
@@ -1139,6 +1253,8 @@ is undecidable.
 ```python
 def is_imaginary_ellipse(conic: Matrix) -> bool | None
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic_classes.py#L71)
 
 Tells whether the conic is an imaginary ellipse.
 
@@ -1156,6 +1272,8 @@ Returns `None` if undecidable.
 def is_ellipse(conic: Matrix) -> bool | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic_classes.py#L83)
+
 Tells whether the conic is an ellipse.
 
 Returns `False` for
@@ -1170,6 +1288,8 @@ or `None` if the conic's type is undecidable.
 def is_circle(conic: Matrix) -> bool | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic_classes.py#L99)
+
 Tells whether the conic is a circle.
 
 Returns `None` if undecidable.
@@ -1181,6 +1301,8 @@ Returns `None` if undecidable.
 ```python
 def is_parabola(conic: Matrix) -> bool | None
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic_classes.py#L114)
 
 Tells whether the conic is a parabola.
 
@@ -1194,6 +1316,8 @@ Returns `None` if undecidable.
 def is_hyperbola(conic: Matrix) -> bool | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic_classes.py#L122)
+
 Tells whether the conic is a hyperbola.
 
 Returns `None` if undecidable.
@@ -1205,6 +1329,8 @@ Returns `None` if undecidable.
 ```python
 def is_circular(conic: Matrix) -> bool | None
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic_classes.py#L130)
 
 Tells whether there is a single center point around which the conic is
 invariant under all rotations.
@@ -1220,6 +1346,8 @@ Double ideal lines are not considered circular. Returns `None` if undecidable.
 def is_line_pair(conic: Matrix) -> bool | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic_classes.py#L146)
+
 Tells whether the conic is the union of two projective lines.
 
 Returns `None` if undecidable.
@@ -1232,6 +1360,8 @@ Returns `None` if undecidable.
 def is_double_line(conic: Matrix) -> bool | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic_classes.py#L165)
+
 Tells whether the conic consists of two coincident projective lines.
 
 Returns `None` if undecidable.
@@ -1243,6 +1373,8 @@ Returns `None` if undecidable.
 ```python
 def is_point_conic(conic: Matrix) -> bool | None
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic_classes.py#L182)
 
 Tells whether the conic consists of a single projective point.
 
@@ -1258,6 +1390,8 @@ complex coordinates.
 ```python
 def is_finite_point_conic(conic: Matrix) -> bool | None
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic_classes.py#L207)
 
 Tells whether the conic consists of a single finite (Euclidean) point.
 
@@ -1276,6 +1410,8 @@ def point_point_distance(point1: Matrix | Sequence[Expr],
                          point2: Matrix | Sequence[Expr]) -> Expr
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/distance.py#L9)
+
 Computes the signed distance between two points.
 
 Special cases:
@@ -1290,6 +1426,8 @@ Special cases:
 def point_line_distance(point: Matrix | Sequence[Expr], line: Matrix) -> Expr
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/distance.py#L24)
+
 Computes the signed distance between a point and a line.
 
 Special cases:
@@ -1303,6 +1441,8 @@ Special cases:
 ```python
 def parallel_line_distance(line1: Matrix, line2: Matrix) -> Expr
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/distance.py#L36)
 
 Computes the signed distance between two parallel lines.
 
@@ -1328,6 +1468,8 @@ Special cases:
 def add_eq(*eqs: Eq) -> Eq
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/sympy_utils.py#L4)
+
 Adds multiple sympy equations.
 
 <a id="sympy_utils.sub_eq"></a>
@@ -1337,6 +1479,8 @@ Adds multiple sympy equations.
 ```python
 def sub_eq(eq0: Eq, eq1: Expr | Eq) -> Eq
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/sympy_utils.py#L14)
 
 Subtracts a sympy equation or expression from another equation.
 
@@ -1348,6 +1492,8 @@ Subtracts a sympy equation or expression from another equation.
 def mul_eq(eq: Eq, factor: Expr | Eq) -> Eq
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/sympy_utils.py#L21)
+
 Multiplies a sympy equation by a factor or another equation.
 
 <a id="sympy_utils.div_eq"></a>
@@ -1357,6 +1503,8 @@ Multiplies a sympy equation by a factor or another equation.
 ```python
 def div_eq(eq: Eq, denom: Expr) -> Eq
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/sympy_utils.py#L28)
 
 Divides a sympy equation by a denominator.
 
@@ -1368,6 +1516,8 @@ Divides a sympy equation by a denominator.
 def swap_eq(eq: Eq) -> Eq
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/sympy_utils.py#L33)
+
 Swaps the lhs and rhs of a sympy equation.
 
 <a id="sympy_utils.eq_chain"></a>
@@ -1377,6 +1527,8 @@ Swaps the lhs and rhs of a sympy equation.
 ```python
 def eq_chain(*expressions: Expr) -> Eq | Expr
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/sympy_utils.py#L38)
 
 Creates a chain of equations, i.e. `expr_1 = expr_2 = ... = expr_n`.
 
@@ -1398,6 +1550,8 @@ The point at (0, 0)
 def ideal_point(x: Expr, y: Expr) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/point.py#L9)
+
 Creates an ideal point at the given direction.
 
 <a id="point.ideal_point_on_line"></a>
@@ -1407,6 +1561,8 @@ Creates an ideal point at the given direction.
 ```python
 def ideal_point_on_line(line: Matrix) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/point.py#L14)
 
 Returns the coordinates of the ideal point on the line.
 
@@ -1423,6 +1579,8 @@ If the line is the ideal line, returns `[0, 0, 0]ᵀ`.
 def point_to_xy(point: Matrix | Sequence[Expr]) -> tuple[Expr, Expr]
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/point.py#L25)
+
 Computes the Euclidean coordinates of a projective point.
 
 <a id="point.point_to_vec3"></a>
@@ -1433,6 +1591,8 @@ Computes the Euclidean coordinates of a projective point.
 def point_to_vec3(point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/point.py#L35)
+
 Computes the homogeneous coordinates of a projective point.
 
 <a id="point.centroid"></a>
@@ -1442,6 +1602,8 @@ Computes the homogeneous coordinates of a projective point.
 ```python
 def centroid(*points: Sequence[Expr]) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/point.py#L46)
 
 Computes the centroid of a set of points.
 
@@ -1454,6 +1616,8 @@ Returns the point's coordinates as a 2D column vector.
 ```python
 def perpendicular_foot(point: Matrix | Sequence[Expr], line: Matrix) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/point.py#L62)
 
 Computes the foot of the perpendicular through a point to a line.
 
@@ -1473,6 +1637,8 @@ Degenerates to `[nan, nan]ᵀ` when `point`, `line` or both are infinite.
 ```python
 class ConicNormFactor(Function)
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic_direction.py#L4)
 
 Computes a normalization factor (±1) for a conic matrix `C`.
 
@@ -1499,6 +1665,8 @@ following properties:
 def eval(cls, conic: Matrix) -> int | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic_direction.py#L26)
+
 Internal implementation. Call `ConicNormFactor(conic)` directly.
 
 <a id="conic_direction.focal_axis_direction"></a>
@@ -1508,6 +1676,8 @@ Internal implementation. Call `ConicNormFactor(conic)` directly.
 ```python
 def focal_axis_direction(conic: Matrix) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/conic_direction.py#L67)
 
 Returns the ideal point representing the direction of a conic's focal axis.
 
@@ -1542,6 +1712,8 @@ def transform_point(point: Matrix | Sequence[Expr],
                     transformation: Matrix) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/transform.py#L8)
+
 Applies a projective transformation to a projective point.
 
 Returns a 3D column vector even if the input point is specified with only
@@ -1555,6 +1727,8 @@ two coordinates.
 def transform_line(line: Matrix, transformation: Matrix) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/transform.py#L20)
+
 Applies a projective transformation to a projective line.
 
 <a id="transform.transform_conic"></a>
@@ -1564,6 +1738,8 @@ Applies a projective transformation to a projective line.
 ```python
 def transform_conic(conic: Matrix, transformation: Matrix) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/transform.py#L25)
 
 Applies a projective transformation to a conic.
 
@@ -1575,6 +1751,8 @@ Applies a projective transformation to a conic.
 def translate(dx: Expr, dy: Expr) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/transform.py#L30)
+
 Computes the transformation matrix for a 2D translation.
 
 <a id="transform.rotate"></a>
@@ -1585,6 +1763,8 @@ Computes the transformation matrix for a 2D translation.
 def rotate(angle: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/transform.py#L35)
+
 Computes the transformation matrix for a rotation around a point.
 
 <a id="transform.reflect_to_line"></a>
@@ -1594,6 +1774,8 @@ Computes the transformation matrix for a rotation around a point.
 ```python
 def reflect_to_line(axis: Matrix) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/transform.py#L48)
 
 Computes the transformation matrix for a reflection to a line.
 
@@ -1613,6 +1795,8 @@ def scale_xy(scale_x: Expr,
              y0: Expr = 0) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/transform.py#L66)
+
 Computes the projective transformation matrix for scaling along the x-
 and y-axes.
 
@@ -1623,6 +1807,8 @@ and y-axes.
 ```python
 def scale(scale: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/transform.py#L79)
 
 Computes the projective transformation matrix for a uniform scaling
 transformation.
@@ -1636,6 +1822,8 @@ def homography_from_samples(
         source_points: Sequence[Matrix | Sequence[Expr]],
         target_points: Sequence[Matrix | Sequence[Expr]]) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/transform.py#L86)
 
 Computes the transformation that maps one quadrilateral to another.
 
@@ -1657,6 +1845,8 @@ projective transformation matrix.
 ```python
 def parabola_directrix(parabola: Matrix) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/parabola.py#L18)
 
 Computes the directrix of a parabola represented as a conic matrix.
 
@@ -1680,6 +1870,8 @@ Special cases for other conic types:
 def parabola_focus(parabola: Matrix) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/parabola.py#L46)
+
 Computes the focus of a parabola represented as a conic matrix.
 
 Special cases for other conic types:
@@ -1700,6 +1892,8 @@ Special cases for other conic types:
 def parabola_vertex(parabola: Matrix) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/parabola.py#L62)
+
 Computes the parabola's vertex.
 
 Returns the point's coordinates as a 2D column vector.
@@ -1713,6 +1907,8 @@ Returns the point's coordinates as a 2D column vector.
 ```python
 def parabola_direction(parabola: Matrix) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/parabola.py#L76)
 
 Computes the direction of a parabola modulo 2π.
 
@@ -1732,6 +1928,8 @@ coincides with both the ideal point lying on the parabola and its
 def parabola_axis(parabola: Matrix) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/parabola.py#L93)
+
 Computes the parabola's focal axis line.
 
 It's the polar line corresponding to the ideal point on the directrix.
@@ -1750,6 +1948,8 @@ Special cases for other conic types:
 ```python
 def parabola_focal_parameter(parabola: Matrix) -> Expr
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/parabola.py#L111)
 
 Computes the parabola's focus-directrix distance.
 
@@ -1785,6 +1985,8 @@ The circle at the origin with radius 1, in polar matrix form.
 def point_at_angle(polar: Matrix, theta: Expr) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/polar_conic.py#L22)
+
 Computes the coordinates of the projective point on a polar conic
 corresponding to a certain angle.
 
@@ -1795,6 +1997,8 @@ corresponding to a certain angle.
 ```python
 def conic_from_polar_matrix(polar: Matrix) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/polar_conic.py#L29)
 
 Transforms a conic from polar to quadratic form.
 
@@ -1817,6 +2021,8 @@ def line_contains_point(
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/incidence.py#L10)
+
 Tells whether `point` is on `line`.
 
 Takes an optional `simplifier` callback that simplifies the incidence
@@ -1835,6 +2041,8 @@ def conic_contains_point(
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/incidence.py#L25)
+
 Checks if a point lies on a conic.
 
 Takes an optional `simplifier` callback that simplifies the incidence
@@ -1852,6 +2060,8 @@ def conic_contains_line(
         *,
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/incidence.py#L40)
 
 Checks if a line lies on a conic.
 
@@ -1872,6 +2082,8 @@ def are_collinear(points: Sequence[Matrix],
                   simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/incidence.py#L59)
+
 Tells whether n points are collinear.
 
 Takes an optional `simplifier` callback that simplifies the collinearity
@@ -1886,6 +2098,8 @@ def are_concurrent(lines: Sequence[Matrix],
                    *,
                    simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/incidence.py#L76)
 
 Tells whether n lines are concurrent, i.e. go through the same point.
 
@@ -1907,6 +2121,8 @@ def are_on_same_conic(
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/incidence.py#L98)
+
 Tells whether up to 6 points lie on the same conic section.
 
 Takes an optional `simplifier` callback that simplifies the incidence
@@ -1924,6 +2140,8 @@ def are_cocircular(points: Sequence[Matrix],
                    *,
                    simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/incidence.py#L125)
 
 Tells whether n points lie on the same circle.
 
@@ -1952,6 +2170,8 @@ def hyperbola_from_foci_and_point(focus1: Matrix | Sequence[Expr],
                                   point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/hyperbola.py#L10)
+
 Constructs a hyperbola from its focus points and an incident point.
 
 *Formula*:
@@ -1964,6 +2184,8 @@ Constructs a hyperbola from its focus points and an incident point.
 ```python
 def asymptote_focal_axis_angle(hyperbola: Matrix) -> Expr
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/hyperbola.py#L24)
 
 Computes the angle between the axis and an asymptote of a hyperbola.
 
@@ -1996,6 +2218,8 @@ Return values for other conics:
 def asymptote_conic(hyperbola: Matrix) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/hyperbola.py#L54)
+
 Computes the line pair conic representing the hyperbola's asymptotes.
 
 Turns ellipses into point conics at their center, preserving the axis
@@ -2019,6 +2243,8 @@ def ellipse(center: Matrix | Sequence[Expr],
             r1_direction: Expr = None) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/ellipse.py#L11)
+
 Constructs an ellipse from its center, radii, and the either the
 direction vector of the first radius or its angle to horizontal.
 
@@ -2034,6 +2260,8 @@ def ellipse_from_foci_and_point(focus1: Matrix | Sequence[Expr],
                                 focus2: Matrix | Sequence[Expr],
                                 point: Matrix | Sequence[Expr]) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/ellipse.py#L50)
 
 Constructs an ellipse from its focus points and an incident point.
 
@@ -2058,6 +2286,8 @@ def steiner_ellipse(point1: Matrix | Sequence[Expr],
                     point3: Matrix | Sequence[Expr]) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/ellipse.py#L72)
+
 Constructs the Steiner circumellipse for the given points.
 
 The ellipse goes through the three points and is centered at the triangle's
@@ -2075,6 +2305,8 @@ def steiner_inellipse(point1: Matrix | Sequence[Expr],
                       point2: Matrix | Sequence[Expr],
                       point3: Matrix | Sequence[Expr]) -> Matrix
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/ellipse.py#L110)
 
 Computes the Steiner inellipse for the given points.
 
@@ -2096,6 +2328,8 @@ triangle's sides at their midpoints.
 def line_x_line(line1: Matrix, line2: Matrix) -> Matrix
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/intersection.py#L9)
+
 Computes the intersection of two lines.
 
 Returns an ideal point if the lines are parallel, or `[0, 0, 0]ᵀ` if they
@@ -2110,6 +2344,8 @@ def conic_x_line(
     conic: Matrix, line: Matrix
 ) -> tuple[Matrix | Sequence[Expr], Matrix | Sequence[Expr]] | NaN
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/intersection.py#L18)
 
 Intersects a conic with a line. Returns two points.
 
@@ -2138,6 +2374,8 @@ def is_homography(
         simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/transform_classes.py#L7)
+
 Tells whether a transformation matrix is a homography.
 
 Takes an optional `simplifier` callback that simplifies the determinant
@@ -2154,6 +2392,8 @@ def is_affine_transform(
         *,
         simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/transform_classes.py#L26)
 
 Tells whether a transformation matrix is an affine transformation.
 
@@ -2172,6 +2412,8 @@ def is_similarity(
         simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
 ```
 
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/transform_classes.py#L48)
+
 Tells whether a transformation matrix is a similarity transformation.
 
 Takes an optional `simplifier` callback that simplifies the similarity
@@ -2188,6 +2430,8 @@ def is_congruence(
         *,
         simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
 ```
+
+[(source)](https://github.com/pallosp/conic_research_sympy/blob/14ca21d0a10887b49b2d1e41aa78663bf44b46f7/src/lib/transform_classes.py#L74)
 
 Tells whether a transformation matrix is a congruence transformation.
 

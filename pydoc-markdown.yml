@@ -10,3 +10,7 @@ renderer:
   type: markdown
   filename: docs/api.md
   render_toc: true
+  source_linker:
+    type: github
+    repo: pallosp/conic_research_sympy
+  source_format: "[(source)]({url})"
