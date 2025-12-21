@@ -75,7 +75,7 @@ def focal_axis_direction(conic: Matrix) -> Matrix:
       horizontal lies in the (-π/2, π/2] interval. For the full direction of a
       parabola, use [parabola_direction](#parabola.parabola_direction) instead.
     - Returns `[0, 0, 0]ᵀ` for circles and
-      [circular conics](#conic_classification.is_circular).
+      [circular conics](#conic_classes.is_circular).
     - Point conics constructed by
       [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(ellipse)
       preserve the axis direction of the original real or imaginary ellipse.

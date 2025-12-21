@@ -84,7 +84,7 @@ def is_ellipse(conic: Matrix) -> bool | None:
     """Tells whether the conic is an ellipse.
 
     Returns `False` for
-    [imaginary ellipses](#conic_classification.is_imaginary_ellipse),
+    [imaginary ellipses](#conic_classes.is_imaginary_ellipse),
     or `None` if the conic's type is undecidable.
     """
     return fuzzy_and(

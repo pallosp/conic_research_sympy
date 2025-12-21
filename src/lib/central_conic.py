@@ -98,7 +98,7 @@ def semi_axis_lengths(conic: Matrix) -> tuple[Expr, Expr]:
 
     To get the semi-focal or semi-transverse axis length (semi-major /
     semi-minor in case of ellipses), call
-    [principal_radius](#central_conic.principal_radius) or
+    [primary_radius](#central_conic.primary_radius) or
     [secondary_radius](#central_conic.secondary_radius), respectively.
 
     *Formula*: [research/conic_radii.py](../src/research/conic_radii.py)
@@ -126,7 +126,7 @@ def primary_radius(conic: Matrix) -> Expr:
     """Computes the center-vertex distance of a conic.
 
     This corresponds to the semi-major axis length of real ellipses. In case of
-    [imaginary ellipses](#conic_classification.is_imaginary_ellipse) however the
+    [imaginary ellipses](#conic_classes.is_imaginary_ellipse) however the
     focal axis is the shorter one in terms of absolute value.
 
     The returned value is:
@@ -186,7 +186,7 @@ def center_to_focus_vector(conic: Matrix) -> Matrix:
     The opposite vector points to the other focus.
 
     The function is only meaningful for
-    [central conics](#conic_classification.is_central_conic). The result vector
+    [central conics](#conic_classes.is_central_conic). The result vector
     will contain infinite or `nan` elements when the conic lacks a finite
     center.
     """
@@ -205,7 +205,7 @@ def center_to_vertex_vector(conic: Matrix) -> Matrix:
     The opposite vector points to the other vertex.
 
     The function is only meaningful for
-    [central conics](#conic_classification.is_central_conic). The result vector
+    [central conics](#conic_classes.is_central_conic). The result vector
     will contain infinite or `nan` elements when the conic lacks a finite
     center.
     """
@@ -223,7 +223,7 @@ def shrink_conic_to_zero(conic: Matrix) -> Matrix:
     ellipses to point conics.
 
     This transformation is only meaningful for
-    [central conics](#conic_classification.is_central_conic): for other
+    [central conics](#conic_classes.is_central_conic): for other
     conic types the result matrix will have infinite or `nan` elements.
 
     *Formula*:

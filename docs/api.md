@@ -408,7 +408,7 @@ Computes the semi-axis lengths of a conic in no specific order.
 
 To get the semi-focal or semi-transverse axis length (semi-major /
 semi-minor in case of ellipses), call
-[principal_radius](#central_conic.principal_radius) or
+[primary_radius](#central_conic.primary_radius) or
 [secondary_radius](#central_conic.secondary_radius), respectively.
 
 *Formula*: [research/conic_radii.py](../src/research/conic_radii.py)
@@ -426,7 +426,7 @@ def primary_radius(conic: Matrix) -> Expr
 Computes the center-vertex distance of a conic.
 
 This corresponds to the semi-major axis length of real ellipses. In case of
-[imaginary ellipses](#conic_classification.is_imaginary_ellipse) however the
+[imaginary ellipses](#conic_classes.is_imaginary_ellipse) however the
 focal axis is the shorter one in terms of absolute value.
 
 The returned value is:
@@ -502,7 +502,7 @@ Returns the 2D vector from a conic's center to one of its foci.
 The opposite vector points to the other focus.
 
 The function is only meaningful for
-[central conics](#conic_classification.is_central_conic). The result vector
+[central conics](#conic_classes.is_central_conic). The result vector
 will contain infinite or `nan` elements when the conic lacks a finite
 center.
 
@@ -521,7 +521,7 @@ Returns the 2D vector from a conic's center to one of its vertices.
 The opposite vector points to the other vertex.
 
 The function is only meaningful for
-[central conics](#conic_classification.is_central_conic). The result vector
+[central conics](#conic_classes.is_central_conic). The result vector
 will contain infinite or `nan` elements when the conic lacks a finite
 center.
 
@@ -541,7 +541,7 @@ Turns hyperbolas to line pair conics consisting of their asymptotes, and
 ellipses to point conics.
 
 This transformation is only meaningful for
-[central conics](#conic_classification.is_central_conic): for other
+[central conics](#conic_classes.is_central_conic): for other
 conic types the result matrix will have infinite or `nan` elements.
 
 *Formula*:
@@ -892,8 +892,8 @@ The result is
  - 1 for parabolas;
  - &gt;1 for hyperbolas, in particular √2 for rectangular hyperbolas.
 
-In case of [non-degenerate](#conic_classification.is_nondegenerate)
-[central conics](#conic_classification.is_central_conic), the eccentricity
+In case of [non-degenerate](#conic_classes.is_nondegenerate)
+[central conics](#conic_classes.is_central_conic), the eccentricity
 equals to the ratio of the center-focus distance
 ([linear_eccentricity](#central_conic.linear_eccentricity))
 and the center-vertex distance
@@ -926,7 +926,7 @@ Returns the axis of symmetry going through conic's focus point(s).
 
 Properties:
 - Returns `[0, 0, 0]ᵀ` for circles and
-  [circular conics](#conic_classification.is_circular).
+  [circular conics](#conic_classes.is_circular).
 - Point conics constructed by
   [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(ellipse)
   preserve the focal axis of the original real or imaginary ellipse.
@@ -1272,7 +1272,7 @@ def is_ellipse(conic: Matrix) -> bool | None
 Tells whether the conic is an ellipse.
 
 Returns `False` for
-[imaginary ellipses](#conic_classification.is_imaginary_ellipse),
+[imaginary ellipses](#conic_classes.is_imaginary_ellipse),
 or `None` if the conic's type is undecidable.
 
 <a id="conic_classes.is_circle"></a>
@@ -1681,7 +1681,7 @@ Properties:
   horizontal lies in the (-π/2, π/2] interval. For the full direction of a
   parabola, use [parabola_direction](#parabola.parabola_direction) instead.
 - Returns `[0, 0, 0]ᵀ` for circles and
-  [circular conics](#conic_classification.is_circular).
+  [circular conics](#conic_classes.is_circular).
 - Point conics constructed by
   [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(ellipse)
   preserve the axis direction of the original real or imaginary ellipse.

@@ -86,8 +86,8 @@ def eccentricity(conic: Matrix) -> Expr:
      - 1 for parabolas;
      - &gt;1 for hyperbolas, in particular √2 for rectangular hyperbolas.
 
-    In case of [non-degenerate](#conic_classification.is_nondegenerate)
-    [central conics](#conic_classification.is_central_conic), the eccentricity
+    In case of [non-degenerate](#conic_classes.is_nondegenerate)
+    [central conics](#conic_classes.is_central_conic), the eccentricity
     equals to the ratio of the center-focus distance
     ([linear_eccentricity](#central_conic.linear_eccentricity))
     and the center-vertex distance
@@ -117,7 +117,7 @@ def focal_axis(conic: Matrix) -> Matrix:
 
     Properties:
     - Returns `[0, 0, 0]ᵀ` for circles and
-      [circular conics](#conic_classification.is_circular).
+      [circular conics](#conic_classes.is_circular).
     - Point conics constructed by
       [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(ellipse)
       preserve the focal axis of the original real or imaginary ellipse.

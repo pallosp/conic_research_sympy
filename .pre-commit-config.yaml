@@ -15,6 +15,14 @@ repos:
 
   - repo: local
     hooks:
+      - id: verify-docstring-refs
+        name: Verify docstring references
+        entry: poetry run python3 scripts/verify_docstring_refs.py
+        language: system
+        pass_filenames: false
+
+  - repo: local
+    hooks:
       - id: check-docs
         name: Ensure docs/api.md is up to date
         entry: poetry run scripts/check-docs.sh
