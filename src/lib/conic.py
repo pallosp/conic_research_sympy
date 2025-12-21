@@ -1,8 +1,8 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Function, I, Matrix, Poly, Symbol, abc, sqrt
+from sympy import Expr, Function, Matrix, Poly, Symbol, abc, sqrt
 
-from lib.conic_classes import ConicNormFactor
+from lib.conic_direction import ConicNormFactor, focal_axis_direction
 from lib.matrix import NonzeroCross
 from lib.point import point_to_vec3, point_to_xy
 
@@ -110,33 +110,6 @@ def eccentricity(conic: Matrix) -> Expr:
     s = sqrt(((a - c) ** 2 + 4 * b**2).factor())
     norm_sign = ConicNormFactor(conic)
     return sqrt(2 * s / (s - norm_sign * (a + c)))
-
-
-def focal_axis_direction(conic: Matrix) -> Matrix:
-    """Returns the ideal point representing the direction of a conic's focal axis.
-
-    Properties:
-    - The focal axis is treated as an undirected line; its angle to the
-      horizontal lies in the (-π/2, π/2] interval. For the full direction of a
-      parabola, use [parabola_direction](#parabola.parabola_direction) instead.
-    - Returns `[0, 0, 0]ᵀ` for circles and
-      [circular conics](#conic_classification.is_circular).
-    - Point conics constructed by
-      [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(ellipse)
-      preserve the axis direction of the original real or imaginary ellipse.
-    - Line pair conics constructed by
-      [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(hyperbola)
-      have no such property.
-    - The focal axis of `line_pair(l1, l2)`, and `angle_bisector(l1, l2)` point
-      to the same direction.
-
-    *Formula*:
-    [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
-    """
-    a, b, c = conic[0], conic[3], conic[4]
-    norm_sign = ConicNormFactor(conic)
-    x, y = sqrt(norm_sign * (a - c + 2 * I * b)).simplify().as_real_imag()
-    return Matrix([x, y, 0])
 
 
 def focal_axis(conic: Matrix) -> Matrix:

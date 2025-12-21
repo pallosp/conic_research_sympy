@@ -50,7 +50,6 @@
   * [conic\_through\_points](#conic.conic_through_points)
   * [conic\_from\_focus\_and\_directrix](#conic.conic_from_focus_and_directrix)
   * [eccentricity](#conic.eccentricity)
-  * [focal\_axis\_direction](#conic.focal_axis_direction)
   * [focal\_axis](#conic.focal_axis)
   * [IdealPoints](#conic.IdealPoints)
     * [eval](#conic.IdealPoints.eval)
@@ -66,8 +65,6 @@
   * [ExtractPoint](#degenerate_conic.ExtractPoint)
     * [eval](#degenerate_conic.ExtractPoint.eval)
 * [conic\_classes](#conic_classes)
-  * [ConicNormFactor](#conic_classes.ConicNormFactor)
-    * [eval](#conic_classes.ConicNormFactor.eval)
   * [is\_degenerate](#conic_classes.is_degenerate)
   * [is\_nondegenerate](#conic_classes.is_nondegenerate)
   * [is\_central\_conic](#conic_classes.is_central_conic)
@@ -101,6 +98,10 @@
   * [point\_to\_vec3](#point.point_to_vec3)
   * [centroid](#point.centroid)
   * [perpendicular\_foot](#point.perpendicular_foot)
+* [conic\_direction](#conic_direction)
+  * [ConicNormFactor](#conic_direction.ConicNormFactor)
+    * [eval](#conic_direction.ConicNormFactor.eval)
+  * [focal\_axis\_direction](#conic_direction.focal_axis_direction)
 * [transform](#transform)
   * [transform\_point](#transform.transform_point)
   * [transform\_line](#transform.transform_line)
@@ -836,34 +837,6 @@ https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficient
 *Own research*:
 [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
 
-<a id="conic.focal_axis_direction"></a>
-
-#### focal\_axis\_direction
-
-```python
-def focal_axis_direction(conic: Matrix) -> Matrix
-```
-
-Returns the ideal point representing the direction of a conic's focal axis.
-
-Properties:
-- The focal axis is treated as an undirected line; its angle to the
-  horizontal lies in the (-π/2, π/2] interval. For the full direction of a
-  parabola, use [parabola_direction](#parabola.parabola_direction) instead.
-- Returns `[0, 0, 0]ᵀ` for circles and
-  [circular conics](#conic_classification.is_circular).
-- Point conics constructed by
-  [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(ellipse)
-  preserve the axis direction of the original real or imaginary ellipse.
-- Line pair conics constructed by
-  [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(hyperbola)
-  have no such property.
-- The focal axis of `line_pair(l1, l2)`, and `angle_bisector(l1, l2)` point
-  to the same direction.
-
-*Formula*:
-[research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
-
 <a id="conic.focal_axis"></a>
 
 #### focal\_axis
@@ -1084,41 +1057,6 @@ Internal implementation. Call `ExtractPoint(conic)` directly.
 <a id="conic_classes"></a>
 
 # conic\_classes
-
-<a id="conic_classes.ConicNormFactor"></a>
-
-## ConicNormFactor Objects
-
-```python
-class ConicNormFactor(Function)
-```
-
-Computes a normalization factor (±1) for a conic matrix `C`.
-
-When `C` is multiplied by this factor, the resulting conic has the
-following properties:
-
-- *Non-degenerate conics*: the conic equation evaluates to a positive
-  value at the focus point(s), i.e. `[fx fy 1]ᵀ C [fx fy 1] > 0`.
-- *Point conics*: The conic equation evaluates to ≤0 for all finite
-  points `[x, y, 1]ᵀ`.
-- *Line-pair conics*: no preferred normalization exists; the factor is
-  always 1.
-- *Symbolic conics*: may return an unevaluated `sympy.Function` if the
-  conic type or determinant sign cannot be determined.
-- `conic.det() * ConicNormFactor(conic) == Abs(conic.det())` holds for
-  all conic types.
-
-<a id="conic_classes.ConicNormFactor.eval"></a>
-
-#### eval
-
-```python
-@classmethod
-def eval(cls, conic: Matrix) -> int | None
-```
-
-Internal implementation. Call `ConicNormFactor(conic)` directly.
 
 <a id="conic_classes.is_degenerate"></a>
 
@@ -1524,6 +1462,73 @@ Degenerates to `[nan, nan]ᵀ` when `point`, `line` or both are infinite.
 
 *Formula*: https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
 
+<a id="conic_direction"></a>
+
+# conic\_direction
+
+<a id="conic_direction.ConicNormFactor"></a>
+
+## ConicNormFactor Objects
+
+```python
+class ConicNormFactor(Function)
+```
+
+Computes a normalization factor (±1) for a conic matrix `C`.
+
+When `C` is multiplied by this factor, the resulting conic has the
+following properties:
+
+- *Non-degenerate conics*: the conic equation evaluates to a positive
+  value at the focus point(s), i.e. `[fx fy 1]ᵀ C [fx fy 1] > 0`.
+- *Point conics*: The conic equation evaluates to ≤0 for all finite
+  points `[x, y, 1]ᵀ`.
+- *Line-pair conics*: no preferred normalization exists; the factor is
+  always 1.
+- *Symbolic conics*: may return an unevaluated `sympy.Function` if the
+  conic type or determinant sign cannot be determined.
+- `conic.det() * ConicNormFactor(conic) == Abs(conic.det())` holds for
+  all conic types.
+
+<a id="conic_direction.ConicNormFactor.eval"></a>
+
+#### eval
+
+```python
+@classmethod
+def eval(cls, conic: Matrix) -> int | None
+```
+
+Internal implementation. Call `ConicNormFactor(conic)` directly.
+
+<a id="conic_direction.focal_axis_direction"></a>
+
+#### focal\_axis\_direction
+
+```python
+def focal_axis_direction(conic: Matrix) -> Matrix
+```
+
+Returns the ideal point representing the direction of a conic's focal axis.
+
+Properties:
+- The focal axis is treated as an undirected line; its angle to the
+  horizontal lies in the (-π/2, π/2] interval. For the full direction of a
+  parabola, use [parabola_direction](#parabola.parabola_direction) instead.
+- Returns `[0, 0, 0]ᵀ` for circles and
+  [circular conics](#conic_classification.is_circular).
+- Point conics constructed by
+  [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(ellipse)
+  preserve the axis direction of the original real or imaginary ellipse.
+- Line pair conics constructed by
+  [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(hyperbola)
+  have no such property.
+- The focal axis of `line_pair(l1, l2)`, and `angle_bisector(l1, l2)` point
+  to the same direction.
+
+*Formula*:
+[research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
+
 <a id="transform"></a>
 
 # transform
@@ -1711,7 +1716,7 @@ def parabola_direction(parabola: Matrix) -> Matrix
 
 Computes the direction of a parabola modulo 2π.
 
-Unlike [focal_axis_direction](#conic.focal_axis_direction), which
+Unlike [focal_axis_direction](#conic_direction.focal_axis_direction), which
 determines the direction only modulo π, this function resolves the full
 orientation.
 

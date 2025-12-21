@@ -1,14 +1,9 @@
-from sympy import Abs, I, Matrix, Rational, pi, sign, symbols
+from sympy import I, Matrix, Rational, pi, symbols
 from sympy.abc import x, y
 
 from lib.circle import IMAGINARY_UNIT_CIRCLE, UNIT_CIRCLE, circle
-from lib.conic import (
-    conic_from_focus_and_directrix,
-    conic_from_poly,
-    focal_axis_direction,
-)
+from lib.conic import conic_from_focus_and_directrix, conic_from_poly
 from lib.conic_classes import (
-    ConicNormFactor,
     is_central_conic,
     is_circle,
     is_circular,
@@ -24,96 +19,12 @@ from lib.conic_classes import (
     is_parabola,
     is_point_conic,
 )
+from lib.conic_direction import focal_axis_direction
 from lib.degenerate_conic import line_pair_conic, point_conic
 from lib.ellipse import ellipse, ellipse_from_foci_and_point
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, horizontal_line
-from lib.matrix import conic_matrix, quadratic_form
+from lib.matrix import conic_matrix
 from lib.point import ORIGIN
-from lib.transform import transform_conic, translate
-
-
-class TestConicNormFactor:
-    def test_parabola_with_focus_at_origin(self):
-        focus = ORIGIN
-        directrix = Matrix(symbols("a b c", positive=True))
-        parabola = conic_from_focus_and_directrix(focus, directrix, 1)
-        assert ConicNormFactor(parabola) == 1
-        assert ConicNormFactor(-parabola) == -1
-
-    def test_general_parabola(self):
-        focus = ORIGIN
-        directrix = Matrix(symbols("a b c", positive=True))
-        parabola = conic_from_focus_and_directrix(focus, directrix, 1)
-        translation = translate(*symbols("dx dy", real=True))
-        parabola = transform_conic(parabola, translation)
-        assert ConicNormFactor(parabola) == 1
-
-    def test_symbolic_circle(self):
-        center = [*symbols("x y"), 1]
-        symbolic_circle = circle(center, symbols("r", positive=True))
-        assert quadratic_form(symbolic_circle, Matrix(center)).factor().is_positive
-        assert ConicNormFactor(symbolic_circle) == 1
-        assert ConicNormFactor(-symbolic_circle) == -1
-
-    def test_zero_radius_circle(self):
-        center = symbols("x y", real=True)
-        zero_circle = circle(center, 0)
-        assert quadratic_form(zero_circle, ORIGIN).is_nonpositive
-        assert ConicNormFactor(zero_circle) == 1
-        assert ConicNormFactor(-zero_circle) == -1
-
-    def test_point_conic(self):
-        point = symbols("x y z", positive=True)
-        conic = point_conic(point)
-        assert quadratic_form(conic, ORIGIN).is_nonpositive
-        assert ConicNormFactor(conic) == 1
-        assert ConicNormFactor(-conic) == -1
-
-    def test_line_pair(self):
-        line1 = Matrix(symbols("a b c", real=True))
-        line2 = Matrix(symbols("d e f", real=True))
-        line_pair = line_pair_conic(line1, line2)
-        assert ConicNormFactor(line_pair) == 1
-        assert ConicNormFactor(-line_pair) == 1
-
-    def test_zero_conic_matrix(self):
-        conic = Matrix.zeros(3, 3)
-        assert ConicNormFactor(conic) == 1
-
-    def test_undecidable(self):
-        conic = conic_matrix(*symbols("a b c d e f", real=True))
-        assert isinstance(ConicNormFactor(conic), ConicNormFactor)
-
-    def test_function_properties(self):
-        conic = conic_matrix(*symbols("a b c d e f", real=True))
-        factor = ConicNormFactor(conic)
-        assert factor.is_nonzero is True
-        assert factor.is_integer is True
-        assert factor.is_positive is None
-
-    def test_simplify_abs(self):
-        conic = conic_matrix(*symbols("a b c d e f", real=True))
-        assert Abs(ConicNormFactor(conic)) == 1
-
-    def test_simplify_pow(self):
-        conic = conic_matrix(*symbols("a b c d e f", real=True))
-        f = ConicNormFactor(conic)
-        assert f * f == 1
-        assert f**3 == f
-        assert 1 / f == f
-
-    def test_simplify_nondegenerate_conic(self):
-        focus = ORIGIN
-        directrix = Matrix(symbols("a,b,c", positive=True))
-        eccentricity = symbols("e", positive=True)
-        plus_minus_one = (-1) ** symbols("n", integer=True)
-        conic = conic_from_focus_and_directrix(focus, directrix, eccentricity)
-        conic *= plus_minus_one
-        # Ideally, ConicNormFactor(conic) should simplify to (-1)ⁿ,
-        # but Sympy 1.14.0 doesn’t recognize that sign((-1)ⁿ) == (-1)ⁿ.
-        f = ConicNormFactor(conic)
-        assert f == sign(plus_minus_one)
-        assert Abs(f) == 1
 
 
 class TestIsDegenerate:

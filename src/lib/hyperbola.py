@@ -3,7 +3,7 @@ from collections.abc import Sequence
 from sympy import Expr, Matrix, acos, sqrt
 
 from lib.central_conic import conic_from_foci_and_radius, shrink_conic_to_zero
-from lib.conic_classes import ConicNormFactor
+from lib.conic_direction import ConicNormFactor
 from lib.distance import point_point_distance
 
 

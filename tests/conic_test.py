@@ -1,4 +1,3 @@
-import pytest
 from sympy import (
     I,
     Matrix,
@@ -6,13 +5,12 @@ from sympy import (
     Rational,
     exp,
     log,
-    pi,
     sqrt,
     symbols,
 )
 from sympy.abc import x, y
 
-from lib.central_conic import conic_from_foci_and_radius, shrink_conic_to_zero
+from lib.central_conic import shrink_conic_to_zero
 from lib.circle import UNIT_CIRCLE, circle
 from lib.conic import (
     IdealPoints,
@@ -21,7 +19,6 @@ from lib.conic import (
     conic_through_points,
     eccentricity,
     focal_axis,
-    focal_axis_direction,
     polar_line,
     pole_point,
     projective_conic_center,
@@ -42,11 +39,9 @@ from lib.line import (
 from lib.matrix import (
     conic_matrix,
     is_nonzero_multiple,
-    is_positive_multiple,
     quadratic_form,
 )
-from lib.point import ORIGIN, ideal_point, ideal_point_on_line
-from lib.transform import rotate, transform_conic
+from lib.point import ORIGIN, ideal_point
 from tests.utils import are_projective_sets_equal
 
 
@@ -148,83 +143,6 @@ class TestEccentricity:
         point_conic = shrink_conic_to_zero(ellipse)
         assert eccentricity(point_conic).factor() == ecc
         assert eccentricity(-point_conic).factor() == ecc
-
-
-class TestAxisDirection:
-    def test_unit_circle(self):
-        assert focal_axis_direction(UNIT_CIRCLE).is_zero_matrix
-
-    def test_symbolic_circle(self):
-        assert focal_axis_direction(circle(symbols("x y"), symbols("r"))).is_zero_matrix
-
-    def test_ellipse(self):
-        rotated_ellipse = ellipse((6, 5), 4, 3, r1_direction=(2, 1))
-        assert is_nonzero_multiple(focal_axis_direction(rotated_ellipse), (2, 1, 0))
-        assert is_nonzero_multiple(focal_axis_direction(-rotated_ellipse), (2, 1, 0))
-
-    def test_imaginary_ellipse(self):
-        focus1 = (1, 2)
-        focus2 = (3, 4)
-        imag_ellipse = conic_from_foci_and_radius(focus1, focus2, 5 * I)
-        assert is_nonzero_multiple(focal_axis_direction(imag_ellipse), (1, 1, 0))
-        assert is_nonzero_multiple(focal_axis_direction(-imag_ellipse), (1, 1, 0))
-
-    def test_point_conic(self):
-        r1_direction = (2, 1, 0)
-        rotated_ellipse = ellipse((6, 5), 4, 3, r1_direction=r1_direction)
-        point = shrink_conic_to_zero(rotated_ellipse)
-        assert is_nonzero_multiple(focal_axis_direction(point), r1_direction)
-        assert is_nonzero_multiple(focal_axis_direction(-point), r1_direction)
-
-    def test_hyperbola(self):
-        hyperbola = conic_from_poly(x * y - 1)
-        assert is_nonzero_multiple(focal_axis_direction(hyperbola), (1, 1, 0))
-        assert is_nonzero_multiple(focal_axis_direction(-hyperbola), (1, 1, 0))
-
-    def test_parabola(self):
-        parabola = conic_from_focus_and_directrix((1, 2), Matrix([3, 4, 5]), 1)
-        assert is_nonzero_multiple(focal_axis_direction(parabola), (3, 4, 0))
-
-    def test_angle_range(self):
-        right_parabola = conic_from_poly(y**2 - x)
-        up_parabola = conic_from_poly(x**2 - y)
-        left_parabola = conic_from_poly(y**2 + x)
-        down_parabola = conic_from_poly(x**2 + y)
-        nw_parabola = transform_conic(up_parabola, rotate(pi / 4))
-        sw_parabola = transform_conic(left_parabola, rotate(pi / 4))
-        assert is_positive_multiple(focal_axis_direction(right_parabola), (1, 0, 0))
-        assert is_positive_multiple(focal_axis_direction(up_parabola), (0, 1, 0))
-        assert is_positive_multiple(focal_axis_direction(left_parabola), (1, 0, 0))
-        assert is_positive_multiple(focal_axis_direction(down_parabola), (0, 1, 0))
-        assert is_positive_multiple(focal_axis_direction(nw_parabola), (1, -1, 0))
-        assert is_positive_multiple(focal_axis_direction(sw_parabola), (1, 1, 0))
-
-    def test_line_pair(self):
-        conic = line_pair_conic(X_AXIS, Y_AXIS)
-        dir1 = focal_axis_direction(conic)
-        dir2 = focal_axis_direction(-conic)
-        assert are_projective_sets_equal([dir1, dir2], [[1, 1, 0], [1, -1, 0]])
-
-    def test_double_line(self):
-        line_pair = line_pair_conic(X_AXIS, X_AXIS)
-        assert is_nonzero_multiple(focal_axis_direction(line_pair), (0, 1, 0))
-        line_pair = line_pair_conic(X_AXIS, -X_AXIS)
-        assert is_nonzero_multiple(focal_axis_direction(line_pair), (1, 0, 0))
-
-    @pytest.mark.parametrize(
-        ("line1", "line2"),
-        [
-            (X_AXIS, Y_AXIS),
-            (X_AXIS, -Y_AXIS),
-            (X_AXIS, IDEAL_LINE),
-            (Matrix([1, 2, 3]), Matrix([4, 5, 6])),
-        ],
-    )
-    def test_line_pair_focal_axis_vs_angle_bisector(self, line1: Matrix, line2: Matrix):
-        line_pair = line_pair_conic(line1, line2)
-        axis_dir = focal_axis_direction(line_pair)
-        bisector = angle_bisector(line1, line2)
-        assert is_nonzero_multiple(axis_dir, ideal_point_on_line(bisector))
 
 
 class TestFocalAxis:

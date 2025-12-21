@@ -76,7 +76,7 @@ def parabola_vertex(parabola: Matrix) -> Matrix:
 def parabola_direction(parabola: Matrix) -> Matrix:
     """Computes the direction of a parabola modulo 2π.
 
-    Unlike [focal_axis_direction](#conic.focal_axis_direction), which
+    Unlike [focal_axis_direction](#conic_direction.focal_axis_direction), which
     determines the direction only modulo π, this function resolves the full
     orientation.
 

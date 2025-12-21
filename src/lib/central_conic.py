@@ -1,8 +1,8 @@
 from collections.abc import Sequence
 
-from sympy import Abs, Expr, I, Matrix, sqrt
+from sympy import Abs, Expr, Matrix, sqrt
 
-from lib.conic_classes import ConicNormFactor
+from lib.conic_direction import ConicNormFactor, focal_axis_direction
 from lib.matrix import conic_matrix, max_eigenvalue, min_eigenvalue
 from lib.point import point_to_xy
 
@@ -192,8 +192,7 @@ def center_to_focus_vector(conic: Matrix) -> Matrix:
     """
     # Calculate the focal axis direction vector.
     a, _, _, b, c, _, _, _, _ = conic
-    norm_sign = ConicNormFactor(conic)
-    x, y = sqrt(norm_sign * (a - c + 2 * I * b)).simplify().as_real_imag()
+    x, y, _ = focal_axis_direction(conic)
 
     # Center-to-focus vector = [x, y] / √(x² + y²) * linear eccentricity
     # The √(x² + y²) = ∜((a-c)² + 4b²) factor vanishes.
@@ -212,13 +211,11 @@ def center_to_vertex_vector(conic: Matrix) -> Matrix:
     center.
     """
     # Calculate the focal axis direction vector and its length.
-    a, _, _, b, c, _, _, _, _ = conic
-    norm_sign = ConicNormFactor(conic)
-    x, y = sqrt(norm_sign * (a - c + 2 * I * b)).simplify().as_real_imag()
+    x, y, _ = focal_axis_direction(conic)
 
     # Center-to-vertex vector = [x, y] / √(x² + y²) * primary radius
     # √(x² + y²) = ∜((a-c)² + 4b²)
-    xy_length = sqrt(sqrt((a - c) ** 2 + 4 * b**2))
+    xy_length = sqrt(x**2 + y**2)
     multiplier = primary_radius(conic) / xy_length
     return Matrix([x, y]).applyfunc(lambda coord: coord * multiplier)
 

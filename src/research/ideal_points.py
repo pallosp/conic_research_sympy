@@ -3,8 +3,8 @@
 from sympy import Abs, Matrix, Ne, exp, expand_complex, gcd, log, sqrt, symbols
 from sympy.abc import x, y
 
-from lib.conic import IdealPoints, conic_from_poly, focal_axis_direction
-from lib.conic_classes import ConicNormFactor
+from lib.conic import IdealPoints, conic_from_poly
+from lib.conic_direction import ConicNormFactor, focal_axis_direction
 from lib.hyperbola import asymptote_focal_axis_angle
 from lib.intersection import conic_x_line
 from lib.line import IDEAL_LINE
