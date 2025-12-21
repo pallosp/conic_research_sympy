@@ -190,14 +190,13 @@ def center_to_focus_vector(conic: Matrix) -> Matrix:
     will contain infinite or `nan` elements when the conic lacks a finite
     center.
     """
-    # Calculate the focal axis direction vector.
-    a, _, _, b, c, _, _, _, _ = conic
     x, y, _ = focal_axis_direction(conic)
 
     # Center-to-focus vector = [x, y] / √(x² + y²) * linear eccentricity
     # The √(x² + y²) = ∜((a-c)² + 4b²) factor vanishes.
+    a, _, _, b, c, _, _, _, _ = conic
     multiplier = sqrt(Abs(conic.det())) / (a * c - b * b)
-    return Matrix([x, y]).applyfunc(lambda coord: coord * multiplier)
+    return Matrix([x * multiplier, y * multiplier])
 
 
 def center_to_vertex_vector(conic: Matrix) -> Matrix:
@@ -210,14 +209,11 @@ def center_to_vertex_vector(conic: Matrix) -> Matrix:
     will contain infinite or `nan` elements when the conic lacks a finite
     center.
     """
-    # Calculate the focal axis direction vector and its length.
     x, y, _ = focal_axis_direction(conic)
 
     # Center-to-vertex vector = [x, y] / √(x² + y²) * primary radius
-    # √(x² + y²) = ∜((a-c)² + 4b²)
-    xy_length = sqrt(x**2 + y**2)
-    multiplier = primary_radius(conic) / xy_length
-    return Matrix([x, y]).applyfunc(lambda coord: coord * multiplier)
+    multiplier = primary_radius(conic) / sqrt(x**2 + y**2)
+    return Matrix([x * multiplier, y * multiplier])
 
 
 def shrink_conic_to_zero(conic: Matrix) -> Matrix:

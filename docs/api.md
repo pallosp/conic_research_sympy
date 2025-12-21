@@ -514,7 +514,7 @@ center.
 def center_to_vertex_vector(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L203))
+([source](../src/lib/central_conic.py#L202))
 
 Returns the 2D vector from a conic's center to one of its vertices.
 
@@ -533,7 +533,7 @@ center.
 def shrink_conic_to_zero(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L223))
+([source](../src/lib/central_conic.py#L219))
 
 Scales a conic section from its center with a factor of zero.
 
