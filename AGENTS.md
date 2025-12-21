@@ -38,18 +38,21 @@ A symbolic 2D projective and Euclidean geometry toolkit built on **SymPy**.
 
 ## 🚀 Common commands
 
-- **Lint/Format**: `ruff check --fix`
+They need `poetry run` prefix if run outside virtual environment.
+
+- **Lint**: `ruff check --fix`
+- **Format**: `ruff format`
 - **Test**: `pytest`
 - **Coverage**: `pytest --cov src/lib --cov-report html`
 - **Docs**: `pydoc-markdown`
-- **Pre-commit**: `pre-commit run --all-files`
+- **Pre-commit**: `pre-commit`
 
 ## 🤖 Agent instructions
 
 - **Command execution**: Run read-only commands (e.g., `ls`, `git status`,
-  `find`) with `SafeToAutoRun: true` to explore the project efficiently.
+  `find`) as well as the commands listed above with `SafeToAutoRun: true`.
 - **Quality**: Run linter and tests before finishing.
 - **Documentation**: Regenerate API docs using `pydoc-markdown` after each
-  public API change.
+  change in `src/lib`.
 - **Lint checks**: Prefer fixing the code or reporting warnings over adding
   `# noqa` comments.
