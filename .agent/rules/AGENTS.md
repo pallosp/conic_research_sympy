@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # Agent instructions
 
 A symbolic 2D projective and Euclidean geometry toolkit built on **SymPy**.
