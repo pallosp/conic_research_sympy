@@ -89,7 +89,6 @@ class TestLineContainsPoint:
 
 
 class TestAreCollinear:
-
     def test_less_than_three_points(self):
         assert are_collinear([(1, 2)]) is True
         assert are_collinear([(1, 2), (3, 4)]) is True
@@ -115,7 +114,6 @@ class TestAreCollinear:
 
 
 class TestAreConcurrent:
-
     def test_symbolic_lines(self):
         p = symbols("x y")
         x1, y1, x2, y2, x3, y3, x4, y4 = symbols("x1 y1 x2 y2 x3 y3 x4 y4")
@@ -168,7 +166,6 @@ class TestAreOnSameConic:
 
 
 class TestAreCocircular:
-
     def test_three_points(self):
         x1, y1, x2, y2, x3, y3 = symbols("x1 y1 x2 y2 x3 y3")
         assert are_cocircular([(x1, y1), (x2, y2), (x3, y3)]) is True

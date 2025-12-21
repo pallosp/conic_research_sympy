@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 from sympy import (
     Eq,
     Expr,
@@ -221,7 +220,7 @@ for det_assumption in Q.positive, Q.negative:
             .subs(((A - C) ** 2).expand(), (A - C) ** 2)
             .refine(det_assumption(det))
         )
-        println_indented(Eq(symbols(f"c{index+1}"), c_simplified))
+        println_indented(Eq(symbols(f"c{index + 1}"), c_simplified))
 
 print(HORIZONTAL_LINE)
 

@@ -90,7 +90,6 @@ class TestFocalAxisAsymptoteAngle:
 
 
 class TestAsymptoteAngleVsIdealPoints:
-
     @pytest.mark.parametrize(
         "conic",
         [
@@ -118,7 +117,6 @@ class TestAsymptoteAngleVsIdealPoints:
 
 
 class TestAsymptoteConic:
-
     def test_hyperbola(self):
         hyperbola = conic_from_poly(1 - x * y)
         asymptotes = asymptote_conic(hyperbola)

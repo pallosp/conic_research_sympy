@@ -36,7 +36,6 @@ class TestIsHomography:
 
 
 class TestIsAffineTransform:
-
     def test_general_matrix(self):
         t = Matrix(3, 3, symbols("a b c d e f g h i"))
         assert is_affine_transform(t) is None
