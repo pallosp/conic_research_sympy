@@ -341,15 +341,14 @@ undecidable.
 ```python
 def conic_from_foci_and_radius(focus1: Matrix | Sequence[Expr],
                                focus2: Matrix | Sequence[Expr],
-                               radius: Expr) -> Matrix
+                               primary_radius: Expr) -> Matrix
 ```
 
 ([source](../src/lib/central_conic.py#L10))
 
-Computes the ellipse or hyperbola with the given focus points and
-radius, i.e. center-vertex distance.
+Computes the ellipse or hyperbola with the given focus points and primary radius.
 
-If `radius` is negative, takes its absolute value.
+If the radius (center-vertex distance) is negative, takes its absolute value.
 
 *Formula*:
 [research/conic_from_foci_and_radius.py](../src/research/conic_from_foci_and_radius.py)
@@ -365,7 +364,7 @@ def conic_from_center_and_points(center: Matrix | Sequence[Expr],
                                  p3: Matrix | Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L42))
+([source](../src/lib/central_conic.py#L41))
 
 Computes the conic section with the given center and perimeter points.
 
@@ -386,7 +385,7 @@ May return
 def conic_center(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L85))
+([source](../src/lib/central_conic.py#L84))
 
 Computes the center point of a conic.
 
@@ -402,7 +401,7 @@ Returns the point's coordinates as a 2D column vector.
 def semi_axis_lengths(conic: Matrix) -> tuple[Expr, Expr]
 ```
 
-([source](../src/lib/central_conic.py#L96))
+([source](../src/lib/central_conic.py#L95))
 
 Computes the semi-axis lengths of a conic in no specific order.
 
@@ -421,7 +420,7 @@ semi-minor in case of ellipses), call
 def primary_radius(conic: Matrix) -> Expr
 ```
 
-([source](../src/lib/central_conic.py#L125))
+([source](../src/lib/central_conic.py#L124))
 
 Computes the center-vertex distance of a conic.
 
@@ -444,7 +443,7 @@ The returned value is:
 def secondary_radius(conic: Matrix) -> Expr
 ```
 
-([source](../src/lib/central_conic.py#L142))
+([source](../src/lib/central_conic.py#L141))
 
 Computes the semi-conjugate axis length of a conic.
 
@@ -468,7 +467,7 @@ The returned value is:
 def linear_eccentricity(conic: Matrix) -> Expr
 ```
 
-([source](../src/lib/central_conic.py#L160))
+([source](../src/lib/central_conic.py#L159))
 
 Computes the linear eccentricity of a conic section.
 
@@ -495,7 +494,7 @@ radii of the conic (i.e., the semi-axis lengths in the case of an ellipse).
 def center_to_focus_vector(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L183))
+([source](../src/lib/central_conic.py#L182))
 
 Returns the 2D vector from a conic's center to one of its foci.
 
@@ -514,7 +513,7 @@ center.
 def center_to_vertex_vector(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L202))
+([source](../src/lib/central_conic.py#L201))
 
 Returns the 2D vector from a conic's center to one of its vertices.
 
@@ -533,7 +532,7 @@ center.
 def shrink_conic_to_zero(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L219))
+([source](../src/lib/central_conic.py#L218))
 
 Scales a conic section from its center with a factor of zero.
 

@@ -10,12 +10,11 @@ from lib.point import point_to_xy
 def conic_from_foci_and_radius(
     focus1: Matrix | Sequence[Expr],
     focus2: Matrix | Sequence[Expr],
-    radius: Expr,
+    primary_radius: Expr,
 ) -> Matrix:
-    """Computes the ellipse or hyperbola with the given focus points and
-    radius, i.e. center-vertex distance.
+    """Computes the ellipse or hyperbola with the given focus points and primary radius.
 
-    If `radius` is negative, takes its absolute value.
+    If the radius (center-vertex distance) is negative, takes its absolute value.
 
     *Formula*:
     [research/conic_from_foci_and_radius.py](../src/research/conic_from_foci_and_radius.py)
@@ -29,9 +28,9 @@ def conic_from_foci_and_radius(
     # center -> focus vector
     dx, dy = (fx2 - fx1) / 2, (fy2 - fy1) / 2
 
-    a = dx**2 - radius**2
+    a = dx**2 - primary_radius**2
     b = dx * dy
-    c = dy**2 - radius**2
+    c = dy**2 - primary_radius**2
     d = -cx * a - cy * b
     e = -cx * b - cy * c
     f = -cx * d - cy * e + (a * c - b * b)
