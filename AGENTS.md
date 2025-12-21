@@ -38,19 +38,17 @@ A symbolic 2D projective and Euclidean geometry toolkit built on **SymPy**.
 
 ## 🚀 Common commands
 
-They need `poetry run` prefix if run outside virtual environment.
-
-- **Lint**: `ruff check --fix`
-- **Format**: `ruff format`
-- **Test**: `pytest`
-- **Coverage**: `pytest --cov src/lib --cov-report html`
-- **Docs**: `pydoc-markdown`
-- **Pre-commit**: `pre-commit`
+- **Lint**: `poetry run ruff check --fix`
+- **Format**: `poetry run ruff format`
+- **Test**: `poetry run pytest`
+- **Regenerate docs**: `poetry run pydoc-markdown`
+- **Pre-commit**: `poetry run pre-commit`
 
 ## 🤖 Agent instructions
 
 - **Command execution**: Run read-only commands (e.g., `ls`, `git status`,
-  `find`) as well as the commands listed above with `SafeToAutoRun: true`.
+  `find`), as well as the common development commands listed above with
+  `SafeToAutoRun: true`.
 - **Quality**: Run linter and tests before finishing.
 - **Documentation**: Regenerate API docs using `pydoc-markdown` after each
   change in `src/lib`.
