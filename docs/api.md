@@ -588,10 +588,11 @@ def director_circle(conic: Matrix) -> Matrix
 
 ([source](../src/lib/circle.py#L26))
 
-Computes the director circle of a conic. It's also called orthoptic
-circle or Fermat–Apollonius circle.
+Computes the director circle of a conic.
 
-*Definition*: https://en.wikipedia.org/wiki/Director_circle<br>
+It's also called orthoptic circle or Fermat–Apollonius circle.
+
+*Definition*: <https://en.wikipedia.org/wiki/Director_circle><br>
 *Formula*: [research/director_circle.py](../src/research/director_circle.py)
 
 <a id="circle.UNIT_CIRCLE"></a>
@@ -907,7 +908,7 @@ two different corresponding eccentricity values. Evaluate
 `(eccentricity(conic), eccentricity(-conic))` to get both.
 
 *Formula*:
-https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients<br>
+<https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients><br>
 *Own research*:
 [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
 
@@ -1007,7 +1008,7 @@ complex conjugate lines, the pole is
  - the intersection of `l₁` and `l₂` otherwise.
 
 *Pole / polar identity*: `conic * pole_point = polar_line`<br>
-*Source*: https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line
+*Source*: <https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line>
 
 <a id="conic.polar_line"></a>
 
@@ -1022,7 +1023,7 @@ def polar_line(conic: Matrix, pole_point: Matrix | Sequence[Expr]) -> Matrix
 Computes the polar line of a conic with respect to the given pole point.
 
 *Pole / polar identity*: `conic * pole_point = polar_line`
-*Source*: https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line
+*Source*: <https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line>
 
 <a id="degenerate_conic"></a>
 
@@ -1618,7 +1619,7 @@ Computes the foot of the perpendicular through a point to a line.
 Returns the foot point's coordinates as a 2D column vector.
 Degenerates to `[nan, nan]ᵀ` when `point`, `line` or both are infinite.
 
-*Formula*: https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+*Formula*: <https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line>
 
 <a id="conic_direction"></a>
 
@@ -2102,7 +2103,7 @@ before it gets compared to zero. Returns `None` if undecidable.
 
 Leverages the projective point-line duality, and uses the collinearity
 formula described at
-https://en.wikipedia.org/wiki/Incidence_(geometry)#Collinearity
+<https://en.wikipedia.org/wiki/Incidence_(geometry)#Collinearity>
 
 <a id="incidence.are_on_same_conic"></a>
 
@@ -2287,7 +2288,7 @@ Constructs the Steiner circumellipse for the given points.
 The ellipse goes through the three points and is centered at the triangle's
 centroid.
 
-*Definition*: https://en.wikipedia.org/wiki/Steiner_ellipse<br>
+*Definition*: <https://en.wikipedia.org/wiki/Steiner_ellipse><br>
 *Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
 
 <a id="ellipse.steiner_inellipse"></a>
@@ -2307,7 +2308,7 @@ Computes the Steiner inellipse for the given points.
 The ellipse is centered at the triangle's centroid, and is tangent to the
 triangle's sides at their midpoints.
 
-*Definition*: https://en.wikipedia.org/wiki/Steiner_inellipse<br>
+*Definition*: <https://en.wikipedia.org/wiki/Steiner_inellipse><br>
 *Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
 
 <a id="intersection"></a>

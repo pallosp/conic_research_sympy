@@ -68,7 +68,7 @@ def perpendicular_foot(
     Returns the foot point's coordinates as a 2D column vector.
     Degenerates to `[nan, nan]ᵀ` when `point`, `line` or both are infinite.
 
-    *Formula*: https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+    *Formula*: <https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line>
     """
     x, y = point_to_xy(point)
     a, b, c = line

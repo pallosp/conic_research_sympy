@@ -102,7 +102,7 @@ def eccentricity(conic: Matrix) -> Expr:
     `(eccentricity(conic), eccentricity(-conic))` to get both.
 
     *Formula*:
-    https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients<br>
+    <https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients><br>
     *Own research*:
     [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
     """
@@ -178,7 +178,7 @@ def pole_point(conic: Matrix, polar_line: Matrix) -> Matrix:
      - the intersection of `l₁` and `l₂` otherwise.
 
     *Pole / polar identity*: `conic * pole_point = polar_line`<br>
-    *Source*: https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line
+    *Source*: <https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line>
     """
     return conic.adjugate() * polar_line
 
@@ -187,6 +187,6 @@ def polar_line(conic: Matrix, pole_point: Matrix | Sequence[Expr]) -> Matrix:
     """Computes the polar line of a conic with respect to the given pole point.
 
     *Pole / polar identity*: `conic * pole_point = polar_line`
-    *Source*: https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line
+    *Source*: <https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line>
     """
     return conic * point_to_vec3(pole_point)

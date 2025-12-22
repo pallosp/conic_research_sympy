@@ -24,10 +24,11 @@ def circle_radius(circle: Matrix) -> Expr:
 
 
 def director_circle(conic: Matrix) -> Matrix:
-    """Computes the director circle of a conic. It's also called orthoptic
-    circle or Fermat–Apollonius circle.
+    """Computes the director circle of a conic.
 
-    *Definition*: https://en.wikipedia.org/wiki/Director_circle<br>
+    It's also called orthoptic circle or Fermat–Apollonius circle.
+
+    *Definition*: <https://en.wikipedia.org/wiki/Director_circle><br>
     *Formula*: [research/director_circle.py](../src/research/director_circle.py)
     """
     a, _, _, _, c, _, d, e, f = conic.adjugate()

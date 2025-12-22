@@ -85,7 +85,7 @@ def are_concurrent(
 
     Leverages the projective point-line duality, and uses the collinearity
     formula described at
-    https://en.wikipedia.org/wiki/Incidence_(geometry)#Collinearity
+    <https://en.wikipedia.org/wiki/Incidence_(geometry)#Collinearity>
     """
     if len(lines) <= 2:
         return True

@@ -79,7 +79,7 @@ def steiner_ellipse(
     The ellipse goes through the three points and is centered at the triangle's
     centroid.
 
-    *Definition*: https://en.wikipedia.org/wiki/Steiner_ellipse<br>
+    *Definition*: <https://en.wikipedia.org/wiki/Steiner_ellipse><br>
     *Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
     """
     x1, y1 = point_to_xy(point1)
@@ -117,7 +117,7 @@ def steiner_inellipse(
     The ellipse is centered at the triangle's centroid, and is tangent to the
     triangle's sides at their midpoints.
 
-    *Definition*: https://en.wikipedia.org/wiki/Steiner_inellipse<br>
+    *Definition*: <https://en.wikipedia.org/wiki/Steiner_inellipse><br>
     *Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
     """
     x1, y1 = point_to_xy(point1)
