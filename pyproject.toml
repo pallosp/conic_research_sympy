@@ -16,11 +16,11 @@ sympy = "1.14"
 
 [tool.poetry.group.dev.dependencies]
 md-dead-link-check = "^1.2.0"
-pre-commit = "^4.3.0"
+pre-commit = "^4.5.1"
 pydoc-markdown = "^4.8.2"
-pytest = "^9.0.1"
+pytest = "^9.0.2"
 pytest-cov = "^7.0.0"
-ruff = "^0.14.2"
+ruff = "^0.14.10"
 
 [build-system]
 requires = ["poetry-core"]
