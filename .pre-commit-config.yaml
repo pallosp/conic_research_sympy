@@ -29,3 +29,11 @@ repos:
         additional_dependencies: []
         language: system
         pass_filenames: false
+
+  - repo: local
+    hooks:
+      - id: link-check
+        name: Check local links in Markdown
+        entry: poetry run md-dead-link-check --all
+        language: system
+        files: \.md$

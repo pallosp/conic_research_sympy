@@ -15,6 +15,7 @@ python = ">=3.12,<3.14"
 sympy = "1.14"
 
 [tool.poetry.group.dev.dependencies]
+md-dead-link-check = "^1.2.0"
 pre-commit = "^4.3.0"
 pydoc-markdown = "^4.8.2"
 pytest = "^9.0.1"
