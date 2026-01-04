@@ -1,9 +1,10 @@
-from sympy import Matrix, nan, pi, simplify, symbols
+from sympy import Matrix, expand, nan, pi, simplify, symbols
 
 from lib.central_conic import conic_center
 from lib.circle import circle
 from lib.line import IDEAL_LINE, X_AXIS, horizontal_line, line_between
 from lib.matrix import conic_matrix, is_nonzero_multiple
+from lib.polar_conic import conic_from_polar_matrix
 from lib.transform import (
     homography_from_samples,
     reflect_to_line,
@@ -13,6 +14,7 @@ from lib.transform import (
     transform_conic,
     transform_line,
     transform_point,
+    transform_polar_conic,
     translate,
 )
 
@@ -79,6 +81,16 @@ class TestScale:
         scaling = scale_xy(sx, sy, x0, y0)
         scaling_sequence = translate(x0, y0) * scale_xy(sx, sy) * translate(-x0, -y0)
         assert simplify(scaling) == simplify(scaling_sequence)
+
+    def test_scale_polar_conic(self):
+        polar = Matrix(3, 3, symbols("a b c d e f g h i"))
+        cartesian = conic_from_polar_matrix(polar)
+
+        scaling = scale_xy(2, 3, 4, 5)
+        scaled_polar = transform_polar_conic(polar, scaling)
+        scaled_cartesian = transform_conic(cartesian, scaling)
+
+        assert expand(conic_from_polar_matrix(scaled_polar)) == expand(scaled_cartesian)
 
 
 class TestTransformPoint:

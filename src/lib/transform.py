@@ -27,6 +27,11 @@ def transform_conic(conic: Matrix, transformation: Matrix) -> Matrix:
     return transformation.adjugate().T * conic * transformation.adjugate()
 
 
+def transform_polar_conic(polar_conic: Matrix, transformation: Matrix) -> Matrix:
+    """Applies a projective transformation to a conic in polar representation."""
+    return transformation * polar_conic
+
+
 def translate(dx: Expr, dy: Expr) -> Matrix:
     """Computes the transformation matrix for a 2D translation."""
     return Matrix([[1, 0, dx], [0, 1, dy], [0, 0, 1]])

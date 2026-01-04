@@ -101,6 +101,7 @@
   * [transform\_point](#transform.transform_point)
   * [transform\_line](#transform.transform_line)
   * [transform\_conic](#transform.transform_conic)
+  * [transform\_polar\_conic](#transform.transform_polar_conic)
   * [translate](#transform.translate)
   * [rotate](#transform.rotate)
   * [reflect\_to\_line](#transform.reflect_to_line)
@@ -1738,6 +1739,19 @@ def transform_conic(conic: Matrix, transformation: Matrix) -> Matrix
 
 Applies a projective transformation to a conic.
 
+<a id="transform.transform_polar_conic"></a>
+
+#### transform\_polar\_conic
+
+```python
+def transform_polar_conic(polar_conic: Matrix,
+                          transformation: Matrix) -> Matrix
+```
+
+([source](../src/lib/transform.py#L30))
+
+Applies a projective transformation to a conic in polar representation.
+
 <a id="transform.translate"></a>
 
 #### translate
@@ -1746,7 +1760,7 @@ Applies a projective transformation to a conic.
 def translate(dx: Expr, dy: Expr) -> Matrix
 ```
 
-([source](../src/lib/transform.py#L30))
+([source](../src/lib/transform.py#L35))
 
 Computes the transformation matrix for a 2D translation.
 
@@ -1758,7 +1772,7 @@ Computes the transformation matrix for a 2D translation.
 def rotate(angle: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix
 ```
 
-([source](../src/lib/transform.py#L35))
+([source](../src/lib/transform.py#L40))
 
 Computes the transformation matrix for a rotation around a point.
 
@@ -1770,7 +1784,7 @@ Computes the transformation matrix for a rotation around a point.
 def reflect_to_line(axis: Matrix) -> Matrix
 ```
 
-([source](../src/lib/transform.py#L48))
+([source](../src/lib/transform.py#L53))
 
 Computes the transformation matrix for a reflection to a line.
 
@@ -1790,7 +1804,7 @@ def scale_xy(scale_x: Expr,
              y0: Expr = 0) -> Matrix
 ```
 
-([source](../src/lib/transform.py#L66))
+([source](../src/lib/transform.py#L71))
 
 Computes the projective transformation matrix for scaling along the x-
 and y-axes.
@@ -1803,7 +1817,7 @@ and y-axes.
 def scale(scale: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix
 ```
 
-([source](../src/lib/transform.py#L79))
+([source](../src/lib/transform.py#L84))
 
 Computes the projective transformation matrix for a uniform scaling
 transformation.
@@ -1818,7 +1832,7 @@ def homography_from_samples(
         target_points: Sequence[Matrix | Sequence[Expr]]) -> Matrix
 ```
 
-([source](../src/lib/transform.py#L86))
+([source](../src/lib/transform.py#L91))
 
 Computes the transformation that maps one quadrilateral to another.
 
