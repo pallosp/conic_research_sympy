@@ -15,8 +15,7 @@ conic = conic_matrix(a, b, c, d, e, f)
 det = conic.det()
 
 # Translate the center to the origin
-cx, cy = conic_center(conic)
-conic = simplify(transform_conic(conic, translate(-cx, -cy)))
+conic = simplify(transform_conic(conic, translate(-conic_center(conic))))
 
 # Rotate with theta
 theta = symbols("theta")

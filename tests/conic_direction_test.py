@@ -32,7 +32,7 @@ class TestConicNormFactor:
         focus = ORIGIN
         directrix = Matrix(symbols("a b c", positive=True))
         parabola = conic_from_focus_and_directrix(focus, directrix, 1)
-        translation = translate(*symbols("dx dy", real=True))
+        translation = translate(symbols("dx dy", real=True))
         parabola = transform_conic(parabola, translation)
         assert ConicNormFactor(parabola) == 1
 

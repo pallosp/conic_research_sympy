@@ -45,11 +45,11 @@ class TestIsAffineTransform:
         assert is_affine_transform(t) is None
 
     def test_translate(self):
-        t = translate(*symbols("x y"))
+        t = translate(symbols("x y"))
         assert is_affine_transform(t) is True
 
     def test_arbitrary_bottom_right_element(self):
-        t = translate(*symbols("x y")) * -2
+        t = translate(symbols("x y")) * -2
         assert is_affine_transform(t) is True
 
     def test_rotate(self):
@@ -57,7 +57,7 @@ class TestIsAffineTransform:
         assert is_affine_transform(t) is True
 
     def test_scalar_multiple_of_affinity_matrix(self):
-        t = translate(1, 2) * -3
+        t = translate((1, 2)) * -3
         assert is_affine_transform(t) is True
 
     def test_simplifier(self):
@@ -86,7 +86,7 @@ class TestIsSimilarity:
         assert is_similarity(t) is False
 
     def test_translate(self):
-        t = translate(1, 2)
+        t = translate((1, 2))
         assert is_similarity(t) is True
 
     def test_rotate(self):
@@ -103,7 +103,7 @@ class TestIsSimilarity:
         assert is_similarity(t) is False
 
     def test_rotate_and_translate(self):
-        t = rotate(0.5) * translate(1, 2)
+        t = rotate(0.5) * translate((1, 2))
         assert is_similarity(t) is True
 
     def test_scale_and_translate(self):
@@ -148,7 +148,7 @@ class TestIsCongruence:
         assert is_congruence(t) is False
 
     def test_translate(self):
-        t = translate(1, 2)
+        t = translate((1, 2))
         assert is_congruence(t) is True
 
     def test_rotate(self):
@@ -161,7 +161,7 @@ class TestIsCongruence:
         assert is_congruence(t) is True
 
     def test_scalar_multiple_of_congruence_matrix(self):
-        t = translate(1, 2) * -3
+        t = translate((1, 2)) * -3
         assert is_congruence(t) is True
 
     def test_symbolic_congruence(self):

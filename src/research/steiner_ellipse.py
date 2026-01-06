@@ -103,7 +103,7 @@ substitutions = {
     y3: y3 - yc,
 }
 
-conic = transform_conic(conic.subs(substitutions), translate(xc, yc))
+conic = transform_conic(conic.subs(substitutions), translate((xc, yc)))
 
 assert conic_center(conic)[0].equals(xc)
 assert conic_contains_point(conic, Matrix([x1, y1, 1]))

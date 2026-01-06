@@ -32,8 +32,9 @@ def transform_polar_conic(polar_conic: Matrix, transformation: Matrix) -> Matrix
     return transformation * polar_conic
 
 
-def translate(dx: Expr, dy: Expr) -> Matrix:
+def translate(by: Matrix | Sequence[Expr]) -> Matrix:
     """Computes the transformation matrix for a 2D translation."""
+    dx, dy = by
     return Matrix([[1, 0, dx], [0, 1, dy], [0, 0, 1]])
 
 

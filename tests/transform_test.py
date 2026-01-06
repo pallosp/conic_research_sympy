@@ -25,7 +25,7 @@ class TestTranslate:
     def test_translate_circle(self):
         x, y, r = symbols("x,y,r")
         dx, dy = symbols("dx,dy")
-        transformation = translate(dx, dy)
+        transformation = translate((dx, dy))
         orig_circle = circle((x, y), r)
         translated_circle = transform_conic(orig_circle, transformation)
         new_center_x, new_center_y = conic_center(translated_circle)
@@ -35,7 +35,7 @@ class TestTranslate:
     def test_translate_conic(self):
         center_x, center_y = conic_center(conic)
         dx, dy = symbols("dx,dy")
-        transformation = translate(dx, dy)
+        transformation = translate((dx, dy))
         new_conic = transform_conic(conic, transformation)
         new_center_x, new_center_y = conic_center(new_conic)
         assert dx == simplify(new_center_x - center_x)
@@ -54,7 +54,7 @@ class TestRotate:
     def test_rotation_around_point(self):
         x0, y0, theta = symbols("x0,y0,theta")
         rotation = rotate(theta, x0, y0)
-        rotation_sequence = translate(x0, y0) * rotate(theta) * translate(-x0, -y0)
+        rotation_sequence = translate((x0, y0)) * rotate(theta) * translate((-x0, -y0))
         assert simplify(rotation) == simplify(rotation_sequence)
 
 
@@ -73,13 +73,14 @@ class TestScale:
     def test_scaling_around_point(self):
         x0, y0, s = symbols("x0,y0,s")
         scaling = scale(s, x0, y0)
-        scaling_sequence = translate(x0, y0) * scale(s) * translate(-x0, -y0)
+        scaling_sequence = translate((x0, y0)) * scale(s) * translate((-x0, -y0))
         assert simplify(scaling) == simplify(scaling_sequence)
 
     def test_scaling_unevenly_around_point(self):
-        x0, y0, sx, sy = symbols("x0,y0,sx,sy")
-        scaling = scale_xy(sx, sy, x0, y0)
-        scaling_sequence = translate(x0, y0) * scale_xy(sx, sy) * translate(-x0, -y0)
+        sx, sy = symbols("sx sy")
+        origin = Matrix(symbols("x0 y0"))
+        scaling = scale_xy(sx, sy, *origin)
+        scaling_sequence = translate(origin) * scale_xy(sx, sy) * translate(-origin)
         assert simplify(scaling) == simplify(scaling_sequence)
 
     def test_scale_polar_conic(self):
@@ -95,8 +96,8 @@ class TestScale:
 
 class TestTransformPoint:
     def test_translate(self):
-        assert transform_point((1, 2), translate(3, 5)) == Matrix([4, 7, 1])
-        assert transform_point((1, 2, 0), translate(3, 5)) == Matrix([1, 2, 0])
+        assert transform_point((1, 2), translate((3, 5))) == Matrix([4, 7, 1])
+        assert transform_point((1, 2, 0), translate((3, 5))) == Matrix([1, 2, 0])
 
 
 class TestTransformLine:
@@ -105,7 +106,7 @@ class TestTransformLine:
         assert is_nonzero_multiple(rotated, line_between((0, 0), (1, 1)))
 
     def test_translate_line(self):
-        translated = transform_line(X_AXIS, translate(1, 2))
+        translated = transform_line(X_AXIS, translate((1, 2)))
         assert translated == horizontal_line(2)
 
 
@@ -120,13 +121,13 @@ class TestHomographyFromSamples:
         source = ((0, 0), (1, 0), (0, 1), (1, 1))
         target = ((2, 1), (3, 1), (2, 2), (3, 2))
         transform = homography_from_samples(source, target)
-        assert transform == translate(2, 1)
+        assert transform == translate((2, 1))
 
     def test_translate_homogeneous_coordinates(self):
         source = ((0, 0), (-2, 0, -2), (0, 1), (1, 1))
         target = ((-4, -2, -2), (3, 1), (2, 2), (3, 2))
         transform = homography_from_samples(source, target)
-        assert transform == translate(2, 1)
+        assert transform == translate((2, 1))
 
     def test_circle_to_hyperbola(self):
         circle = ((1, 0), (0, 1), (-1, 0), (0, -1))
