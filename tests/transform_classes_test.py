@@ -25,8 +25,8 @@ class TestIsHomography:
         assert is_homography(t) is True
 
     def test_non_3x3_matrix(self):
-        t = Matrix(2, 2, symbols("a b c d"))
-        assert is_homography(t) is False
+        assert is_homography(Matrix([[1, 2], [3, 4]])) is False
+        assert is_homography(Matrix([1, 2])) is False
 
     def test_simplifier(self):
         t = rotate(symbols("theta"))
@@ -66,6 +66,9 @@ class TestIsAffineTransform:
         assert is_affine_transform(t, simplifier=expand) is None
         assert is_affine_transform(t, simplifier=simplify) is True
 
+    def test_non_3x3_matrix(self):
+        assert is_affine_transform(Matrix([1, 2])) is False
+
 
 class TestIsSimilarity:
     def test_general_matrix(self):
@@ -73,8 +76,8 @@ class TestIsSimilarity:
         assert is_similarity(t) is None
 
     def test_non_3x3_matrix(self):
-        t = Matrix(2, 2, symbols("a b c d"))
-        assert is_similarity(t) is False
+        assert is_similarity(Matrix([[1, 2], [3, 4]])) is False
+        assert is_similarity(Matrix([1, 2])) is False
 
     def test_affine_not_similarity(self):
         # A shear transformation is affine but not similarity
@@ -135,8 +138,8 @@ class TestIsCongruence:
         assert is_congruence(t) is None
 
     def test_non_3x3_matrix(self):
-        t = Matrix(2, 2, symbols("a b c d"))
-        assert is_congruence(t) is False
+        assert is_congruence(Matrix([[1, 2], [3, 4]])) is False
+        assert is_congruence(Matrix([1, 2])) is False
 
     def test_similarity_not_congruence(self):
         # Uniform scaling is similarity but not congruence

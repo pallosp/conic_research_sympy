@@ -9,18 +9,19 @@ def is_homography(
     *,
     simplifier: Callable[[Expr], Expr] = simplify,
 ) -> bool | None:
-    """Tells whether a transformation matrix is a homography.
+    """Checks whether a transformation matrix represents a homography.
 
-    Takes an optional `simplifier` callback that simplifies the determinant
-    before it gets compared to zero. Returns `None` if the result is
-    undecidable.
+    A homography (projective transformation) matrix is a non-singular 3×3
+    matrix, up to scale.
+
+    The optional `simplifier` is applied to the determinant before comparing it
+    to zero. If the determinant cannot be decided to be zero or non-zero after
+    simplification, the function returns `None`.
     """
-    return fuzzy_and(
-        [
-            transformation.shape == (3, 3),
-            simplifier(transformation.det()).is_nonzero,
-        ],
-    )
+    if transformation.shape != (3, 3):
+        return False
+
+    return simplifier(transformation.det()).is_nonzero
 
 
 def is_affine_transform(
@@ -28,12 +29,20 @@ def is_affine_transform(
     *,
     simplifier: Callable[[Expr], Expr] = simplify,
 ) -> bool | None:
-    """Tells whether a transformation matrix is an affine transformation.
+    """Checks whether a matrix represents an affine transformation.
 
-    Takes an optional `simplifier` callback that simplifies the affinity
-    checking polynomials before they get compared to zero. Returns `None` if
-    undecidable.
+    An affine transformation is represented (up to scale) by a non-singular 3×3
+    matrix whose last row is proportional to (0, 0, 1). Geometrically, affine
+    transformations preserve parallelism and ratios of distances along a line,
+    but not necessarily angles or lengths.
+
+    The optional `simplifier` is applied to the affinity checking polynomials
+    before comparing them to zero. If the polynomials cannot be decided to be
+    zero or non-zero after simplification, the function returns `None`.
     """
+    if transformation.shape != (3, 3):
+        return False
+
     row2 = transformation.row(2)
     return fuzzy_and(
         [
@@ -50,11 +59,11 @@ def is_similarity(
     *,
     simplifier: Callable[[Expr], Expr] = simplify,
 ) -> bool | None:
-    """Tells whether a transformation matrix is a similarity transformation.
+    """Checks whether a matrix represents a similarity transformation.
 
-    Takes an optional `simplifier` callback that simplifies the similarity
-    checking polynomials before they get compared to zero. Returns `None` if the
-    result is undecidable.
+    The optional `simplifier` is applied to the similarity checking polynomials
+    before comparing them to zero. If the polynomials cannot be decided to be
+    zero or non-zero after simplification, the function returns `None`.
     """
     if transformation.shape != (3, 3):
         return False
@@ -76,11 +85,11 @@ def is_congruence(
     *,
     simplifier: Callable[[Expr], Expr] = simplify,
 ) -> bool | None:
-    """Tells whether a transformation matrix is a congruence transformation.
+    """Checks whether a matrix represents a congruence transformation.
 
-    Takes an optional `simplifier` callback that simplifies the congruence
-    checking polynomials before they get compared to zero. Returns `None` if the
-    result is undecidable.
+    The optional `simplifier` is applied to the congruence checking polynomials
+    before comparing them to zero. If the polynomials cannot be decided to be
+    zero or non-zero after simplification, the function returns `None`.
     """
     if transformation.shape != (3, 3):
         return False
