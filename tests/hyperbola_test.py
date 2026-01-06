@@ -3,7 +3,8 @@ from sympy import I, Matrix, Rational, acos, nan, pi, sqrt, symbols
 from sympy.abc import x, y
 
 from lib.circle import circle
-from lib.conic import conic_from_poly, projective_conic_center
+from lib.conic import IdealPoints, conic_from_poly, projective_conic_center
+from lib.conic_classes import UNIT_HYPERBOLA
 from lib.conic_direction import focal_axis_direction
 from lib.degenerate_conic import line_pair_conic, point_conic
 from lib.ellipse import ellipse
@@ -13,9 +14,10 @@ from lib.hyperbola import (
     hyperbola_from_foci_and_point,
 )
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, horizontal_line, line_through_point
-from lib.matrix import is_nonzero_multiple
+from lib.matrix import is_nonzero_multiple, quadratic_form
 from lib.point import ORIGIN
 from lib.transform import rotate, transform_line, transform_point
+from tests.utils import are_projective_sets_equal
 
 
 class TestHyperbolaFromFociAndPoint:
@@ -121,3 +123,18 @@ class TestAsymptoteConic:
         hyperbola = conic_from_poly(1 - x * y)
         asymptotes = asymptote_conic(hyperbola)
         assert asymptotes == line_pair_conic(X_AXIS, Y_AXIS)
+
+
+class TestUnitHyperbola:
+    def test_formula(self):
+        assert conic_from_poly(x * x - y * y - 1) == UNIT_HYPERBOLA
+
+    def test_ideal_points(self):
+        ideal_points = [Matrix([1, 1, 0]), Matrix([1, -1, 0])]
+        assert are_projective_sets_equal(IdealPoints(UNIT_HYPERBOLA), ideal_points)
+
+    def test_contains_foci(self):
+        focus1 = Matrix([sqrt(2), 0, 1])
+        focus2 = Matrix([-sqrt(2), 0, 1])
+        assert quadratic_form(UNIT_HYPERBOLA, focus1) > 0
+        assert quadratic_form(UNIT_HYPERBOLA, focus2) > 0
