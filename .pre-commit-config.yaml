@@ -15,25 +15,25 @@ repos:
 
   - repo: local
     hooks:
-      - id: verify-docstring-refs
+      - id: check_docstring_refs
         name: Verify docstring references
-        entry: poetry run python3 scripts/verify_docstring_refs.py
+        entry: poetry run python3 scripts/check_docstring_refs.py
         language: system
         pass_filenames: false
 
   - repo: local
     hooks:
-      - id: check-docs
+      - id: check_docs_freshness
         name: Ensure docs/api.md is up to date
-        entry: poetry run scripts/check-docs.sh
+        entry: poetry run scripts/check_docs_freshness.sh
         additional_dependencies: []
         language: system
         pass_filenames: false
 
   - repo: local
     hooks:
-      - id: link-check
-        name: Check local links in Markdown
+      - id: check_links
+        name: Check dead links in Markdown
         entry: poetry run md-dead-link-check --all
         language: system
         files: \.md$
