@@ -70,11 +70,13 @@
   * [is\_circle](#conic_classes.is_circle)
   * [is\_parabola](#conic_classes.is_parabola)
   * [is\_hyperbola](#conic_classes.is_hyperbola)
+  * [is\_rectangular\_hyperbola](#conic_classes.is_rectangular_hyperbola)
   * [is\_circular](#conic_classes.is_circular)
   * [is\_line\_pair](#conic_classes.is_line_pair)
   * [is\_double\_line](#conic_classes.is_double_line)
   * [is\_point\_conic](#conic_classes.is_point_conic)
   * [is\_finite\_point\_conic](#conic_classes.is_finite_point_conic)
+  * [UNIT\_HYPERBOLA](#conic_classes.UNIT_HYPERBOLA)
 * [distance](#distance)
   * [point\_point\_distance](#distance.point_point_distance)
   * [point\_line\_distance](#distance.point_line_distance)
@@ -1318,6 +1320,25 @@ Tells whether the conic is a hyperbola.
 
 Returns `None` if undecidable.
 
+<a id="conic_classes.is_rectangular_hyperbola"></a>
+
+#### is\_rectangular\_hyperbola
+
+```python
+def is_rectangular_hyperbola(conic: Matrix) -> bool | None
+```
+
+([source](../src/lib/conic_classes.py#L130))
+
+Tells whether the conic is a rectangular hyperbola.
+
+It's also called equilateral hyperbola or right hyperbola.
+
+*Definition and properties*:
+<https://mathworld.wolfram.com/RectangularHyperbola.html>
+
+Returns `None` if undecidable.
+
 <a id="conic_classes.is_circular"></a>
 
 #### is\_circular
@@ -1326,7 +1347,7 @@ Returns `None` if undecidable.
 def is_circular(conic: Matrix) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L130))
+([source](../src/lib/conic_classes.py#L144))
 
 Tells whether there is a single center point around which the conic is
 invariant under all rotations.
@@ -1342,7 +1363,7 @@ Double ideal lines are not considered circular. Returns `None` if undecidable.
 def is_line_pair(conic: Matrix) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L146))
+([source](../src/lib/conic_classes.py#L160))
 
 Tells whether the conic is the union of two projective lines.
 
@@ -1356,7 +1377,7 @@ Returns `None` if undecidable.
 def is_double_line(conic: Matrix) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L165))
+([source](../src/lib/conic_classes.py#L179))
 
 Tells whether the conic consists of two coincident projective lines.
 
@@ -1370,7 +1391,7 @@ Returns `None` if undecidable.
 def is_point_conic(conic: Matrix) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L182))
+([source](../src/lib/conic_classes.py#L196))
 
 Tells whether the conic consists of a single projective point.
 
@@ -1387,11 +1408,18 @@ complex coordinates.
 def is_finite_point_conic(conic: Matrix) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L207))
+([source](../src/lib/conic_classes.py#L221))
 
 Tells whether the conic consists of a single finite (Euclidean) point.
 
 Returns `None` if undecidable.
+
+<a id="conic_classes.UNIT_HYPERBOLA"></a>
+
+#### UNIT\_HYPERBOLA
+
+The x² - y² = 1 hyperbola.
+https://en.wikipedia.org/wiki/Unit_hyperbola
 
 <a id="distance"></a>
 

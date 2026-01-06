@@ -127,6 +127,20 @@ def is_hyperbola(conic: Matrix) -> bool | None:
     return fuzzy_and([is_nondegenerate(conic), conic[:2, :2].det().is_negative])
 
 
+def is_rectangular_hyperbola(conic: Matrix) -> bool | None:
+    """Tells whether the conic is a rectangular hyperbola.
+
+    It's also called equilateral hyperbola or right hyperbola.
+
+    *Definition and properties*:
+    <https://mathworld.wolfram.com/RectangularHyperbola.html>
+
+    Returns `None` if undecidable.
+    """
+    a, c, _ = conic.diagonal()
+    return fuzzy_and([is_nondegenerate(conic), (a + c).is_zero])
+
+
 def is_circular(conic: Matrix) -> bool | None:
     """Tells whether there is a single center point around which the conic is
     invariant under all rotations.
@@ -210,3 +224,8 @@ def is_finite_point_conic(conic: Matrix) -> bool | None:
     Returns `None` if undecidable.
     """
     return fuzzy_and([is_degenerate(conic), is_finite_conic(conic)])
+
+
+#: The x² - y² = 1 hyperbola.
+#: https://en.wikipedia.org/wiki/Unit_hyperbola
+UNIT_HYPERBOLA: Matrix = Matrix.diag([1, -1, -1])

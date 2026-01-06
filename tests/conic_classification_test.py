@@ -1,9 +1,10 @@
-from sympy import I, Matrix, Rational, pi, symbols
+from sympy import I, Matrix, Rational, pi, sqrt, symbols
 from sympy.abc import x, y
 
 from lib.circle import IMAGINARY_UNIT_CIRCLE, UNIT_CIRCLE, circle
 from lib.conic import conic_from_focus_and_directrix, conic_from_poly
 from lib.conic_classes import (
+    UNIT_HYPERBOLA,
     is_central_conic,
     is_circle,
     is_circular,
@@ -18,6 +19,7 @@ from lib.conic_classes import (
     is_nondegenerate,
     is_parabola,
     is_point_conic,
+    is_rectangular_hyperbola,
 )
 from lib.conic_direction import focal_axis_direction
 from lib.degenerate_conic import line_pair_conic, point_conic
@@ -512,3 +514,30 @@ class TestIsFinitePointConic:
 
     def test_undecidable(self):
         assert is_finite_point_conic(conic_matrix(*symbols("a,b,c,d,e,f"))) is None
+
+
+class TestIsRectangularHyperbola:
+    def test_unit_hyperbola(self):
+        assert is_rectangular_hyperbola(UNIT_HYPERBOLA) is True
+
+    def test_reciprocal_hyperbola(self):
+        assert is_rectangular_hyperbola(conic_from_poly(x * y - 1)) is True
+
+    def test_unit_circle(self):
+        assert is_rectangular_hyperbola(UNIT_CIRCLE) is False
+        assert is_rectangular_hyperbola(IMAGINARY_UNIT_CIRCLE) is False
+
+    def test_eccentricity_sqrt_2(self):
+        directrix = Matrix(symbols("a b c", positive=True))
+        hyperbola = conic_from_focus_and_directrix(
+            ORIGIN, directrix, eccentricity=sqrt(2)
+        )
+        assert is_rectangular_hyperbola(hyperbola) is True
+
+    def test_axes_line_pair(self):
+        line_pair = line_pair_conic(X_AXIS, Y_AXIS)
+        assert is_rectangular_hyperbola(line_pair) is False
+
+    def test_undecidable(self):
+        conic = conic_matrix(*symbols("a,b,c,d,e,f"))
+        assert is_rectangular_hyperbola(conic) is None
