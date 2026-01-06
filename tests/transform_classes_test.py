@@ -1,10 +1,13 @@
-from sympy import Matrix, expand, simplify, symbols
+from sympy import Matrix, expand, pi, simplify, symbols
 
-from lib.transform import reflect_to_line, rotate, scale, translate
+from lib.circle import UNIT_CIRCLE
+from lib.conic_classes import UNIT_HYPERBOLA
+from lib.transform import reflect_to_line, rotate, scale, transform_conic, translate
 from lib.transform_classes import (
     is_affine_transform,
     is_congruence,
     is_homography,
+    is_involution,
     is_similarity,
 )
 
@@ -177,3 +180,50 @@ class TestIsCongruence:
         # A reflection combined with a rotation, should still be a congruence
         t = rotate(symbols("theta")) * Matrix([[-1, 0, 0], [0, 1, 0], [0, 0, 1]])
         assert is_congruence(t) is True
+
+
+class TestIsInvolution:
+    def test_reflection_to_point(self):
+        # Reflection to a point is rotation by 180 degrees
+        center = symbols("x y")
+        t = rotate(pi, center)
+        assert is_involution(t) is True
+
+    def test_reflection_to_line(self):
+        line = Matrix(symbols("a b c"))
+        t = reflect_to_line(line)
+        assert is_involution(t) is True
+
+    def test_rotation_90(self):
+        t = rotate(pi / 2)
+        assert is_involution(t) is False
+
+    def test_scaling(self):
+        t = scale(2)
+        assert is_involution(t) is False
+
+    def test_transformation_matrix_multiplied_by_scalar(self):
+        t = rotate(pi)
+        assert is_involution(t * -3) is True
+        assert is_involution(t * symbols("k", nonzero=True)) is True
+
+    def test_zero_matrix(self):
+        t = Matrix.zeros(3, 3)
+        assert is_involution(t) is False
+
+    def test_identity_matrix(self):
+        t = Matrix.eye(3)
+        assert is_involution(t) is True
+
+    def test_unit_circle_to_unit_hyperbola(self):
+        t = Matrix([[0, 0, 1], [0, 1, 0], [1, 0, 0]])
+        assert transform_conic(UNIT_CIRCLE, t) == UNIT_HYPERBOLA
+        assert transform_conic(UNIT_HYPERBOLA, t) == UNIT_CIRCLE
+        assert is_involution(t) is True
+
+    def test_non_3x3_matrix(self):
+        assert is_involution(Matrix([[1, 2], [3, 4]])) is False
+
+    def test_undecidable(self):
+        t = translate(symbols("dx dy"))
+        assert is_involution(t) is None

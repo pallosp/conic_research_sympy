@@ -146,6 +146,7 @@
   * [is\_affine\_transform](#transform_classes.is_affine_transform)
   * [is\_similarity](#transform_classes.is_similarity)
   * [is\_congruence](#transform_classes.is_congruence)
+  * [is\_involution](#transform_classes.is_involution)
 
 <a id="matrix"></a>
 
@@ -2484,4 +2485,23 @@ Checks whether a matrix represents a congruence transformation.
 The optional `simplifier` is applied to the congruence checking polynomials
 before comparing them to zero. If the polynomials cannot be decided to be
 zero or non-zero after simplification, the function returns `None`.
+
+<a id="transform_classes.is_involution"></a>
+
+#### is\_involution
+
+```python
+def is_involution(
+        transformation: Matrix,
+        *,
+        simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
+```
+
+([source](../src/lib/transform_classes.py#L107))
+
+Checks whether applying the transformation twice is the identity.
+
+The optional `simplifier` is applied to the matrix elements before
+comparing them to zero. If they cannot be decided to be zero or non-zero
+after simplification, the function returns `None`.
 

@@ -102,3 +102,22 @@ def is_congruence(
             simplifier(a * a + b * b - i * i).is_zero,
         ],
     )
+
+
+def is_involution(
+    transformation: Matrix,
+    *,
+    simplifier: Callable[[Expr], Expr] = simplify,
+) -> bool | None:
+    """Checks whether applying the transformation twice is the identity.
+
+    The optional `simplifier` is applied to the matrix elements before
+    comparing them to zero. If they cannot be decided to be zero or non-zero
+    after simplification, the function returns `None`.
+    """
+    if transformation.shape != (3, 3):
+        return False
+
+    double_transformation = simplifier(transformation * transformation)
+    double_transformation /= double_transformation[0, 0]
+    return (double_transformation - Matrix.eye(3)).is_zero_matrix
