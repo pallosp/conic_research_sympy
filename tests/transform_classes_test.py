@@ -53,7 +53,7 @@ class TestIsAffineTransform:
         assert is_affine_transform(t) is True
 
     def test_rotate(self):
-        t = rotate(symbols("a"), symbols("x"), symbols("y"))
+        t = rotate(symbols("theta"), symbols("x y"))
         assert is_affine_transform(t) is True
 
     def test_scalar_multiple_of_affinity_matrix(self):
@@ -116,8 +116,7 @@ class TestIsSimilarity:
         assert is_similarity(t) is None
 
     def test_symbolic_rotation(self):
-        theta, x, y = symbols("theta x y")
-        t = rotate(theta, x, y)
+        t = rotate(symbols("theta"), symbols("x y"))
         assert is_similarity(t) is True
 
     def test_reflection(self):
@@ -165,8 +164,7 @@ class TestIsCongruence:
         assert is_congruence(t) is True
 
     def test_symbolic_congruence(self):
-        theta, x, y = symbols("theta x y")
-        t = rotate(theta, x, y)
+        t = rotate(symbols("theta"), symbols("x y"))
         assert is_congruence(t) is True
 
     def test_simplifier(self):

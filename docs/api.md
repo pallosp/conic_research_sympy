@@ -1797,7 +1797,8 @@ Computes the transformation matrix for a 2D translation.
 #### rotate
 
 ```python
-def rotate(angle: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix
+def rotate(angle_radians: Expr,
+           around: Matrix | Sequence[Expr] = ORIGIN) -> Matrix
 ```
 
 ([source](../src/lib/transform.py#L41))
@@ -1812,7 +1813,7 @@ Computes the transformation matrix for a rotation around a point.
 def reflect_to_line(axis: Matrix) -> Matrix
 ```
 
-([source](../src/lib/transform.py#L54))
+([source](../src/lib/transform.py#L56))
 
 Computes the transformation matrix for a reflection to a line.
 
@@ -1832,7 +1833,7 @@ def scale_xy(scale_x: Expr,
              y0: Expr = 0) -> Matrix
 ```
 
-([source](../src/lib/transform.py#L72))
+([source](../src/lib/transform.py#L74))
 
 Computes the projective transformation matrix for scaling along the x-
 and y-axes.
@@ -1845,7 +1846,7 @@ and y-axes.
 def scale(scale: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix
 ```
 
-([source](../src/lib/transform.py#L85))
+([source](../src/lib/transform.py#L87))
 
 Computes the projective transformation matrix for a uniform scaling
 transformation.
@@ -1860,7 +1861,7 @@ def homography_from_samples(
         target_points: Sequence[Matrix | Sequence[Expr]]) -> Matrix
 ```
 
-([source](../src/lib/transform.py#L92))
+([source](../src/lib/transform.py#L94))
 
 Computes the transformation that maps one quadrilateral to another.
 

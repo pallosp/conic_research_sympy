@@ -44,17 +44,18 @@ class TestTranslate:
 
 class TestRotate:
     def test_rotate_circle_around_center(self):
-        center = symbols("x,y")
-        r, theta = symbols("r,theta")
+        center = symbols("x y")
+        r, angle = symbols("r theta")
         orig_circle = circle(center, r)
-        rotation = rotate(theta, *center)
+        rotation = rotate(angle, center)
         rotated_circle = transform_conic(orig_circle, rotation)
         assert orig_circle == simplify(rotated_circle)
 
     def test_rotation_around_point(self):
-        x0, y0, theta = symbols("x0,y0,theta")
-        rotation = rotate(theta, x0, y0)
-        rotation_sequence = translate((x0, y0)) * rotate(theta) * translate((-x0, -y0))
+        angle = symbols("theta")
+        center = Matrix(symbols("x y"))
+        rotation = rotate(angle, center)
+        rotation_sequence = translate(center) * rotate(angle) * translate(-center)
         assert simplify(rotation) == simplify(rotation_sequence)
 
 

@@ -2,7 +2,7 @@ from collections.abc import Sequence
 
 from sympy import Expr, Matrix, cos, sin
 
-from lib.point import point_to_vec3
+from lib.point import ORIGIN, point_to_vec3, point_to_xy
 
 
 def transform_point(
@@ -38,10 +38,12 @@ def translate(by: Matrix | Sequence[Expr]) -> Matrix:
     return Matrix([[1, 0, dx], [0, 1, dy], [0, 0, 1]])
 
 
-def rotate(angle: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix:
+def rotate(angle_radians: Expr, around: Matrix | Sequence[Expr] = ORIGIN) -> Matrix:
     """Computes the transformation matrix for a rotation around a point."""
-    cos_angle = cos(angle)
-    sin_angle = sin(angle)
+    x0, y0 = point_to_xy(around)
+    cos_angle = cos(angle_radians)
+    sin_angle = sin(angle_radians)
+
     return Matrix(
         [
             [cos_angle, -sin_angle, x0 * (1 - cos_angle) + y0 * sin_angle],
