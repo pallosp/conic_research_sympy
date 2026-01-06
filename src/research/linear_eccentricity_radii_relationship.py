@@ -3,7 +3,7 @@
 from sympy import Abs, Eq, pprint, symbols
 
 from lib.central_conic import linear_eccentricity, primary_radius, secondary_radius
-from lib.conic_classes import ConicNormFactor
+from lib.conic_direction import ConicNormFactor
 from lib.matrix import conic_matrix
 
 conic = conic_matrix(*symbols("a b c d e f", real=True))

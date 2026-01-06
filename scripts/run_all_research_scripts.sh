@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/../src/research"
 
 for script in *.py; do
   [ "$script" = "__init__.py" ] && continue
