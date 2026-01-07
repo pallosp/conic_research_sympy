@@ -2,7 +2,19 @@ from sympy import Matrix, pi
 
 from lib.circle import UNIT_CIRCLE
 from lib.incidence import conic_contains_point
-from lib.polar_conic import POLAR_UNIT_CIRCLE, conic_from_polar_matrix, point_at_angle
+from lib.polar_conic import (
+    POLAR_UNIT_CIRCLE,
+    angle_at_point,
+    conic_from_polar_matrix,
+    point_at_angle,
+)
+
+
+class TestAngleAtPoint:
+    polar = Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 0]])
+    for angle in [0, pi / 4, pi / 2, pi, -pi / 2]:
+        point = point_at_angle(polar, angle)
+        assert angle == angle_at_point(polar, point)
 
 
 class TestConicFromPolarMatrix:

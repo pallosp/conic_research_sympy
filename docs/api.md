@@ -113,6 +113,7 @@
 * [polar\_conic](#polar_conic)
   * [POLAR\_UNIT\_CIRCLE](#polar_conic.POLAR_UNIT_CIRCLE)
   * [point\_at\_angle](#polar_conic.point_at_angle)
+  * [angle\_at\_point](#polar_conic.angle_at_point)
   * [conic\_from\_polar\_matrix](#polar_conic.conic_from_polar_matrix)
 * [incidence](#incidence)
   * [line\_contains\_point](#incidence.line_contains_point)
@@ -1941,10 +1942,24 @@ The circle at the origin with radius 1, in polar matrix form.
 def point_at_angle(polar: Matrix, theta: Expr) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L22))
+([source](../src/lib/polar_conic.py#L25))
 
 Computes the coordinates of the projective point on a polar conic
 corresponding to a certain angle.
+
+<a id="polar_conic.angle_at_point"></a>
+
+#### angle\_at\_point
+
+```python
+def angle_at_point(polar: Matrix, point: Matrix | Sequence[Expr]) -> Expr
+```
+
+([source](../src/lib/polar_conic.py#L32))
+
+Computes the polar angle corresponding to a point on a polar conic.
+
+The result is unspecified if the point is not on the conic.
 
 <a id="polar_conic.conic_from_polar_matrix"></a>
 
@@ -1954,7 +1969,7 @@ corresponding to a certain angle.
 def conic_from_polar_matrix(polar: Matrix) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L29))
+([source](../src/lib/polar_conic.py#L42))
 
 Transforms a conic from polar to quadratic form.
 
