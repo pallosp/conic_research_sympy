@@ -4,7 +4,7 @@ from lib.central_conic import conic_center
 from lib.circle import circle
 from lib.line import IDEAL_LINE, X_AXIS, horizontal_line, line_between
 from lib.matrix import conic_matrix, is_nonzero_multiple
-from lib.polar_conic import conic_from_polar_matrix
+from lib.polar_conic import conic_from_polar_matrix, point_at_angle
 from lib.transform import (
     homography_from_samples,
     reflect_to_line,
@@ -84,16 +84,6 @@ class TestScale:
         scaling_sequence = translate(origin) * scale_xy(sx, sy) * translate(-origin)
         assert simplify(scaling) == simplify(scaling_sequence)
 
-    def test_scale_polar_conic(self):
-        polar = Matrix(3, 3, symbols("a b c d e f g h i"))
-        cartesian = conic_from_polar_matrix(polar)
-
-        scaling = scale_xy(2, 3, 4, 5)
-        scaled_polar = transform_polar_conic(polar, scaling)
-        scaled_cartesian = transform_conic(cartesian, scaling)
-
-        assert expand(conic_from_polar_matrix(scaled_polar)) == expand(scaled_cartesian)
-
 
 class TestTransformPoint:
     def test_translate(self):
@@ -109,6 +99,29 @@ class TestTransformLine:
     def test_translate_line(self):
         translated = transform_line(X_AXIS, translate((1, 2)))
         assert translated == horizontal_line(2)
+
+
+class TestTransformPolarConic:
+    def test_symbolic_transformation(self):
+        polar = Matrix(3, 3, symbols("a b c d e f g h i"))
+        transformation = Matrix(3, 3, symbols("A B C D E F G H I"))
+        transformed_polar = transform_polar_conic(polar, transformation)
+        phi = symbols("phi")
+
+        expected_point = transform_point(point_at_angle(polar, phi), transformation)
+        actual_point = point_at_angle(transformed_polar, phi)
+
+        assert expand(expected_point) == expand(actual_point)
+
+    def test_scaled_polar_conic_shape(self):
+        polar = Matrix(3, 3, symbols("a b c d e f g h i"))
+        cartesian = conic_from_polar_matrix(polar)
+
+        scaling = scale_xy(2, 3, 4, 5)
+        scaled_polar = transform_polar_conic(polar, scaling)
+        scaled_cartesian = transform_conic(cartesian, scaling)
+
+        assert expand(conic_from_polar_matrix(scaled_polar)) == expand(scaled_cartesian)
 
 
 class TestHomographyFromSamples:
