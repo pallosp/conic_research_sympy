@@ -3,8 +3,7 @@
 from sympy import Ge, MatMul, factor, gcd, symbols
 
 from lib.matrix import conic_matrix
-from lib.sympy_utils import eq_chain
-from research.util import println_indented
+from research.sympy_utils import eq_chain, println_indented
 
 HORIZONTAL_LINE = "-" * 80
 

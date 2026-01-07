@@ -8,7 +8,7 @@ from sympy import Determinant, Expr, I, Matrix, S, factor, sqrt, symbols
 
 from lib.incidence import are_on_same_conic
 from lib.point import point_to_xy
-from research.util import println_indented
+from research.sympy_utils import println_indented
 
 
 def richter_gebert_poly(p1: Matrix, p2: Matrix, p3: Matrix, p4: Matrix) -> Expr:

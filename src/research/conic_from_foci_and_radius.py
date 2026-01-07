@@ -4,8 +4,7 @@ from sympy import Abs, Eq, Expr, Matrix, symbols
 
 from lib.conic import conic_from_poly
 from lib.distance import point_point_distance
-from lib.sympy_utils import mul_eq, sub_eq
-from research.util import println_indented
+from research.sympy_utils import mul_eq, println_indented, sub_eq
 
 cx, cy = symbols("cx cy", real=True)  # center
 focus = symbols("fx fy")

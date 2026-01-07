@@ -81,13 +81,6 @@
   * [point\_point\_distance](#distance.point_point_distance)
   * [point\_line\_distance](#distance.point_line_distance)
   * [parallel\_line\_distance](#distance.parallel_line_distance)
-* [sympy\_utils](#sympy_utils)
-  * [add\_eq](#sympy_utils.add_eq)
-  * [sub\_eq](#sympy_utils.sub_eq)
-  * [mul\_eq](#sympy_utils.mul_eq)
-  * [div\_eq](#sympy_utils.div_eq)
-  * [swap\_eq](#sympy_utils.swap_eq)
-  * [eq\_chain](#sympy_utils.eq_chain)
 * [point](#point)
   * [ORIGIN](#point.ORIGIN)
   * [ideal\_point](#point.ideal_point)
@@ -1480,82 +1473,6 @@ Special cases:
 - Raises a `ValueError` if the lines are provably not parallel.
 - Returns an unspecified value if the lines cross at a finite point, but
   Sympy cannot prove this fact.
-
-<a id="sympy_utils"></a>
-
-# sympy\_utils
-
-<a id="sympy_utils.add_eq"></a>
-
-#### add\_eq
-
-```python
-def add_eq(*eqs: Eq) -> Eq
-```
-
-([source](../src/lib/sympy_utils.py#L4))
-
-Adds multiple sympy equations.
-
-<a id="sympy_utils.sub_eq"></a>
-
-#### sub\_eq
-
-```python
-def sub_eq(eq0: Eq, eq1: Expr | Eq) -> Eq
-```
-
-([source](../src/lib/sympy_utils.py#L14))
-
-Subtracts a sympy equation or expression from another equation.
-
-<a id="sympy_utils.mul_eq"></a>
-
-#### mul\_eq
-
-```python
-def mul_eq(eq: Eq, factor: Expr | Eq) -> Eq
-```
-
-([source](../src/lib/sympy_utils.py#L21))
-
-Multiplies a sympy equation by a factor or another equation.
-
-<a id="sympy_utils.div_eq"></a>
-
-#### div\_eq
-
-```python
-def div_eq(eq: Eq, denom: Expr) -> Eq
-```
-
-([source](../src/lib/sympy_utils.py#L28))
-
-Divides a sympy equation by a denominator.
-
-<a id="sympy_utils.swap_eq"></a>
-
-#### swap\_eq
-
-```python
-def swap_eq(eq: Eq) -> Eq
-```
-
-([source](../src/lib/sympy_utils.py#L33))
-
-Swaps the lhs and rhs of a sympy equation.
-
-<a id="sympy_utils.eq_chain"></a>
-
-#### eq\_chain
-
-```python
-def eq_chain(*expressions: Expr) -> Eq | Expr
-```
-
-([source](../src/lib/sympy_utils.py#L38))
-
-Creates a chain of equations, i.e. `expr_1 = expr_2 = ... = expr_n`.
 
 <a id="point"></a>
 

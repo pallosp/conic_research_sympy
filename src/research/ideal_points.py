@@ -9,9 +9,8 @@ from lib.hyperbola import asymptote_focal_axis_angle
 from lib.intersection import conic_x_line
 from lib.line import IDEAL_LINE
 from lib.matrix import conic_matrix, is_nonzero_multiple
-from lib.sympy_utils import eq_chain
 from lib.transform import rotate, transform_point
-from research.util import println_indented
+from research.sympy_utils import eq_chain, println_indented
 
 print("\nIdeal points on a conic:\n")
 

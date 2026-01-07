@@ -1,4 +1,6 @@
-from sympy import Eq, Expr
+from textwrap import indent as indent_multiline
+
+from sympy import Eq, Expr, Pow, pretty
 
 
 def add_eq(*eqs: Eq) -> Eq:
@@ -42,3 +44,16 @@ def eq_chain(*expressions: Expr) -> Eq | Expr:
     if len(expressions) == 1:
         return expressions[0]
     return Eq(eq_chain(*expressions[0:-1]), expressions[-1], evaluate=False)
+
+
+def factor_radicals(expr: Expr) -> Expr:
+    """Factors all `Pow` and `sqrt` subexpressions inside `expr`."""
+    return expr.replace(Pow, lambda base, exp: Pow(base.factor(), exp))
+
+
+def print_indented(expr: Expr, *, indent: int = 2) -> None:
+    print(indent_multiline(pretty(expr), " " * indent))
+
+
+def println_indented(expr: Expr, *, indent: int = 2) -> None:
+    print(indent_multiline(pretty(expr), " " * indent) + "\n")

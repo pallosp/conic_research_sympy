@@ -35,7 +35,7 @@ from sympy import Matrix, symbols
 
 from lib.conic import pole_point
 from lib.matrix import conic_matrix, quadratic_form, skew_matrix
-from research.util import print_indented, println_indented
+from research.sympy_utils import print_indented, println_indented
 
 conic = conic_matrix(*symbols("a,b,c,d,e,f"))
 line = Matrix(symbols("x,y,z"))

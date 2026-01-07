@@ -6,7 +6,7 @@ from itertools import chain, combinations
 from sympy import Determinant, Expr, MatMul, Matrix, S, factor, gcd, pi, symbols
 
 from lib.transform import homography_from_samples, rotate, scale
-from research.util import print_indented
+from research.sympy_utils import print_indented
 
 """Calculates the transformation that maps (xᵢ,yᵢ) to (uᵢ,vᵢ) for i=0..3.
 

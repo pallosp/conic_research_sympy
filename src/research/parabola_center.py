@@ -4,8 +4,7 @@ from sympy import MatMul, symbols
 
 from lib.conic import projective_conic_center
 from lib.matrix import conic_matrix, quadratic_form
-from lib.sympy_utils import eq_chain
-from research.util import println_indented
+from research.sympy_utils import eq_chain, println_indented
 
 print("\nLemma: parabola's projective center = parabola's ideal point\n")
 

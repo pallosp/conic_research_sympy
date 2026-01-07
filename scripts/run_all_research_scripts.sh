@@ -5,7 +5,7 @@ cd "$(dirname "$0")/../src/research"
 
 for script in *.py; do
   [ "$script" = "__init__.py" ] && continue
-  [ "$script" = "util.py" ] && continue
+  [ "$script" = "sympy_utils.py" ] && continue
 
   echo
   printf "\033[1mRunning $script...\033[0m"

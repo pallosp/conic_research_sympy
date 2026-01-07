@@ -5,7 +5,7 @@ from collections.abc import Callable
 from sympy import Expr, Matrix, factor, gcd, pi, symbols
 
 from lib.polar_conic import point_at_angle
-from research.util import println_indented
+from research.sympy_utils import println_indented
 
 a, b, c, d, e, f, g, h, i, alpha, beta = symbols("a,b,c,d,e,f,g,h,i,alpha,beta")
 polar_matrix = Matrix([[a, b, c], [d, e, f], [g, h, i]])

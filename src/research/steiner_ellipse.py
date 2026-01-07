@@ -11,7 +11,7 @@ from sympy import Determinant, Eq, Expr, Matrix, symbols
 from lib.central_conic import conic_center
 from lib.incidence import conic_contains_point
 from lib.transform import transform_conic, translate
-from research.util import println_indented
+from research.sympy_utils import println_indented
 
 # Simplification WLOG: let the center point be at (0, 0).
 #

@@ -5,7 +5,7 @@ from sympy import sqrt, symbols
 from lib.distance import point_line_distance
 from lib.matrix import conic_matrix
 from lib.parabola import parabola_directrix, parabola_focus
-from research.util import println_indented
+from research.sympy_utils import println_indented
 
 print("\nParabola focal parameter (focus-directrix distance):\n")
 

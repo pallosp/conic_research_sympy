@@ -2,8 +2,7 @@
 
 from sympy import Eq, Limit, cos, oo, solve, symbols
 
-from lib.sympy_utils import eq_chain
-from research.util import println_indented
+from research.sympy_utils import eq_chain, println_indented
 
 print("\nAngle between the focal axis and an asymptote of a hyperbola\n")
 

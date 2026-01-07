@@ -6,7 +6,7 @@ from lib.central_conic import conic_from_foci_and_radius
 from lib.distance import point_point_distance
 from lib.ellipse import ellipse
 from lib.point import centroid
-from research.util import println_indented
+from research.sympy_utils import println_indented
 
 print("\nEllipse from its focus points and an incident point:\n")
 

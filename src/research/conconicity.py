@@ -8,7 +8,7 @@ from collections.abc import Sequence
 from sympy import Determinant, Expr, Matrix, symbols
 
 from lib.point import point_to_vec3
-from research.util import println_indented
+from research.sympy_utils import println_indented
 
 
 def richter_gebert_poly(six_points: Matrix) -> Expr:
