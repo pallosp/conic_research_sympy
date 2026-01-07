@@ -47,7 +47,11 @@ def eq_chain(*expressions: Expr) -> Eq | Expr:
 
 
 def factor_radicals(expr: Expr) -> Expr:
-    """Factors all `Pow` and `sqrt` subexpressions inside `expr`."""
+    """Factors all `Pow` and `sqrt` subexpressions inside `expr`.
+
+    Note that there is a simpler alternative that factors all subexpressions:
+    `expr.factor(deep=True)`
+    """
     return expr.replace(Pow, lambda base, exp: Pow(base.factor(), exp))
 
 
