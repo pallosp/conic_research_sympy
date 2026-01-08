@@ -136,7 +136,7 @@ def are_cocircular(
     determinant before it gets compared to zero. Returns `None` if undecidable.
 
     *Formula*: [Measuring cocircularity in a point set](
-    https://egc23.web.uah.es/wp-content/uploads/2023/06/EGC23_paper_20.pdf)<br>
+    https://upcommons.upc.edu/entities/publication/2001f976-4a50-4415-a706-79bbb2ca40bc)<br>
     *Own research*:
     [research/cocircularity.py](../src/research/cocircularity.py)
     """

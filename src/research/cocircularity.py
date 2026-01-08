@@ -38,7 +38,7 @@ def cocircularity_matrix(p1: Matrix, p2: Matrix, p3: Matrix, p4: Matrix) -> Expr
     July 3-5, 2023
     Measuring cocircularity in a point set
 
-    https://egc23.web.uah.es/wp-content/uploads/2023/06/EGC23_paper_20.pdf
+    https://upcommons.upc.edu/entities/publication/2001f976-4a50-4415-a706-79bbb2ca40bc
     """
     x1, y1 = point_to_xy(p1)
     x2, y2 = point_to_xy(p2)
