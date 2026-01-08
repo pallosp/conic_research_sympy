@@ -14,6 +14,7 @@ from lib.incidence import (
     conic_contains_line,
     conic_contains_point,
     line_contains_point,
+    polar_conic_contains_point,
 )
 from lib.line import (
     IDEAL_LINE,
@@ -22,6 +23,8 @@ from lib.line import (
     horizontal_line,
     line_through_point,
 )
+from lib.polar_conic import POLAR_UNIT_CIRCLE
+from lib.transform import scale, transform_polar_conic, translate
 
 
 class TestConicContainsPoint:
@@ -37,6 +40,19 @@ class TestConicContainsPoint:
         assert conic_contains_point(conic, (x, y)) is None
         assert conic_contains_point(conic, (x, 0, 0)) is True
         assert conic_contains_point(conic, (x, -x)) is False
+
+
+class TestPolarConicContainsPoint:
+    def test_circle(self):
+        circle = transform_polar_conic(POLAR_UNIT_CIRCLE, translate((1, 2)) * scale(3))
+        assert polar_conic_contains_point(circle, (1, -1)) is True
+        assert polar_conic_contains_point(circle, (4, 2, 1)) is True
+        assert polar_conic_contains_point(circle, (-4, -2, -1)) is True
+        assert polar_conic_contains_point(circle, (0, 0)) is False
+
+        x, y = symbols("x y", positive=True)
+        assert polar_conic_contains_point(circle, (x, y, 0)) is False
+        assert polar_conic_contains_point(circle, (x, y, 1)) is None
 
 
 class TestConicContainsLine:

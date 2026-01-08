@@ -119,6 +119,7 @@
   * [line\_contains\_point](#incidence.line_contains_point)
   * [conic\_contains\_point](#incidence.conic_contains_point)
   * [conic\_contains\_line](#incidence.conic_contains_line)
+  * [polar\_conic\_contains\_point](#incidence.polar_conic_contains_point)
   * [are\_collinear](#incidence.are_collinear)
   * [are\_concurrent](#incidence.are_concurrent)
   * [are\_on\_same\_conic](#incidence.are_on_same_conic)
@@ -2043,6 +2044,29 @@ result is undecidable.
 *Formula*:
 [research/conic_line_containment.py](../src/research/conic_line_containment.py)
 
+<a id="incidence.polar_conic_contains_point"></a>
+
+#### polar\_conic\_contains\_point
+
+```python
+def polar_conic_contains_point(
+        polar_conic: Matrix,
+        point: Matrix | Sequence[Expr],
+        *,
+        simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+```
+
+([source](../src/lib/incidence.py#L59))
+
+Checks if a point lies on a conic that is specified in polar form.
+
+Takes an optional `simplifier` callback that simplifies the incidence
+polynomial before it gets compared to zero. Returns `None` if the result is
+undecidable.
+
+*Formula*:
+[research/polar_conic_point_incidence.py](../src/research/polar_conic_point_incidence.py)
+
 <a id="incidence.are_collinear"></a>
 
 #### are\_collinear
@@ -2053,7 +2077,7 @@ def are_collinear(points: Sequence[Matrix],
                   simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L59))
+([source](../src/lib/incidence.py#L78))
 
 Tells whether n points are collinear.
 
@@ -2070,7 +2094,7 @@ def are_concurrent(lines: Sequence[Matrix],
                    simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L76))
+([source](../src/lib/incidence.py#L95))
 
 Tells whether n lines are concurrent, i.e. go through the same point.
 
@@ -2092,7 +2116,7 @@ def are_on_same_conic(
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L98))
+([source](../src/lib/incidence.py#L117))
 
 Tells whether up to 6 points lie on the same conic section.
 
@@ -2112,7 +2136,7 @@ def are_cocircular(points: Sequence[Matrix],
                    simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L125))
+([source](../src/lib/incidence.py#L144))
 
 Tells whether n points lie on the same circle.
 

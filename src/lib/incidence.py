@@ -56,6 +56,25 @@ def conic_contains_line(
     return (skew * conic * skew).applyfunc(simplifier).is_zero_matrix
 
 
+def polar_conic_contains_point(
+    polar_conic: Matrix,
+    point: Matrix | Sequence[Expr],
+    *,
+    simplifier: Callable[[Expr], Expr] = expand,
+) -> bool | None:
+    """Checks if a point lies on a conic that is specified in polar form.
+
+    Takes an optional `simplifier` callback that simplifies the incidence
+    polynomial before it gets compared to zero. Returns `None` if the result is
+    undecidable.
+
+    *Formula*:
+    [research/polar_conic_point_incidence.py](../src/research/polar_conic_point_incidence.py)
+    """
+    c, s, i = polar_conic.adjugate() * point_to_vec3(point)
+    return simplifier(c * c + s * s - i * i).is_zero
+
+
 def are_collinear(
     points: Sequence[Matrix],
     *,
