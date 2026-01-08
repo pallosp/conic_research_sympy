@@ -103,22 +103,23 @@ class TestTransformLine:
 
 class TestTransformPolarConic:
     def test_symbolic_transformation(self):
-        polar = Matrix(3, 3, symbols("a b c d e f g h i"))
+        conic = Matrix(3, 3, symbols("a b c d e f g h i"))
         transformation = Matrix(3, 3, symbols("A B C D E F G H I"))
-        transformed_polar = transform_polar_conic(polar, transformation)
+        transformed_conic = transform_polar_conic(conic, transformation)
+
         phi = symbols("phi")
+        point = point_at_angle(conic, phi)
+        transformed_point = transform_point(point, transformation)
+        point_on_transformed_conic = point_at_angle(transformed_conic, phi)
 
-        expected_point = transform_point(point_at_angle(polar, phi), transformation)
-        actual_point = point_at_angle(transformed_polar, phi)
-
-        assert expand(expected_point) == expand(actual_point)
+        assert expand(transformed_point) == expand(point_on_transformed_conic)
 
     def test_scaled_polar_conic_shape(self):
-        polar = Matrix(3, 3, symbols("a b c d e f g h i"))
-        cartesian = conic_from_polar_matrix(polar)
+        polar_conic = Matrix(3, 3, symbols("a b c d e f g h i"))
+        cartesian = conic_from_polar_matrix(polar_conic)
 
         scaling = scale_xy(2, 3, 4, 5)
-        scaled_polar = transform_polar_conic(polar, scaling)
+        scaled_polar = transform_polar_conic(polar_conic, scaling)
         scaled_cartesian = transform_conic(cartesian, scaling)
 
         assert expand(conic_from_polar_matrix(scaled_polar)) == expand(scaled_cartesian)

@@ -1940,7 +1940,7 @@ The circle at the origin with radius 1, in polar matrix form.
 #### point\_at\_angle
 
 ```python
-def point_at_angle(polar: Matrix, theta: Expr) -> Matrix
+def point_at_angle(polar_conic: Matrix, theta: Expr) -> Matrix
 ```
 
 ([source](../src/lib/polar_conic.py#L25))
@@ -1953,7 +1953,8 @@ corresponding to a certain angle.
 #### angle\_at\_point
 
 ```python
-def angle_at_point(polar: Matrix, point: Matrix | Sequence[Expr]) -> Expr
+def angle_at_point(polar_conic: Matrix,
+                   point: Matrix | Sequence[Expr]) -> Expr
 ```
 
 ([source](../src/lib/polar_conic.py#L32))
@@ -1967,7 +1968,7 @@ The result is unspecified if the point is not on the conic.
 #### conic\_from\_polar\_matrix
 
 ```python
-def conic_from_polar_matrix(polar: Matrix) -> Matrix
+def conic_from_polar_matrix(polar_conic: Matrix) -> Matrix
 ```
 
 ([source](../src/lib/polar_conic.py#L42))

@@ -11,10 +11,10 @@ from lib.polar_conic import (
 
 
 class TestAngleAtPoint:
-    polar = Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 0]])
+    polar_conic = Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 0]])
     for angle in [0, pi / 4, pi / 2, pi, -pi / 2]:
-        point = point_at_angle(polar, angle)
-        assert angle == angle_at_point(polar, point)
+        point = point_at_angle(polar_conic, angle)
+        assert angle == angle_at_point(polar_conic, point)
 
 
 class TestConicFromPolarMatrix:
@@ -22,10 +22,10 @@ class TestConicFromPolarMatrix:
         assert conic_from_polar_matrix(POLAR_UNIT_CIRCLE) == UNIT_CIRCLE
 
     def test_five_points(self):
-        polar = Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 0]])
-        conic = conic_from_polar_matrix(polar)
-        assert conic_contains_point(conic, point_at_angle(polar, 0))
-        assert conic_contains_point(conic, point_at_angle(polar, pi / 4))
-        assert conic_contains_point(conic, point_at_angle(polar, pi / 2))
-        assert conic_contains_point(conic, point_at_angle(polar, pi))
-        assert conic_contains_point(conic, point_at_angle(polar, -pi / 2))
+        polar_conic = Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 0]])
+        conic = conic_from_polar_matrix(polar_conic)
+        assert conic_contains_point(conic, point_at_angle(polar_conic, 0))
+        assert conic_contains_point(conic, point_at_angle(polar_conic, pi / 4))
+        assert conic_contains_point(conic, point_at_angle(polar_conic, pi / 2))
+        assert conic_contains_point(conic, point_at_angle(polar_conic, pi))
+        assert conic_contains_point(conic, point_at_angle(polar_conic, -pi / 2))
