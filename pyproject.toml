@@ -47,6 +47,7 @@ ignore = [
   "EM101",  # Exception message should be a variable, not a raw string
   "ERA001",  # Commented-out code
   "PLR2004",  # Magic value used in comparison
+  "RUF001",  # Ambiguous Unicode character in string literal
   "RUF002",  # Ambiguous Unicode character in docstring
   "RUF003",  # Ambiguous Unicode character in comment
   "TRY003",  # Use Exception subclasses instead of messages
