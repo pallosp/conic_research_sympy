@@ -39,6 +39,16 @@ def angle_at_point(polar_conic: Matrix, point: Matrix | Sequence[Expr]) -> Expr:
     return atan2(x_times_sin_a, x_times_cos_a)
 
 
+def tangent_at_angle(polar_conic: Matrix, angle_radians: Expr) -> Matrix:
+    """Computes the tangent line to a polar conic at the given angle.
+
+    *Formula*:
+    [research/conic_properties/polar_conic_tangents.py](../src/research/conic_properties/polar_conic_tangents.py)
+    """
+    adj = polar_conic.adjugate()
+    return adj.T * Matrix([cos(angle_radians), sin(angle_radians), -1])
+
+
 def conic_from_polar_matrix(polar_conic: Matrix) -> Matrix:
     """Transforms a conic from polar to quadratic form.
 

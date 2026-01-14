@@ -114,6 +114,7 @@
   * [POLAR\_UNIT\_CIRCLE](#polar_conic.POLAR_UNIT_CIRCLE)
   * [point\_at\_angle](#polar_conic.point_at_angle)
   * [angle\_at\_point](#polar_conic.angle_at_point)
+  * [tangent\_at\_angle](#polar_conic.tangent_at_angle)
   * [conic\_from\_polar\_matrix](#polar_conic.conic_from_polar_matrix)
 * [incidence](#incidence)
   * [line\_contains\_point](#incidence.line_contains_point)
@@ -1970,6 +1971,21 @@ Computes the polar angle corresponding to a point on a polar conic.
 
 The result is unspecified if the point is not on the conic.
 
+<a id="polar_conic.tangent_at_angle"></a>
+
+#### tangent\_at\_angle
+
+```python
+def tangent_at_angle(polar_conic: Matrix, angle_radians: Expr) -> Matrix
+```
+
+([source](../src/lib/polar_conic.py#L42))
+
+Computes the tangent line to a polar conic at the given angle.
+
+*Formula*:
+[research/conic_properties/polar_conic_tangents.py](../src/research/conic_properties/polar_conic_tangents.py)
+
 <a id="polar_conic.conic_from_polar_matrix"></a>
 
 #### conic\_from\_polar\_matrix
@@ -1978,7 +1994,7 @@ The result is unspecified if the point is not on the conic.
 def conic_from_polar_matrix(polar_conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L42))
+([source](../src/lib/polar_conic.py#L52))
 
 Transforms a conic from polar to quadratic form.
 
