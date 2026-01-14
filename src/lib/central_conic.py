@@ -17,7 +17,7 @@ def conic_from_foci_and_radius(
     If the radius (center-vertex distance) is negative, takes its absolute value.
 
     *Formula*:
-    [research/conic_from_foci_and_radius.py](../src/research/conic_from_foci_and_radius.py)
+    [research/construction/conic_from_foci_and_radius.py](../src/research/construction/conic_from_foci_and_radius.py)
     """
     fx1, fy1 = point_to_xy(focus1)
     fx2, fy2 = point_to_xy(focus2)
@@ -53,7 +53,8 @@ def conic_from_center_and_points(
      - zero matrix if the solution is ambiguous, which happens when some of the
        (`center`, `pᵢ`, `pⱼ`) triples are collinear.
 
-    *Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
+    *Formula*:
+    [research/construction/steiner_ellipse.py](../src/research/construction/steiner_ellipse.py)
     """
     x, y = point_to_xy(center)
     x1, y1 = point_to_xy(p1)
@@ -86,7 +87,8 @@ def conic_center(conic: Matrix) -> Matrix:
 
     Returns the point's coordinates as a 2D column vector.
 
-    *Formula*: [research/conic_center.py](../src/research/conic_center.py)
+    *Formula*:
+    [research/conic_properties/conic_center.py](../src/research/conic_properties/conic_center.py)
     """
     x, y, z = conic.col(0).cross(conic.col(1))
     return Matrix([x / z, y / z])
@@ -100,7 +102,8 @@ def semi_axis_lengths(conic: Matrix) -> tuple[Expr, Expr]:
     [primary_radius](#central_conic.primary_radius) or
     [secondary_radius](#central_conic.secondary_radius), respectively.
 
-    *Formula*: [research/conic_radii.py](../src/research/conic_radii.py)
+    *Formula*:
+    [research/conic_properties/conic_radii.py](../src/research/conic_properties/conic_radii.py)
     """
     submatrix = conic[:2, :2]
     return (
@@ -226,7 +229,7 @@ def shrink_conic_to_zero(conic: Matrix) -> Matrix:
     conic types the result matrix will have infinite or `nan` elements.
 
     *Formula*:
-    [research/scale_conic_from_center.py](../src/research/scale_conic_from_center.py)
+    [research/transformation/scale_conic_from_center.py](../src/research/transformation/scale_conic_from_center.py)
     """
     a, _, _, b, c, _, _, _, _ = conic
     return conic - Matrix.diag([0, 0, conic.det() / (a * c - b * b)])

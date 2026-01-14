@@ -85,7 +85,8 @@ def angle_bisector(line1: Matrix, line2: Matrix) -> Matrix:
      - AngleBisector(ideal line, ideal line) = `[0, 0, 0]ᵀ`
      - AngleBisector(ideal line, finite line) = ideal line
 
-    *Formula*: [research/angle_bisector.py](../src/research/angle_bisector.py)
+    *Formula*:
+    [research/construction/angle_bisector.py](../src/research/construction/angle_bisector.py)
     """
     l1 = sqrt(line1[0] ** 2 + line1[1] ** 2)
     l2 = sqrt(line2[0] ** 2 + line2[1] ** 2)

@@ -68,7 +68,7 @@ def conic_from_focus_and_directrix(
     """Constructs a conic from its focus, directrix and eccentricity.
 
     *Formula*:
-    [research/conic_from_focus_and_directrix.py](../src/research/conic_from_focus_and_directrix.py)
+    [research/construction/conic_from_focus_and_directrix.py](../src/research/construction/conic_from_focus_and_directrix.py)
     """
     fx, fy = point_to_xy(focus)
     m1 = directrix * directrix.T
@@ -104,7 +104,7 @@ def eccentricity(conic: Matrix) -> Expr:
     *Formula*:
     <https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients><br>
     *Own research*:
-    [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
+    [research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)
     """
     a, b, c = conic[0], conic[1], conic[4]
     s = sqrt(((a - c) ** 2 + 4 * b**2).factor())
@@ -162,7 +162,7 @@ def projective_conic_center(conic: Matrix) -> Matrix:
      - crossing finite line pairs
 
     For parabolas returns the ideal point on it
-    ([proof](../src/research/parabola_center.py))
+    ([proof](../src/research/conic_properties/parabola_center.py))
 
     For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
     """

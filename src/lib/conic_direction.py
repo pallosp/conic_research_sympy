@@ -86,7 +86,7 @@ def focal_axis_direction(conic: Matrix) -> Matrix:
       to the same direction.
 
     *Formula*:
-    [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
+    [research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)
     """
     # Use b as in ax² + 2bxy + cy²
     a, b, c = conic[0], conic[3], conic[4]

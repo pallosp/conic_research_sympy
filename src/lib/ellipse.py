@@ -20,7 +20,7 @@ def ellipse(
     direction vector of the first radius or its angle to horizontal.
 
     *Formula*:
-    [research/ellipse_from_params.py](../src/research/ellipse_from_params.py)
+    [research/construction/ellipse_from_params.py](../src/research/construction/ellipse_from_params.py)
     """
     if (r1_angle is not None) and (r1_direction is not None):
         raise ValueError("Specify either r1_angle or r1_direction, not both.")
@@ -63,7 +63,7 @@ def ellipse_from_foci_and_point(
        `nan` elements.
 
     *Formula*:
-    [research/ellipse_from_foci_and_point.py](../src/research/ellipse_from_foci_and_point.py)
+    [research/construction/ellipse_from_foci_and_point.py](../src/research/construction/ellipse_from_foci_and_point.py)
     """
     r = (point_point_distance(focus1, point) + point_point_distance(focus2, point)) / 2
     return conic_from_foci_and_radius(focus1, focus2, r)
@@ -80,7 +80,8 @@ def steiner_ellipse(
     centroid.
 
     *Definition*: <https://en.wikipedia.org/wiki/Steiner_ellipse><br>
-    *Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
+    *Formula*:
+    [research/construction/steiner_ellipse.py](../src/research/construction/steiner_ellipse.py)
     """
     x1, y1 = point_to_xy(point1)
     x2, y2 = point_to_xy(point2)
@@ -118,7 +119,8 @@ def steiner_inellipse(
     triangle's sides at their midpoints.
 
     *Definition*: <https://en.wikipedia.org/wiki/Steiner_inellipse><br>
-    *Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
+    *Formula*:
+    [research/construction/steiner_ellipse.py](../src/research/construction/steiner_ellipse.py)
     """
     x1, y1 = point_to_xy(point1)
     x2, y2 = point_to_xy(point2)

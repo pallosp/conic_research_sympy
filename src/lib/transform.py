@@ -59,7 +59,7 @@ def reflect_to_line(axis: Matrix) -> Matrix:
     Returns a `nan` matrix if `axis` is the ideal line.
 
     *Formula*:
-    [research/reflection_matrix.py](../src/research/reflection_matrix.py)
+    [research/transformation/reflection_matrix.py](../src/research/transformation/reflection_matrix.py)
     """
     a, b, c = axis
     return Matrix(
@@ -102,7 +102,7 @@ def homography_from_samples(
     projective transformation matrix.
 
     *Research*:
-    [research/homography_from_samples.py](../src/research/homography_from_samples.py)
+    [research/transformation/homography_from_samples.py](../src/research/transformation/homography_from_samples.py)
     """
     if len(source_points) != 4 or len(target_points) != 4:
         raise ValueError("Exactly 4 source and 4 target points are required")

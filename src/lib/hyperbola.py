@@ -15,7 +15,7 @@ def hyperbola_from_foci_and_point(
     """Constructs a hyperbola from its focus points and an incident point.
 
     *Formula*:
-    [research/conic_from_foci_and_radius.py](../src/research/conic_from_foci_and_radius.py)
+    [research/construction/conic_from_foci_and_radius.py](../src/research/construction/conic_from_foci_and_radius.py)
     """
     r = (point_point_distance(focus1, point) - point_point_distance(focus2, point)) / 2
     return conic_from_foci_and_radius(focus1, focus2, r)
@@ -42,7 +42,7 @@ def asymptote_focal_axis_angle(hyperbola: Matrix) -> Expr:
        - conics containis the ideal line: `nan`
 
     *Research*:
-    [research/asymptote_angle.py](../src/research/asymptote_angle.py)<br>
+    [research/conic_properties/asymptote_angle.py](../src/research/conic_properties/asymptote_angle.py)<br>
     *Formula*: `acos(1 / eccentricity)`
     """
     a, _, _, b, c, _, _, _, _ = hyperbola

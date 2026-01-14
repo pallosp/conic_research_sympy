@@ -28,7 +28,7 @@ def parabola_directrix(parabola: Matrix) -> Matrix:
     - Returns an unspecified 3D column vector in all other cases.
 
     *Formula*:
-    [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
+    [research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)
     """
     return _parabola_directrix_from_adjugate(parabola.adjugate())
 
@@ -54,7 +54,7 @@ def parabola_focus(parabola: Matrix) -> Matrix:
     - Returns an unspecified 3D column vector in all other cases.
 
     *Formula*:
-    [research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
+    [research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)
     """
     return _parabola_focus_from_adjugate(parabola.adjugate())
 
@@ -64,7 +64,8 @@ def parabola_vertex(parabola: Matrix) -> Matrix:
 
     Returns the point's coordinates as a 2D column vector.
 
-    *Formula*: [research/parabola_vertex.py](../src/research/parabola_vertex.py)
+    *Formula*:
+    [research/conic_properties/parabola_vertex.py](../src/research/conic_properties/parabola_vertex.py)
     """
     a, _, _, b, c, _, d, e, _ = parabola
     focus_x, focus_y = point_to_xy(parabola_focus(parabola))
@@ -111,7 +112,8 @@ def parabola_axis(parabola: Matrix) -> Matrix:
 def parabola_focal_parameter(parabola: Matrix) -> Expr:
     """Computes the parabola's focus-directrix distance.
 
-    *Formula*: [research/focal_parameter.py](../src/research/focal_parameter.py)
+    *Formula*:
+    [research/conic_properties/focal_parameter.py](../src/research/conic_properties/focal_parameter.py)
     """
     a, c, _ = parabola.diagonal()
     return sqrt(-parabola.det() / (a + c) ** 3)

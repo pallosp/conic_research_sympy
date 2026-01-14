@@ -350,7 +350,7 @@ Computes the ellipse or hyperbola with the given focus points and primary radius
 If the radius (center-vertex distance) is negative, takes its absolute value.
 
 *Formula*:
-[research/conic_from_foci_and_radius.py](../src/research/conic_from_foci_and_radius.py)
+[research/construction/conic_from_foci_and_radius.py](../src/research/construction/conic_from_foci_and_radius.py)
 
 <a id="central_conic.conic_from_center_and_points"></a>
 
@@ -374,7 +374,8 @@ May return
  - zero matrix if the solution is ambiguous, which happens when some of the
    (`center`, `pᵢ`, `pⱼ`) triples are collinear.
 
-*Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
+*Formula*:
+[research/construction/steiner_ellipse.py](../src/research/construction/steiner_ellipse.py)
 
 <a id="central_conic.conic_center"></a>
 
@@ -384,13 +385,14 @@ May return
 def conic_center(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L84))
+([source](../src/lib/central_conic.py#L85))
 
 Computes the center point of a conic.
 
 Returns the point's coordinates as a 2D column vector.
 
-*Formula*: [research/conic_center.py](../src/research/conic_center.py)
+*Formula*:
+[research/conic_properties/conic_center.py](../src/research/conic_properties/conic_center.py)
 
 <a id="central_conic.semi_axis_lengths"></a>
 
@@ -400,7 +402,7 @@ Returns the point's coordinates as a 2D column vector.
 def semi_axis_lengths(conic: Matrix) -> tuple[Expr, Expr]
 ```
 
-([source](../src/lib/central_conic.py#L95))
+([source](../src/lib/central_conic.py#L97))
 
 Computes the semi-axis lengths of a conic in no specific order.
 
@@ -409,7 +411,8 @@ semi-minor in case of ellipses), call
 [primary_radius](#central_conic.primary_radius) or
 [secondary_radius](#central_conic.secondary_radius), respectively.
 
-*Formula*: [research/conic_radii.py](../src/research/conic_radii.py)
+*Formula*:
+[research/conic_properties/conic_radii.py](../src/research/conic_properties/conic_radii.py)
 
 <a id="central_conic.primary_radius"></a>
 
@@ -419,7 +422,7 @@ semi-minor in case of ellipses), call
 def primary_radius(conic: Matrix) -> Expr
 ```
 
-([source](../src/lib/central_conic.py#L124))
+([source](../src/lib/central_conic.py#L127))
 
 Computes the center-vertex distance of a conic.
 
@@ -442,7 +445,7 @@ The returned value is:
 def secondary_radius(conic: Matrix) -> Expr
 ```
 
-([source](../src/lib/central_conic.py#L141))
+([source](../src/lib/central_conic.py#L144))
 
 Computes the semi-conjugate axis length of a conic.
 
@@ -466,7 +469,7 @@ The returned value is:
 def linear_eccentricity(conic: Matrix) -> Expr
 ```
 
-([source](../src/lib/central_conic.py#L159))
+([source](../src/lib/central_conic.py#L162))
 
 Computes the linear eccentricity of a conic section.
 
@@ -493,7 +496,7 @@ radii of the conic (i.e., the semi-axis lengths in the case of an ellipse).
 def center_to_focus_vector(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L182))
+([source](../src/lib/central_conic.py#L185))
 
 Returns the 2D vector from a conic's center to one of its foci.
 
@@ -512,7 +515,7 @@ center.
 def center_to_vertex_vector(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L201))
+([source](../src/lib/central_conic.py#L204))
 
 Returns the 2D vector from a conic's center to one of its vertices.
 
@@ -531,7 +534,7 @@ center.
 def shrink_conic_to_zero(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L218))
+([source](../src/lib/central_conic.py#L221))
 
 Scales a conic section from its center with a factor of zero.
 
@@ -543,7 +546,7 @@ This transformation is only meaningful for
 conic types the result matrix will have infinite or `nan` elements.
 
 *Formula*:
-[research/scale_conic_from_center.py](../src/research/scale_conic_from_center.py)
+[research/transformation/scale_conic_from_center.py](../src/research/transformation/scale_conic_from_center.py)
 
 <a id="circle"></a>
 
@@ -575,7 +578,7 @@ Computes the radius of a circle conic.
 
 The result is not specified if the conic matrix is not a circle.
 The computation is based on
-[research/director_circle.py](../src/research/director_circle.py).
+[research/construction/director_circle.py](../src/research/construction/director_circle.py).
 
 <a id="circle.director_circle"></a>
 
@@ -592,7 +595,8 @@ Computes the director circle of a conic.
 It's also called orthoptic circle or Fermat–Apollonius circle.
 
 *Definition*: <https://en.wikipedia.org/wiki/Director_circle><br>
-*Formula*: [research/director_circle.py](../src/research/director_circle.py)
+*Formula*:
+[research/construction/director_circle.py](../src/research/construction/director_circle.py)
 
 <a id="circle.UNIT_CIRCLE"></a>
 
@@ -716,7 +720,8 @@ Special cases:
  - AngleBisector(ideal line, ideal line) = `[0, 0, 0]ᵀ`
  - AngleBisector(ideal line, finite line) = ideal line
 
-*Formula*: [research/angle_bisector.py](../src/research/angle_bisector.py)
+*Formula*:
+[research/construction/angle_bisector.py](../src/research/construction/angle_bisector.py)
 
 <a id="line.perpendicular_bisector"></a>
 
@@ -727,7 +732,7 @@ def perpendicular_bisector(point1: Matrix | Sequence[Expr],
                            point2: Matrix | Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/line.py#L95))
+([source](../src/lib/line.py#L96))
 
 Constructs the perpendicular bisector of two points.
 
@@ -741,7 +746,7 @@ def line_normal(line: Matrix,
                 toward: Matrix | Sequence[Expr] = None) -> Matrix
 ```
 
-([source](../src/lib/line.py#L105))
+([source](../src/lib/line.py#L106))
 
 Returns the normal vector of a line, represented as an ideal point.
 
@@ -762,7 +767,7 @@ Returns `[0, 0, 0]ᵀ` if the `toward` point lies on the line.
 def are_parallel(line1: Matrix, line2: Matrix) -> bool | None
 ```
 
-([source](../src/lib/line.py#L127))
+([source](../src/lib/line.py#L128))
 
 Tells whether line1 and line2 are parallel.
 
@@ -777,7 +782,7 @@ Considers the ideal line parallel to everything.
 def are_perpendicular(line1: Matrix, line2: Matrix) -> bool | None
 ```
 
-([source](../src/lib/line.py#L138))
+([source](../src/lib/line.py#L139))
 
 Tells whether line1 and line2 are perpendicular.
 
@@ -870,7 +875,7 @@ def conic_from_focus_and_directrix(focus: Matrix | Sequence[Expr],
 Constructs a conic from its focus, directrix and eccentricity.
 
 *Formula*:
-[research/conic_from_focus_and_directrix.py](../src/research/conic_from_focus_and_directrix.py)
+[research/construction/conic_from_focus_and_directrix.py](../src/research/construction/conic_from_focus_and_directrix.py)
 
 <a id="conic.eccentricity"></a>
 
@@ -909,7 +914,7 @@ two different corresponding eccentricity values. Evaluate
 *Formula*:
 <https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients><br>
 *Own research*:
-[research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
+[research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)
 
 <a id="conic.focal_axis"></a>
 
@@ -985,7 +990,7 @@ finite point) for
  - crossing finite line pairs
 
 For parabolas returns the ideal point on it
-([proof](../src/research/parabola_center.py))
+([proof](../src/research/conic_properties/parabola_center.py))
 
 For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
 
@@ -1641,7 +1646,7 @@ Properties:
   to the same direction.
 
 *Formula*:
-[research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
+[research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)
 
 <a id="transform"></a>
 
@@ -1740,7 +1745,7 @@ Computes the transformation matrix for a reflection to a line.
 Returns a `nan` matrix if `axis` is the ideal line.
 
 *Formula*:
-[research/reflection_matrix.py](../src/research/reflection_matrix.py)
+[research/transformation/reflection_matrix.py](../src/research/transformation/reflection_matrix.py)
 
 <a id="transform.scale_xy"></a>
 
@@ -1790,7 +1795,7 @@ and the target quadrilaterals must be non-degenerate. Returns a 3x3
 projective transformation matrix.
 
 *Research*:
-[research/homography_from_samples.py](../src/research/homography_from_samples.py)
+[research/transformation/homography_from_samples.py](../src/research/transformation/homography_from_samples.py)
 
 <a id="parabola"></a>
 
@@ -1818,7 +1823,7 @@ Special cases for other conic types:
 - Returns an unspecified 3D column vector in all other cases.
 
 *Formula*:
-[research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
+[research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)
 
 <a id="parabola.parabola_focus"></a>
 
@@ -1840,7 +1845,7 @@ Special cases for other conic types:
 - Returns an unspecified 3D column vector in all other cases.
 
 *Formula*:
-[research/focus_directrix_eccentricity.py](../src/research/focus_directrix_eccentricity.py)
+[research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)
 
 <a id="parabola.parabola_vertex"></a>
 
@@ -1856,7 +1861,8 @@ Computes the parabola's vertex.
 
 Returns the point's coordinates as a 2D column vector.
 
-*Formula*: [research/parabola_vertex.py](../src/research/parabola_vertex.py)
+*Formula*:
+[research/conic_properties/parabola_vertex.py](../src/research/conic_properties/parabola_vertex.py)
 
 <a id="parabola.parabola_direction"></a>
 
@@ -1866,7 +1872,7 @@ Returns the point's coordinates as a 2D column vector.
 def parabola_direction(parabola: Matrix) -> Matrix
 ```
 
-([source](../src/lib/parabola.py#L76))
+([source](../src/lib/parabola.py#L77))
 
 Computes the direction of a parabola modulo 2π.
 
@@ -1886,7 +1892,7 @@ coincides with both the ideal point lying on the parabola and its
 def parabola_axis(parabola: Matrix) -> Matrix
 ```
 
-([source](../src/lib/parabola.py#L93))
+([source](../src/lib/parabola.py#L94))
 
 Computes the parabola's focal axis line.
 
@@ -1907,11 +1913,12 @@ Special cases for other conic types:
 def parabola_focal_parameter(parabola: Matrix) -> Expr
 ```
 
-([source](../src/lib/parabola.py#L111))
+([source](../src/lib/parabola.py#L112))
 
 Computes the parabola's focus-directrix distance.
 
-*Formula*: [research/focal_parameter.py](../src/research/focal_parameter.py)
+*Formula*:
+[research/conic_properties/focal_parameter.py](../src/research/conic_properties/focal_parameter.py)
 
 <a id="polar_conic"></a>
 
@@ -2043,7 +2050,7 @@ containment matrix before it gets compared to zero. Returns `None` if the
 result is undecidable.
 
 *Formula*:
-[research/conic_line_containment.py](../src/research/conic_line_containment.py)
+[research/incidence/conic_line_containment.py](../src/research/incidence/conic_line_containment.py)
 
 <a id="incidence.polar_conic_contains_point"></a>
 
@@ -2066,7 +2073,7 @@ polynomial before it gets compared to zero. Returns `None` if the result is
 undecidable.
 
 *Formula*:
-[research/polar_conic_point_incidence.py](../src/research/polar_conic_point_incidence.py)
+[research/incidence/polar_conic_point_incidence.py](../src/research/incidence/polar_conic_point_incidence.py)
 
 <a id="incidence.are_collinear"></a>
 
@@ -2150,7 +2157,7 @@ determinant before it gets compared to zero. Returns `None` if undecidable.
 *Formula*: [Measuring cocircularity in a point set](
 https://upcommons.upc.edu/entities/publication/2001f976-4a50-4415-a706-79bbb2ca40bc)<br>
 *Own research*:
-[research/cocircularity.py](../src/research/cocircularity.py)
+[research/incidence/cocircularity.py](../src/research/incidence/cocircularity.py)
 
 <a id="hyperbola"></a>
 
@@ -2171,7 +2178,7 @@ def hyperbola_from_foci_and_point(focus1: Matrix | Sequence[Expr],
 Constructs a hyperbola from its focus points and an incident point.
 
 *Formula*:
-[research/conic_from_foci_and_radius.py](../src/research/conic_from_foci_and_radius.py)
+[research/construction/conic_from_foci_and_radius.py](../src/research/construction/conic_from_foci_and_radius.py)
 
 <a id="hyperbola.asymptote_focal_axis_angle"></a>
 
@@ -2203,7 +2210,7 @@ Return values for other conics:
    - conics containis the ideal line: `nan`
 
 *Research*:
-[research/asymptote_angle.py](../src/research/asymptote_angle.py)<br>
+[research/conic_properties/asymptote_angle.py](../src/research/conic_properties/asymptote_angle.py)<br>
 *Formula*: `acos(1 / eccentricity)`
 
 <a id="hyperbola.asymptote_conic"></a>
@@ -2245,7 +2252,7 @@ Constructs an ellipse from its center, radii, and the either the
 direction vector of the first radius or its angle to horizontal.
 
 *Formula*:
-[research/ellipse_from_params.py](../src/research/ellipse_from_params.py)
+[research/construction/ellipse_from_params.py](../src/research/construction/ellipse_from_params.py)
 
 <a id="ellipse.ellipse_from_foci_and_point"></a>
 
@@ -2270,7 +2277,7 @@ Special cases:
    `nan` elements.
 
 *Formula*:
-[research/ellipse_from_foci_and_point.py](../src/research/ellipse_from_foci_and_point.py)
+[research/construction/ellipse_from_foci_and_point.py](../src/research/construction/ellipse_from_foci_and_point.py)
 
 <a id="ellipse.steiner_ellipse"></a>
 
@@ -2290,7 +2297,8 @@ The ellipse goes through the three points and is centered at the triangle's
 centroid.
 
 *Definition*: <https://en.wikipedia.org/wiki/Steiner_ellipse><br>
-*Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
+*Formula*:
+[research/construction/steiner_ellipse.py](../src/research/construction/steiner_ellipse.py)
 
 <a id="ellipse.steiner_inellipse"></a>
 
@@ -2302,7 +2310,7 @@ def steiner_inellipse(point1: Matrix | Sequence[Expr],
                       point3: Matrix | Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/ellipse.py#L110))
+([source](../src/lib/ellipse.py#L111))
 
 Computes the Steiner inellipse for the given points.
 
@@ -2310,7 +2318,8 @@ The ellipse is centered at the triangle's centroid, and is tangent to the
 triangle's sides at their midpoints.
 
 *Definition*: <https://en.wikipedia.org/wiki/Steiner_inellipse><br>
-*Formula*: [research/steiner_ellipse.py](../src/research/steiner_ellipse.py)
+*Formula*:
+[research/construction/steiner_ellipse.py](../src/research/construction/steiner_ellipse.py)
 
 <a id="intersection"></a>
 

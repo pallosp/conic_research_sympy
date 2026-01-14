@@ -50,7 +50,7 @@ def conic_contains_line(
     result is undecidable.
 
     *Formula*:
-    [research/conic_line_containment.py](../src/research/conic_line_containment.py)
+    [research/incidence/conic_line_containment.py](../src/research/incidence/conic_line_containment.py)
     """
     skew = skew_matrix(line)
     return (skew * conic * skew).applyfunc(simplifier).is_zero_matrix
@@ -69,7 +69,7 @@ def polar_conic_contains_point(
     undecidable.
 
     *Formula*:
-    [research/polar_conic_point_incidence.py](../src/research/polar_conic_point_incidence.py)
+    [research/incidence/polar_conic_point_incidence.py](../src/research/incidence/polar_conic_point_incidence.py)
     """
     c, s, i = polar_conic.adjugate() * point_to_vec3(point)
     return simplifier(c * c + s * s - i * i).is_zero
@@ -157,7 +157,7 @@ def are_cocircular(
     *Formula*: [Measuring cocircularity in a point set](
     https://upcommons.upc.edu/entities/publication/2001f976-4a50-4415-a706-79bbb2ca40bc)<br>
     *Own research*:
-    [research/cocircularity.py](../src/research/cocircularity.py)
+    [research/incidence/cocircularity.py](../src/research/incidence/cocircularity.py)
     """
     if len(points) < 4:
         return True
