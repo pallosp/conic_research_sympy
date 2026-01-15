@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Abs, Expr, Matrix, sqrt
+from sympy import Abs, Expr, Matrix, cos, sin, sqrt
 
 from lib.conic_direction import ConicNormFactor, focal_axis_direction
 from lib.matrix import conic_matrix, max_eigenvalue, min_eigenvalue
@@ -157,6 +157,42 @@ def secondary_radius(conic: Matrix) -> Expr:
      - 0 for the other degenerate conics.
     """
     return _selected_radius(conic, -ConicNormFactor(conic))
+
+
+def radius_in_direction(
+    conic: Matrix, *, direction: Matrix | Sequence[Expr] = None, angle: Expr = None
+) -> Expr:
+    """Computes the length of the conic radius in the given direction.
+
+    The radius is the line segment connecting the conic's center and a point on
+    it. Its direction can be specified either as
+     - a 2D direction vector: `direction=(dx, dy)`;
+     - an ideal point on the radius line: `direction=(dx, dy, 0)`;
+     - an angle to the horizontal in radians: `angle=pi / 2`.
+
+    *Formula*:
+    [research/conic_properties/conic_radius_in_direction.py](../src/research/conic_properties/conic_radius_in_direction.py)
+    """
+    if (direction is None) == (angle is None):
+        raise ValueError("Specify exactly one of angle or direction")
+
+    cos_x, sin_x = None, None
+
+    if direction is not None:
+        dx, dy, *rest = direction
+        if rest not in ([], [0]):
+            raise ValueError("Invalid direction vector.")
+        cos_x = dx / sqrt(dx**2 + dy**2)
+        sin_x = dy / sqrt(dx**2 + dy**2)
+    else:
+        cos_x = cos(angle)
+        sin_x = sin(angle)
+
+    a, _, _, b, c, _, _, _, _ = conic
+    det = conic.det()
+    disc = a * c - b * b
+
+    return sqrt(-det / (disc * (a * cos_x**2 + 2 * b * cos_x * sin_x + c * sin_x**2)))
 
 
 def linear_eccentricity(conic: Matrix) -> Expr:

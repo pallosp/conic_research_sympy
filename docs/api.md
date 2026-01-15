@@ -19,6 +19,7 @@
   * [semi\_axis\_lengths](#central_conic.semi_axis_lengths)
   * [primary\_radius](#central_conic.primary_radius)
   * [secondary\_radius](#central_conic.secondary_radius)
+  * [radius\_in\_direction](#central_conic.radius_in_direction)
   * [linear\_eccentricity](#central_conic.linear_eccentricity)
   * [center\_to\_focus\_vector](#central_conic.center_to_focus_vector)
   * [center\_to\_vertex\_vector](#central_conic.center_to_vertex_vector)
@@ -462,6 +463,30 @@ The returned value is:
  - `nan` for ideal point conics;
  - 0 for the other degenerate conics.
 
+<a id="central_conic.radius_in_direction"></a>
+
+#### radius\_in\_direction
+
+```python
+def radius_in_direction(conic: Matrix,
+                        *,
+                        direction: Matrix | Sequence[Expr] = None,
+                        angle: Expr = None) -> Expr
+```
+
+([source](../src/lib/central_conic.py#L162))
+
+Computes the length of the conic radius in the given direction.
+
+The radius is the line segment connecting the conic's center and a point on
+it. Its direction can be specified either as
+ - a 2D direction vector: `direction=(dx, dy)`;
+ - an ideal point on the radius line: `direction=(dx, dy, 0)`;
+ - an angle to the horizontal in radians: `angle=pi / 2`.
+
+*Formula*:
+[research/conic_properties/conic_radius_in_direction.py](../src/research/conic_properties/conic_radius_in_direction.py)
+
 <a id="central_conic.linear_eccentricity"></a>
 
 #### linear\_eccentricity
@@ -470,7 +495,7 @@ The returned value is:
 def linear_eccentricity(conic: Matrix) -> Expr
 ```
 
-([source](../src/lib/central_conic.py#L162))
+([source](../src/lib/central_conic.py#L198))
 
 Computes the linear eccentricity of a conic section.
 
@@ -497,7 +522,7 @@ radii of the conic (i.e., the semi-axis lengths in the case of an ellipse).
 def center_to_focus_vector(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L185))
+([source](../src/lib/central_conic.py#L221))
 
 Returns the 2D vector from a conic's center to one of its foci.
 
@@ -516,7 +541,7 @@ center.
 def center_to_vertex_vector(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L204))
+([source](../src/lib/central_conic.py#L240))
 
 Returns the 2D vector from a conic's center to one of its vertices.
 
@@ -535,7 +560,7 @@ center.
 def shrink_conic_to_zero(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L221))
+([source](../src/lib/central_conic.py#L257))
 
 Scales a conic section from its center with a factor of zero.
 

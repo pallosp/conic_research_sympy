@@ -1,4 +1,5 @@
-from sympy import AppliedPredicate, Expr, I, Matrix, Q, Rational, nan, symbols, zoo
+import pytest
+from sympy import AppliedPredicate, Expr, I, Matrix, Q, Rational, nan, pi, symbols, zoo
 from sympy.abc import x, y
 
 from lib.central_conic import (
@@ -9,6 +10,7 @@ from lib.central_conic import (
     conic_from_foci_and_radius,
     linear_eccentricity,
     primary_radius,
+    radius_in_direction,
     secondary_radius,
     shrink_conic_to_zero,
 )
@@ -147,6 +149,38 @@ class TestSemiAxisLengths:
         ideal_point_conic = point_conic([*symbols("x,y"), 0])
         assert primary_radius(ideal_point_conic) == nan
         assert secondary_radius(ideal_point_conic) == nan
+
+
+class TestRadiusInDirection:
+    def test_bad_arguments(self):
+        with pytest.raises(ValueError, match="exactly one of"):
+            radius_in_direction(UNIT_CIRCLE)
+        with pytest.raises(ValueError, match="exactly one of"):
+            radius_in_direction(UNIT_CIRCLE, angle=0, direction=(1, 0))
+        with pytest.raises(ValueError, match="Invalid direction"):
+            radius_in_direction(UNIT_CIRCLE, direction=(1, 2, 3))
+
+    def test_symbolic_circle(self):
+        r = symbols("r", positive=True)
+        symbolic_circle = circle(symbols("x,y", real=True), r)
+        direction = symbols("dx dy", real=True)
+        computed_radius = radius_in_direction(symbolic_circle, direction=direction)
+        assert r == computed_radius.simplify()
+
+    def test_vertical_ellipse(self):
+        v_ellipse = ellipse((1, 2), 3, 4)
+        assert radius_in_direction(v_ellipse, direction=Matrix([1, 0])) == 3
+        assert radius_in_direction(v_ellipse, direction=Matrix([0, 1, 0])) == 4
+
+    def test_imaginary_ellipse(self):
+        im_ellipse = ellipse((1, 2), 3 * I, 4 * I)
+        assert radius_in_direction(im_ellipse, direction=(1, 0)) == 3 * I
+        assert radius_in_direction(im_ellipse, direction=(0, 1, 0)) == 4 * I
+
+    def test_radius_at_angle(self):
+        vertical_ellipse = ellipse((1, 2), 3, 4)
+        assert radius_in_direction(vertical_ellipse, angle=0) == 3
+        assert radius_in_direction(vertical_ellipse, angle=pi / 2) == 4
 
 
 class TestLinearEccentricity:
