@@ -2248,7 +2248,7 @@ Return values for other conics:
      directions
    - parallel lines in the same direction: π/2
    - parallel lines in the opposite direction: 0
-   - conics containis the ideal line: `nan`
+   - conics containing the ideal line: `nan`
 
 *Research*:
 [research/conic_properties/asymptote_angle.py](../src/research/conic_properties/asymptote_angle.py)<br>
