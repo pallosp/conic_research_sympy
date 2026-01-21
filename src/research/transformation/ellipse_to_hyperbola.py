@@ -64,6 +64,18 @@ t = (t / gcd(t[0], t[1])).applyfunc(factor)
 
 println_indented(t)
 
+print("Expressed with the center point and the center-to-vertex vector:\n")
+
+cx, cy, vx, vy = symbols("cx cy vx vy")
+println_indented(
+    (t / 4)
+    .subs(vertex_1[0], cx + vx)
+    .subs(vertex_1[1], cy + vy)
+    .subs(vertex_2[0], cx - vx)
+    .subs(vertex_2[1], cy - vy)
+    .applyfunc(factor)
+)
+
 print("Interesting fact: the transformation is independent on the secondary radius.\n")
 
 # Verify correctness
