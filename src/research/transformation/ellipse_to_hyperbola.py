@@ -34,15 +34,15 @@ covertex_1 = transform_point(vertex_1, rotate(pi / 2, center) * scale(r2 / r1, c
 covertex_2 = transform_point(vertex_2, rotate(pi / 2, center) * scale(r2 / r1, center))
 lin_ecc = sqrt(r1**2 - r2**2)
 
-# Angle between the focal axis angle and the x-axis
+# Angle between the focal axis and the x-axis
 
 cos_a, sin_a = (vertex_1 - center) / r1
 
-# Angle between the focal axis angle and the asymptotes
+# Angle between the focal axis and the asymptotes
 
 cos_b, sin_b = r1 / lin_ecc, r2 / lin_ecc
 
-# Angle between the ideal points and the horizontal
+# Angle between the ideal points and the x-axis
 
 cos_a_plus_b = cos_a * cos_b - sin_a * sin_b
 sin_a_plus_b = sin_a * cos_b + cos_a * sin_b
