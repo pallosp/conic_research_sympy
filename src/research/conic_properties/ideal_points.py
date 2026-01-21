@@ -1,6 +1,18 @@
 #!/usr/bin/env python
 
-from sympy import Abs, Matrix, Ne, exp, expand_complex, gcd, log, sqrt, symbols
+from sympy import (
+    Abs,
+    I,
+    Matrix,
+    Ne,
+    exp,
+    expand_complex,
+    factor,
+    gcd,
+    log,
+    sqrt,
+    symbols,
+)
 from sympy.abc import x, y
 
 from lib.conic import IdealPoints, conic_from_poly
@@ -40,7 +52,7 @@ print("Asymptote direction based formula:\n")
 def ideal_points_from_asymptotes(
     conic: Matrix,
     *,
-    expand: bool = False,
+    expanded: bool = False,
 ) -> tuple[Matrix, Matrix]:
     axis_dir = focal_axis_direction(conic)
     rotation1 = rotate(asymptote_focal_axis_angle(conic))
@@ -79,7 +91,25 @@ def ideal_points_from_asymptotes(
         pt = simplify_coord(point)
         pt /= gcd(*pt[:2]).factor()
         pt = pt.subs(1 / (eigen_plus - eigen_minus), 1)
-        if expand:
+        sep, smem = symbols("sep smem")
+        pt = (
+            pt.subs(sqrt(eigen_plus), sep)
+            .subs(sqrt(-eigen_minus), smem)
+            .subs(eigen_plus, sep**2)
+            .subs(eigen_minus, -(smem**2))
+            .applyfunc(factor)
+        )
+        pt /= gcd(*pt)
+        pt = (
+            pt.subs(sep, sqrt(eigen_plus))
+            .subs(smem, sqrt(-eigen_minus))
+            .subs(eigen_plus + eigen_minus, a + c)
+            .subs(sqrt(eigen_plus) * sqrt(-eigen_minus), I * sqrt(a * c - b * b))
+            .expand()
+        )
+        pt /= 2
+
+        if expanded:
             pt = pt.subs(eigen_plus, (a + c + sqrt(eigen_diff_square)) / 2).subs(
                 eigen_minus,
                 (a + c - sqrt(eigen_diff_square)) / 2,
@@ -91,7 +121,9 @@ def ideal_points_from_asymptotes(
 
 
 conic = conic_matrix(*symbols("a b c d e f", real=True))
-println_indented(ideal_points_from_asymptotes(conic, expand=False)[0])
+ip_formulae = ideal_points_from_asymptotes(conic, expanded=True)
+
+println_indented(ip_formulae)
 
 print("Verification for concrete conics:\n")
 
@@ -102,13 +134,15 @@ conics = [
     conic_from_poly(2 * x * x + y * y - 1),
     conic_from_poly(2 * x * x + y * y + 1),
     conic_from_poly(x * x - y),
+    conic_from_poly(x * y - 1),
+    conic_from_poly(x * x + 2 * y * y - 1),
 ]
-ip_formula = ideal_points_from_asymptotes(conic, expand=True)
+
 for conic_example in conics:
     ip1 = IdealPoints(conic_example)
     ip2 = tuple(
         expand_complex(i.subs(zip(conic, conic_example, strict=True)))
-        for i in ip_formula
+        for i in ip_formulae
     )
     assert any(is_nonzero_multiple(ip1[0], p) for p in ip2)
     assert any(is_nonzero_multiple(ip1[1], p) for p in ip2)
@@ -118,5 +152,5 @@ print("The formula breaks down for circles:\n")
 
 circle = conic_from_poly(x * x + y * y - 1)
 expected = IdealPoints(circle)[0]
-actual = ip_formula[0].subs(zip(conic, circle, strict=True))
+actual = ip_formulae[0].subs(zip(conic, circle, strict=True))
 println_indented(Ne(expected, actual, evaluate=False))
