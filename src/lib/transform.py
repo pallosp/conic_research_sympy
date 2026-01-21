@@ -71,10 +71,15 @@ def reflect_to_line(axis: Matrix) -> Matrix:
     ).applyfunc(lambda el: el / (a**2 + b**2))
 
 
-def scale_xy(scale_x: Expr, scale_y: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix:
+def scale_xy(
+    scale_x: Expr,
+    scale_y: Expr,
+    center: Sequence[Expr] | Matrix = ORIGIN,
+) -> Matrix:
     """Computes the projective transformation matrix for scaling along the x-
     and y-axes.
     """
+    x0, y0 = point_to_xy(center)
     return Matrix(
         [
             [scale_x, 0, x0 * (1 - scale_x)],
@@ -84,11 +89,11 @@ def scale_xy(scale_x: Expr, scale_y: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix
     )
 
 
-def scale(scale: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix:
+def scale(scale: Expr, center: Sequence[Expr] | Matrix = ORIGIN) -> Matrix:
     """Computes the projective transformation matrix for a uniform scaling
     transformation.
     """
-    return scale_xy(scale, scale, x0, y0)
+    return scale_xy(scale, scale, center=center)
 
 
 def homography_from_samples(

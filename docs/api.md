@@ -1780,8 +1780,7 @@ Returns a `nan` matrix if `axis` is the ideal line.
 ```python
 def scale_xy(scale_x: Expr,
              scale_y: Expr,
-             x0: Expr = 0,
-             y0: Expr = 0) -> Matrix
+             center: Sequence[Expr] | Matrix = ORIGIN) -> Matrix
 ```
 
 ([source](../src/lib/transform.py#L74))
@@ -1794,10 +1793,10 @@ and y-axes.
 #### scale
 
 ```python
-def scale(scale: Expr, x0: Expr = 0, y0: Expr = 0) -> Matrix
+def scale(scale: Expr, center: Sequence[Expr] | Matrix = ORIGIN) -> Matrix
 ```
 
-([source](../src/lib/transform.py#L87))
+([source](../src/lib/transform.py#L92))
 
 Computes the projective transformation matrix for a uniform scaling
 transformation.
@@ -1812,7 +1811,7 @@ def homography_from_samples(
         target_points: Sequence[Matrix | Sequence[Expr]]) -> Matrix
 ```
 
-([source](../src/lib/transform.py#L94))
+([source](../src/lib/transform.py#L99))
 
 Computes the transformation that maps one quadrilateral to another.
 

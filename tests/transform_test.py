@@ -73,15 +73,15 @@ class TestReflection:
 class TestScale:
     def test_scaling_around_point(self):
         x0, y0, s = symbols("x0,y0,s")
-        scaling = scale(s, x0, y0)
+        scaling = scale(s, center=(x0, y0))
         scaling_sequence = translate((x0, y0)) * scale(s) * translate((-x0, -y0))
         assert simplify(scaling) == simplify(scaling_sequence)
 
     def test_scaling_unevenly_around_point(self):
         sx, sy = symbols("sx sy")
-        origin = Matrix(symbols("x0 y0"))
-        scaling = scale_xy(sx, sy, *origin)
-        scaling_sequence = translate(origin) * scale_xy(sx, sy) * translate(-origin)
+        center = Matrix(symbols("x0 y0"))
+        scaling = scale_xy(sx, sy, center)
+        scaling_sequence = translate(center) * scale_xy(sx, sy) * translate(-center)
         assert simplify(scaling) == simplify(scaling_sequence)
 
 
@@ -118,7 +118,7 @@ class TestTransformPolarConic:
         polar_conic = Matrix(3, 3, symbols("a b c d e f g h i"))
         cartesian = conic_from_polar_matrix(polar_conic)
 
-        scaling = scale_xy(2, 3, 4, 5)
+        scaling = scale_xy(2, 3, center=(4, 5))
         scaled_polar = transform_polar_conic(polar_conic, scaling)
         scaled_cartesian = transform_conic(cartesian, scaling)
 
