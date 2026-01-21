@@ -93,6 +93,7 @@
 * [conic\_direction](#conic_direction)
   * [ConicNormFactor](#conic_direction.ConicNormFactor)
   * [focal\_axis\_direction](#conic_direction.focal_axis_direction)
+  * [conjugate\_axis\_direction](#conic_direction.conjugate_axis_direction)
 * [transform](#transform)
   * [transform\_point](#transform.transform_point)
   * [transform\_line](#transform.transform_line)
@@ -1656,6 +1657,8 @@ def focal_axis_direction(conic: Matrix) -> Matrix
 
 Returns the ideal point representing the direction of a conic's focal axis.
 
+The focal axis is also known as the transverse axis.
+
 Properties:
 - The focal axis is treated as an undirected line; its angle to the
   horizontal lies in the (-π/2, π/2] interval. For the full direction of a
@@ -1673,6 +1676,32 @@ Properties:
 
 *Formula*:
 [research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)
+
+<a id="conic_direction.conjugate_axis_direction"></a>
+
+#### conjugate\_axis\_direction
+
+```python
+def conjugate_axis_direction(conic: Matrix) -> Matrix
+```
+
+([source](../src/lib/conic_direction.py#L99))
+
+Returns the ideal point representing the direction of a conic's conjugate axis.
+
+It's equivalent to the ideal point on the directrix.
+
+Properties:
+- The conjugate axis is treated as an undirected line; its angle to the
+  horizontal lies in the (0, π] interval.
+- Returns `[0, 0, 0]ᵀ` for circles and
+  [circular conics](#conic_classes.is_circular).
+- Point conics constructed by
+  [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(ellipse)
+  preserve the axis direction of the original real or imaginary ellipse.
+- Line pair conics constructed by
+  [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(hyperbola)
+  have no such property.
 
 <a id="transform"></a>
 

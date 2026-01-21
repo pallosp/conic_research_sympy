@@ -70,6 +70,8 @@ class ConicNormFactor(Function):
 def focal_axis_direction(conic: Matrix) -> Matrix:
     """Returns the ideal point representing the direction of a conic's focal axis.
 
+    The focal axis is also known as the transverse axis.
+
     Properties:
     - The focal axis is treated as an undirected line; its angle to the
       horizontal lies in the (-π/2, π/2] interval. For the full direction of a
@@ -88,8 +90,30 @@ def focal_axis_direction(conic: Matrix) -> Matrix:
     *Formula*:
     [research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)
     """
-    # Use b as in ax² + 2bxy + cy²
     a, b, c = conic[0], conic[3], conic[4]
     norm_sign = ConicNormFactor(conic)
     x, y = sqrt(norm_sign * (a - c + 2 * I * b)).simplify().as_real_imag()
     return Matrix([x, y, 0])
+
+
+def conjugate_axis_direction(conic: Matrix) -> Matrix:
+    """Returns the ideal point representing the direction of a conic's conjugate axis.
+
+    It's equivalent to the ideal point on the directrix.
+
+    Properties:
+    - The conjugate axis is treated as an undirected line; its angle to the
+      horizontal lies in the (0, π] interval.
+    - Returns `[0, 0, 0]ᵀ` for circles and
+      [circular conics](#conic_classes.is_circular).
+    - Point conics constructed by
+      [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(ellipse)
+      preserve the axis direction of the original real or imaginary ellipse.
+    - Line pair conics constructed by
+      [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(hyperbola)
+      have no such property.
+    """
+    a, b, c = conic[0], conic[3], conic[4]
+    norm_sign = ConicNormFactor(conic)
+    x, y = sqrt(norm_sign * (a - c + 2 * I * b)).simplify().as_real_imag()
+    return Matrix([-y, x, 0])
