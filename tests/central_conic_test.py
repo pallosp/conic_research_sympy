@@ -3,6 +3,7 @@ from sympy import AppliedPredicate, Expr, I, Matrix, Q, Rational, nan, pi, symbo
 from sympy.abc import x, y
 
 from lib.central_conic import (
+    center_to_covertex_vector,
     center_to_focus_vector,
     center_to_vertex_vector,
     conic_center,
@@ -14,9 +15,9 @@ from lib.central_conic import (
     secondary_radius,
     shrink_conic_to_zero,
 )
-from lib.circle import UNIT_CIRCLE, circle
+from lib.circle import IMAGINARY_UNIT_CIRCLE, UNIT_CIRCLE, circle
 from lib.conic import IdealPoints, conic_from_focus_and_directrix, conic_from_poly
-from lib.conic_classes import is_point_conic
+from lib.conic_classes import UNIT_HYPERBOLA, is_point_conic
 from lib.degenerate_conic import line_pair_conic, point_conic
 from lib.ellipse import ellipse, ellipse_from_foci_and_point
 from lib.hyperbola import hyperbola_from_foci_and_point
@@ -282,9 +283,13 @@ class TestCenterToFocusVector:
 class TestCenterToVertexVector:
     def test_ellipse(self):
         ellipse = conic_from_foci_and_radius((0, 0), (3, 4), 10)
-        expected_vec = Matrix([6, 8])
-        assert center_to_vertex_vector(ellipse) == expected_vec
-        assert center_to_vertex_vector(-ellipse) == expected_vec
+        assert center_to_vertex_vector(ellipse) == Matrix([6, 8])
+        assert center_to_vertex_vector(-ellipse) == Matrix([6, 8])
+
+    def test_imaginary_ellipse(self):
+        im_ellipse = conic_from_foci_and_radius((0, 0), (3, 4), 10 * I)
+        assert center_to_vertex_vector(im_ellipse) == Matrix([6 * I, 8 * I])
+        assert center_to_vertex_vector(-im_ellipse) == Matrix([6 * I, 8 * I])
 
     def test_hyperbola(self):
         hyperbola = conic_from_foci_and_radius((0, 0), (9, 12), 5)
@@ -297,6 +302,10 @@ class TestCenterToVertexVector:
         assert center_to_vertex_vector(parabola) == Matrix([nan, zoo])
         assert center_to_vertex_vector(-parabola) == Matrix([nan, zoo])
 
+    def test_circle(self):
+        assert center_to_vertex_vector(circle((1, 2), 3)) == Matrix([nan, nan])
+        assert center_to_vertex_vector(IMAGINARY_UNIT_CIRCLE) == Matrix([nan, nan])
+
     def test_finite_point_conic(self):
         assert center_to_vertex_vector(point_conic([1, 2])) == Matrix([0, 0])
 
@@ -308,6 +317,35 @@ class TestCenterToVertexVector:
         line2 = Matrix([4, 5, 6])
         line_pair = line_pair_conic(line1, line2)
         assert center_to_vertex_vector(line_pair) == Matrix([0, 0])
+
+
+class TestCenterToCovertexVector:
+    def test_ellipse(self):
+        h_ellipse = ellipse((5, 4), 3, 2, r1_direction=(1, 0))
+        assert center_to_covertex_vector(h_ellipse) == Matrix([0, 2])
+
+        v_ellipse = ellipse((5, 4), 3, 2, r1_direction=(0, 1))
+        assert center_to_covertex_vector(v_ellipse) == Matrix([-2, 0])
+
+    def test_hyperbola(self):
+        assert center_to_covertex_vector(UNIT_HYPERBOLA) == Matrix([0, I])
+        assert center_to_covertex_vector(conic_from_poly(x * y - 1)) == Matrix([-I, I])
+
+    def test_circle(self):
+        assert center_to_covertex_vector(circle((1, 2), 3)) == Matrix([nan, nan])
+        assert center_to_covertex_vector(IMAGINARY_UNIT_CIRCLE) == Matrix([nan, nan])
+
+    def test_crossing_lines(self):
+        line1 = Matrix([1, 2, 3])
+        line2 = Matrix([4, 5, 6])
+        line_pair = line_pair_conic(line1, line2)
+        assert center_to_covertex_vector(line_pair) == Matrix([0, 0])
+
+    def test_finite_point_conic(self):
+        assert center_to_covertex_vector(point_conic([1, 2])) == Matrix([0, 0])
+
+    def test_ideal_point_conic(self):
+        assert center_to_covertex_vector(point_conic([2, 1, 0])) == Matrix([nan, nan])
 
 
 class TestShrinkToZero:

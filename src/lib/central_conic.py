@@ -2,7 +2,11 @@ from collections.abc import Sequence
 
 from sympy import Abs, Expr, Matrix, cos, sin, sqrt
 
-from lib.conic_direction import ConicNormFactor, focal_axis_direction
+from lib.conic_direction import (
+    ConicNormFactor,
+    conjugate_axis_direction,
+    focal_axis_direction,
+)
 from lib.matrix import conic_matrix, max_eigenvalue, min_eigenvalue
 from lib.point import point_to_xy
 
@@ -238,19 +242,46 @@ def center_to_focus_vector(conic: Matrix) -> Matrix:
 
 
 def center_to_vertex_vector(conic: Matrix) -> Matrix:
-    """Returns the 2D vector from a conic's center to one of its vertices.
+    """Vector from the center of a conic to one of its vertices.
 
-    The opposite vector points to the other vertex.
+    The negated vector points to the opposite vertex.
 
-    The function is only meaningful for
-    [central conics](#conic_classes.is_central_conic). The result vector
-    will contain infinite or `nan` elements when the conic lacks a finite
-    center.
+    Returns a 2D column vector with the following properties:
+     - *Non-circular ellipses and hyperbolas*:
+       real-valued coordinates; direction angle to the x-axis ∈ `(−π/2, π/2]`.
+     - *Non-circular imaginary ellipses*:
+       purely imaginary coordinates.
+     - *Circles and imaginary circles*:
+       `[nan, nan]ᵀ`.
+     - *Finite point conics and intersecting line pairs*:
+       `[0, 0]ᵀ`.
+     - *Parabolas and degenerate conics without a finite center*:
+       one or more components are infinite or `nan`
     """
     x, y, _ = focal_axis_direction(conic)
-
-    # Center-to-vertex vector = [x, y] / √(x² + y²) * primary radius
     multiplier = primary_radius(conic) / sqrt(x**2 + y**2)
+    return Matrix([x * multiplier, y * multiplier])
+
+
+def center_to_covertex_vector(conic: Matrix) -> Matrix:
+    """Vector from the center of a conic to one of its covertices.
+
+    The negated vector points to the opposite covertex.
+
+    Returns a 2D column vector with the following properties:
+     - *Non-circular ellipses*:
+       real-valued coordinates; direction angle to the x-axis ∈ `(0, π]`.
+     - *Hyperbolas and non-circular imaginary ellipses*:
+       purely imaginary coordinates.
+     - *Circles and imaginary circles*:
+       `[nan, nan]ᵀ`.
+     - *Finite point conics and intersecting line pairs*:
+       `[0, 0]ᵀ`.
+     - *Parabolas and degenerate conics without a finite center*:
+       one or more components are infinite or `nan`
+    """
+    x, y, _ = conjugate_axis_direction(conic)
+    multiplier = secondary_radius(conic) / sqrt(x**2 + y**2)
     return Matrix([x * multiplier, y * multiplier])
 
 

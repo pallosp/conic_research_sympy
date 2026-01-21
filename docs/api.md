@@ -23,6 +23,7 @@
   * [linear\_eccentricity](#central_conic.linear_eccentricity)
   * [center\_to\_focus\_vector](#central_conic.center_to_focus_vector)
   * [center\_to\_vertex\_vector](#central_conic.center_to_vertex_vector)
+  * [center\_to\_covertex\_vector](#central_conic.center_to_covertex_vector)
   * [shrink\_conic\_to\_zero](#central_conic.shrink_conic_to_zero)
 * [circle](#circle)
   * [circle](#circle.circle)
@@ -346,7 +347,7 @@ def conic_from_foci_and_radius(focus1: Matrix | Sequence[Expr],
                                primary_radius: Expr) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L10))
+([source](../src/lib/central_conic.py#L14))
 
 Computes the ellipse or hyperbola with the given focus points and primary radius.
 
@@ -366,7 +367,7 @@ def conic_from_center_and_points(center: Matrix | Sequence[Expr],
                                  p3: Matrix | Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L41))
+([source](../src/lib/central_conic.py#L45))
 
 Computes the conic section with the given center and perimeter points.
 
@@ -388,7 +389,7 @@ May return
 def conic_center(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L85))
+([source](../src/lib/central_conic.py#L89))
 
 Computes the center point of a conic.
 
@@ -405,7 +406,7 @@ Returns the point's coordinates as a 2D column vector.
 def semi_axis_lengths(conic: Matrix) -> tuple[Expr, Expr]
 ```
 
-([source](../src/lib/central_conic.py#L97))
+([source](../src/lib/central_conic.py#L101))
 
 Computes the semi-axis lengths of a conic in no specific order.
 
@@ -425,7 +426,7 @@ semi-minor in case of ellipses), call
 def primary_radius(conic: Matrix) -> Expr
 ```
 
-([source](../src/lib/central_conic.py#L127))
+([source](../src/lib/central_conic.py#L131))
 
 Computes the center-vertex distance of a conic.
 
@@ -448,7 +449,7 @@ The returned value is:
 def secondary_radius(conic: Matrix) -> Expr
 ```
 
-([source](../src/lib/central_conic.py#L144))
+([source](../src/lib/central_conic.py#L148))
 
 Computes the semi-conjugate axis length of a conic.
 
@@ -475,7 +476,7 @@ def radius_in_direction(conic: Matrix,
                         angle: Expr = None) -> Expr
 ```
 
-([source](../src/lib/central_conic.py#L162))
+([source](../src/lib/central_conic.py#L166))
 
 Computes the length of the conic radius in the given direction.
 
@@ -496,7 +497,7 @@ it. Its direction can be specified either as
 def linear_eccentricity(conic: Matrix) -> Expr
 ```
 
-([source](../src/lib/central_conic.py#L198))
+([source](../src/lib/central_conic.py#L202))
 
 Computes the linear eccentricity of a conic section.
 
@@ -523,7 +524,7 @@ radii of the conic (i.e., the semi-axis lengths in the case of an ellipse).
 def center_to_focus_vector(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L221))
+([source](../src/lib/central_conic.py#L225))
 
 Returns the 2D vector from a conic's center to one of its foci.
 
@@ -542,16 +543,49 @@ center.
 def center_to_vertex_vector(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L240))
+([source](../src/lib/central_conic.py#L244))
 
-Returns the 2D vector from a conic's center to one of its vertices.
+Vector from the center of a conic to one of its vertices.
 
-The opposite vector points to the other vertex.
+The negated vector points to the opposite vertex.
 
-The function is only meaningful for
-[central conics](#conic_classes.is_central_conic). The result vector
-will contain infinite or `nan` elements when the conic lacks a finite
-center.
+Returns a 2D column vector with the following properties:
+ - *Non-circular ellipses and hyperbolas*:
+   real-valued coordinates; direction angle to the x-axis ∈ `(−π/2, π/2]`.
+ - *Non-circular imaginary ellipses*:
+   purely imaginary coordinates.
+ - *Circles and imaginary circles*:
+   `[nan, nan]ᵀ`.
+ - *Finite point conics and intersecting line pairs*:
+   `[0, 0]ᵀ`.
+ - *Parabolas and degenerate conics without a finite center*:
+   one or more components are infinite or `nan`
+
+<a id="central_conic.center_to_covertex_vector"></a>
+
+#### center\_to\_covertex\_vector
+
+```python
+def center_to_covertex_vector(conic: Matrix) -> Matrix
+```
+
+([source](../src/lib/central_conic.py#L266))
+
+Vector from the center of a conic to one of its covertices.
+
+The negated vector points to the opposite covertex.
+
+Returns a 2D column vector with the following properties:
+ - *Non-circular ellipses*:
+   real-valued coordinates; direction angle to the x-axis ∈ `(0, π]`.
+ - *Hyperbolas and non-circular imaginary ellipses*:
+   purely imaginary coordinates.
+ - *Circles and imaginary circles*:
+   `[nan, nan]ᵀ`.
+ - *Finite point conics and intersecting line pairs*:
+   `[0, 0]ᵀ`.
+ - *Parabolas and degenerate conics without a finite center*:
+   one or more components are infinite or `nan`
 
 <a id="central_conic.shrink_conic_to_zero"></a>
 
@@ -561,7 +595,7 @@ center.
 def shrink_conic_to_zero(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L257))
+([source](../src/lib/central_conic.py#L288))
 
 Scales a conic section from its center with a factor of zero.
 
