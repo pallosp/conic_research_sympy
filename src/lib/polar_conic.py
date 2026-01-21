@@ -13,7 +13,7 @@ C(θ) = ⎢d  e  f⎥ * ⎢sin θ⎥
 
 from collections.abc import Sequence
 
-from sympy import Expr, Matrix, atan2, cos, sin
+from sympy import Expr, Matrix, atan2, cos, sin, sqrt
 
 from lib.circle import UNIT_CIRCLE
 from lib.point import point_to_vec3
@@ -57,3 +57,26 @@ def conic_from_polar_matrix(polar_conic: Matrix) -> Matrix:
     """
     polar_adjugate = polar_conic.adjugate()
     return polar_adjugate.T * UNIT_CIRCLE * polar_adjugate
+
+
+def ellipse_to_polar_matrix(ellipse: Matrix) -> Matrix:
+    """Converts an ellipse to a polar conic matrix.
+
+    Properties:
+     - The ellipse's vertices and covertices are π/2 apart.
+     - The secants between α and α+π go through the ellipse center.
+     - The z-coordinates of all curve points are 1.
+
+    *Formula*:
+    [research/construction/polar_ellipse.py](../src/research/construction/polar_ellipse.py)
+    """
+    a, _, _, b, c, _, d, e, _ = ellipse
+    disc = a * c - b * b
+    t = sqrt(-ellipse.det() / a)
+    return Matrix(
+        [
+            [t / sqrt(disc), -b * t / disc, (b * e - c * d) / disc],
+            [0, a * t / disc, (b * d - a * e) / disc],
+            [0, 0, 1],
+        ]
+    )

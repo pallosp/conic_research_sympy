@@ -1,13 +1,16 @@
 from sympy import Matrix, pi
 
+from lib.central_conic import conic_center
 from lib.circle import UNIT_CIRCLE
-from lib.incidence import conic_contains_point
+from lib.ellipse import ellipse
+from lib.incidence import are_collinear, conic_contains_point
 from lib.line import line_through_point
 from lib.matrix import is_nonzero_multiple
 from lib.polar_conic import (
     POLAR_UNIT_CIRCLE,
     angle_at_point,
     conic_from_polar_matrix,
+    ellipse_to_polar_matrix,
     point_at_angle,
     tangent_at_angle,
 )
@@ -40,3 +43,18 @@ class TestConicFromPolarMatrix:
         assert conic_contains_point(conic, point_at_angle(polar_conic, pi / 2))
         assert conic_contains_point(conic, point_at_angle(polar_conic, pi))
         assert conic_contains_point(conic, point_at_angle(polar_conic, -pi / 2))
+
+
+class TestEllipseToPolarMatrix:
+    def test_numeric_ellipse(self):
+        e = ellipse((1, 2), 3, 4, r1_direction=(5, 6))
+        p = ellipse_to_polar_matrix(e)
+        assert is_nonzero_multiple(conic_from_polar_matrix(p), e)
+        assert are_collinear(
+            [
+                point_at_angle(p, 0),
+                conic_center(e),
+                point_at_angle(p, pi),
+            ]
+        )
+        assert point_at_angle(p, 0)[2] == 1

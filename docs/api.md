@@ -119,6 +119,7 @@
   * [angle\_at\_point](#polar_conic.angle_at_point)
   * [tangent\_at\_angle](#polar_conic.tangent_at_angle)
   * [conic\_from\_polar\_matrix](#polar_conic.conic_from_polar_matrix)
+  * [ellipse\_to\_polar\_matrix](#polar_conic.ellipse_to_polar_matrix)
 * [incidence](#incidence)
   * [line\_contains\_point](#incidence.line_contains_point)
   * [conic\_contains\_point](#incidence.conic_contains_point)
@@ -2087,6 +2088,26 @@ Transforms a conic from polar to quadratic form.
 
 The algorithm is essentially applying the polar matrix as a projective
 transformation on the unit circle.
+
+<a id="polar_conic.ellipse_to_polar_matrix"></a>
+
+#### ellipse\_to\_polar\_matrix
+
+```python
+def ellipse_to_polar_matrix(ellipse: Matrix) -> Matrix
+```
+
+([source](../src/lib/polar_conic.py#L62))
+
+Converts an ellipse to a polar conic matrix.
+
+Properties:
+ - The ellipse's vertices and covertices are π/2 apart.
+ - The secants between α and α+π go through the ellipse center.
+ - The z-coordinates of all curve points are 1.
+
+*Formula*:
+[research/construction/polar_ellipse.py](../src/research/construction/polar_ellipse.py)
 
 <a id="incidence"></a>
 
