@@ -118,6 +118,7 @@
   * [point\_at\_angle](#polar_conic.point_at_angle)
   * [angle\_at\_point](#polar_conic.angle_at_point)
   * [tangent\_at\_angle](#polar_conic.tangent_at_angle)
+  * [curvature\_sign\_at\_angle](#polar_conic.curvature_sign_at_angle)
   * [conic\_from\_polar\_matrix](#polar_conic.conic_from_polar_matrix)
   * [ellipse\_to\_polar\_matrix](#polar_conic.ellipse_to_polar_matrix)
 * [incidence](#incidence)
@@ -2074,6 +2075,26 @@ Computes the tangent line to a polar conic at the given angle.
 *Formula*:
 [research/conic_properties/polar_conic_tangents.py](../src/research/conic_properties/polar_conic_tangents.py)
 
+<a id="polar_conic.curvature_sign_at_angle"></a>
+
+#### curvature\_sign\_at\_angle
+
+```python
+def curvature_sign_at_angle(polar_conic: Matrix,
+                            angle_radians: Expr) -> Matrix
+```
+
+([source](../src/lib/polar_conic.py#L52))
+
+Tells which direction a polar conic turns at an angle.
+
+- *Positive*: the curve turns left (counterclockwise).
+- *Negative*: the curve turns right (clockwise).
+- *Zero*: the curve point at the angle is an ideal point.
+
+*Formula*:
+[research/conic_properties/polar_conic_curvature_sign.py](../src/research/conic_properties/polar_conic_curvature_sign.py)
+
 <a id="polar_conic.conic_from_polar_matrix"></a>
 
 #### conic\_from\_polar\_matrix
@@ -2082,7 +2103,7 @@ Computes the tangent line to a polar conic at the given angle.
 def conic_from_polar_matrix(polar_conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L52))
+([source](../src/lib/polar_conic.py#L67))
 
 Transforms a conic from polar to quadratic form.
 
@@ -2097,7 +2118,7 @@ transformation on the unit circle.
 def ellipse_to_polar_matrix(ellipse: Matrix) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L62))
+([source](../src/lib/polar_conic.py#L77))
 
 Converts an ellipse to a polar conic matrix.
 

@@ -13,7 +13,7 @@ C(θ) = ⎢d  e  f⎥ * ⎢sin θ⎥
 
 from collections.abc import Sequence
 
-from sympy import Expr, Matrix, atan2, cos, sin, sqrt
+from sympy import Expr, Matrix, atan2, cos, sign, sin, sqrt
 
 from lib.circle import UNIT_CIRCLE
 from lib.point import point_to_vec3
@@ -47,6 +47,21 @@ def tangent_at_angle(polar_conic: Matrix, angle_radians: Expr) -> Matrix:
     """
     adj = polar_conic.adjugate()
     return adj.T * Matrix([cos(angle_radians), sin(angle_radians), -1])
+
+
+def curvature_sign_at_angle(polar_conic: Matrix, angle_radians: Expr) -> Matrix:
+    """Tells which direction a polar conic turns at an angle.
+
+    - *Positive*: the curve turns left (counterclockwise).
+    - *Negative*: the curve turns right (clockwise).
+    - *Zero*: the curve point at the angle is an ideal point.
+
+    *Formula*:
+    [research/conic_properties/polar_conic_curvature_sign.py](../src/research/conic_properties/polar_conic_curvature_sign.py)
+    """
+    g, h, i = polar_conic.row(2)
+    det = polar_conic.det()
+    return sign((g * cos(angle_radians) + h * sin(angle_radians) + i) * det)
 
 
 def conic_from_polar_matrix(polar_conic: Matrix) -> Matrix:

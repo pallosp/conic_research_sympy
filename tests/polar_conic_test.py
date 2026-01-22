@@ -10,10 +10,12 @@ from lib.polar_conic import (
     POLAR_UNIT_CIRCLE,
     angle_at_point,
     conic_from_polar_matrix,
+    curvature_sign_at_angle,
     ellipse_to_polar_matrix,
     point_at_angle,
     tangent_at_angle,
 )
+from lib.transform import homography_from_samples
 
 
 class TestAngleAtPoint:
@@ -29,6 +31,26 @@ class TestTangentAtAngle:
         point = point_at_angle(POLAR_UNIT_CIRCLE, pi / 4)
         expected = line_through_point(point, direction=(-1, 1))
         assert is_nonzero_multiple(tangent, expected)
+
+
+class TestCurvatureSignAtAngle:
+    def test_circle(self):
+        circle = Matrix.eye(3)
+        assert curvature_sign_at_angle(circle, 0) == 1
+        assert curvature_sign_at_angle(circle, pi / 2) == 1
+
+    def test_reverse_circle(self):
+        circle = Matrix.diag([1, -1, 1])
+        assert curvature_sign_at_angle(circle, 0) == -1
+
+    def test_hyperbola(self):
+        circle = ((1, 0), (0, 1), (-1, 0), (0, -1))
+        hyperbola = ((1, 0), (1, 1, 0), (-1, 0), (1, -1, 0))
+        polar_hyperbola = homography_from_samples(circle, hyperbola)
+        assert curvature_sign_at_angle(polar_hyperbola, 0) == -1
+        assert curvature_sign_at_angle(polar_hyperbola, pi / 2) == 0
+        assert curvature_sign_at_angle(polar_hyperbola, pi) == 1
+        assert curvature_sign_at_angle(polar_hyperbola, -pi / 2) == 0
 
 
 class TestConicFromPolarMatrix:
