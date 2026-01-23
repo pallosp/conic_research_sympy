@@ -13,9 +13,11 @@ C(θ) = ⎢d  e  f⎥ * ⎢sin θ⎥
 
 from collections.abc import Sequence
 
-from sympy import Expr, Matrix, atan2, cos, sign, sin, sqrt
+from sympy import Expr, I, Matrix, atan2, cos, sign, sin, sqrt
 
+from lib.central_conic import conic_center, primary_radius, secondary_radius
 from lib.circle import UNIT_CIRCLE
+from lib.conic_direction import focal_axis_direction
 from lib.point import point_to_vec3
 
 #: The circle at the origin with radius 1, in polar matrix form.
@@ -93,5 +95,30 @@ def ellipse_to_polar_matrix(ellipse: Matrix) -> Matrix:
             [t / sqrt(disc), -b * t / disc, (b * e - c * d) / disc],
             [0, a * t / disc, (b * d - a * e) / disc],
             [0, 0, 1],
+        ]
+    )
+
+
+def hyperbola_to_polar_matrix(hyperbola: Matrix) -> Matrix:
+    """Converts a hyperbola to a polar conic matrix.
+
+    Properties:
+     - The hyperbola's vertices and ideal points are π/2 apart.
+     - The secants between α and α+π go through the center point.
+
+    *Formula*:
+    [research/construction/polar_hyperbola.py](../src/research/construction/polar_hyperbola.py)
+    """
+    fd = focal_axis_direction(hyperbola)
+    cos_a, sin_a, _ = fd / fd.norm()
+    cx, cy = conic_center(hyperbola)
+    r1 = primary_radius(hyperbola)
+    r2 = secondary_radius(hyperbola)
+
+    return Matrix(
+        [
+            [cx, -I * r2 * sin_a, r1 * cos_a],
+            [cy, I * r2 * cos_a, r1 * sin_a],
+            [1, 0, 0],
         ]
     )

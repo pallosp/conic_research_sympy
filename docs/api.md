@@ -121,6 +121,7 @@
   * [curvature\_sign\_at\_angle](#polar_conic.curvature_sign_at_angle)
   * [conic\_from\_polar\_matrix](#polar_conic.conic_from_polar_matrix)
   * [ellipse\_to\_polar\_matrix](#polar_conic.ellipse_to_polar_matrix)
+  * [hyperbola\_to\_polar\_matrix](#polar_conic.hyperbola_to_polar_matrix)
 * [incidence](#incidence)
   * [line\_contains\_point](#incidence.line_contains_point)
   * [conic\_contains\_point](#incidence.conic_contains_point)
@@ -2050,7 +2051,7 @@ The circle at the origin with radius 1, in polar matrix form.
 def point_at_angle(polar_conic: Matrix, theta: Expr) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L25))
+([source](../src/lib/polar_conic.py#L27))
 
 Computes the coordinates of the projective point on a polar conic
 corresponding to a certain angle.
@@ -2064,7 +2065,7 @@ def angle_at_point(polar_conic: Matrix,
                    point: Matrix | Sequence[Expr]) -> Expr
 ```
 
-([source](../src/lib/polar_conic.py#L32))
+([source](../src/lib/polar_conic.py#L34))
 
 Computes the polar angle corresponding to a point on a polar conic.
 
@@ -2078,7 +2079,7 @@ The result is unspecified if the point is not on the conic.
 def tangent_at_angle(polar_conic: Matrix, angle_radians: Expr) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L42))
+([source](../src/lib/polar_conic.py#L44))
 
 Computes the tangent line to a polar conic at the given angle.
 
@@ -2094,7 +2095,7 @@ def curvature_sign_at_angle(polar_conic: Matrix,
                             angle_radians: Expr) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L52))
+([source](../src/lib/polar_conic.py#L54))
 
 Tells which direction a polar conic turns at an angle.
 
@@ -2113,7 +2114,7 @@ Tells which direction a polar conic turns at an angle.
 def conic_from_polar_matrix(polar_conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L67))
+([source](../src/lib/polar_conic.py#L69))
 
 Transforms a conic from polar to quadratic form.
 
@@ -2128,7 +2129,7 @@ transformation on the unit circle.
 def ellipse_to_polar_matrix(ellipse: Matrix) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L77))
+([source](../src/lib/polar_conic.py#L79))
 
 Converts an ellipse to a polar conic matrix.
 
@@ -2139,6 +2140,25 @@ Properties:
 
 *Formula*:
 [research/construction/polar_ellipse.py](../src/research/construction/polar_ellipse.py)
+
+<a id="polar_conic.hyperbola_to_polar_matrix"></a>
+
+#### hyperbola\_to\_polar\_matrix
+
+```python
+def hyperbola_to_polar_matrix(hyperbola: Matrix) -> Matrix
+```
+
+([source](../src/lib/polar_conic.py#L102))
+
+Converts a hyperbola to a polar conic matrix.
+
+Properties:
+ - The hyperbola's vertices and ideal points are π/2 apart.
+ - The secants between α and α+π go through the center point.
+
+*Formula*:
+[research/construction/polar_hyperbola.py](../src/research/construction/polar_hyperbola.py)
 
 <a id="incidence"></a>
 

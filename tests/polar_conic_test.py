@@ -1,17 +1,19 @@
-from sympy import Matrix, pi
+from sympy import Matrix, pi, simplify
 
 from lib.central_conic import conic_center
 from lib.circle import UNIT_CIRCLE
+from lib.conic_classes import is_hyperbola
 from lib.ellipse import ellipse
 from lib.incidence import are_collinear, conic_contains_point
 from lib.line import line_through_point
-from lib.matrix import is_nonzero_multiple
+from lib.matrix import conic_matrix, is_nonzero_multiple
 from lib.polar_conic import (
     POLAR_UNIT_CIRCLE,
     angle_at_point,
     conic_from_polar_matrix,
     curvature_sign_at_angle,
     ellipse_to_polar_matrix,
+    hyperbola_to_polar_matrix,
     point_at_angle,
     tangent_at_angle,
 )
@@ -80,3 +82,13 @@ class TestEllipseToPolarMatrix:
             ]
         )
         assert point_at_angle(p, 0)[2] == 1
+
+
+class TestHyperbolaToPolarMatrix:
+    def test_numeric_hyperbola(self):
+        hyperbola = conic_matrix(1, 2, 3, 4, 5, 6)
+        assert is_hyperbola(hyperbola)
+
+        polar_hyperbola = hyperbola_to_polar_matrix(hyperbola).applyfunc(simplify)
+        rebuilt_hyperbola = conic_from_polar_matrix(polar_hyperbola).applyfunc(simplify)
+        assert is_nonzero_multiple(rebuilt_hyperbola, hyperbola)
