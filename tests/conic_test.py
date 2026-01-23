@@ -4,13 +4,19 @@ from sympy import (
     Poly,
     Rational,
     exp,
+    factor,
     log,
     sqrt,
     symbols,
 )
 from sympy.abc import x, y
 
-from lib.central_conic import shrink_conic_to_zero
+from lib.central_conic import (
+    conic_from_center_and_points,
+    primary_radius,
+    secondary_radius,
+    shrink_conic_to_zero,
+)
 from lib.circle import UNIT_CIRCLE, circle
 from lib.conic import (
     IdealPoints,
@@ -23,6 +29,7 @@ from lib.conic import (
     pole_point,
     projective_conic_center,
 )
+from lib.conic_direction import focal_axis_direction
 from lib.degenerate_conic import line_pair_conic
 from lib.ellipse import ellipse
 from lib.incidence import conic_contains_point
@@ -227,6 +234,26 @@ class TestIdealPoints:
             ideal_points,
             [ideal_point(1, I), ideal_point(1, -I)],
         )
+
+    def test_hyperbola_radius_formula(self):
+        # Workaround for no ideal point support in conic_from_center_and_points
+        z = symbols("z")
+        hyperbola = (
+            (conic_from_center_and_points((0, 0), (1, 1), (2, 1, z), (1, 3, z)) * z**4)
+            .applyfunc(factor)
+            .subs(z, 0)
+        )
+
+        r1 = primary_radius(hyperbola).factor()
+        r2 = secondary_radius(hyperbola).factor()
+        dx, dy, _ = focal_axis_direction(hyperbola)
+        cos_a = dx / sqrt(dx**2 + dy**2).simplify()
+        sin_a = dy / sqrt(dx**2 + dy**2).simplify()
+
+        ip1 = Matrix([r1 * cos_a - I * r2 * sin_a, r1 * sin_a + I * r2 * cos_a, 0])
+        ip2 = Matrix([r1 * cos_a + I * r2 * sin_a, r1 * sin_a - I * r2 * cos_a, 0])
+
+        assert are_projective_sets_equal(IdealPoints(hyperbola), [ip1, ip2])
 
 
 class TestProjectiveConicCenter:

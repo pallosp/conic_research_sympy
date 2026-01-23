@@ -1020,6 +1020,16 @@ Returns two points. Special cases:
  - For ellipses these are the complex conjugates of each other.
  - For symbolic conics returns an unevaluated `sympy.Function`.
 
+The computation is based on intersecting the conic with the ideal line.
+
+An alternative formula for non-degenerate central conics is
+`[r₁·cos(α) ∓ 𝑖·r₂·sin(α), r₁·sin(α) ± 𝑖·r₂·cos(α), 0]ᵀ`, where `α` is the
+angle between the focal axis and the x-axis, and `r₁` and `r₂` are the conic
+radii. Note that `r₂` is imaginary in case of hyperbolas.
+
+*Research*:
+[research/conic_properties/ideal_points.py](../src/research/conic_properties/ideal_points.py)
+
 <a id="conic.IdealPoints.eval"></a>
 
 #### IdealPoints.eval
@@ -1029,7 +1039,7 @@ Returns two points. Special cases:
 def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None
 ```
 
-([source](../src/lib/conic.py#L144))
+([source](../src/lib/conic.py#L154))
 
 Internal implementation. Call `IdealPoints(conic)` directly.
 
@@ -1041,7 +1051,7 @@ Internal implementation. Call `IdealPoints(conic)` directly.
 def projective_conic_center(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/conic.py#L154))
+([source](../src/lib/conic.py#L164))
 
 Computes the generalized projective center of a conic.
 
@@ -1065,7 +1075,7 @@ For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
 def pole_point(conic: Matrix, polar_line: Matrix) -> Matrix
 ```
 
-([source](../src/lib/conic.py#L172))
+([source](../src/lib/conic.py#L182))
 
 Computes the pole point of a conic with respect to the given polar line.
 
@@ -1085,7 +1095,7 @@ complex conjugate lines, the pole is
 def polar_line(conic: Matrix, pole_point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/conic.py#L186))
+([source](../src/lib/conic.py#L196))
 
 Computes the polar line of a conic with respect to the given pole point.
 

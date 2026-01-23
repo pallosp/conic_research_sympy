@@ -138,6 +138,16 @@ class IdealPoints(Function):
      - For parabolas these are the same point.
      - For ellipses these are the complex conjugates of each other.
      - For symbolic conics returns an unevaluated `sympy.Function`.
+
+    The computation is based on intersecting the conic with the ideal line.
+
+    An alternative formula for non-degenerate central conics is
+    `[r₁·cos(α) ∓ 𝑖·r₂·sin(α), r₁·sin(α) ± 𝑖·r₂·cos(α), 0]ᵀ`, where `α` is the
+    angle between the focal axis and the x-axis, and `r₁` and `r₂` are the conic
+    radii. Note that `r₂` is imaginary in case of hyperbolas.
+
+    *Research*:
+    [research/conic_properties/ideal_points.py](../src/research/conic_properties/ideal_points.py)
     """
 
     @classmethod

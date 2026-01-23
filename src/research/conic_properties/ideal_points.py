@@ -5,11 +5,13 @@ from sympy import (
     I,
     Matrix,
     Ne,
+    cos,
     exp,
     expand_complex,
     factor,
     gcd,
     log,
+    sin,
     sqrt,
     symbols,
 )
@@ -24,11 +26,20 @@ from lib.matrix import conic_matrix, is_nonzero_multiple
 from lib.transform import rotate, transform_point
 from research.sympy_utils import eq_chain, println_indented
 
-print("\nIdeal points on a conic:\n")
+HORIZONTAL_LINE = "-" * 80
+
+################################################################################
+# Intersection with the ideal line
+################################################################################
+
+print()
+print("Ideal points on a conic:")
+print()
 
 println_indented(conic_x_line(conic_matrix(*symbols("a,b,c,d,e,f")), IDEAL_LINE))
 
-print("\nPotential formulae based on the coefficients' signs:\n")
+print("Potential NonzeroCross expansions based on the coefficients' signs:")
+print()
 
 solutions = set()
 for a_assumption in [{"zero": True}, {"nonzero": True}]:
@@ -46,7 +57,48 @@ for a_assumption in [{"zero": True}, {"nonzero": True}]:
                 solutions.add(str(ideal_points))
                 println_indented(ideal_points)
 
-print("Asymptote direction based formula:\n")
+################################################################################
+# Formula based on focal axis angle and radii
+################################################################################
+
+print(HORIZONTAL_LINE)
+print()
+print("Radius and focal axis angle based formula:")
+print()
+
+r1, r2, lin_ecc, axis_angle = symbols("r1 r2 l alpha")
+
+# Asymptote-axis angle; see ./asymptote_angle.py
+cos_aa_angle = r1 / lin_ecc
+sin_aa_angle = I * r2 / lin_ecc
+
+# First ideal point angle: axis_angle + aa_angle
+ideal_point_1 = Matrix(
+    [
+        cos(axis_angle) * cos_aa_angle - sin(axis_angle) * sin_aa_angle,
+        cos(axis_angle) * sin_aa_angle + sin(axis_angle) * cos_aa_angle,
+        0,
+    ]
+)
+
+# Second ideal point angle: axis_angle - aa_angle
+ideal_point_2 = ideal_point_1.subs(sin_aa_angle, -sin_aa_angle)
+
+ideal_point_1 /= gcd(*ideal_point_1[:2])
+ideal_point_1 = ideal_point_1.applyfunc(factor)
+ideal_point_2 /= gcd(*ideal_point_2[:2])
+ideal_point_2 = ideal_point_2.applyfunc(factor)
+
+println_indented((ideal_point_1, ideal_point_2))
+
+################################################################################
+# Branch-free, asymptote direction based formula
+################################################################################
+
+print(HORIZONTAL_LINE)
+print()
+print("Branch-free, asymptote direction based formula with complex coordinates:")
+print()
 
 
 def ideal_points_from_asymptotes(
@@ -125,7 +177,8 @@ ip_formulae = ideal_points_from_asymptotes(conic, expanded=True)
 
 println_indented(ip_formulae)
 
-print("Verification for concrete conics:\n")
+print("Verification for concrete conics:")
+print()
 
 conics = [
     conic_from_poly(x * x - y * y - 1),
@@ -148,7 +201,8 @@ for conic_example in conics:
     assert any(is_nonzero_multiple(ip1[1], p) for p in ip2)
     println_indented(eq_chain(ip1, ip2))
 
-print("The formula breaks down for circles:\n")
+print("The formula breaks down for circles:")
+print()
 
 circle = conic_from_poly(x * x + y * y - 1)
 expected = IdealPoints(circle)[0]
