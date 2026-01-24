@@ -114,6 +114,7 @@
   * [parabola\_focal\_parameter](#parabola.parabola_focal_parameter)
 * [polar\_conic](#polar_conic)
   * [POLAR\_UNIT\_CIRCLE](#polar_conic.POLAR_UNIT_CIRCLE)
+  * [PolarOrigin](#polar_conic.PolarOrigin)
   * [point\_at\_angle](#polar_conic.point_at_angle)
   * [angle\_at\_point](#polar_conic.angle_at_point)
   * [tangent\_at\_angle](#polar_conic.tangent_at_angle)
@@ -2036,6 +2037,48 @@ C(θ) = ⎢d  e  f⎥ * ⎢sin θ⎥
 
 The circle at the origin with radius 1, in polar matrix form.
 
+<a id="polar_conic.PolarOrigin"></a>
+
+## PolarOrigin
+
+```python
+class PolarOrigin(Enum)
+```
+
+([source](../src/lib/polar_conic.py#L28))
+
+Specifies which point of a conic in polar form corresponds to angle 0.
+
+<a id="polar_conic.PolarOrigin.VERTEX"></a>
+
+#### VERTEX
+
+A vertex of the conic.
+
+<a id="polar_conic.PolarOrigin.COVERTEX"></a>
+
+#### COVERTEX
+
+A co-vertex of the conic.
+
+<a id="polar_conic.PolarOrigin.IDEAL_POINT"></a>
+
+#### IDEAL\_POINT
+
+An ideal point of the conic.
+
+<a id="polar_conic.PolarOrigin.HORIZONTAL"></a>
+
+#### HORIZONTAL
+
+An endpoint of the horizontal diameter.
+
+<a id="polar_conic.PolarOrigin.VERTICAL"></a>
+
+#### VERTICAL
+
+An endpoint of the vertical diameter.
+
 <a id="polar_conic.point_at_angle"></a>
 
 #### point\_at\_angle
@@ -2044,7 +2087,7 @@ The circle at the origin with radius 1, in polar matrix form.
 def point_at_angle(polar_conic: Matrix, theta: Expr) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L27))
+([source](../src/lib/polar_conic.py#L47))
 
 Computes the coordinates of the projective point on a polar conic
 corresponding to a certain angle.
@@ -2058,7 +2101,7 @@ def angle_at_point(polar_conic: Matrix,
                    point: Matrix | Sequence[Expr]) -> Expr
 ```
 
-([source](../src/lib/polar_conic.py#L34))
+([source](../src/lib/polar_conic.py#L54))
 
 Computes the polar angle corresponding to a point on a polar conic.
 
@@ -2072,7 +2115,7 @@ The result is unspecified if the point is not on the conic.
 def tangent_at_angle(polar_conic: Matrix, angle_radians: Expr) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L44))
+([source](../src/lib/polar_conic.py#L64))
 
 Computes the tangent line to a polar conic at the given angle.
 
@@ -2088,7 +2131,7 @@ def curvature_sign_at_angle(polar_conic: Matrix,
                             angle_radians: Expr) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L54))
+([source](../src/lib/polar_conic.py#L74))
 
 Tells which direction a polar conic turns at an angle.
 
@@ -2107,7 +2150,7 @@ Tells which direction a polar conic turns at an angle.
 def conic_from_polar_matrix(polar_conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L69))
+([source](../src/lib/polar_conic.py#L89))
 
 Transforms a conic from polar to quadratic form.
 
@@ -2119,17 +2162,20 @@ transformation on the unit circle.
 #### ellipse\_to\_polar\_matrix
 
 ```python
-def ellipse_to_polar_matrix(ellipse: Matrix) -> Matrix
+def ellipse_to_polar_matrix(
+        ellipse: Matrix,
+        start: PolarOrigin = PolarOrigin.HORIZONTAL) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L79))
+([source](../src/lib/polar_conic.py#L99))
 
-Converts an ellipse to a polar conic matrix.
+Converts an ellipse to a polar conic matrix representation.
 
-Properties:
- - The ellipse's vertices and covertices are π/2 apart.
+The resulting polar form has the following properties:
+ - The vertices and covertices are separated by an angular distance of π/2.
  - The secants between α and α+π go through the ellipse center.
- - The z-coordinates of all curve points are 1.
+ - The homogeneous z-coordinates of all points on the curve are equal to 1.
+ - The point corresponding to angle 0 is determined by the `start` parameter.
 
 *Formula*:
 [research/construction/polar_ellipse.py](../src/research/construction/polar_ellipse.py)
@@ -2139,16 +2185,19 @@ Properties:
 #### hyperbola\_to\_polar\_matrix
 
 ```python
-def hyperbola_to_polar_matrix(hyperbola: Matrix) -> Matrix
+def hyperbola_to_polar_matrix(hyperbola: Matrix,
+                              start: PolarOrigin = PolarOrigin.VERTEX
+                              ) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L102))
+([source](../src/lib/polar_conic.py#L129))
 
-Converts a hyperbola to a polar conic matrix.
+Converts a hyperbola to a polar conic matrix representation.
 
-Properties:
- - The hyperbola's vertices and ideal points are π/2 apart.
+The resulting polar form has the following properties:
+ - The vertices and ideal points are separated by an angular distance of π/2.
  - The secants between α and α+π go through the center point.
+ - The point corresponding to angle 0 is determined by the `start` parameter.
 
 *Formula*:
 [research/construction/polar_hyperbola.py](../src/research/construction/polar_hyperbola.py)

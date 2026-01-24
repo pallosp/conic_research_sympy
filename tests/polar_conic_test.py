@@ -1,14 +1,18 @@
-from sympy import Matrix, pi, simplify
+import pytest
+from sympy import Matrix, pi, simplify, symbols
 
-from lib.central_conic import conic_center
+from lib.central_conic import center_to_vertex_vector, conic_center
 from lib.circle import UNIT_CIRCLE
 from lib.conic_classes import is_hyperbola
 from lib.ellipse import ellipse
+from lib.hyperbola import UNIT_HYPERBOLA
 from lib.incidence import are_collinear, conic_contains_point
 from lib.line import line_through_point
 from lib.matrix import conic_matrix, is_nonzero_multiple
+from lib.point import point_to_xy
 from lib.polar_conic import (
     POLAR_UNIT_CIRCLE,
+    PolarOrigin,
     angle_at_point,
     conic_from_polar_matrix,
     curvature_sign_at_angle,
@@ -72,16 +76,30 @@ class TestConicFromPolarMatrix:
 class TestEllipseToPolarMatrix:
     def test_numeric_ellipse(self):
         e = ellipse((1, 2), 3, 4, r1_direction=(5, 6))
-        p = ellipse_to_polar_matrix(e)
-        assert is_nonzero_multiple(conic_from_polar_matrix(p), e)
-        assert are_collinear(
-            [
-                point_at_angle(p, 0),
-                conic_center(e),
-                point_at_angle(p, pi),
-            ]
-        )
-        assert point_at_angle(p, 0)[2] == 1
+
+        start_points = [PolarOrigin.HORIZONTAL]
+        polar_ellipses = {}
+
+        for start in start_points:
+            p = ellipse_to_polar_matrix(e, start=start)
+            polar_ellipses[start] = p
+            assert is_nonzero_multiple(conic_from_polar_matrix(p), e)
+            assert are_collinear(
+                [
+                    point_at_angle(p, 0),
+                    conic_center(e),
+                    point_at_angle(p, pi),
+                ]
+            )
+            assert point_at_angle(p, symbols("a"))[2] == 1
+
+        start_point = point_at_angle(polar_ellipses[PolarOrigin.HORIZONTAL], 0)
+        assert start_point[1] == 2
+
+    def test_unsupported_polar_origin(self):
+        e = ellipse((0, 0), 2, 1)
+        with pytest.raises(ValueError, match="Unsupported PolarOrigin"):
+            ellipse_to_polar_matrix(e, start=PolarOrigin.IDEAL_POINT)
 
 
 class TestHyperbolaToPolarMatrix:
@@ -89,6 +107,23 @@ class TestHyperbolaToPolarMatrix:
         hyperbola = conic_matrix(1, 2, 3, 4, 5, 6)
         assert is_hyperbola(hyperbola)
 
-        polar_hyperbola = hyperbola_to_polar_matrix(hyperbola).applyfunc(simplify)
-        rebuilt_hyperbola = conic_from_polar_matrix(polar_hyperbola).applyfunc(simplify)
-        assert is_nonzero_multiple(rebuilt_hyperbola, hyperbola)
+        start_points = [PolarOrigin.VERTEX]
+        polar_hyperbolas = {}
+
+        for start in start_points:
+            polar_hyperbola = hyperbola_to_polar_matrix(hyperbola, start=start)
+            polar_hyperbolas[start] = polar_hyperbola
+            polar_hyperbola = polar_hyperbola.applyfunc(simplify)
+
+            rebuilt_hyperbola = conic_from_polar_matrix(polar_hyperbola)
+            rebuilt_hyperbola = rebuilt_hyperbola.applyfunc(simplify)
+
+            assert is_nonzero_multiple(rebuilt_hyperbola, hyperbola)
+
+        start_point = point_at_angle(polar_hyperbolas[PolarOrigin.VERTEX], 0)
+        vertex = conic_center(hyperbola) + center_to_vertex_vector(hyperbola)
+        assert point_to_xy(start_point) == vertex
+
+    def test_unsupported_polar_origin(self):
+        with pytest.raises(ValueError, match="Unsupported PolarOrigin"):
+            hyperbola_to_polar_matrix(UNIT_HYPERBOLA, start=PolarOrigin.COVERTEX)

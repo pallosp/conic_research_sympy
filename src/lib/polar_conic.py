@@ -12,6 +12,7 @@ C(θ) = ⎢d  e  f⎥ * ⎢sin θ⎥
 """
 
 from collections.abc import Sequence
+from enum import Enum
 
 from sympy import Expr, I, Matrix, atan2, cos, sign, sin, sqrt
 
@@ -22,6 +23,25 @@ from lib.point import point_to_vec3
 
 #: The circle at the origin with radius 1, in polar matrix form.
 POLAR_UNIT_CIRCLE: Matrix = Matrix.eye(3)
+
+
+class PolarOrigin(Enum):
+    """Specifies which point of a conic in polar form corresponds to angle 0."""
+
+    #: A vertex of the conic.
+    VERTEX = 0
+
+    #: A co-vertex of the conic.
+    COVERTEX = 1
+
+    #: An ideal point of the conic.
+    IDEAL_POINT = 2
+
+    #: An endpoint of the horizontal diameter.
+    HORIZONTAL = 3
+
+    #: An endpoint of the vertical diameter.
+    VERTICAL = 4
 
 
 def point_at_angle(polar_conic: Matrix, theta: Expr) -> Matrix:
@@ -76,49 +96,63 @@ def conic_from_polar_matrix(polar_conic: Matrix) -> Matrix:
     return polar_adjugate.T * UNIT_CIRCLE * polar_adjugate
 
 
-def ellipse_to_polar_matrix(ellipse: Matrix) -> Matrix:
-    """Converts an ellipse to a polar conic matrix.
+def ellipse_to_polar_matrix(
+    ellipse: Matrix,
+    start: PolarOrigin = PolarOrigin.HORIZONTAL,
+) -> Matrix:
+    """Converts an ellipse to a polar conic matrix representation.
 
-    Properties:
-     - The ellipse's vertices and covertices are π/2 apart.
+    The resulting polar form has the following properties:
+     - The vertices and covertices are separated by an angular distance of π/2.
      - The secants between α and α+π go through the ellipse center.
-     - The z-coordinates of all curve points are 1.
+     - The homogeneous z-coordinates of all points on the curve are equal to 1.
+     - The point corresponding to angle 0 is determined by the `start` parameter.
 
     *Formula*:
     [research/construction/polar_ellipse.py](../src/research/construction/polar_ellipse.py)
     """
-    a, _, _, b, c, _, d, e, _ = ellipse
-    disc = a * c - b * b
-    t = sqrt(-ellipse.det() / a)
-    return Matrix(
-        [
-            [t / sqrt(disc), -b * t / disc, (b * e - c * d) / disc],
-            [0, a * t / disc, (b * d - a * e) / disc],
-            [0, 0, 1],
-        ]
-    )
+    if start == PolarOrigin.HORIZONTAL:
+        a, _, _, b, c, _, d, e, _ = ellipse
+        disc = a * c - b * b
+        t = sqrt(-ellipse.det() / a)
+        return Matrix(
+            [
+                [t / sqrt(disc), -b * t / disc, (b * e - c * d) / disc],
+                [0, a * t / disc, (b * d - a * e) / disc],
+                [0, 0, 1],
+            ]
+        )
+
+    raise ValueError("Unsupported PolarOrigin value")
 
 
-def hyperbola_to_polar_matrix(hyperbola: Matrix) -> Matrix:
-    """Converts a hyperbola to a polar conic matrix.
+def hyperbola_to_polar_matrix(
+    hyperbola: Matrix,
+    start: PolarOrigin = PolarOrigin.VERTEX,
+) -> Matrix:
+    """Converts a hyperbola to a polar conic matrix representation.
 
-    Properties:
-     - The hyperbola's vertices and ideal points are π/2 apart.
+    The resulting polar form has the following properties:
+     - The vertices and ideal points are separated by an angular distance of π/2.
      - The secants between α and α+π go through the center point.
+     - The point corresponding to angle 0 is determined by the `start` parameter.
 
     *Formula*:
     [research/construction/polar_hyperbola.py](../src/research/construction/polar_hyperbola.py)
     """
-    fd = focal_axis_direction(hyperbola)
-    cos_a, sin_a, _ = fd / fd.norm()
-    cx, cy = conic_center(hyperbola)
-    r1 = primary_radius(hyperbola)
-    r2 = secondary_radius(hyperbola)
+    if start == PolarOrigin.VERTEX:
+        fd = focal_axis_direction(hyperbola)
+        cos_a, sin_a, _ = fd / fd.norm()
+        cx, cy = conic_center(hyperbola)
+        r1 = primary_radius(hyperbola)
+        r2 = secondary_radius(hyperbola)
 
-    return Matrix(
-        [
-            [cx, -I * r2 * sin_a, r1 * cos_a],
-            [cy, I * r2 * cos_a, r1 * sin_a],
-            [1, 0, 0],
-        ]
-    )
+        return Matrix(
+            [
+                [cx, -I * r2 * sin_a, r1 * cos_a],
+                [cy, I * r2 * cos_a, r1 * sin_a],
+                [1, 0, 0],
+            ]
+        )
+
+    raise ValueError("Unsupported PolarOrigin value")
