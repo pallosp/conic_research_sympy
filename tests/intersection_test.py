@@ -79,7 +79,7 @@ class TestConicXLine:
 
     def test_complex_intersection(self):
         intersections = conic_x_line(UNIT_CIRCLE, horizontal_line(2))
-        intersections = sorted((point_to_xy(i) for i in intersections), key=str)
+        intersections = sorted((tuple(point_to_xy(i)) for i in intersections), key=str)
         assert intersections == sorted([(-sqrt(3) * I, 2), (sqrt(3) * I, 2)], key=str)
 
     def test_symbolic_conic(self):

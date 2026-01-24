@@ -1,9 +1,27 @@
 import pytest
-from sympy import Matrix, Rational, nan, symbols
+from sympy import Matrix, Rational, nan, symbols, zoo
 
 from lib.line import IDEAL_LINE
 from lib.matrix import is_nonzero_multiple
-from lib.point import centroid, ideal_point_on_line, perpendicular_foot
+from lib.point import centroid, ideal_point_on_line, perpendicular_foot, point_to_xy
+
+
+class TestPointToXy:
+    def test_2d(self):
+        assert point_to_xy((1, 2)) == Matrix([1, 2])
+        assert point_to_xy([1, 2]) == Matrix([1, 2])
+        assert point_to_xy(Matrix([1, 2])) == Matrix([1, 2])
+
+    def test_3d(self):
+        assert point_to_xy((1, 2, 3)) == Matrix([Rational(1, 3), Rational(2, 3)])
+        assert point_to_xy([-3, -2, -1]) == Matrix([3, 2])
+        assert point_to_xy(Matrix([-3, -2, -1])) == Matrix([3, 2])
+
+    def test_ideal_point(self):
+        assert point_to_xy((1, 2, 0)) == Matrix([zoo, zoo])
+
+    def test_zero_vector(self):
+        assert point_to_xy((0, 0, 0)) == Matrix([nan, nan])
 
 
 class TestIdealPointOnLine:

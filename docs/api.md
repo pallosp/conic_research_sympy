@@ -1592,7 +1592,7 @@ If the line is the ideal line, returns `[0, 0, 0]ᵀ`.
 #### point\_to\_xy
 
 ```python
-def point_to_xy(point: Matrix | Sequence[Expr]) -> tuple[Expr, Expr]
+def point_to_xy(point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
 ([source](../src/lib/point.py#L25))
@@ -1607,7 +1607,7 @@ Computes the Euclidean coordinates of a projective point.
 def point_to_vec3(point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/point.py#L35))
+([source](../src/lib/point.py#L34))
 
 Computes the homogeneous coordinates of a projective point.
 
@@ -1619,7 +1619,7 @@ Computes the homogeneous coordinates of a projective point.
 def centroid(*points: Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/point.py#L46))
+([source](../src/lib/point.py#L45))
 
 Computes the centroid of a set of points.
 
@@ -1633,7 +1633,7 @@ Returns the point's coordinates as a 2D column vector.
 def perpendicular_foot(point: Matrix | Sequence[Expr], line: Matrix) -> Matrix
 ```
 
-([source](../src/lib/point.py#L62))
+([source](../src/lib/point.py#L61))
 
 Computes the foot of the perpendicular through a point to a line.
 

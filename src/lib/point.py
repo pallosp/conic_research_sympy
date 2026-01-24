@@ -22,14 +22,13 @@ def ideal_point_on_line(line: Matrix) -> Matrix:
     return Matrix([line[1], -line[0], 0])
 
 
-def point_to_xy(point: Matrix | Sequence[Expr]) -> tuple[Expr, Expr]:
+def point_to_xy(point: Matrix | Sequence[Expr]) -> Matrix:
     """Computes the Euclidean coordinates of a projective point."""
     if len(point) not in (2, 3):
         raise ValueError("The point must be a 2D or 3D vector, list or tuple.")
-    if len(point) == 2:
-        return sympify(point)
-    x, y, z = sympify(point)
-    return (x / z, y / z)
+    x, y, *z = sympify(point)
+    z = sympify(z[0]) if z else S.One
+    return Matrix([x / z, y / z])
 
 
 def point_to_vec3(point: Matrix | Sequence[Expr]) -> Matrix:
