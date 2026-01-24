@@ -263,6 +263,23 @@ def center_to_vertex_vector(conic: Matrix) -> Matrix:
     return Matrix([x * multiplier, y * multiplier])
 
 
+def central_conic_vertices(conic: Matrix) -> tuple[Matrix, Matrix]:
+    """Computes the vertices of a central conic.
+
+    Returns a pair of 2D column vectors.
+
+    Special cases:
+     - *Real-valued and imaginary circles*: a pair of `[nan, nan]ᵀ` vectors.
+     - *Other imaginary ellipses*: purely imaginary coordinates.
+     - *Finite point conics and intersecting line pairs*: 2x the center point.
+     - *Parabolas and degenerate conics without a finite center*: vectors with
+       at least one infinite or `nan` component.
+    """
+    center = conic_center(conic)
+    cvv = center_to_vertex_vector(conic)
+    return (center + cvv, center - cvv)
+
+
 def center_to_covertex_vector(conic: Matrix) -> Matrix:
     """Vector from the center of a conic to one of its covertices.
 

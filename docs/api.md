@@ -23,6 +23,7 @@
   * [linear\_eccentricity](#central_conic.linear_eccentricity)
   * [center\_to\_focus\_vector](#central_conic.center_to_focus_vector)
   * [center\_to\_vertex\_vector](#central_conic.center_to_vertex_vector)
+  * [central\_conic\_vertices](#central_conic.central_conic_vertices)
   * [center\_to\_covertex\_vector](#central_conic.center_to_covertex_vector)
   * [shrink\_conic\_to\_zero](#central_conic.shrink_conic_to_zero)
 * [circle](#circle)
@@ -565,6 +566,27 @@ Returns a 2D column vector with the following properties:
  - *Parabolas and degenerate conics without a finite center*:
    one or more components are infinite or `nan`
 
+<a id="central_conic.central_conic_vertices"></a>
+
+#### central\_conic\_vertices
+
+```python
+def central_conic_vertices(conic: Matrix) -> tuple[Matrix, Matrix]
+```
+
+([source](../src/lib/central_conic.py#L266))
+
+Computes the vertices of a central conic.
+
+Returns a pair of 2D column vectors.
+
+Special cases:
+ - *Real-valued and imaginary circles*: a pair of `[nan, nan]ᵀ` vectors.
+ - *Other imaginary ellipses*: purely imaginary coordinates.
+ - *Finite point conics and intersecting line pairs*: 2x the center point.
+ - *Parabolas and degenerate conics without a finite center*: vectors with
+   at least one infinite or `nan` component.
+
 <a id="central_conic.center_to_covertex_vector"></a>
 
 #### center\_to\_covertex\_vector
@@ -573,7 +595,7 @@ Returns a 2D column vector with the following properties:
 def center_to_covertex_vector(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L266))
+([source](../src/lib/central_conic.py#L283))
 
 Vector from the center of a conic to one of its covertices.
 
@@ -599,7 +621,7 @@ Returns a 2D column vector with the following properties:
 def shrink_conic_to_zero(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L288))
+([source](../src/lib/central_conic.py#L305))
 
 Scales a conic section from its center with a factor of zero.
 

@@ -1,7 +1,7 @@
 import pytest
 from sympy import Matrix, pi, simplify, symbols
 
-from lib.central_conic import center_to_vertex_vector, conic_center
+from lib.central_conic import central_conic_vertices, conic_center
 from lib.circle import UNIT_CIRCLE
 from lib.conic_classes import is_hyperbola
 from lib.ellipse import ellipse
@@ -121,7 +121,7 @@ class TestHyperbolaToPolarMatrix:
             assert is_nonzero_multiple(rebuilt_hyperbola, hyperbola)
 
         start_point = point_at_angle(polar_hyperbolas[PolarOrigin.VERTEX], 0)
-        vertex = conic_center(hyperbola) + center_to_vertex_vector(hyperbola)
+        vertex = central_conic_vertices(hyperbola)[0]
         assert point_to_xy(start_point) == vertex
 
     def test_unsupported_polar_origin(self):

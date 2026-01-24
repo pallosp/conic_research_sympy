@@ -6,6 +6,7 @@ from lib.central_conic import (
     center_to_covertex_vector,
     center_to_focus_vector,
     center_to_vertex_vector,
+    central_conic_vertices,
     conic_center,
     conic_from_center_and_points,
     conic_from_foci_and_radius,
@@ -280,11 +281,17 @@ class TestCenterToFocusVector:
         assert center_to_focus_vector(line_pair) == Matrix([0, 0])
 
 
-class TestCenterToVertexVector:
+class TestVertices:
     def test_ellipse(self):
         ellipse = conic_from_foci_and_radius((0, 0), (3, 4), 10)
+
         assert center_to_vertex_vector(ellipse) == Matrix([6, 8])
         assert center_to_vertex_vector(-ellipse) == Matrix([6, 8])
+
+        assert central_conic_vertices(ellipse) == (
+            Matrix([Rational(15, 2), 10]),
+            Matrix([Rational(-9, 2), -6]),
+        )
 
     def test_imaginary_ellipse(self):
         im_ellipse = conic_from_foci_and_radius((0, 0), (3, 4), 10 * I)
@@ -306,8 +313,17 @@ class TestCenterToVertexVector:
         assert center_to_vertex_vector(circle((1, 2), 3)) == Matrix([nan, nan])
         assert center_to_vertex_vector(IMAGINARY_UNIT_CIRCLE) == Matrix([nan, nan])
 
+        assert central_conic_vertices(UNIT_CIRCLE) == (
+            Matrix([nan, nan]),
+            Matrix([nan, nan]),
+        )
+
     def test_finite_point_conic(self):
         assert center_to_vertex_vector(point_conic([1, 2])) == Matrix([0, 0])
+        assert central_conic_vertices(point_conic([3, 4])) == (
+            Matrix([3, 4]),
+            Matrix([3, 4]),
+        )
 
     def test_ideal_point_conic(self):
         assert center_to_vertex_vector(point_conic([2, 1, 0])) == Matrix([nan, nan])
