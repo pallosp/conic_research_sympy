@@ -6,6 +6,10 @@ from lib.central_conic import conic_from_foci_and_radius, shrink_conic_to_zero
 from lib.conic_direction import ConicNormFactor
 from lib.distance import point_point_distance
 
+#: The x² - y² = 1 hyperbola.
+#: https://en.wikipedia.org/wiki/Unit_hyperbola
+UNIT_HYPERBOLA: Matrix = Matrix.diag([1, -1, -1])
+
 
 def hyperbola_from_foci_and_point(
     focus1: Matrix | Sequence[Expr],

@@ -1,7 +1,7 @@
 from sympy import Matrix, expand, pi, simplify, symbols
 
 from lib.circle import UNIT_CIRCLE
-from lib.conic_classes import UNIT_HYPERBOLA
+from lib.hyperbola import UNIT_HYPERBOLA
 from lib.transform import reflect_to_line, rotate, scale, transform_conic, translate
 from lib.transform_classes import (
     is_affine_transform,

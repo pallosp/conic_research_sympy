@@ -78,7 +78,6 @@
   * [is\_double\_line](#conic_classes.is_double_line)
   * [is\_point\_conic](#conic_classes.is_point_conic)
   * [is\_finite\_point\_conic](#conic_classes.is_finite_point_conic)
-  * [UNIT\_HYPERBOLA](#conic_classes.UNIT_HYPERBOLA)
 * [distance](#distance)
   * [point\_point\_distance](#distance.point_point_distance)
   * [point\_line\_distance](#distance.point_line_distance)
@@ -132,6 +131,7 @@
   * [are\_on\_same\_conic](#incidence.are_on_same_conic)
   * [are\_cocircular](#incidence.are_cocircular)
 * [hyperbola](#hyperbola)
+  * [UNIT\_HYPERBOLA](#hyperbola.UNIT_HYPERBOLA)
   * [hyperbola\_from\_foci\_and\_point](#hyperbola.hyperbola_from_foci_and_point)
   * [asymptote\_focal\_axis\_angle](#hyperbola.asymptote_focal_axis_angle)
   * [asymptote\_conic](#hyperbola.asymptote_conic)
@@ -1489,13 +1489,6 @@ Tells whether the conic consists of a single finite (Euclidean) point.
 
 Returns `None` if undecidable.
 
-<a id="conic_classes.UNIT_HYPERBOLA"></a>
-
-#### UNIT\_HYPERBOLA
-
-The x² - y² = 1 hyperbola.
-https://en.wikipedia.org/wiki/Unit_hyperbola
-
 <a id="distance"></a>
 
 # distance
@@ -2338,6 +2331,13 @@ https://upcommons.upc.edu/entities/publication/2001f976-4a50-4415-a706-79bbb2ca4
 
 # hyperbola
 
+<a id="hyperbola.UNIT_HYPERBOLA"></a>
+
+#### UNIT\_HYPERBOLA
+
+The x² - y² = 1 hyperbola.
+https://en.wikipedia.org/wiki/Unit_hyperbola
+
 <a id="hyperbola.hyperbola_from_foci_and_point"></a>
 
 #### hyperbola\_from\_foci\_and\_point
@@ -2348,7 +2348,7 @@ def hyperbola_from_foci_and_point(focus1: Matrix | Sequence[Expr],
                                   point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/hyperbola.py#L10))
+([source](../src/lib/hyperbola.py#L14))
 
 Constructs a hyperbola from its focus points and an incident point.
 
@@ -2363,7 +2363,7 @@ Constructs a hyperbola from its focus points and an incident point.
 def asymptote_focal_axis_angle(hyperbola: Matrix) -> Expr
 ```
 
-([source](../src/lib/hyperbola.py#L24))
+([source](../src/lib/hyperbola.py#L28))
 
 Computes the angle between the axis and an asymptote of a hyperbola.
 
@@ -2396,7 +2396,7 @@ Return values for other conics:
 def asymptote_conic(hyperbola: Matrix) -> Matrix
 ```
 
-([source](../src/lib/hyperbola.py#L54))
+([source](../src/lib/hyperbola.py#L58))
 
 Computes the line pair conic representing the hyperbola's asymptotes.
 

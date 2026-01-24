@@ -17,10 +17,10 @@ from lib.central_conic import (
 )
 from lib.circle import IMAGINARY_UNIT_CIRCLE, UNIT_CIRCLE, circle
 from lib.conic import IdealPoints, conic_from_focus_and_directrix, conic_from_poly
-from lib.conic_classes import UNIT_HYPERBOLA, is_point_conic
+from lib.conic_classes import is_point_conic
 from lib.degenerate_conic import line_pair_conic, point_conic
 from lib.ellipse import ellipse, ellipse_from_foci_and_point
-from lib.hyperbola import hyperbola_from_foci_and_point
+from lib.hyperbola import UNIT_HYPERBOLA, hyperbola_from_foci_and_point
 from lib.line import X_AXIS, horizontal_line
 from lib.matrix import is_nonzero_multiple
 from lib.point import ORIGIN

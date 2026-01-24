@@ -224,8 +224,3 @@ def is_finite_point_conic(conic: Matrix) -> bool | None:
     Returns `None` if undecidable.
     """
     return fuzzy_and([is_degenerate(conic), is_finite_conic(conic)])
-
-
-#: The x² - y² = 1 hyperbola.
-#: https://en.wikipedia.org/wiki/Unit_hyperbola
-UNIT_HYPERBOLA: Matrix = Matrix.diag([1, -1, -1])

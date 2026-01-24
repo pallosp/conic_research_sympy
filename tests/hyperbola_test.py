@@ -4,11 +4,11 @@ from sympy.abc import x, y
 
 from lib.circle import circle
 from lib.conic import IdealPoints, conic_from_poly, projective_conic_center
-from lib.conic_classes import UNIT_HYPERBOLA
 from lib.conic_direction import focal_axis_direction
 from lib.degenerate_conic import line_pair_conic, point_conic
 from lib.ellipse import ellipse
 from lib.hyperbola import (
+    UNIT_HYPERBOLA,
     asymptote_conic,
     asymptote_focal_axis_angle,
     hyperbola_from_foci_and_point,

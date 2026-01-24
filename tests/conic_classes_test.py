@@ -4,7 +4,6 @@ from sympy.abc import x, y
 from lib.circle import IMAGINARY_UNIT_CIRCLE, UNIT_CIRCLE, circle
 from lib.conic import conic_from_focus_and_directrix, conic_from_poly
 from lib.conic_classes import (
-    UNIT_HYPERBOLA,
     is_central_conic,
     is_circle,
     is_circular,
@@ -24,6 +23,7 @@ from lib.conic_classes import (
 from lib.conic_direction import focal_axis_direction
 from lib.degenerate_conic import line_pair_conic, point_conic
 from lib.ellipse import ellipse, ellipse_from_foci_and_point
+from lib.hyperbola import UNIT_HYPERBOLA
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, horizontal_line
 from lib.matrix import conic_matrix
 from lib.point import ORIGIN
