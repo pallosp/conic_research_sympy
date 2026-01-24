@@ -146,6 +146,11 @@ class TestAxisDirection:
         assert is_positive_multiple(focal_axis_direction(point), r1_direction)
         assert is_positive_multiple(focal_axis_direction(-point), r1_direction)
 
+    def test_zero_radius_circle(self):
+        point = circle((1, 2), 0)
+        assert focal_axis_direction(point) == Matrix([0, 0, 0])
+        assert conjugate_axis_direction(point) == Matrix([0, 0, 0])
+
     def test_hyperbola(self):
         hyperbola = conic_from_poly(x * y - 1)
         assert is_positive_multiple(focal_axis_direction(hyperbola), (1, 1, 0))
