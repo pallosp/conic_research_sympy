@@ -84,9 +84,9 @@ ideal_point_1 = Matrix(
 # Second ideal point angle: axis_angle - aa_angle
 ideal_point_2 = ideal_point_1.subs(sin_aa_angle, -sin_aa_angle)
 
-ideal_point_1 /= gcd(*ideal_point_1[:2])
+ideal_point_1 /= gcd(list(ideal_point_1))
 ideal_point_1 = ideal_point_1.applyfunc(factor)
-ideal_point_2 /= gcd(*ideal_point_2[:2])
+ideal_point_2 /= gcd(list(ideal_point_2))
 ideal_point_2 = ideal_point_2.applyfunc(factor)
 
 println_indented((ideal_point_1, ideal_point_2))
@@ -141,7 +141,7 @@ def ideal_points_from_asymptotes(
     ret = []
     for point in ideal_point_1, ideal_point_2:
         pt = simplify_coord(point)
-        pt /= gcd(*pt[:2]).factor()
+        pt /= gcd(list(pt)).factor()
         pt = pt.subs(1 / (eigen_plus - eigen_minus), 1)
         sep, smem = symbols("sep smem")
         pt = (
@@ -151,7 +151,7 @@ def ideal_points_from_asymptotes(
             .subs(eigen_minus, -(smem**2))
             .applyfunc(factor)
         )
-        pt /= gcd(*pt)
+        pt /= gcd(list(pt))
         pt = (
             pt.subs(sep, sqrt(eigen_plus))
             .subs(smem, sqrt(-eigen_minus))

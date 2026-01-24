@@ -23,7 +23,7 @@ def get_intersection_of_secants(end_point_func: Callable[[Expr], Expr]) -> Matri
     secant2 = p3.cross(p4)
 
     common_point = secant1.cross(secant2)
-    common_point /= gcd(common_point[0], common_point[1])
+    common_point /= gcd(list(common_point))
 
     # For certain start point -> end point mapping functions (see below)
     # alpha and beta vanish.

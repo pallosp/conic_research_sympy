@@ -60,7 +60,7 @@ t = homography_from_samples(
     [vertex_1, vertex_2, ideal_point_1, ideal_point_2],
 )
 t = t.applyfunc(lambda el: el.factor(deep=True))
-t = (t / gcd(t[0], t[1])).applyfunc(factor)
+t = t / gcd(list(t)).factor()
 
 println_indented(t)
 
