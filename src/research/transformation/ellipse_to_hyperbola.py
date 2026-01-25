@@ -83,10 +83,7 @@ print("Interesting fact: the transformation is independent on the secondary radi
 h_ellipse = ellipse((4, 3), 2, 1)
 hyperbola = transform_conic(
     h_ellipse,
-    t.subs(vertex_1[0], 6)
-    .subs(vertex_1[1], 3)
-    .subs(vertex_2[0], 2)
-    .subs(vertex_2[1], 3),
+    t.subs(zip(vertex_1, (6, 3), strict=True)).subs(zip(vertex_2, (2, 3), strict=True)),
 )
 
 assert point_to_xy(conic_center(hyperbola)) == Matrix([4, 3])
