@@ -196,7 +196,14 @@ def pole_point(conic: Matrix, polar_line: Matrix) -> Matrix:
 def polar_line(conic: Matrix, pole_point: Matrix | Sequence[Expr]) -> Matrix:
     """Computes the polar line of a conic with respect to the given pole point.
 
-    *Pole / polar identity*: `conic * pole_point = polar_line`
-    *Source*: <https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line>
+    Pole / polar identities:
+     - `conic * pole_point = polar_line`<br>
+       <https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line>
+     - The directrix is the polar line corresponding to the focus.<br>
+       Berndt. Schwerdtfeger -
+       [Invariants of curves of second order](https://berndt-schwerdtfeger.de/wp-content/uploads/pdf/c2.pdf),
+       3.5. Tangents and polars.
+     - The focal axis is the polar line corresponding to the ideal point on the
+       directrix.
     """
     return conic * point_to_vec3(pole_point)
