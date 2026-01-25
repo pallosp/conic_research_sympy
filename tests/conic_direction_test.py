@@ -151,6 +151,13 @@ class TestAxisDirection:
         assert focal_axis_direction(point) == Matrix([0, 0, 0])
         assert conjugate_axis_direction(point) == Matrix([0, 0, 0])
 
+    def test_lazy_zero_radius_circle(self):
+        conic = conic_matrix(*symbols("a b c d e f"))
+        point = circle((1, 2), 0)
+        direction = focal_axis_direction(conic)
+        direction = direction.subs(zip(conic, point, strict=True))
+        assert direction.is_zero_matrix
+
     def test_hyperbola(self):
         hyperbola = conic_from_poly(x * y - 1)
         assert is_positive_multiple(focal_axis_direction(hyperbola), (1, 1, 0))

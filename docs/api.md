@@ -1716,7 +1716,7 @@ Internal implementation. Call `ConicNormFactor(conic)` directly.
 def focal_axis_direction(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/conic_direction.py#L70))
+([source](../src/lib/conic_direction.py#L82))
 
 Returns the ideal point representing the direction of a conic's focal axis.
 
@@ -1727,7 +1727,8 @@ Properties:
   horizontal lies in the (-π/2, π/2] interval. For the full direction of a
   parabola, use [parabola_direction](#parabola.parabola_direction) instead.
 - Returns `[0, 0, 0]ᵀ` for circles and
-  [circular conics](#conic_classes.is_circular).
+  [circular conics](#conic_classes.is_circular), including zero-radius
+  circles.
 - Point conics constructed by
   [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(ellipse)
   preserve the axis direction of the original real or imaginary ellipse.
@@ -1748,7 +1749,7 @@ Properties:
 def conjugate_axis_direction(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/conic_direction.py#L99))
+([source](../src/lib/conic_direction.py#L112))
 
 Returns the ideal point representing the direction of a conic's conjugate axis.
 
@@ -1758,7 +1759,8 @@ Properties:
 - The conjugate axis is treated as an undirected line; its angle to the
   horizontal lies in the (0, π] interval.
 - Returns `[0, 0, 0]ᵀ` for circles and
-  [circular conics](#conic_classes.is_circular).
+  [circular conics](#conic_classes.is_circular), including zero-radius
+  circles.
 - Point conics constructed by
   [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(ellipse)
   preserve the axis direction of the original real or imaginary ellipse.

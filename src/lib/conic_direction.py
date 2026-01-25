@@ -1,6 +1,6 @@
 from typing import override
 
-from sympy import Expr, Function, I, Integer, Matrix, S, sign, sqrt
+from sympy import Expr, Function, I, Integer, Matrix, Piecewise, S, sign, sqrt
 
 from lib.conic_classes import is_point_conic
 
@@ -67,6 +67,18 @@ class ConicNormFactor(Function):
         return None
 
 
+def _sqrt_complex(z: Expr) -> tuple[Expr, Expr]:
+    """Computes the square root of a complex number.
+
+    Unlike `sympy.sqrt`, it's correct for symbols that are potentially zero.
+    See https://github.com/sympy/sympy/issues/29000 for more details.
+    """
+    x, y = z.as_real_imag()
+    abs_z = sqrt(x * x + y * y)
+    sgn = Piecewise((1, y >= 0), (-1, True))
+    return (sqrt((abs_z + x) / 2), sgn * sqrt((abs_z - x) / 2))
+
+
 def focal_axis_direction(conic: Matrix) -> Matrix:
     """Returns the ideal point representing the direction of a conic's focal axis.
 
@@ -77,7 +89,8 @@ def focal_axis_direction(conic: Matrix) -> Matrix:
       horizontal lies in the (-π/2, π/2] interval. For the full direction of a
       parabola, use [parabola_direction](#parabola.parabola_direction) instead.
     - Returns `[0, 0, 0]ᵀ` for circles and
-      [circular conics](#conic_classes.is_circular).
+      [circular conics](#conic_classes.is_circular), including zero-radius
+      circles.
     - Point conics constructed by
       [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(ellipse)
       preserve the axis direction of the original real or imaginary ellipse.
@@ -92,7 +105,7 @@ def focal_axis_direction(conic: Matrix) -> Matrix:
     """
     a, b, c = conic[0], conic[3], conic[4]
     norm_sign = ConicNormFactor(conic)
-    x, y = sqrt(norm_sign * (a - c + 2 * I * b)).simplify().as_real_imag()
+    x, y = _sqrt_complex(norm_sign * (a - c + 2 * I * b))
     return Matrix([x, y, 0])
 
 
@@ -105,7 +118,8 @@ def conjugate_axis_direction(conic: Matrix) -> Matrix:
     - The conjugate axis is treated as an undirected line; its angle to the
       horizontal lies in the (0, π] interval.
     - Returns `[0, 0, 0]ᵀ` for circles and
-      [circular conics](#conic_classes.is_circular).
+      [circular conics](#conic_classes.is_circular), including zero-radius
+      circles.
     - Point conics constructed by
       [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(ellipse)
       preserve the axis direction of the original real or imaginary ellipse.
@@ -115,5 +129,5 @@ def conjugate_axis_direction(conic: Matrix) -> Matrix:
     """
     a, b, c = conic[0], conic[3], conic[4]
     norm_sign = ConicNormFactor(conic)
-    x, y = sqrt(norm_sign * (a - c + 2 * I * b)).simplify().as_real_imag()
+    x, y = _sqrt_complex(norm_sign * (a - c + 2 * I * b))
     return Matrix([-y, x, 0])
