@@ -77,7 +77,7 @@ class TestEllipseToPolarMatrix:
     def test_numeric_ellipse(self):
         e = ellipse((1, 2), 3, 4, r1_direction=(5, 6))
 
-        start_points = [PolarOrigin.HORIZONTAL]
+        start_points = [PolarOrigin.HORIZONTAL, PolarOrigin.VERTICAL]
         polar_ellipses = {}
 
         for start in start_points:
@@ -93,8 +93,11 @@ class TestEllipseToPolarMatrix:
             )
             assert point_at_angle(p, symbols("a"))[2] == 1
 
-        start_point = point_at_angle(polar_ellipses[PolarOrigin.HORIZONTAL], 0)
-        assert start_point[1] == 2
+        start_point_h = point_at_angle(polar_ellipses[PolarOrigin.HORIZONTAL], 0)
+        assert start_point_h[1] == 2
+
+        start_point_v = point_at_angle(polar_ellipses[PolarOrigin.VERTICAL], 0)
+        assert start_point_v[0] == 1
 
     def test_unsupported_polar_origin(self):
         e = ellipse((0, 0), 2, 1)

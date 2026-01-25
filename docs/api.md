@@ -2236,7 +2236,7 @@ def hyperbola_to_polar_matrix(hyperbola: Matrix,
                               ) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L129))
+([source](../src/lib/polar_conic.py#L141))
 
 Converts a hyperbola to a polar conic matrix representation.
 

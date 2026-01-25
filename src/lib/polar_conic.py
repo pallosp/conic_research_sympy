@@ -123,6 +123,18 @@ def ellipse_to_polar_matrix(
             ]
         )
 
+    if start == PolarOrigin.VERTICAL:
+        a, _, _, b, c, _, d, e, _ = ellipse
+        disc = a * c - b * b
+        t = sqrt(-ellipse.det() / c)
+        return Matrix(
+            [
+                [0, -c * t / disc, (b * e - c * d) / disc],
+                [t / sqrt(disc), b * t / disc, (b * d - a * e) / disc],
+                [0, 0, 1],
+            ]
+        )
+
     raise ValueError("Unsupported PolarOrigin value")
 
 
