@@ -261,12 +261,12 @@ def center_to_vertex_vector(conic: Matrix) -> Matrix:
        real-valued coordinates; direction angle to the x-axis ∈ `(−π/2, π/2]`.
      - *Non-circular imaginary ellipses*:
        purely imaginary coordinates.
-     - *Circles and imaginary circles*:
+     - *Circles and imaginary circles, including zero-radius circles*:
        `[nan, nan]ᵀ`.
-     - *Finite point conics and intersecting line pairs*:
+     - *Other finite point conics and intersecting line pairs*:
        `[0, 0]ᵀ`.
      - *Parabolas and degenerate conics without a finite center*:
-       one or more components are infinite or `nan`
+       one or more components are infinite or `nan`.
     """
     x, y, _ = focal_axis_direction(conic)
     multiplier = primary_radius(conic) / sqrt(x**2 + y**2)
