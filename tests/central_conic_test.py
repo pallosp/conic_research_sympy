@@ -363,6 +363,12 @@ class TestVertices:
             Matrix([3, 4]),
         )
 
+    def test_zero_radius_circle(self):
+        zero_circle = circle((1, 2), 0)
+        nan_vector = Matrix([nan, nan])
+        assert center_to_vertex_vector(zero_circle) == nan_vector
+        assert central_conic_vertices(zero_circle) == (nan_vector, nan_vector)
+
     def test_ideal_point_conic(self):
         assert center_to_vertex_vector(point_conic([2, 1, 0])) == Matrix([nan, nan])
 
