@@ -241,6 +241,16 @@ def center_to_focus_vector(conic: Matrix) -> Matrix:
     return Matrix([x * multiplier, y * multiplier])
 
 
+def central_conic_foci(conic: Matrix) -> tuple[Matrix, Matrix]:
+    """Computes the focus points of a central conic.
+
+    Returns a pair of 2D vectors.
+    """
+    center = conic_center(conic)
+    cfv = center_to_focus_vector(conic)
+    return (center + cfv, center - cfv)
+
+
 def center_to_vertex_vector(conic: Matrix) -> Matrix:
     """Vector from the center of a conic to one of its vertices.
 

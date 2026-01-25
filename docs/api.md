@@ -22,6 +22,7 @@
   * [radius\_in\_direction](#central_conic.radius_in_direction)
   * [linear\_eccentricity](#central_conic.linear_eccentricity)
   * [center\_to\_focus\_vector](#central_conic.center_to_focus_vector)
+  * [central\_conic\_foci](#central_conic.central_conic_foci)
   * [center\_to\_vertex\_vector](#central_conic.center_to_vertex_vector)
   * [central\_conic\_vertices](#central_conic.central_conic_vertices)
   * [center\_to\_covertex\_vector](#central_conic.center_to_covertex_vector)
@@ -540,6 +541,20 @@ The function is only meaningful for
 will contain infinite or `nan` elements when the conic lacks a finite
 center.
 
+<a id="central_conic.central_conic_foci"></a>
+
+#### central\_conic\_foci
+
+```python
+def central_conic_foci(conic: Matrix) -> tuple[Matrix, Matrix]
+```
+
+([source](../src/lib/central_conic.py#L244))
+
+Computes the focus points of a central conic.
+
+Returns a pair of 2D vectors.
+
 <a id="central_conic.center_to_vertex_vector"></a>
 
 #### center\_to\_vertex\_vector
@@ -548,7 +563,7 @@ center.
 def center_to_vertex_vector(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L244))
+([source](../src/lib/central_conic.py#L254))
 
 Vector from the center of a conic to one of its vertices.
 
@@ -574,7 +589,7 @@ Returns a 2D column vector with the following properties:
 def central_conic_vertices(conic: Matrix) -> tuple[Matrix, Matrix]
 ```
 
-([source](../src/lib/central_conic.py#L266))
+([source](../src/lib/central_conic.py#L276))
 
 Computes the vertices of a central conic.
 
@@ -595,7 +610,7 @@ Special cases:
 def center_to_covertex_vector(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L283))
+([source](../src/lib/central_conic.py#L293))
 
 Vector from the center of a conic to one of its covertices.
 
@@ -621,7 +636,7 @@ Returns a 2D column vector with the following properties:
 def shrink_conic_to_zero(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L305))
+([source](../src/lib/central_conic.py#L315))
 
 Scales a conic section from its center with a factor of zero.
 

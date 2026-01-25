@@ -6,6 +6,7 @@ from lib.central_conic import (
     center_to_covertex_vector,
     center_to_focus_vector,
     center_to_vertex_vector,
+    central_conic_foci,
     central_conic_vertices,
     conic_center,
     conic_from_center_and_points,
@@ -22,9 +23,10 @@ from lib.conic_classes import is_point_conic
 from lib.degenerate_conic import line_pair_conic, point_conic
 from lib.ellipse import ellipse, ellipse_from_foci_and_point
 from lib.hyperbola import UNIT_HYPERBOLA, hyperbola_from_foci_and_point
+from lib.intersection import line_x_line
 from lib.line import X_AXIS, horizontal_line
 from lib.matrix import is_nonzero_multiple
-from lib.point import ORIGIN
+from lib.point import ORIGIN, point_to_xy
 from lib.transform import scale_xy, transform_conic
 from tests.utils import are_projective_sets_equal
 
@@ -279,6 +281,42 @@ class TestCenterToFocusVector:
         line2 = Matrix([4, 5, 6])
         line_pair = line_pair_conic(line1, line2)
         assert center_to_focus_vector(line_pair) == Matrix([0, 0])
+
+
+class TestCentralConicFoci:
+    def test_ellipse(self):
+        foci = (Matrix([5, 8]), Matrix([2, 3]))
+        ellipse = conic_from_foci_and_radius(*foci, 13)
+        assert central_conic_foci(ellipse) == foci
+        assert central_conic_foci(-ellipse) == foci
+
+    def test_hyperbola(self):
+        foci = (Matrix([5, 3]), Matrix([13, 8]))
+        hyperbola = conic_from_foci_and_radius(*foci, 2)
+        assert central_conic_foci(hyperbola) == foci
+        assert central_conic_foci(-hyperbola) == foci
+
+    def test_parabola(self):
+        parabola = conic_from_poly(x * x - y)
+        assert central_conic_foci(parabola) == tuple([Matrix([nan, nan])] * 2)
+
+    def test_finite_point_conic(self):
+        point = point_conic([1, 2])
+        assert central_conic_foci(point) == tuple([Matrix([1, 2])] * 2)
+
+        zero_circle = circle((1, 2), 0)
+        assert central_conic_foci(zero_circle) == tuple([Matrix([1, 2])] * 2)
+
+    def test_ideal_point_conic(self):
+        ideal_point = point_conic([2, 1, 0])
+        assert central_conic_foci(ideal_point) == tuple([Matrix([nan, nan])] * 2)
+
+    def test_crossing_lines(self):
+        line1 = Matrix([1, 2, 3])
+        line2 = Matrix([4, 5, 6])
+        line_pair = line_pair_conic(line1, line2)
+        intersection = point_to_xy(line_x_line(line1, line2))
+        assert central_conic_foci(line_pair) == (intersection, intersection)
 
 
 class TestVertices:
