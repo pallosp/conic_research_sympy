@@ -106,31 +106,49 @@ def ellipse_to_polar_matrix(
      - The vertices and covertices are separated by an angular distance of π/2.
      - The secants between α and α+π go through the ellipse center.
      - The homogeneous z-coordinates of all points on the curve are equal to 1.
+     - The curve goes counterclockwise.
      - The point corresponding to angle 0 is determined by the `start` parameter.
 
     *Formula*:
     [research/construction/polar_ellipse.py](../src/research/construction/polar_ellipse.py)
     """
+    a, _, _, b, c, _, d, e, _ = ellipse
+    disc = a * c - b * b
+    cx = (b * e - c * d) / disc
+    cy = (b * d - a * e) / disc
+
     if start == PolarOrigin.HORIZONTAL:
-        a, _, _, b, c, _, d, e, _ = ellipse
-        disc = a * c - b * b
-        t = sqrt(-ellipse.det() / a)
+        det = ellipse.det()
+        t = sqrt(-det / a)
         return Matrix(
             [
-                [t / sqrt(disc), -b * t / disc, (b * e - c * d) / disc],
-                [0, a * t / disc, (b * d - a * e) / disc],
+                [t / sqrt(disc), b * t * sign(det) / disc, cx],
+                [0, -a * t * sign(det) / disc, cy],
                 [0, 0, 1],
             ]
         )
 
     if start == PolarOrigin.VERTICAL:
-        a, _, _, b, c, _, d, e, _ = ellipse
-        disc = a * c - b * b
-        t = sqrt(-ellipse.det() / c)
+        det = ellipse.det()
+        t = sqrt(-det / c)
         return Matrix(
             [
-                [0, -c * t / disc, (b * e - c * d) / disc],
-                [t / sqrt(disc), b * t / disc, (b * d - a * e) / disc],
+                [0, c * t * sign(det) / disc, cx],
+                [t / sqrt(disc), -b * t * sign(det) / disc, cy],
+                [0, 0, 1],
+            ]
+        )
+
+    if start == PolarOrigin.VERTEX:
+        fd = focal_axis_direction(ellipse)
+        cos_a, sin_a, _ = fd / fd.norm()
+        r1 = primary_radius(ellipse)
+        r2 = secondary_radius(ellipse)
+
+        return Matrix(
+            [
+                [r1 * cos_a, -r2 * sin_a, cx],
+                [r1 * sin_a, r2 * cos_a, cy],
                 [0, 0, 1],
             ]
         )

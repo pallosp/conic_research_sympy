@@ -74,30 +74,47 @@ class TestConicFromPolarMatrix:
 
 
 class TestEllipseToPolarMatrix:
-    def test_numeric_ellipse(self):
+
+    @pytest.mark.parametrize(
+        "start_point",
+        [PolarOrigin.HORIZONTAL, PolarOrigin.VERTICAL, PolarOrigin.VERTEX],
+    )
+    def test_polar_ellipse_properties(self, start_point: PolarOrigin):
         e = ellipse((1, 2), 3, 4, r1_direction=(5, 6))
+        p = ellipse_to_polar_matrix(e, start=start_point)
 
-        start_points = [PolarOrigin.HORIZONTAL, PolarOrigin.VERTICAL]
-        polar_ellipses = {}
+        # same ellipse
+        assert is_nonzero_multiple(conic_from_polar_matrix(p), e)
+        # symmetric
+        assert are_collinear(
+            [
+                point_at_angle(p, 0),
+                conic_center(e),
+                point_at_angle(p, pi),
+            ]
+        )
+        # z-coordinate is 1
+        assert point_at_angle(p, symbols("a"))[2] == 1
+        # counterclockwise
+        assert curvature_sign_at_angle(p, 0) == 1
 
-        for start in start_points:
-            p = ellipse_to_polar_matrix(e, start=start)
-            polar_ellipses[start] = p
-            assert is_nonzero_multiple(conic_from_polar_matrix(p), e)
-            assert are_collinear(
-                [
-                    point_at_angle(p, 0),
-                    conic_center(e),
-                    point_at_angle(p, pi),
-                ]
-            )
-            assert point_at_angle(p, symbols("a"))[2] == 1
+    def test_polar_origin_horizontal(self):
+        e = ellipse((1, 2), 3, 4, r1_direction=(5, 6))
+        p = ellipse_to_polar_matrix(e, start=PolarOrigin.HORIZONTAL)
+        start_point = point_at_angle(p, 0)
+        assert start_point[1] == 2
 
-        start_point_h = point_at_angle(polar_ellipses[PolarOrigin.HORIZONTAL], 0)
-        assert start_point_h[1] == 2
+    def test_polar_origint_vertical(self):
+        e = ellipse((1, 2), 3, 4, r1_direction=(5, 6))
+        p = ellipse_to_polar_matrix(e, start=PolarOrigin.VERTICAL)
+        start_point = point_at_angle(p, 0)
+        assert start_point[0] == 1
 
-        start_point_v = point_at_angle(polar_ellipses[PolarOrigin.VERTICAL], 0)
-        assert start_point_v[0] == 1
+    def test_polar_origin_vertex(self):
+        e = ellipse((1, 2), 3, 4, r1_direction=(5, 6))
+        p = ellipse_to_polar_matrix(e, start=PolarOrigin.VERTEX)
+        start_point = point_at_angle(p, 0)
+        assert point_to_xy(start_point) == central_conic_vertices(e)[0]
 
     def test_unsupported_polar_origin(self):
         e = ellipse((0, 0), 2, 1)

@@ -21,7 +21,7 @@ from lib.central_conic import (
 )
 from lib.ellipse import ellipse
 from lib.matrix import conic_matrix
-from lib.polar_conic import conic_from_polar_matrix
+from lib.polar_conic import conic_from_polar_matrix, curvature_sign_at_angle
 from lib.transform import homography_from_samples
 from research.sympy_utils import eq_chain, println_indented
 
@@ -135,6 +135,11 @@ polar_ellipse_h = (
 )
 
 println_indented(eq_chain(symbols("P"), polar_ellipse_h))
+
+print("Orientation (1 is counterclockwise, -1 is clockwise):")
+print()
+
+println_indented(curvature_sign_at_angle(polar_ellipse_h, 0).factor(deep=True))
 
 # ---------------------------------------------------------------------------
 # Second approach: start from the endpoint of the vertical diameter

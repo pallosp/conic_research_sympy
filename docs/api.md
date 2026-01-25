@@ -2221,6 +2221,7 @@ The resulting polar form has the following properties:
  - The vertices and covertices are separated by an angular distance of π/2.
  - The secants between α and α+π go through the ellipse center.
  - The homogeneous z-coordinates of all points on the curve are equal to 1.
+ - The curve goes counterclockwise.
  - The point corresponding to angle 0 is determined by the `start` parameter.
 
 *Formula*:
@@ -2236,7 +2237,7 @@ def hyperbola_to_polar_matrix(hyperbola: Matrix,
                               ) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L141))
+([source](../src/lib/polar_conic.py#L159))
 
 Converts a hyperbola to a polar conic matrix representation.
 
