@@ -142,7 +142,7 @@ class TestEccentricity:
         assert eccentricity(ellipse).factor() == ecc
         assert eccentricity(-ellipse).factor() == ecc
 
-    def test_point_conic(self):
+    def test_symbolic_point_conic(self):
         focus = ORIGIN
         directrix = Matrix(symbols("a,b,c", positive=True))
         ecc = Rational(1, 2)
@@ -150,6 +150,10 @@ class TestEccentricity:
         point_conic = shrink_conic_to_zero(ellipse)
         assert eccentricity(point_conic).factor() == ecc
         assert eccentricity(-point_conic).factor() == ecc
+
+    def test_symbolic_zero_radius_circle(self):
+        zero_circle = circle(symbols("x y"), 0)
+        assert eccentricity(zero_circle) == 0
 
 
 class TestFocalAxis:
