@@ -106,7 +106,8 @@ def ellipse_to_polar_matrix(
      - The vertices and covertices are separated by an angular distance of π/2.
      - The secants between α and α+π go through the ellipse center.
      - The homogeneous z-coordinates of all points on the curve are equal to 1.
-     - The curve goes counterclockwise.
+     - The curve goes counterclockwise. To reverse its direction, negate the
+       middle column of the matrix.
      - The point corresponding to angle 0 is determined by the `start` parameter.
 
     *Formula*:
