@@ -187,23 +187,33 @@ def pole_point(conic: Matrix, polar_line: Matrix) -> Matrix:
      - `[0, 0, 0]ᵀ` if `l₁`, `l₂`, and `polar_line` are concurrent;
      - the intersection of `l₁` and `l₂` otherwise.
 
-    *Pole / polar identity*: `conic * pole_point = polar_line`<br>
-    *Source*: <https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line>
+    See [polar_line](#conic.polar_line) for references and example pole/polar
+    relationships.
     """
     return conic.adjugate() * polar_line
 
 
 def polar_line(conic: Matrix, pole_point: Matrix | Sequence[Expr]) -> Matrix:
-    """Computes the polar line of a conic with respect to the given pole point.
+    """Computes the polar line of a conic for a given pole point.
 
-    Pole / polar identities:
-     - `conic * pole_point = polar_line`<br>
-       <https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line>
-     - The directrix is the polar line corresponding to the focus.<br>
-       Berndt. Schwerdtfeger -
+    Example pole/polar relationships:
+
+    | Pole                     | Polar                     |
+    |--------------------------|---------------------------|
+    | any point                | `conic * pole_point`      |
+    | any point on conic       | tangent through the point |
+    | hyperbola ideal point    | asymptote                 |
+    | center                   | ideal line                |
+    | any ideal point          | line through conic center |
+    | focus                    | directrix                 |
+    | any point on directrix   | line through focus        |
+    | ideal point on directrix | focal axis                |
+
+    References:
+     - https://en.wikipedia.org/wiki/Pole_and_polar#Calculating_the_pole_of_a_line
+     - Berndt Schwerdtfeger,
        [Invariants of curves of second order](https://berndt-schwerdtfeger.de/wp-content/uploads/pdf/c2.pdf),
-       3.5. Tangents and polars.
-     - The focal axis is the polar line corresponding to the ideal point on the
-       directrix.
+       §3.5. Tangents and polars.
+
     """
     return conic * point_to_vec3(pole_point)

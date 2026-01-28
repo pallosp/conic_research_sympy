@@ -32,8 +32,8 @@ from lib.conic import (
 from lib.conic_direction import focal_axis_direction
 from lib.degenerate_conic import line_pair_conic
 from lib.ellipse import ellipse
-from lib.incidence import conic_contains_point
-from lib.intersection import conic_x_line
+from lib.incidence import conic_contains_point, line_contains_point
+from lib.intersection import conic_x_line, line_x_line
 from lib.line import (
     IDEAL_LINE,
     X_AXIS,
@@ -308,6 +308,13 @@ class TestPolePolar:
         polar = polar_line(conic, pole)
         assert pole_point(conic, polar).equals(pole * conic.det())
 
+    def test_point_on_polar(self):
+        conic = conic_matrix(*symbols("a b c d e f"))
+        pole = symbols("x y z")
+        polar = polar_line(conic, pole)
+        point_on_polar = line_x_line(polar, Matrix(symbols("p q r")))
+        assert line_contains_point(polar_line(conic, point_on_polar), pole)
+
     def test_polar_of_circle_center(self):
         center = (2, 3)
         conic = circle(center, 4)
@@ -344,3 +351,9 @@ class TestPolePolar:
         assert is_nonzero_multiple(pole_point(conic, X_AXIS), (3, 2, 1))
         assert is_nonzero_multiple(pole_point(conic, IDEAL_LINE), (3, 2, 1))
         assert pole_point(conic, horizontal_line(2)).is_zero_matrix
+
+    def test_polar_of_ideal_point(self):
+        conic = conic_matrix(*symbols("a b c d e f"))
+        center = projective_conic_center(conic)
+        ideal_point = (*symbols("x y"), 0)
+        assert line_contains_point(polar_line(conic, ideal_point), center)
