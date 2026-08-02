@@ -15,12 +15,12 @@ python = ">=3.12,<3.14"
 sympy = "1.14"
 
 [tool.poetry.group.dev.dependencies]
-md-dead-link-check = "^1.2.0"
-pre-commit = "^4.5.1"
+md-dead-link-check = "^1.3.0"
+pre-commit = "^4.6.1"
 pydoc-markdown = "^4.8.2"
-pytest = "^9.0.2"
-pytest-cov = "^7.0.0"
-ruff = "^0.14.10"
+pytest = "^9.1.1"
+pytest-cov = "^7.1.0"
+ruff = "^0.16.1"
 
 [build-system]
 requires = ["poetry-core"]
@@ -38,6 +38,7 @@ select = [
 ]
 ignore = [
   "COM812",  # Missing trailing comma; should be the formatter's responsibility
+  "CPY001",  # Missing copyright notice at top of file
   "D100",  # Missing module docstring
   "D104",  # Missing package docstring
   "D203",  # Incorrect blank line before class

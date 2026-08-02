@@ -90,7 +90,7 @@ def min_eigenvalue(symmetric_matrix_2x2: Matrix) -> Expr:
     return (a + c) / 2 - sqrt((a - c) ** 2 + 4 * b**2) / 2
 
 
-def conic_matrix(  # noqa: PLR0913 (too-many-arguments)
+def conic_matrix(  # noqa: PLR0913, PLR0917 (too-many-arguments, too-many-positional-arguments)
     a: Expr,
     b: Expr,
     c: Expr,
