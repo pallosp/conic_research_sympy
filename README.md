@@ -28,7 +28,7 @@ The API supports:
 
 ```sh
 git clone https://github.com/pallosp/conic_research_sympy
-poetry env use 3.13
+poetry env use 3.14
 poetry install
 poetry run pre-commit install
 
