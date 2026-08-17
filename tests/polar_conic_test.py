@@ -1,7 +1,11 @@
 import pytest
 from sympy import Matrix, pi, simplify, symbols
 
-from lib.central_conic import central_conic_vertices, conic_center
+from lib.central_conic import (
+    center_to_covertex_vector,
+    central_conic_vertices,
+    conic_center,
+)
 from lib.circle import UNIT_CIRCLE
 from lib.conic_classes import is_hyperbola
 from lib.ellipse import ellipse
@@ -74,7 +78,6 @@ class TestConicFromPolarMatrix:
 
 
 class TestEllipseToPolarMatrix:
-
     @pytest.mark.parametrize(
         "start_point",
         [PolarOrigin.HORIZONTAL, PolarOrigin.VERTICAL, PolarOrigin.VERTEX],
@@ -104,7 +107,7 @@ class TestEllipseToPolarMatrix:
         start_point = point_at_angle(p, 0)
         assert start_point[1] == 2
 
-    def test_polar_origint_vertical(self):
+    def test_polar_origin_vertical(self):
         e = ellipse((1, 2), 3, 4, r1_direction=(5, 6))
         p = ellipse_to_polar_matrix(e, start=PolarOrigin.VERTICAL)
         start_point = point_at_angle(p, 0)
@@ -115,6 +118,13 @@ class TestEllipseToPolarMatrix:
         p = ellipse_to_polar_matrix(e, start=PolarOrigin.VERTEX)
         start_point = point_at_angle(p, 0)
         assert point_to_xy(start_point) == central_conic_vertices(e)[0]
+
+    def test_covertex_angle(self):
+        center = Matrix([1, 2])
+        e = ellipse(center, 3, 4, r1_direction=(5, 6))
+        covertex = conic_center(e) + center_to_covertex_vector(e)
+        p = ellipse_to_polar_matrix(e, start=PolarOrigin.VERTEX)
+        assert angle_at_point(p, covertex) == pi / 2
 
     def test_unsupported_polar_origin(self):
         e = ellipse((0, 0), 2, 1)
