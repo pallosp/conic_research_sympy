@@ -124,6 +124,7 @@
   * [conic\_from\_polar\_matrix](#polar_conic.conic_from_polar_matrix)
   * [ellipse\_to\_polar\_matrix](#polar_conic.ellipse_to_polar_matrix)
   * [hyperbola\_to\_polar\_matrix](#polar_conic.hyperbola_to_polar_matrix)
+  * [rotate\_polar\_param](#polar_conic.rotate_polar_param)
 * [incidence](#incidence)
   * [line\_contains\_point](#incidence.line_contains_point)
   * [conic\_contains\_point](#incidence.conic_contains_point)
@@ -2100,7 +2101,7 @@ The circle at the origin with radius 1, in polar matrix form.
 class PolarOrigin(Enum)
 ```
 
-([source](../src/lib/polar_conic.py#L28))
+([source](../src/lib/polar_conic.py#L29))
 
 Specifies which point of a conic in polar form corresponds to angle 0.
 
@@ -2142,7 +2143,7 @@ An endpoint of the vertical diameter.
 def point_at_angle(polar_conic: Matrix, theta: Expr) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L47))
+([source](../src/lib/polar_conic.py#L48))
 
 Computes the coordinates of the projective point on a polar conic
 corresponding to a certain angle.
@@ -2156,7 +2157,7 @@ def angle_at_point(polar_conic: Matrix,
                    point: Matrix | Sequence[Expr]) -> Expr
 ```
 
-([source](../src/lib/polar_conic.py#L54))
+([source](../src/lib/polar_conic.py#L55))
 
 Computes the polar angle corresponding to a point on a polar conic.
 
@@ -2170,7 +2171,7 @@ The result is unspecified if the point is not on the conic.
 def tangent_at_angle(polar_conic: Matrix, angle_radians: Expr) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L64))
+([source](../src/lib/polar_conic.py#L65))
 
 Computes the tangent line to a polar conic at the given angle.
 
@@ -2186,7 +2187,7 @@ def curvature_sign_at_angle(polar_conic: Matrix,
                             angle_radians: Expr) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L74))
+([source](../src/lib/polar_conic.py#L75))
 
 Tells which direction a polar conic turns at an angle.
 
@@ -2205,7 +2206,7 @@ Tells which direction a polar conic turns at an angle.
 def conic_from_polar_matrix(polar_conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L89))
+([source](../src/lib/polar_conic.py#L90))
 
 Transforms a conic from polar to quadratic form.
 
@@ -2222,7 +2223,7 @@ def ellipse_to_polar_matrix(
         start: PolarOrigin = PolarOrigin.HORIZONTAL) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L99))
+([source](../src/lib/polar_conic.py#L100))
 
 Converts an ellipse to a polar conic matrix representation.
 
@@ -2247,7 +2248,7 @@ def hyperbola_to_polar_matrix(hyperbola: Matrix,
                               ) -> Matrix
 ```
 
-([source](../src/lib/polar_conic.py#L160))
+([source](../src/lib/polar_conic.py#L161))
 
 Converts a hyperbola to a polar conic matrix representation.
 
@@ -2258,6 +2259,21 @@ The resulting polar form has the following properties:
 
 *Formula*:
 [research/construction/polar_hyperbola.py](../src/research/construction/polar_hyperbola.py)
+
+<a id="polar_conic.rotate_polar_param"></a>
+
+#### rotate\_polar\_param
+
+```python
+def rotate_polar_param(polar_conic: Matrix, start_angle: Expr) -> Matrix
+```
+
+([source](../src/lib/polar_conic.py#L193))
+
+Shifts the angle origin of a polar conic's parametrization.
+
+* `P'(θ) = P(θ + start_angle)` for all `θ`
+* `P'` traces the same conic as `P`
 
 <a id="incidence"></a>
 

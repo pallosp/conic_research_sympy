@@ -23,6 +23,7 @@ from lib.polar_conic import (
     ellipse_to_polar_matrix,
     hyperbola_to_polar_matrix,
     point_at_angle,
+    rotate_polar_param,
     tangent_at_angle,
 )
 from lib.transform import homography_from_samples
@@ -157,3 +158,13 @@ class TestHyperbolaToPolarMatrix:
     def test_unsupported_polar_origin(self):
         with pytest.raises(ValueError, match="Unsupported PolarOrigin"):
             hyperbola_to_polar_matrix(UNIT_HYPERBOLA, start=PolarOrigin.COVERTEX)
+
+
+class TestRotatePolarParam:
+    def test_unit_circle(self):
+        rotated = rotate_polar_param(POLAR_UNIT_CIRCLE, pi / 4)
+        assert conic_from_polar_matrix(rotated) == UNIT_CIRCLE
+        assert point_at_angle(rotated, 0) == point_at_angle(POLAR_UNIT_CIRCLE, pi / 4)
+        assert point_at_angle(rotated, pi / 4) == point_at_angle(
+            POLAR_UNIT_CIRCLE, pi / 2
+        )

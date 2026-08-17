@@ -20,6 +20,7 @@ from lib.central_conic import conic_center, primary_radius, secondary_radius
 from lib.circle import UNIT_CIRCLE
 from lib.conic_direction import focal_axis_direction
 from lib.point import point_to_vec3
+from lib.transform import rotate
 
 #: The circle at the origin with radius 1, in polar matrix form.
 POLAR_UNIT_CIRCLE: Matrix = Matrix.eye(3)
@@ -187,3 +188,16 @@ def hyperbola_to_polar_matrix(
         )
 
     raise ValueError("Unsupported PolarOrigin value")
+
+
+def rotate_polar_param(polar_conic: Matrix, start_angle: Expr) -> Matrix:
+    """Shifts the angle origin of a polar conic's parametrization.
+
+    * `P'(θ) = P(θ + start_angle)` for all `θ`
+    * `P'` traces the same conic as `P`
+    """
+    # Formula:
+    #                      ⎡cos(θ+α)⎤       ⎡cos α  -sin α  0⎤   ⎡cos θ⎤
+    # P'(θ) = P(θ+α) = P * ⎢sin(θ+α)⎥ = P * ⎢sin α   cos α  0⎥ * ⎢sin θ⎥
+    #                      ⎣   1    ⎦       ⎣  0       0    1⎦   ⎣  1  ⎦
+    return polar_conic * rotate(start_angle)
