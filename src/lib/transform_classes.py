@@ -119,5 +119,7 @@ def is_involution(
         return False
 
     double_transformation = simplifier(transformation * transformation)
+    if double_transformation[0, 0].is_zero:
+        return False
     double_transformation /= double_transformation[0, 0]
     return (double_transformation - Matrix.eye(3)).is_zero_matrix

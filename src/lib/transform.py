@@ -68,7 +68,7 @@ def reflect_to_line(axis: Matrix) -> Matrix:
             [-2 * a * b, (a**2 - b**2), -2 * b * c],
             [0, 0, a**2 + b**2],
         ],
-    ).applyfunc(lambda el: el / (a**2 + b**2))
+    ) / (a**2 + b**2)
 
 
 def scale_xy(

@@ -1697,21 +1697,25 @@ files = [
 
 [[package]]
 name = "sympy"
-version = "1.14.0"
+version = "1.15.0.dev0"
 description = "Computer algebra system (CAS) in Python"
 optional = false
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["main"]
-files = [
-    {file = "sympy-1.14.0-py3-none-any.whl", hash = "sha256:e091cc3e99d2141a0ba2847328f5479b05d94a6635cb96148ccb3f34671bd8f5"},
-    {file = "sympy-1.14.0.tar.gz", hash = "sha256:d3d3fe8df1e5a0b42f0e7bdf50541697dbe7d23746e894990c030e2b05e72517"},
-]
+files = []
+develop = false
 
 [package.dependencies]
-mpmath = ">=1.1.0,<1.4"
+mpmath = ">=1.1.0"
 
 [package.extras]
 dev = ["hypothesis (>=6.70.0)", "pytest (>=7.1.0)"]
+
+[package.source]
+type = "git"
+url = "https://github.com/sympy/sympy.git"
+reference = "master"
+resolved_reference = "024e2c84a64dd43501b30887faa8e44c6254d181"
 
 [[package]]
 name = "tomli"
@@ -2169,4 +2173,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.15"
-content-hash = "a05ca73ce2aadc15df0dae6dd4a0451ee9732a923d4c7d7d5f6bdfe52811e549"
+content-hash = "90ff2336e28ddf57b435d86cf26467a783129473ac5d4b271ff734e86866f06c"

@@ -237,8 +237,7 @@ def center_to_focus_vector(conic: Matrix) -> Matrix:
     # Center-to-focus vector = [x, y] / √(x² + y²) * linear eccentricity
     # The √(x² + y²) = ∜((a-c)² + 4b²) factor vanishes.
     a, _, _, b, c, _, _, _, _ = conic
-    multiplier = sqrt(Abs(conic.det())) / (a * c - b * b)
-    return Matrix([x * multiplier, y * multiplier])
+    return Matrix([x, y]) * sqrt(Abs(conic.det())) / (a * c - b * b)
 
 
 def central_conic_foci(conic: Matrix) -> tuple[Matrix, Matrix]:
@@ -269,8 +268,7 @@ def center_to_vertex_vector(conic: Matrix) -> Matrix:
        one or more components are infinite or `nan`.
     """
     x, y, _ = focal_axis_direction(conic)
-    multiplier = primary_radius(conic) / sqrt(x**2 + y**2)
-    return Matrix([x * multiplier, y * multiplier])
+    return Matrix([x, y]) * primary_radius(conic) / sqrt(x**2 + y**2)
 
 
 def central_conic_vertices(conic: Matrix) -> tuple[Matrix, Matrix]:
@@ -308,8 +306,7 @@ def center_to_covertex_vector(conic: Matrix) -> Matrix:
        one or more components are infinite or `nan`
     """
     x, y, _ = conjugate_axis_direction(conic)
-    multiplier = secondary_radius(conic) / sqrt(x**2 + y**2)
-    return Matrix([x * multiplier, y * multiplier])
+    return Matrix([x, y]) * secondary_radius(conic) / sqrt(x**2 + y**2)
 
 
 def shrink_conic_to_zero(conic: Matrix) -> Matrix:

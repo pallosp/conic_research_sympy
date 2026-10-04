@@ -550,7 +550,7 @@ center.
 def central_conic_foci(conic: Matrix) -> tuple[Matrix, Matrix]
 ```
 
-([source](../src/lib/central_conic.py#L244))
+([source](../src/lib/central_conic.py#L243))
 
 Computes the focus points of a central conic.
 
@@ -564,7 +564,7 @@ Returns a pair of 2D vectors.
 def center_to_vertex_vector(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L254))
+([source](../src/lib/central_conic.py#L253))
 
 Vector from the center of a conic to one of its vertices.
 
@@ -590,7 +590,7 @@ Returns a 2D column vector with the following properties:
 def central_conic_vertices(conic: Matrix) -> tuple[Matrix, Matrix]
 ```
 
-([source](../src/lib/central_conic.py#L276))
+([source](../src/lib/central_conic.py#L274))
 
 Computes the vertices of a central conic.
 
@@ -611,7 +611,7 @@ Special cases:
 def center_to_covertex_vector(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L293))
+([source](../src/lib/central_conic.py#L291))
 
 Vector from the center of a conic to one of its covertices.
 
@@ -637,7 +637,7 @@ Returns a 2D column vector with the following properties:
 def shrink_conic_to_zero(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L315))
+([source](../src/lib/central_conic.py#L312))
 
 Scales a conic section from its center with a factor of zero.
 
