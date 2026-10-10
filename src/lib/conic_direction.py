@@ -102,6 +102,9 @@ def focal_axis_direction(conic: Matrix) -> Matrix:
 
     *Formula*:
     [research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)
+
+    *Related research* (trigonometric identities):
+    [research/conic_properties/focal_axis_angle_identities.py](../src/research/conic_properties/focal_axis_angle_identities.py)
     """
     a, b, c = conic[0], conic[3], conic[4]
     norm_sign = ConicNormFactor(conic)

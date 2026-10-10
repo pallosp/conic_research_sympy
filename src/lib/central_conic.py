@@ -141,6 +141,9 @@ def primary_radius(conic: Matrix) -> Expr:
      - an imaginary number for imaginary ellipses;
      - `nan` for ideal point conics;
      - 0 for the other degenerate conics.
+
+    *Formula*:
+    [research/conic_properties/conic_radii.py](../src/research/conic_properties/conic_radii.py)
     """
     return _selected_radius(conic, ConicNormFactor(conic))
 
@@ -159,6 +162,9 @@ def secondary_radius(conic: Matrix) -> Expr:
      - an imaginary number for hyperbolas and imaginary ellipses;
      - `nan` for ideal point conics;
      - 0 for the other degenerate conics.
+
+    *Formula*:
+    [research/conic_properties/conic_radii.py](../src/research/conic_properties/conic_radii.py)
     """
     return _selected_radius(conic, -ConicNormFactor(conic))
 
@@ -216,6 +222,9 @@ def linear_eccentricity(conic: Matrix) -> Expr:
 
     *Formula*: `√|r₁²-r₂²|` where `r₁` and `r₂` denote the primary and secondary
     radii of the conic (i.e., the semi-axis lengths in the case of an ellipse).
+
+    *Related research*:
+    [research/conic_properties/linear_eccentricity_radii_relationship.py](../src/research/conic_properties/linear_eccentricity_radii_relationship.py)
     """
     a, _, _, b, c, _, _, _, _ = conic
     eigenvalue_diff = sqrt((a - c) ** 2 + 4 * b**2)

@@ -195,6 +195,9 @@ def rotate_polar_param(polar_conic: Matrix, start_angle: Expr) -> Matrix:
 
     * `P'(θ) = P(θ + start_angle)` for all `θ`
     * `P'` traces the same conic as `P`
+
+    *Formula*:
+    [research/transformation/rotate_points_along_polar_conic.py](../src/research/transformation/rotate_points_along_polar_conic.py)
     """
     # Formula:
     #                      ⎡cos(θ+α)⎤       ⎡cos α  -sin α  0⎤   ⎡cos θ⎤

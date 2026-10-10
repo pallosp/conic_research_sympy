@@ -126,6 +126,9 @@ def are_on_same_conic(
 
     *Formula*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
     section 10.2 (Conics and Cross-Ratios)
+
+    *Research*:
+    [research/incidence/conconicity.py](../src/research/incidence/conconicity.py)
     """
     if len(points) < 6:
         return True

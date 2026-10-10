@@ -61,5 +61,8 @@ def asymptote_conic(hyperbola: Matrix) -> Matrix:
     Turns ellipses into point conics at their center, preserving the axis
     directions. The function is equivalent to
     [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero).
+
+    *Research*:
+    [research/construction/asymptote_conic.py](../src/research/construction/asymptote_conic.py)
     """
     return shrink_conic_to_zero(hyperbola)

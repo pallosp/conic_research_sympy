@@ -448,6 +448,9 @@ The returned value is:
  - `nan` for ideal point conics;
  - 0 for the other degenerate conics.
 
+*Formula*:
+[research/conic_properties/conic_radii.py](../src/research/conic_properties/conic_radii.py)
+
 <a id="central_conic.secondary_radius"></a>
 
 #### secondary\_radius
@@ -456,7 +459,7 @@ The returned value is:
 def secondary_radius(conic: Matrix) -> Expr
 ```
 
-([source](../src/lib/central_conic.py#L148))
+([source](../src/lib/central_conic.py#L151))
 
 Computes the semi-conjugate axis length of a conic.
 
@@ -472,6 +475,9 @@ The returned value is:
  - `nan` for ideal point conics;
  - 0 for the other degenerate conics.
 
+*Formula*:
+[research/conic_properties/conic_radii.py](../src/research/conic_properties/conic_radii.py)
+
 <a id="central_conic.radius_in_direction"></a>
 
 #### radius\_in\_direction
@@ -483,7 +489,7 @@ def radius_in_direction(conic: Matrix,
                         angle: Expr = None) -> Expr
 ```
 
-([source](../src/lib/central_conic.py#L166))
+([source](../src/lib/central_conic.py#L172))
 
 Computes the length of the conic radius in the given direction.
 
@@ -504,7 +510,7 @@ it. Its direction can be specified either as
 def linear_eccentricity(conic: Matrix) -> Expr
 ```
 
-([source](../src/lib/central_conic.py#L202))
+([source](../src/lib/central_conic.py#L208))
 
 Computes the linear eccentricity of a conic section.
 
@@ -523,6 +529,9 @@ Special cases:
 *Formula*: `√|r₁²-r₂²|` where `r₁` and `r₂` denote the primary and secondary
 radii of the conic (i.e., the semi-axis lengths in the case of an ellipse).
 
+*Related research*:
+[research/conic_properties/linear_eccentricity_radii_relationship.py](../src/research/conic_properties/linear_eccentricity_radii_relationship.py)
+
 <a id="central_conic.center_to_focus_vector"></a>
 
 #### center\_to\_focus\_vector
@@ -531,7 +540,7 @@ radii of the conic (i.e., the semi-axis lengths in the case of an ellipse).
 def center_to_focus_vector(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L225))
+([source](../src/lib/central_conic.py#L234))
 
 Returns the 2D vector from a conic's center to one of its foci.
 
@@ -550,7 +559,7 @@ center.
 def central_conic_foci(conic: Matrix) -> tuple[Matrix, Matrix]
 ```
 
-([source](../src/lib/central_conic.py#L243))
+([source](../src/lib/central_conic.py#L252))
 
 Computes the focus points of a central conic.
 
@@ -564,7 +573,7 @@ Returns a pair of 2D vectors.
 def center_to_vertex_vector(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L253))
+([source](../src/lib/central_conic.py#L262))
 
 Vector from the center of a conic to one of its vertices.
 
@@ -590,7 +599,7 @@ Returns a 2D column vector with the following properties:
 def central_conic_vertices(conic: Matrix) -> tuple[Matrix, Matrix]
 ```
 
-([source](../src/lib/central_conic.py#L274))
+([source](../src/lib/central_conic.py#L283))
 
 Computes the vertices of a central conic.
 
@@ -611,7 +620,7 @@ Special cases:
 def center_to_covertex_vector(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L291))
+([source](../src/lib/central_conic.py#L300))
 
 Vector from the center of a conic to one of its covertices.
 
@@ -637,7 +646,7 @@ Returns a 2D column vector with the following properties:
 def shrink_conic_to_zero(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L312))
+([source](../src/lib/central_conic.py#L321))
 
 Scales a conic section from its center with a factor of zero.
 
@@ -1788,6 +1797,9 @@ Properties:
 *Formula*:
 [research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)
 
+*Related research* (trigonometric identities):
+[research/conic_properties/focal_axis_angle_identities.py](../src/research/conic_properties/focal_axis_angle_identities.py)
+
 <a id="conic_direction.conjugate_axis_direction"></a>
 
 #### conjugate\_axis\_direction
@@ -1796,7 +1808,7 @@ Properties:
 def conjugate_axis_direction(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/conic_direction.py#L112))
+([source](../src/lib/conic_direction.py#L115))
 
 Returns the ideal point representing the direction of a conic's conjugate axis.
 
@@ -2290,6 +2302,9 @@ Shifts the angle origin of a polar conic's parametrization.
 * `P'(θ) = P(θ + start_angle)` for all `θ`
 * `P'` traces the same conic as `P`
 
+*Formula*:
+[research/transformation/rotate_points_along_polar_conic.py](../src/research/transformation/rotate_points_along_polar_conic.py)
+
 <a id="incidence"></a>
 
 # incidence
@@ -2439,6 +2454,9 @@ polynomial before it gets compared to zero. Returns `None` if undecidable.
 *Formula*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
 section 10.2 (Conics and Cross-Ratios)
 
+*Research*:
+[research/incidence/conconicity.py](../src/research/incidence/conconicity.py)
+
 <a id="incidence.are_cocircular"></a>
 
 #### are\_cocircular
@@ -2449,7 +2467,7 @@ def are_cocircular(points: Sequence[Matrix],
                    simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L144))
+([source](../src/lib/incidence.py#L147))
 
 Tells whether n points lie on the same circle.
 
@@ -2540,6 +2558,9 @@ Computes the line pair conic representing the hyperbola's asymptotes.
 Turns ellipses into point conics at their center, preserving the axis
 directions. The function is equivalent to
 [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero).
+
+*Research*:
+[research/construction/asymptote_conic.py](../src/research/construction/asymptote_conic.py)
 
 <a id="ellipse"></a>
 
