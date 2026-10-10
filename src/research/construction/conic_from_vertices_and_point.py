@@ -109,7 +109,7 @@ def conic_formula(center: tuple | Matrix, *, double_line: bool = False) -> MatAd
         axis = line_through_point(center, direction=v)
         second_member = double_line_conic(axis).applyfunc(factor)
     else:
-        second_member = -circle(center, radius)
+        second_member = -circle(center, r=radius)
 
     a, b = symbols("a b")
     equations = (conic - a * tangents - b * second_member).applyfunc(expand)

@@ -85,7 +85,7 @@ class TestSplitToLines:
         assert are_projective_sets_equal(lines, SplitToLines(conic))
 
     def test_point_conic(self):
-        conic = circle((0, 0), 0)
+        conic = circle((0, 0), r=0)
         assert are_projective_sets_equal(
             [Matrix([1, I, 0]), Matrix([1, -I, 0])],
             SplitToLines(conic),
@@ -95,7 +95,7 @@ class TestSplitToLines:
 class TestExtractPoint:
     def test_symbolic_real_point_conic(self):
         point = symbols("x,y", real=True)
-        zero_circle = circle(point, 0)
+        zero_circle = circle(point, r=0)
         assert is_nonzero_multiple(ExtractPoint(zero_circle), point_to_vec3(point))
 
         finite_point_conic = point_conic(point)

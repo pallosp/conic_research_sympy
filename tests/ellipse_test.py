@@ -87,7 +87,7 @@ class TestEllipseFromFociAndPoint:
         f = (2, 3)
         p = (5, 7)
         circular_ellipse = ellipse_from_foci_and_point(f, f, p)
-        assert is_nonzero_multiple(circular_ellipse, circle(f, 5))
+        assert is_nonzero_multiple(circular_ellipse, circle(f, r=5))
 
     def test_coincident_foci_and_point(self):
         assert ellipse_from_foci_and_point((1, 2), (1, 2), (1, 2)).is_zero_matrix

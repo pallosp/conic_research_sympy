@@ -36,7 +36,7 @@ class TestConicFromFociAndRadius:
         center = (1, 2)
         radius = 3
         conic = conic_from_foci_and_radius(center, center, radius)
-        assert is_nonzero_multiple(conic, circle(center, radius))
+        assert is_nonzero_multiple(conic, circle(center, r=radius))
 
     def test_radius_sign_does_not_matter(self):
         conic1 = conic_from_foci_and_radius((1, 2), (3, 4), 5)
@@ -58,7 +58,7 @@ class TestConicFromCenterAndPoints:
         p2 = (4, 3)
         p3 = (5, 0)
         conic = conic_from_center_and_points(ORIGIN, p1, p2, p3)
-        assert is_nonzero_multiple(conic, circle(ORIGIN, 5))
+        assert is_nonzero_multiple(conic, circle(ORIGIN, r=5))
 
     def test_translated_circle(self):
         center = (1, 3)
@@ -66,7 +66,7 @@ class TestConicFromCenterAndPoints:
         p2 = (5, 6)
         p3 = (6, 3)
         conic = conic_from_center_and_points(center, p1, p2, p3)
-        assert is_nonzero_multiple(conic, circle(center, 5))
+        assert is_nonzero_multiple(conic, circle(center, r=5))
 
     def test_hyperbola_centered_at_origin(self):
         p1 = (1, 6)
@@ -87,7 +87,7 @@ class TestConicFromCenterAndPoints:
 class TestConicCenter:
     def test_circle(self):
         x, y, r = symbols("x,y,r")
-        symbolic_circle = circle((x, y), r)
+        symbolic_circle = circle((x, y), r=r)
         assert conic_center(symbolic_circle) == Matrix([x, y])
 
 
@@ -95,7 +95,7 @@ class TestSemiAxisLengths:
     def test_circle_radius(self):
         center = symbols("x,y")
         r = symbols("r", nonnegative=True)
-        symbolic_circle = circle(center, r)
+        symbolic_circle = circle(center, r=r)
         assert r == primary_radius(symbolic_circle)
         assert r == secondary_radius(symbolic_circle)
 
@@ -141,7 +141,7 @@ class TestSemiAxisLengths:
         assert primary_radius(line_pair) == 0
 
     def test_finite_point_conic(self):
-        zero_circle = circle(symbols("x y", real=True), 0)
+        zero_circle = circle(symbols("x y", real=True), r=0)
         assert primary_radius(zero_circle) == 0
         assert secondary_radius(zero_circle) == 0
 
@@ -166,7 +166,7 @@ class TestRadiusInDirection:
 
     def test_symbolic_circle(self):
         r = symbols("r", positive=True)
-        symbolic_circle = circle(symbols("x,y", real=True), r)
+        symbolic_circle = circle(symbols("x,y", real=True), r=r)
         direction = symbols("dx dy", real=True)
         computed_radius = radius_in_direction(symbolic_circle, direction=direction)
         assert r == computed_radius.simplify()
@@ -189,13 +189,13 @@ class TestRadiusInDirection:
 
 class TestLinearEccentricity:
     def test_symbolic_circle(self):
-        symbolic_circle = circle(symbols("x,y", real=True), symbols("r", real=True))
+        symbolic_circle = circle(symbols("x,y", real=True), r=symbols("r", real=True))
         assert linear_eccentricity(symbolic_circle) == 0
 
     def test_symbolic_imaginary_circle(self):
         center = symbols("x,y", real=True)
         imaginary_radius = symbols("r", real=True) * I
-        imaginary_circle = circle(center, imaginary_radius)
+        imaginary_circle = circle(center, r=imaginary_radius)
         assert linear_eccentricity(imaginary_circle) == 0
 
     def test_symbolic_central_conic_standard_form(self):
@@ -304,7 +304,7 @@ class TestCentralConicFoci:
         point = point_conic([1, 2])
         assert central_conic_foci(point) == tuple([Matrix([1, 2])] * 2)
 
-        zero_circle = circle((1, 2), 0)
+        zero_circle = circle((1, 2), r=0)
         assert central_conic_foci(zero_circle) == tuple([Matrix([1, 2])] * 2)
 
     def test_ideal_point_conic(self):
@@ -348,7 +348,7 @@ class TestVertices:
         assert center_to_vertex_vector(-parabola) == Matrix([nan, zoo])
 
     def test_circle(self):
-        assert center_to_vertex_vector(circle((1, 2), 3)) == Matrix([nan, nan])
+        assert center_to_vertex_vector(circle((1, 2), r=3)) == Matrix([nan, nan])
         assert center_to_vertex_vector(IMAGINARY_UNIT_CIRCLE) == Matrix([nan, nan])
 
         assert central_conic_vertices(UNIT_CIRCLE) == (
@@ -364,7 +364,7 @@ class TestVertices:
         )
 
     def test_zero_radius_circle(self):
-        zero_circle = circle((1, 2), 0)
+        zero_circle = circle((1, 2), r=0)
         nan_vector = Matrix([nan, nan])
         assert center_to_vertex_vector(zero_circle) == nan_vector
         assert central_conic_vertices(zero_circle) == (nan_vector, nan_vector)
@@ -392,7 +392,7 @@ class TestCenterToCovertexVector:
         assert center_to_covertex_vector(conic_from_poly(x * y - 1)) == Matrix([-I, I])
 
     def test_circle(self):
-        assert center_to_covertex_vector(circle((1, 2), 3)) == Matrix([nan, nan])
+        assert center_to_covertex_vector(circle((1, 2), r=3)) == Matrix([nan, nan])
         assert center_to_covertex_vector(IMAGINARY_UNIT_CIRCLE) == Matrix([nan, nan])
 
     def test_crossing_lines(self):
@@ -417,7 +417,7 @@ class TestShrinkToZero:
         assert are_projective_sets_equal(IdealPoints(hyperbola), IdealPoints(shrunk))
 
     def test_circle(self):
-        symbolic_circle = circle(symbols("x y"), symbols("r"))
+        symbolic_circle = circle(symbols("x y"), r=symbols("r"))
         shrunk_circle = shrink_conic_to_zero(symbolic_circle)
         assert is_point_conic(shrunk_circle)
         assert conic_center(shrunk_circle) == Matrix([x, y])

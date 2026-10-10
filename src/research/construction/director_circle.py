@@ -17,7 +17,7 @@ det = symbols("det")
 pprint(radius.subs(conic.det(), det))
 
 print("\nDirector circle matrix:")
-director_circle = simplify(circle(center, radius))
+director_circle = simplify(circle(center, r=radius))
 pprint(director_circle)
 
 print("\nDirector circle matrix in adjugate form:")

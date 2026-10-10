@@ -42,14 +42,14 @@ class TestConicNormFactor:
 
     def test_symbolic_circle(self):
         center = [*symbols("x y"), 1]
-        symbolic_circle = circle(center, symbols("r", positive=True))
+        symbolic_circle = circle(center, r=symbols("r", positive=True))
         assert quadratic_form(symbolic_circle, Matrix(center)).factor().is_positive
         assert ConicNormFactor(symbolic_circle) == 1
         assert ConicNormFactor(-symbolic_circle) == -1
 
     def test_zero_radius_circle(self):
         center = symbols("x y", real=True)
-        zero_circle = circle(center, 0)
+        zero_circle = circle(center, r=0)
         assert quadratic_form(zero_circle, ORIGIN).is_nonpositive
         assert ConicNormFactor(zero_circle) == 1
         assert ConicNormFactor(-zero_circle) == -1
@@ -114,7 +114,9 @@ class TestAxisDirection:
         assert conjugate_axis_direction(UNIT_CIRCLE).is_zero_matrix
 
     def test_symbolic_circle(self):
-        assert focal_axis_direction(circle(symbols("x y"), symbols("r"))).is_zero_matrix
+        assert focal_axis_direction(
+            circle(symbols("x y"), r=symbols("r"))
+        ).is_zero_matrix
 
     def test_ellipse(self):
         h_ellipse = ellipse((5, 4), 3, 2, r1_direction=(1, 0))
@@ -147,13 +149,13 @@ class TestAxisDirection:
         assert is_positive_multiple(focal_axis_direction(-point), r1_direction)
 
     def test_zero_radius_circle(self):
-        point = circle((1, 2), 0)
+        point = circle((1, 2), r=0)
         assert focal_axis_direction(point) == Matrix([0, 0, 0])
         assert conjugate_axis_direction(point) == Matrix([0, 0, 0])
 
     def test_lazy_zero_radius_circle(self):
         conic = conic_matrix(*symbols("a b c d e f"))
-        point = circle((1, 2), 0)
+        point = circle((1, 2), r=0)
         direction = focal_axis_direction(conic)
         direction = direction.subs(zip(conic, point, strict=True))
         assert direction.is_zero_matrix

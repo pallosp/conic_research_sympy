@@ -57,7 +57,7 @@ class TestPolarConicContainsPoint:
 
 class TestConicContainsLine:
     def test_circle_symbolic(self):
-        a_circle = circle((1, 2), 3)
+        a_circle = circle((1, 2), r=3)
         line = Matrix(symbols("a b c", positive=True))
         assert conic_contains_line(a_circle, line) is False
 
@@ -84,7 +84,7 @@ class TestConicContainsLine:
         assert conic_contains_line(conic, horizontal_line(1)) is False
 
     def test_point_conic_numeric(self):
-        conic = circle((0, 0), 0)
+        conic = circle((0, 0), r=0)
         assert conic_contains_line(conic, X_AXIS) is False
         assert conic_contains_line(conic, horizontal_line(1)) is False
         assert conic_contains_line(conic, Matrix([1, I, 0])) is True

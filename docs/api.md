@@ -660,12 +660,27 @@ conic types the result matrix will have infinite or `nan` elements.
 #### circle
 
 ```python
-def circle(center: Matrix | Sequence[Expr], radius: Expr) -> Matrix
+def circle(center: Matrix | Sequence[Expr],
+           *,
+           r: Expr | None = None,
+           point: Matrix | Sequence[Expr] | None = None) -> Matrix
 ```
 
 ([source](../src/lib/circle.py#L9))
 
-Creates a circle from its center and radius.
+Creates a circle from its center and either its radius or a point on it.
+
+Exactly one of `r` and `point` must be specified.
+
+The conic's value at the center is non-negative (`r²` for a finite
+radius `r`), so the sign of the matrix is the same for both constructions.
+
+If `center` is an ideal point, the result is a matrix with `nan` and/or
+`zoo` entries. If `point` is an ideal point and the center is finite, the
+result is the double ideal line.
+
+*Formula*:
+[research/construction/circle.py](../src/research/construction/circle.py)
 
 <a id="circle.circle_radius"></a>
 
@@ -675,7 +690,7 @@ Creates a circle from its center and radius.
 def circle_radius(circle: Matrix) -> Expr
 ```
 
-([source](../src/lib/circle.py#L15))
+([source](../src/lib/circle.py#L45))
 
 Computes the radius of a circle conic.
 
@@ -691,7 +706,7 @@ The computation is based on
 def director_circle(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/circle.py#L26))
+([source](../src/lib/circle.py#L56))
 
 Computes the director circle of a conic.
 

@@ -42,7 +42,7 @@ class TestFocalAxisAsymptoteAngle:
         assert asymptote_focal_axis_angle(parabola) == 0
 
     def test_circle(self):
-        a_circle = circle((1, 2), 3)
+        a_circle = circle((1, 2), r=3)
         assert asymptote_focal_axis_angle(a_circle).is_infinite
 
     def test_ellipse(self):
@@ -80,7 +80,7 @@ class TestFocalAxisAsymptoteAngle:
         assert asymptote_focal_axis_angle(double_ideal_line) == nan
 
     def test_finite_point_conic(self):
-        zero_circle = circle((1, 2), 0)
+        zero_circle = circle((1, 2), r=0)
         assert asymptote_focal_axis_angle(zero_circle).is_infinite
 
         finite_point_conic = point_conic((1, 2))

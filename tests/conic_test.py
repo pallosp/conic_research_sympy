@@ -109,8 +109,8 @@ class TestEccentricity:
     def test_symbolic_circle(self):
         center = symbols("x y", real=True)
         radius = symbols("r", real=True)
-        assert eccentricity(circle(center, radius)) == 0
-        assert eccentricity(circle(center, radius) * -2) == 0
+        assert eccentricity(circle(center, r=radius)) == 0
+        assert eccentricity(circle(center, r=radius) * -2) == 0
 
     def test_numeric_parabola(self):
         parabola = conic_from_poly(x * x - y)
@@ -152,7 +152,7 @@ class TestEccentricity:
         assert eccentricity(-point_conic).factor() == ecc
 
     def test_symbolic_zero_radius_circle(self):
-        zero_circle = circle(symbols("x y"), 0)
+        zero_circle = circle(symbols("x y"), r=0)
         assert eccentricity(zero_circle) == 0
 
 
@@ -164,17 +164,19 @@ class TestFocalAxis:
         conic = conic_from_focus_and_directrix(focus, directrix, ecc)
         expected = perpendicular_line(directrix, focus)
         axis = focal_axis(conic).applyfunc(
-            lambda coord: coord.expand()
-            .factor()
-            .rewrite(log)
-            .factor(deep=True)
-            .rewrite(exp)
-            .factor(),
+            lambda coord: (
+                coord.expand()
+                .factor()
+                .rewrite(log)
+                .factor(deep=True)
+                .rewrite(exp)
+                .factor()
+            ),
         )
         assert is_nonzero_multiple(axis, expected)
 
     def test_symbolic_circle(self):
-        symbolic_circle = circle(symbols("x y"), symbols("r"))
+        symbolic_circle = circle(symbols("x y"), r=symbols("r"))
         assert focal_axis(symbolic_circle).is_zero_matrix
 
     def test_ellipse(self):
@@ -263,7 +265,7 @@ class TestIdealPoints:
 class TestProjectiveConicCenter:
     def test_circle(self):
         center = symbols("x,y")
-        symbolic_circle = circle(center, symbols("r"))
+        symbolic_circle = circle(center, r=symbols("r"))
         assert projective_conic_center(symbolic_circle) == Matrix([*center, 1])
 
     def test_ellipse(self):
@@ -317,7 +319,7 @@ class TestPolePolar:
 
     def test_polar_of_circle_center(self):
         center = (2, 3)
-        conic = circle(center, 4)
+        conic = circle(center, r=4)
         polar = polar_line(conic, center)
         assert is_nonzero_multiple(polar, IDEAL_LINE)
 
@@ -330,7 +332,7 @@ class TestPolePolar:
         assert intersections[0] == intersections[1]  # tangent line
 
     def test_pole_of_line_tangent_to_conic(self):
-        conic = circle((0, 0), 5)
+        conic = circle((0, 0), r=5)
         tangent_line = line_through_point((3, 4), direction=(-4, 3))
         pole = pole_point(conic, tangent_line)
         assert conic_contains_point(conic, pole)
@@ -347,7 +349,7 @@ class TestPolePolar:
         assert is_nonzero_multiple(pole_point(conic, IDEAL_LINE), ORIGIN)
 
     def test_point_conic(self):
-        conic = circle((3, 2), 0)
+        conic = circle((3, 2), r=0)
         assert is_nonzero_multiple(pole_point(conic, X_AXIS), (3, 2, 1))
         assert is_nonzero_multiple(pole_point(conic, IDEAL_LINE), (3, 2, 1))
         assert pole_point(conic, horizontal_line(2)).is_zero_matrix
