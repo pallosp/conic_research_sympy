@@ -42,15 +42,21 @@ def circle(
     return conic_matrix(-1, 0, -1, cx, cy, r * r - cx * cx - cy * cy)
 
 
-def circle_radius(circle: Matrix) -> Expr:
-    """Computes the radius of a circle conic.
+def circle_radius(conic: Matrix) -> Expr:
+    """Computes the radius of a circular or a finite point conic.
 
-    The result is not specified if the conic matrix is not a circle.
-    The computation is based on
-    [research/construction/director_circle.py](../src/research/construction/director_circle.py).
+    Return value by conic type:
+
+    - *Real circles*: the positive radius.
+    - *Imaginary circles*: an imaginary number.
+    - *Finite point conics*: 0, including non-circular ones.
+    - *Other conics*: not meaningful.
+
+    *Formula*:
+    [research/conic_properties/circle_radius.py](../src/research/conic_properties/circle_radius.py)
     """
-    a, b, c = circle[0], circle[1], circle[4]
-    return sqrt(-circle.det() * (a + c) / 2) / (a * c - b * b)
+    a = conic[0]
+    return sqrt(-a * conic.det()) / a**2
 
 
 def director_circle(conic: Matrix) -> Matrix:

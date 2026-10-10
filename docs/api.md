@@ -696,16 +696,22 @@ result is the double ideal line.
 #### circle\_radius
 
 ```python
-def circle_radius(circle: Matrix) -> Expr
+def circle_radius(conic: Matrix) -> Expr
 ```
 
 ([source](../src/lib/circle.py#L45))
 
-Computes the radius of a circle conic.
+Computes the radius of a circular or a finite point conic.
 
-The result is not specified if the conic matrix is not a circle.
-The computation is based on
-[research/construction/director_circle.py](../src/research/construction/director_circle.py).
+Return value by conic type:
+
+- *Real circles*: the positive radius.
+- *Imaginary circles*: an imaginary number.
+- *Finite point conics*: 0, including non-circular ones.
+- *Other conics*: not meaningful.
+
+*Formula*:
+[research/conic_properties/circle_radius.py](../src/research/conic_properties/circle_radius.py)
 
 <a id="circle.director_circle"></a>
 
@@ -715,7 +721,7 @@ The computation is based on
 def director_circle(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/circle.py#L56))
+([source](../src/lib/circle.py#L62))
 
 Computes the director circle of a conic.
 

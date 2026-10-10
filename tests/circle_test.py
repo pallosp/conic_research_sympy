@@ -1,12 +1,18 @@
 from typing import Any
 
 import pytest
-from sympy import Matrix, nan, pi, sqrt, zoo
+from sympy import I, Matrix, nan, pi, sqrt, symbols, zoo
 from sympy.abc import x, y
 
-from lib.circle import UNIT_CIRCLE, circle, circle_radius, director_circle
+from lib.circle import (
+    IMAGINARY_UNIT_CIRCLE,
+    UNIT_CIRCLE,
+    circle,
+    circle_radius,
+    director_circle,
+)
 from lib.conic import conic_from_poly
-from lib.degenerate_conic import double_line_conic
+from lib.degenerate_conic import double_line_conic, point_conic
 from lib.ellipse import ellipse
 from lib.line import IDEAL_LINE
 from lib.matrix import is_nonzero_multiple, quadratic_form
@@ -63,9 +69,29 @@ class TestCircle:
         assert circle((1, 0, 0), point=(1, 3, 0)).has(nan, zoo)
 
 
-def test_circle_radius():
-    assert circle_radius(circle((1, 2), r=3)) == 3
-    assert circle_radius(UNIT_CIRCLE * -2) == 1
+class TestCircleRadius:
+    def test_real_circle(self):
+        assert circle_radius(circle((1, 2), r=3)) == 3
+        assert circle_radius(UNIT_CIRCLE * -2) == 1
+
+    def test_imaginary_circle(self):
+        assert circle_radius(IMAGINARY_UNIT_CIRCLE) == I
+        assert circle_radius(-IMAGINARY_UNIT_CIRCLE) == I
+        assert circle_radius(circle((1, 2), r=3 * I)) == 3 * I
+
+    def test_finite_point_conic(self):
+        assert circle_radius(circle((1, 2), r=0)) == 0
+        assert circle_radius(point_conic((1, 2))) == 0
+
+    def test_symbolic_circular_conic(self):
+        center = symbols("x y")
+        r = symbols("r", complex=True)
+        # √(r²) = { r if 0 ≤ arg(r) < π, -r otherwise }
+        assert circle_radius(circle(center, r=r)) == sqrt(r**2)
+
+    def test_symbolic_finite_point_conic(self):
+        center = symbols("x y")
+        assert circle_radius(point_conic(center)) == 0
 
 
 class TestDirectorCircle:
