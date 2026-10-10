@@ -28,18 +28,18 @@ def circle(
     """
     if (r is None) == (point is None):
         raise ValueError("Exactly one of r and point must be specified.")
-    x, y = point_to_xy(center)
+    cx, cy = point_to_xy(center)
     if r is None:
-        px, py, pz = point_to_vec3(point)
+        x, y, z = point_to_vec3(point)
         return conic_matrix(
-            -(pz**2),
+            -(z**2),
             0,
-            -(pz**2),
-            x * pz**2,
-            y * pz**2,
-            px**2 + py**2 - 2 * pz * (x * px + y * py),
+            -(z**2),
+            cx * z**2,
+            cy * z**2,
+            x**2 + y**2 - 2 * z * (cx * x + cy * y),
         )
-    return conic_matrix(-1, 0, -1, x, y, r * r - x * x - y * y)
+    return conic_matrix(-1, 0, -1, cx, cy, r * r - cx * cx - cy * cy)
 
 
 def circle_radius(circle: Matrix) -> Expr:
