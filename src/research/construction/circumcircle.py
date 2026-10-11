@@ -14,7 +14,7 @@ p3 = x3, y3, z3 = symbols("x3 y3 z3")
 print("\nCircumcircle as conic matrix:\n")
 
 circumcircle = conic_through_points(p1, p2, p3, CIRCULAR_POINT_I, CIRCULAR_POINT_J)
-circumcircle /= 2 * I
+circumcircle /= -2 * I
 
 println_indented(circumcircle.applyfunc(lambda e: normalize_det3(poly_as_det3(e))))
 

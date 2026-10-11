@@ -117,6 +117,8 @@
   * [parabola\_axis](#parabola.parabola_axis)
   * [parabola\_focal\_parameter](#parabola.parabola_focal_parameter)
 * [triangle](#triangle)
+  * [circumcircle](#triangle.circumcircle)
+  * [circumcenter](#triangle.circumcenter)
   * [steiner\_ellipse](#triangle.steiner_ellipse)
   * [steiner\_inellipse](#triangle.steiner_inellipse)
 * [polar\_conic](#polar_conic)
@@ -2128,6 +2130,64 @@ Computes the parabola's focus-directrix distance.
 
 # triangle
 
+<a id="triangle.circumcircle"></a>
+
+#### circumcircle
+
+```python
+def circumcircle(point1: Matrix | Sequence[Expr],
+                 point2: Matrix | Sequence[Expr],
+                 point3: Matrix | Sequence[Expr]) -> Matrix
+```
+
+([source](../src/lib/triangle.py#L9))
+
+Computes the circle through three points.
+
+If the points are in counterclockwise order, the sign of the matrix matches
+`circle()`: the conic's value at the center is non-negative. In clockwise
+order, the matrix is negated.
+
+Special cases:
+ - If the points are collinear, the result is the union of their common
+   line and the ideal line.
+ - If exactly one point is ideal, the result is the union of the line
+   through the two finite points and the ideal line.
+ - If two points coincide, or at least two points are ideal, the result is
+   a zero matrix.
+
+*Definition*: <https://en.wikipedia.org/wiki/Circumcircle><br>
+*Formula*:
+[research/construction/circumcircle.py](../src/research/construction/circumcircle.py)
+
+<a id="triangle.circumcenter"></a>
+
+#### circumcenter
+
+```python
+def circumcenter(point1: Matrix | Sequence[Expr],
+                 point2: Matrix | Sequence[Expr],
+                 point3: Matrix | Sequence[Expr]) -> Matrix
+```
+
+([source](../src/lib/triangle.py#L49))
+
+Computes the center of the circle through three points.
+
+Returns the center as a homogeneous 3D column vector.
+
+Special cases:
+ - If the points are collinear, the result is the ideal point
+   perpendicular to their common line.
+ - If exactly one point is ideal, the result is the ideal point
+   perpendicular to the line through the two finite points.
+ - If two points coincide, or at least two points are ideal, the result is
+   a zero vector.
+
+*Definition*: <https://en.wikipedia.org/wiki/Circumcircle><br>
+*Formula*:
+[research/construction/circumcircle.py](../src/research/construction/circumcircle.py)
+
 <a id="triangle.steiner_ellipse"></a>
 
 #### steiner\_ellipse
@@ -2138,7 +2198,7 @@ def steiner_ellipse(point1: Matrix | Sequence[Expr],
                     point3: Matrix | Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/triangle.py#L9))
+([source](../src/lib/triangle.py#L86))
 
 Constructs the Steiner circumellipse for the given points.
 
@@ -2159,7 +2219,7 @@ def steiner_inellipse(point1: Matrix | Sequence[Expr],
                       point3: Matrix | Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/triangle.py#L48))
+([source](../src/lib/triangle.py#L125))
 
 Computes the Steiner inellipse for the given points.
 
