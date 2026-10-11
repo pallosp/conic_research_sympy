@@ -23,6 +23,7 @@ Example:
 """
 
 import itertools
+import math
 import random
 import re
 from collections import defaultdict
@@ -30,7 +31,18 @@ from collections.abc import Iterable, Iterator
 from functools import cached_property
 from typing import TypeVar
 
-from sympy import ZZ, Determinant, Expr, Matrix, Rational, Symbol, sympify, zeros
+from sympy import (
+    ZZ,
+    Determinant,
+    Expr,
+    Matrix,
+    Poly,
+    Rational,
+    Symbol,
+    sympify,
+    zeros,
+)
+from sympy.combinatorics import Permutation
 from sympy.polys.rings import PolyElement, PolyRing
 
 Exponents = tuple[int, ...]  # exponents of a monomial
@@ -155,11 +167,13 @@ class _Search:
         """
         for term in self.target.monoms():
             for a in _divisors(term):
+                if not self._fits(a):
+                    continue
                 for shifted_b in _divisors(_sub(term, a)):
                     shifted_c = _sub(_sub(term, a), shifted_b)
                     b = self._shift_exps(shifted_b, -1)
                     c = self._shift_exps(shifted_c, -2)
-                    if self._fits(a) and sum(a) >= sum(b) >= sum(c):
+                    if sum(a) >= sum(b) >= sum(c):
                         for sign in (1, -1):
                             yield (
                                 self.monomial(a, sign),
@@ -212,10 +226,6 @@ class _Search:
             row = rng.choice(steps)
         return row
 
-    def matrix(self, row: Row) -> Matrix:
-        """Converts the first row to the full sympy matrix."""
-        return Matrix([[e.as_expr() for e in r] for r in self.rows(row)])
-
 
 def poly_as_det3_matrix(
     poly: Expr,
@@ -254,7 +264,7 @@ def poly_as_det3_matrix(
     for _ in range(max_runs):
         row = search.run(rng)
         if row is not None:
-            return k, search.matrix(row)
+            return k, Matrix([[e.as_expr() for e in r] for r in search.rows(row)])
     msg = f"cannot express {poly} as a 3x3 determinant"
     if constants := sorted(
         s.name for s, t in index_shift.items() if s == t and s.name[-1] in "123"
@@ -278,3 +288,59 @@ def poly_as_det3(
         poly, max_degree=max_degree, max_runs=max_runs, seed=seed
     )
     return k * Determinant(matrix)
+
+
+def normalize_det3(det: Expr) -> Expr:
+    """Rewrites k⋅det(M) into a canonical form with the same value.
+
+    k may be any expression. The steps:
+    1. Negates rows and columns of M to minimize the number of minus signs,
+       then the number of entries with a negative leading term.
+    2. Sorts the columns by non-increasing degree, then the rows and columns by
+       the variable indices of the entries in reading order (x1 before x2).
+    3. Moves the sign change of the determinant into k.
+    """
+    k, determinant = det.as_independent(Determinant, as_Add=False)
+    if not isinstance(determinant, Determinant):
+        msg = f"{det} is not of the form k⋅det(M)"
+        raise TypeError(msg)
+    matrix = determinant.arg
+    gens = sorted(matrix.free_symbols, key=str)
+    if not gens:
+        return det
+    polys = [[Poly(e, *gens) for e in row] for row in matrix.tolist()]
+
+    def minus_signs(signs: tuple[int, ...]) -> tuple[int, int]:
+        """Minus signs in the matrix, then entries with a negative leading term.
+
+        Row i is multiplied by signs[i], column j by signs[3 + j].
+        """
+        minus = [
+            [c.is_negative != (signs[i] * signs[3 + j] < 0) for c in p.coeffs()]
+            for i, row in enumerate(polys)
+            for j, p in enumerate(row)
+        ]
+        return sum(map(sum, minus)), sum(m[0] for m in minus if m)
+
+    # Negating all rows and columns is a no-op, so the last column stays as is.
+    signs = min(
+        ((*s, 1) for s in itertools.product((1, -1), repeat=5)), key=minus_signs
+    )
+
+    degrees = [max(polys[i][j].total_degree() for i in range(3)) for j in range(3)]
+    keys = [[[tuple(-e for e in m) for m in p.monoms()] for p in row] for row in polys]
+
+    def sorted_rows(cols: tuple[int, ...]) -> list[int]:
+        return sorted(range(3), key=lambda i: [keys[i][j] for j in cols])
+
+    def order_key(cols: tuple[int, ...]) -> tuple:
+        rows = sorted_rows(cols)
+        return [-degrees[j] for j in cols], [keys[i][j] for i in rows for j in cols]
+
+    cols = min(itertools.permutations(range(3)), key=order_key)
+    rows = sorted_rows(cols)
+
+    signed = Matrix(3, 3, lambda i, j: signs[i] * signs[3 + j] * matrix[i, j])
+    sign = math.prod(signs) * Permutation(rows).signature()
+    sign *= Permutation(cols).signature()
+    return k * sign * Determinant(signed.extract(rows, cols))

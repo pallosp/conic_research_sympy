@@ -11,7 +11,7 @@ from sympy import Eq, Matrix, symbols
 from lib.central_conic import conic_center
 from lib.incidence import conic_contains_point
 from lib.transform import transform_conic, translate
-from research.poly_as_det import poly_as_det3
+from research.poly_as_det import normalize_det3, poly_as_det3
 from research.sympy_utils import println_indented
 
 # Simplification WLOG: let the center point be at (0, 0).
@@ -123,7 +123,7 @@ a, _, _, b, c, _, d, e, f = (elem.factor() for elem in steiner)
 print("\nElements of the Steiner ellipse matrix:\n")
 
 for name, value in zip("abcdef", [a, b, c, d, e, f], strict=True):
-    println_indented(Eq(symbols(name), poly_as_det3(value)))
+    println_indented(Eq(symbols(name), normalize_det3(poly_as_det3(value))))
 
 # Steiner inellipse
 #
@@ -144,8 +144,7 @@ inellipse_subs = {
 
 a, b, c, d, e, f = (v.xreplace(inellipse_subs) * 4 for v in [a, b, c, d, e, f])
 
-for name, value in zip("abcde", [a, b, c, d, e], strict=True):
-    println_indented(Eq(symbols(name), poly_as_det3(value)))
-
-# This seed finds the matrix in the simplest form (binomial entries).
-println_indented(Eq(symbols("f"), poly_as_det3(f, max_degree=2, seed=6)))
+for name, value in zip("abcdef", [a, b, c, d, e, f], strict=True):
+    # This seed finds the f matrix in the simplest form (binomial entries).
+    det = normalize_det3(poly_as_det3(value, max_degree=2, seed=6))
+    println_indented(Eq(symbols(name), det))
