@@ -233,10 +233,11 @@ def poly_as_det3_matrix(
     max_degree: int | None = None,
     max_runs: int = 20,
     seed: int = 0,
-) -> tuple[Rational, Matrix]:
-    """Finds a constant k and a 3x3 matrix M such that poly = k⋅det(M).
+) -> tuple[Expr, Matrix]:
+    """Finds a monomial k and a 3x3 matrix M such that poly = k⋅det(M).
 
-    k is the rational gcd of the coefficients. The entries of M are sums of
+    k is the gcd of the terms: the rational gcd of the coefficients times the
+    common monomial factor, or 0 if poly is 0. The entries of M are sums of
     ±monomials of degree at most max_degree, its rows are cyclic shifts of each
     other, and its column degrees are non-increasing. Raises ValueError if poly
     is not a cyclic polynomial with rational coefficients, or no matrix is found
@@ -244,7 +245,7 @@ def poly_as_det3_matrix(
     """
     poly = sympify(poly).expand()
     if poly == 0:
-        return Rational(1), zeros(3, 3)
+        return Rational(0), zeros(3, 3)
     if not poly.is_polynomial() or not all(
         c.is_Rational for c in poly.as_coefficients_dict().values()
     ):
@@ -255,6 +256,12 @@ def poly_as_det3_matrix(
     index_shift = _index_shift(primitive.free_symbols)
     ring = PolyRing(sorted(index_shift, key=str), ZZ)
     target = ring.from_expr(primitive)
+    common_exps = tuple(min(col) for col in zip(*target.monoms(), strict=True))
+    monomial = ring.from_dict({common_exps: 1})
+    k *= monomial.as_expr()
+    target = target.exquo(monomial)
+    if target.LC < 0:  # makes the search independent of the sign of poly
+        k, target = -k, -target
     search = _Search(target, index_shift, max_degree)
     if search.shift(target) != target:
         msg = f"{poly} is not invariant under the index shift 1 → 2 → 3 → 1"
@@ -300,6 +307,8 @@ def normalize_det3(det: Expr) -> Expr:
        the variable indices of the entries in reading order (x1 before x2).
     3. Moves the sign change of the determinant into k.
     """
+    if det == 0:
+        return det
     k, determinant = det.as_independent(Determinant, as_Add=False)
     if not isinstance(determinant, Determinant):
         msg = f"{det} is not of the form k⋅det(M)"
