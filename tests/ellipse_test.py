@@ -8,13 +8,11 @@ from lib.degenerate_conic import double_line_conic
 from lib.ellipse import (
     ellipse,
     ellipse_from_foci_and_point,
-    steiner_ellipse,
-    steiner_inellipse,
 )
 from lib.incidence import conic_contains_point
 from lib.line import line_between
 from lib.matrix import is_nonzero_multiple
-from lib.point import ORIGIN, centroid, point_to_vec3
+from lib.point import ORIGIN
 
 
 class TestEllipseFromParams:
@@ -103,25 +101,3 @@ class TestEllipseFromFociAndPoint:
         f2 = (3, 4)
         p = (5, 6, 0)
         assert nan in ellipse_from_foci_and_point(f1, f2, p)
-
-
-class TestSteinerEllipse:
-    def test_circumellipse(self):
-        p1 = (4, 1)
-        p2 = (7, 3)
-        p3 = (5, 5)
-        ellipse = steiner_ellipse(p1, p2, p3)
-        assert conic_contains_point(ellipse, point_to_vec3(p1))
-        assert conic_contains_point(ellipse, point_to_vec3(p2))
-        assert conic_contains_point(ellipse, point_to_vec3(p3))
-        assert conic_center(ellipse) == centroid(p1, p2, p3)
-
-    def test_inellipse(self):
-        p1 = (4, 1)
-        p2 = (7, 3)
-        p3 = (5, 5)
-        ellipse = steiner_inellipse(p1, p2, p3)
-        assert conic_contains_point(ellipse, point_to_vec3(centroid(p2, p3)))
-        assert conic_contains_point(ellipse, point_to_vec3(centroid(p3, p1)))
-        assert conic_contains_point(ellipse, point_to_vec3(centroid(p1, p2)))
-        assert conic_center(ellipse) == centroid(p1, p2, p3)

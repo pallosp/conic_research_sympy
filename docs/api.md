@@ -116,6 +116,9 @@
   * [parabola\_direction](#parabola.parabola_direction)
   * [parabola\_axis](#parabola.parabola_axis)
   * [parabola\_focal\_parameter](#parabola.parabola_focal_parameter)
+* [triangle](#triangle)
+  * [steiner\_ellipse](#triangle.steiner_ellipse)
+  * [steiner\_inellipse](#triangle.steiner_inellipse)
 * [polar\_conic](#polar_conic)
   * [POLAR\_UNIT\_CIRCLE](#polar_conic.POLAR_UNIT_CIRCLE)
   * [PolarOrigin](#polar_conic.PolarOrigin)
@@ -144,8 +147,6 @@
 * [ellipse](#ellipse)
   * [ellipse](#ellipse.ellipse)
   * [ellipse\_from\_foci\_and\_point](#ellipse.ellipse_from_foci_and_point)
-  * [steiner\_ellipse](#ellipse.steiner_ellipse)
-  * [steiner\_inellipse](#ellipse.steiner_inellipse)
 * [intersection](#intersection)
   * [line\_x\_line](#intersection.line_x_line)
   * [conic\_x\_line](#intersection.conic_x_line)
@@ -2123,6 +2124,52 @@ Computes the parabola's focus-directrix distance.
 *Formula*:
 [research/conic_properties/focal_parameter.py](../src/research/conic_properties/focal_parameter.py)
 
+<a id="triangle"></a>
+
+# triangle
+
+<a id="triangle.steiner_ellipse"></a>
+
+#### steiner\_ellipse
+
+```python
+def steiner_ellipse(point1: Matrix | Sequence[Expr],
+                    point2: Matrix | Sequence[Expr],
+                    point3: Matrix | Sequence[Expr]) -> Matrix
+```
+
+([source](../src/lib/triangle.py#L9))
+
+Constructs the Steiner circumellipse for the given points.
+
+The ellipse goes through the three points and is centered at the triangle's
+centroid.
+
+*Definition*: <https://en.wikipedia.org/wiki/Steiner_ellipse><br>
+*Formula*:
+[research/construction/steiner_ellipse.py](../src/research/construction/steiner_ellipse.py)
+
+<a id="triangle.steiner_inellipse"></a>
+
+#### steiner\_inellipse
+
+```python
+def steiner_inellipse(point1: Matrix | Sequence[Expr],
+                      point2: Matrix | Sequence[Expr],
+                      point3: Matrix | Sequence[Expr]) -> Matrix
+```
+
+([source](../src/lib/triangle.py#L48))
+
+Computes the Steiner inellipse for the given points.
+
+The ellipse is centered at the triangle's centroid, and is tangent to the
+triangle's sides at their midpoints.
+
+*Definition*: <https://en.wikipedia.org/wiki/Steiner_inellipse><br>
+*Formula*:
+[research/construction/steiner_ellipse.py](../src/research/construction/steiner_ellipse.py)
+
 <a id="polar_conic"></a>
 
 # polar\_conic
@@ -2636,48 +2683,6 @@ Special cases:
 
 *Formula*:
 [research/construction/ellipse_from_foci_and_point.py](../src/research/construction/ellipse_from_foci_and_point.py)
-
-<a id="ellipse.steiner_ellipse"></a>
-
-#### steiner\_ellipse
-
-```python
-def steiner_ellipse(point1: Matrix | Sequence[Expr],
-                    point2: Matrix | Sequence[Expr],
-                    point3: Matrix | Sequence[Expr]) -> Matrix
-```
-
-([source](../src/lib/ellipse.py#L72))
-
-Constructs the Steiner circumellipse for the given points.
-
-The ellipse goes through the three points and is centered at the triangle's
-centroid.
-
-*Definition*: <https://en.wikipedia.org/wiki/Steiner_ellipse><br>
-*Formula*:
-[research/construction/steiner_ellipse.py](../src/research/construction/steiner_ellipse.py)
-
-<a id="ellipse.steiner_inellipse"></a>
-
-#### steiner\_inellipse
-
-```python
-def steiner_inellipse(point1: Matrix | Sequence[Expr],
-                      point2: Matrix | Sequence[Expr],
-                      point3: Matrix | Sequence[Expr]) -> Matrix
-```
-
-([source](../src/lib/ellipse.py#L111))
-
-Computes the Steiner inellipse for the given points.
-
-The ellipse is centered at the triangle's centroid, and is tangent to the
-triangle's sides at their midpoints.
-
-*Definition*: <https://en.wikipedia.org/wiki/Steiner_inellipse><br>
-*Formula*:
-[research/construction/steiner_ellipse.py](../src/research/construction/steiner_ellipse.py)
 
 <a id="intersection"></a>
 
