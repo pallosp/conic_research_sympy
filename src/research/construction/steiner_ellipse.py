@@ -6,11 +6,12 @@
 # A special case is the Steiner ellipse, where the conic's center coincides
 # with the centroid of the triangle formed by the perimeter points.
 
-from sympy import Determinant, Eq, Expr, Matrix, symbols
+from sympy import Eq, Matrix, symbols
 
 from lib.central_conic import conic_center
 from lib.incidence import conic_contains_point
 from lib.transform import transform_conic, translate
+from research.poly_as_det import poly_as_det3
 from research.sympy_utils import println_indented
 
 # Simplification WLOG: let the center point be at (0, 0).
@@ -119,78 +120,10 @@ steiner /= Matrix([[x1, x2, x3], [y1, y2, y3], [1, 1, 1]]).det() / -18
 a, _, _, b, c, _, d, e, f = (elem.factor() for elem in steiner)
 
 
-def poly_as_det(
-    poly: Expr,
-    col1_options: list[Matrix],
-    col2_options: list[Matrix],
-    col3_options: list[Matrix],
-) -> Determinant:
-    """Expresses poly as the determinant of a 3x3 matrix."""
-    for c1 in col1_options:
-        for c2 in col2_options:
-            for c3 in col3_options:
-                matrix = Matrix.hstack(c1, c2, c3)
-                if poly.equals(matrix.det()):
-                    return Determinant(matrix)
-    raise AssertionError("not found")
-
-
-col_ones = Matrix([1, 1, 1])
-col_x_options = [
-    Matrix([x1, x2, x3]),
-    Matrix([x2 - x3, x3 - x1, x1 - x2]),
-    Matrix([x2 + x3, x3 + x1, x1 + x2]),
-]
-col_y_options = [
-    Matrix([y1, y2, y3]),
-    Matrix([y2 - y3, y3 - y1, y1 - y2]),
-    Matrix([y2 + y3, y3 + y1, y1 + y2]),
-]
-col_xy_asymmetric = Matrix(
-    [
-        x1 * y2 - x2 * y1,
-        x2 * y3 - x3 * y2,
-        x3 * y1 - x1 * y3,
-    ],
-)
-col_xy_symmetric = [
-    Matrix(
-        [
-            x1 * (y2 - y3) - y1 * (x2 - x3),
-            x2 * (y3 - y1) - y2 * (x3 - x1),
-            x3 * (y1 - y2) - y3 * (x1 - x2),
-        ],
-    ),
-    Matrix([x2 * y3 - x3 * y2, x3 * y1 - x1 * y3, x1 * y2 - x2 * y1]),
-]
-
-
 print("\nElements of the Steiner ellipse matrix:\n")
 
-println_indented(
-    Eq(symbols("a"), poly_as_det(a, col_y_options, col_y_options, [col_ones])),
-)
-println_indented(
-    Eq(symbols("b"), poly_as_det(b, col_x_options, col_y_options, [col_ones])),
-)
-println_indented(
-    Eq(symbols("c"), poly_as_det(c, col_x_options, col_x_options, [col_ones])),
-)
-println_indented(
-    Eq(symbols("d"), poly_as_det(d, col_y_options, col_y_options, col_x_options)),
-)
-println_indented(
-    Eq(symbols("e"), poly_as_det(e, col_x_options, col_x_options, col_y_options)),
-)
-println_indented(
-    Eq(symbols("f"), poly_as_det(f, col_x_options, col_xy_symmetric, col_y_options)),
-)
-println_indented(
-    Eq(
-        symbols("f") / 2,
-        poly_as_det(f / 2, col_x_options, [col_xy_asymmetric], col_y_options),
-    ),
-)
+for name, value in zip("abcdef", [a, b, c, d, e, f], strict=True):
+    println_indented(Eq(symbols(name), poly_as_det3(value)))
 
 # Steiner inellipse
 #
@@ -211,24 +144,8 @@ inellipse_subs = {
 
 a, b, c, d, e, f = (v.xreplace(inellipse_subs) * 4 for v in [a, b, c, d, e, f])
 
-println_indented(
-    Eq(symbols("a"), poly_as_det(a, col_y_options, col_y_options, [col_ones])),
-)
-println_indented(
-    Eq(symbols("b"), poly_as_det(b, col_x_options, col_y_options, [col_ones])),
-)
-println_indented(
-    Eq(symbols("c"), poly_as_det(c, col_x_options, col_x_options, [col_ones])),
-)
-println_indented(
-    Eq(symbols("d"), poly_as_det(d, col_y_options, col_y_options, col_x_options)),
-)
-println_indented(
-    Eq(symbols("e"), poly_as_det(e, col_x_options, col_x_options, col_y_options)),
-)
-println_indented(
-    Eq(
-        symbols("f") * 2,
-        poly_as_det(f * 2, col_x_options, col_xy_symmetric, col_y_options),
-    ),
-)
+for name, value in zip("abcde", [a, b, c, d, e], strict=True):
+    println_indented(Eq(symbols(name), poly_as_det3(value)))
+
+# This seed finds the matrix in the simplest form (binomial entries).
+println_indented(Eq(symbols("f"), poly_as_det3(f, max_degree=2, seed=6)))
