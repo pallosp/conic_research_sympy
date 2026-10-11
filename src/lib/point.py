@@ -1,9 +1,20 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Matrix, S, sympify
+from sympy import Expr, I, Matrix, S, sympify
 
 #: The point at (0, 0)
 ORIGIN: Matrix = Matrix([0, 0, 1])
+
+#: The circular point at infinity `(1 : i : 0)`, also known as a cyclic or
+#: isotropic point. Every circle passes through it.
+#:
+#: https://en.wikipedia.org/wiki/Circular_points_at_infinity
+CIRCULAR_POINT_I: Matrix = Matrix([1, I, 0])
+
+#: The circular point at infinity `(1 : -i : 0)`, also known as a cyclic or
+#: isotropic point. It is the complex conjugate of `CIRCULAR_POINT_I`.
+#: Every circle passes through it.
+CIRCULAR_POINT_J: Matrix = Matrix([1, -I, 0])
 
 
 def ideal_point(x: Expr, y: Expr) -> Matrix:

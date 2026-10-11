@@ -86,6 +86,8 @@
   * [parallel\_line\_distance](#distance.parallel_line_distance)
 * [point](#point)
   * [ORIGIN](#point.ORIGIN)
+  * [CIRCULAR\_POINT\_I](#point.CIRCULAR_POINT_I)
+  * [CIRCULAR\_POINT\_J](#point.CIRCULAR_POINT_J)
   * [ideal\_point](#point.ideal_point)
   * [ideal\_point\_on\_line](#point.ideal_point_on_line)
   * [point\_to\_xy](#point.point_to_xy)
@@ -1643,6 +1645,23 @@ Special cases:
 
 The point at (0, 0)
 
+<a id="point.CIRCULAR_POINT_I"></a>
+
+#### CIRCULAR\_POINT\_I
+
+The circular point at infinity `(1 : i : 0)`, also known as a cyclic or
+isotropic point. Every circle passes through it.
+
+https://en.wikipedia.org/wiki/Circular_points_at_infinity
+
+<a id="point.CIRCULAR_POINT_J"></a>
+
+#### CIRCULAR\_POINT\_J
+
+The circular point at infinity `(1 : -i : 0)`, also known as a cyclic or
+isotropic point. It is the complex conjugate of `CIRCULAR_POINT_I`.
+Every circle passes through it.
+
 <a id="point.ideal_point"></a>
 
 #### ideal\_point
@@ -1651,7 +1670,7 @@ The point at (0, 0)
 def ideal_point(x: Expr, y: Expr) -> Matrix
 ```
 
-([source](../src/lib/point.py#L9))
+([source](../src/lib/point.py#L20))
 
 Creates an ideal point at the given direction.
 
@@ -1663,7 +1682,7 @@ Creates an ideal point at the given direction.
 def ideal_point_on_line(line: Matrix) -> Matrix
 ```
 
-([source](../src/lib/point.py#L14))
+([source](../src/lib/point.py#L25))
 
 Returns the coordinates of the ideal point on the line.
 
@@ -1680,7 +1699,7 @@ If the line is the ideal line, returns `[0, 0, 0]ᵀ`.
 def point_to_xy(point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/point.py#L25))
+([source](../src/lib/point.py#L36))
 
 Computes the Euclidean coordinates of a projective point.
 
@@ -1692,7 +1711,7 @@ Computes the Euclidean coordinates of a projective point.
 def point_to_vec3(point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/point.py#L34))
+([source](../src/lib/point.py#L45))
 
 Computes the homogeneous coordinates of a projective point.
 
@@ -1704,7 +1723,7 @@ Computes the homogeneous coordinates of a projective point.
 def centroid(*points: Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/point.py#L45))
+([source](../src/lib/point.py#L56))
 
 Computes the centroid of a set of points.
 
@@ -1718,7 +1737,7 @@ Returns the point's coordinates as a 2D column vector.
 def perpendicular_foot(point: Matrix | Sequence[Expr], line: Matrix) -> Matrix
 ```
 
-([source](../src/lib/point.py#L61))
+([source](../src/lib/point.py#L72))
 
 Computes the foot of the perpendicular through a point to a line.
 

@@ -1,9 +1,20 @@
 import pytest
-from sympy import Matrix, Rational, nan, symbols, zoo
+from sympy import I, Matrix, Rational, nan, symbols, zoo
 
-from lib.line import IDEAL_LINE
+from lib.circle import circle
+from lib.conic_classes import is_circular
+from lib.degenerate_conic import double_line_conic, point_conic
+from lib.incidence import conic_contains_point
+from lib.line import IDEAL_LINE, X_AXIS
 from lib.matrix import is_nonzero_multiple
-from lib.point import centroid, ideal_point_on_line, perpendicular_foot, point_to_xy
+from lib.point import (
+    CIRCULAR_POINT_I,
+    CIRCULAR_POINT_J,
+    centroid,
+    ideal_point_on_line,
+    perpendicular_foot,
+    point_to_xy,
+)
 
 
 class TestPointToXy:
@@ -63,3 +74,25 @@ class TestPerpendicularFoot:
         assert perpendicular_foot((1, 2), IDEAL_LINE) == nan_point
         assert perpendicular_foot((1, 2, 0), Matrix([1, 2, 3])) == nan_point
         assert perpendicular_foot((1, 2, 0), IDEAL_LINE) == nan_point
+
+
+class TestCircularPoints:
+    @pytest.mark.parametrize("point", [CIRCULAR_POINT_I, CIRCULAR_POINT_J])
+    def test_on_circles(self, point: Matrix) -> None:
+        assert conic_contains_point(circle((3, -2), r=5), point)
+        assert conic_contains_point(circle((3, -2), r=0), point)
+        assert conic_contains_point(circle((3, -2), r=2 * I), point)
+
+    @pytest.mark.parametrize("point", [CIRCULAR_POINT_I, CIRCULAR_POINT_J])
+    def test_on_double_ideal_line(self, point: Matrix) -> None:
+        assert conic_contains_point(double_line_conic(IDEAL_LINE), point)
+
+    @pytest.mark.parametrize("point", [CIRCULAR_POINT_I, CIRCULAR_POINT_J])
+    def test_not_on_non_circular_point_conic(self, point: Matrix) -> None:
+        conic = point_conic((3, -2))
+        assert is_circular(conic) is False
+        assert conic_contains_point(conic, point) is False
+
+    @pytest.mark.parametrize("point", [CIRCULAR_POINT_I, CIRCULAR_POINT_J])
+    def test_not_on_double_real_line(self, point: Matrix) -> None:
+        assert conic_contains_point(double_line_conic(X_AXIS), point) is False
