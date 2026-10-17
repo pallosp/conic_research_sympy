@@ -1,6 +1,7 @@
 from sympy import Function, I, Matrix, sqrt, symbols
 
 from lib.matrix import (
+    NonzeroColumn,
     NonzeroCross,
     conic_matrix,
     is_definite_matrix,
@@ -125,6 +126,21 @@ class TestQuadraticForm:
     def test_quadratic_form(self):
         # https://www.wolframalpha.com/input?i={{1,2}}*{{1,2},{3,4}}*{{1},{2}}
         assert quadratic_form(Matrix([[1, 2], [3, 4]]), Matrix([1, 2])) == 27
+
+
+class TestNonzeroColumn:
+    def test_numeric(self):
+        assert NonzeroColumn(Matrix([[1, 2], [3, 4]])) == Matrix([1, 3])
+        assert NonzeroColumn(Matrix([[0, 1], [0, 2]])) == Matrix([1, 2])
+        assert NonzeroColumn(Matrix.zeros(3, 2)) == Matrix.zeros(3, 1)
+
+    def test_symbolic(self):
+        pos = symbols("p", positive=True)
+        assert NonzeroColumn(Matrix.diag([0, pos])) == Matrix([0, pos])
+
+        x = symbols("x")
+        assert isinstance(NonzeroColumn(Matrix.diag([x, 0])), NonzeroColumn)
+        assert NonzeroColumn(Matrix.diag([x, 1])) == Matrix([0, 1])
 
 
 class TestNonZeroCross:

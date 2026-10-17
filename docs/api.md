@@ -8,6 +8,7 @@
   * [conic\_matrix](#matrix.conic_matrix)
   * [quadratic\_form](#matrix.quadratic_form)
   * [skew\_matrix](#matrix.skew_matrix)
+  * [NonzeroColumn](#matrix.NonzeroColumn)
   * [NonzeroCross](#matrix.NonzeroCross)
   * [is\_real\_matrix](#matrix.is_real_matrix)
   * [is\_definite\_matrix](#matrix.is_definite_matrix)
@@ -65,7 +66,7 @@
   * [double\_line\_conic](#degenerate_conic.double_line_conic)
   * [point\_conic](#degenerate_conic.point_conic)
   * [SplitToLines](#degenerate_conic.SplitToLines)
-  * [ExtractPoint](#degenerate_conic.ExtractPoint)
+  * [extract\_point](#degenerate_conic.extract_point)
 * [conic\_classes](#conic_classes)
   * [is\_degenerate](#conic_classes.is_degenerate)
   * [is\_nondegenerate](#conic_classes.is_nondegenerate)
@@ -273,6 +274,34 @@ def skew_matrix(vector3: Matrix) -> Matrix
 
 Creates a skew-symmetric matrix from a 3D column vector.
 
+<a id="matrix.NonzeroColumn"></a>
+
+## NonzeroColumn
+
+```python
+class NonzeroColumn(Function)
+```
+
+([source](../src/lib/matrix.py#L132))
+
+Finds a non-zero column in a matrix.
+
+Returns an unevaluated `sympy.Function` if none of the columns can be
+proven to be non-zero, or a zero vector in case of a zero matrix.
+
+<a id="matrix.NonzeroColumn.eval"></a>
+
+#### NonzeroColumn.eval
+
+```python
+@classmethod
+def eval(cls, matrix: Matrix) -> Matrix | None
+```
+
+([source](../src/lib/matrix.py#L140))
+
+Internal implementation. Call `NonzeroColumn(matrix)` directly.
+
 <a id="matrix.NonzeroCross"></a>
 
 ## NonzeroCross
@@ -281,7 +310,7 @@ Creates a skew-symmetric matrix from a 3D column vector.
 class NonzeroCross(Function)
 ```
 
-([source](../src/lib/matrix.py#L132))
+([source](../src/lib/matrix.py#L151))
 
 Finds a column and a row in a matrix whose intersection is a non-zero
 element.
@@ -300,7 +329,7 @@ proven to be non-zero, or two zero vectors in case of a zero matrix.
 def eval(cls, matrix: Matrix) -> tuple[Matrix, Matrix] | None
 ```
 
-([source](../src/lib/matrix.py#L143))
+([source](../src/lib/matrix.py#L162))
 
 Internal implementation. Call `NonZeroCross(matrix)` directly.
 
@@ -312,7 +341,7 @@ Internal implementation. Call `NonZeroCross(matrix)` directly.
 def is_real_matrix(matrix: Matrix) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L157))
+([source](../src/lib/matrix.py#L176))
 
 Checks if all elements of a matrix are real.
 
@@ -326,7 +355,7 @@ Returns a bool or `None` if undecidable.
 def is_definite_matrix(matrix: Matrix) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L165))
+([source](../src/lib/matrix.py#L184))
 
 Checks if a real matrix is either positive or negative definite.
 
@@ -342,7 +371,7 @@ def is_full_rank(matrix: Matrix,
                  simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L195))
+([source](../src/lib/matrix.py#L214))
 
 Tells whether a matrix has full rank.
 
@@ -1254,7 +1283,7 @@ where `λ₁`, `λ₂` and `λ₃` are either all positive or all negative.
 This function returns the corresponding conic matrix for the choice
 `λ₁ = λ₂ = λ₃ = -1`.
 
-Hint: Use [ExtractPoint](#degenerate_conic.ExtractPoint) to recover the
+Hint: Use [extract_point](#degenerate_conic.extract_point) to recover the
 point from the resulting conic.
 
 <a id="degenerate_conic.SplitToLines"></a>
@@ -1291,12 +1320,12 @@ def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None
 
 Internal implementation. Call `SplitToLines(conic)` directly.
 
-<a id="degenerate_conic.ExtractPoint"></a>
+<a id="degenerate_conic.extract_point"></a>
 
-## ExtractPoint
+#### extract\_point
 
 ```python
-class ExtractPoint(Function)
+def extract_point(degenerate_conic: Matrix) -> Matrix | NonzeroColumn
 ```
 
 ([source](../src/lib/degenerate_conic.py#L94))
@@ -1304,9 +1333,11 @@ class ExtractPoint(Function)
 Extracts the point from a point conic or the intersection of the
 lines from a line pair conic.
 
-Returns `[0, 0, 0]ᵀ` for double line pairs, or an unspecified 3D
-column vector if the conic is not degenerate. May return an unevaluated
-`sympy.Function` for symbolic conic matrices.
+Special cases:
+ - Returns `[0, 0, 0]ᵀ` for double line pairs.
+ - Returns an unspecified 3D column vector if the conic is not degenerate.
+ - May return an unevaluated `NonzeroColumn` for symbolic conics, when the
+   result depends on which coefficients are zero.
 
 *Algorithm*:
 
@@ -1318,18 +1349,7 @@ on the conic iff `pᵀ C p = 0`, i.e. `p·(r₁·p, r₂·p, r₃·p) = 0`.
 conic matrix is a rank 2 matrix (point conic or non-coincident line pair),
 at least one of these is a non-zero vector.
 
-<a id="degenerate_conic.ExtractPoint.eval"></a>
-
-#### ExtractPoint.eval
-
-```python
-@classmethod
-def eval(cls, degenerate_conic: Matrix) -> Matrix | None
-```
-
-([source](../src/lib/degenerate_conic.py#L114))
-
-Internal implementation. Call `ExtractPoint(conic)` directly.
+Since `C` is symmetric, these cross products are the columns of `adj(C)`.
 
 <a id="conic_classes"></a>
 

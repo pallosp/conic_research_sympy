@@ -6,9 +6,9 @@ from lib.conic import conic_from_poly, ideal_points
 from lib.conic_classes import is_degenerate, is_finite_conic
 from lib.degenerate_conic import (
     ZERO_CONIC,
-    ExtractPoint,
     SplitToLines,
     double_line_conic,
+    extract_point,
     line_pair_conic,
     point_conic,
 )
@@ -107,30 +107,30 @@ class TestExtractPoint:
     def test_symbolic_real_point_conic(self):
         point = symbols("x,y", real=True)
         zero_circle = circle(point, r=0)
-        assert is_nonzero_multiple(ExtractPoint(zero_circle), point_to_vec3(point))
+        assert is_nonzero_multiple(extract_point(zero_circle), point_to_vec3(point))
 
         finite_point_conic = point_conic(point)
         assert is_nonzero_multiple(
-            ExtractPoint(finite_point_conic),
+            extract_point(finite_point_conic),
             point_to_vec3(point),
         )
 
     def test_symbolic_ideal_point_conic(self):
         point = [*symbols("x,y", positive=True), 0]
         conic = point_conic(point)
-        assert is_nonzero_multiple(ExtractPoint(conic), point_to_vec3(point))
+        assert is_nonzero_multiple(extract_point(conic), point_to_vec3(point))
 
     def test_zero_matrix(self):
-        assert ExtractPoint(ZERO_CONIC) == ZERO_POINT
+        assert extract_point(ZERO_CONIC) == ZERO_POINT
 
     def test_numeric_line_pairs(self):
         line1 = Matrix([1, 2, 3])
         line2 = Matrix([4, 5, 6])
         conic = line_pair_conic(line1, line2)
         intersection = line1.cross(line2)
-        assert is_nonzero_multiple(ExtractPoint(conic), intersection)
+        assert is_nonzero_multiple(extract_point(conic), intersection)
 
     def test_symbolic_double_line(self):
         line = Matrix(symbols("a b c"))
         conic = line_pair_conic(line, line)
-        assert ExtractPoint(conic) == ZERO_POINT
+        assert extract_point(conic) == ZERO_POINT

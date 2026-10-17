@@ -2,8 +2,8 @@ from collections.abc import Sequence
 
 from sympy import Expr, Function, ImmutableMatrix, Matrix, sqrt
 
-from lib.matrix import NonzeroCross, conic_matrix, skew_matrix
-from lib.point import ZERO_POINT, point_to_vec3
+from lib.matrix import NonzeroColumn, NonzeroCross, conic_matrix, skew_matrix
+from lib.point import point_to_vec3
 
 #: The zero matrix. Every point satisfies its equation.
 ZERO_CONIC: ImmutableMatrix = ImmutableMatrix.zeros(3, 3)
@@ -40,7 +40,7 @@ def point_conic(point: Matrix | Sequence[Expr]) -> Matrix:
     This function returns the corresponding conic matrix for the choice
     `λ₁ = λ₂ = λ₃ = -1`.
 
-    Hint: Use [ExtractPoint](#degenerate_conic.ExtractPoint) to recover the
+    Hint: Use [extract_point](#degenerate_conic.extract_point) to recover the
     point from the resulting conic.
     """
     x, y, z = point_to_vec3(point)
@@ -91,13 +91,15 @@ class SplitToLines(Function):
         return cross
 
 
-class ExtractPoint(Function):
+def extract_point(degenerate_conic: Matrix) -> Matrix | NonzeroColumn:
     """Extracts the point from a point conic or the intersection of the
     lines from a line pair conic.
 
-    Returns `[0, 0, 0]ᵀ` for double line pairs, or an unspecified 3D
-    column vector if the conic is not degenerate. May return an unevaluated
-    `sympy.Function` for symbolic conic matrices.
+    Special cases:
+     - Returns `[0, 0, 0]ᵀ` for double line pairs.
+     - Returns an unspecified 3D column vector if the conic is not degenerate.
+     - May return an unevaluated `NonzeroColumn` for symbolic conics, when the
+       result depends on which coefficients are zero.
 
     *Algorithm*:
 
@@ -108,15 +110,7 @@ class ExtractPoint(Function):
     `r₃·(r₁⨯r₂) = det C = 0`. So are `p = r₂⨯r₃` and `p = r₃⨯r₁`. When the
     conic matrix is a rank 2 matrix (point conic or non-coincident line pair),
     at least one of these is a non-zero vector.
-    """
 
-    @classmethod
-    def eval(cls, degenerate_conic: Matrix) -> Matrix | None:
-        """Internal implementation. Call `ExtractPoint(conic)` directly."""
-        adj = degenerate_conic.adjugate()
-        if adj.is_zero_matrix:
-            return ZERO_POINT
-        for i in range(3):
-            if adj.col(i).is_zero_matrix is False:
-                return adj.col(i)
-        return None
+    Since `C` is symmetric, these cross products are the columns of `adj(C)`.
+    """
+    return NonzeroColumn(degenerate_conic.adjugate())

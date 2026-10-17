@@ -129,6 +129,25 @@ def skew_matrix(vector3: Matrix) -> Matrix:
     return vector3.hat()
 
 
+class NonzeroColumn(Function):
+    """Finds a non-zero column in a matrix.
+
+    Returns an unevaluated `sympy.Function` if none of the columns can be
+    proven to be non-zero, or a zero vector in case of a zero matrix.
+    """
+
+    @classmethod
+    def eval(cls, matrix: Matrix) -> Matrix | None:
+        """Internal implementation. Call `NonzeroColumn(matrix)` directly."""
+        for j in range(matrix.cols):
+            col = matrix.col(j)
+            if col.is_zero_matrix is False:
+                return col
+        if matrix.is_zero_matrix:
+            return matrix.col(0)
+        return None
+
+
 class NonzeroCross(Function):
     """Finds a column and a row in a matrix whose intersection is a non-zero
     element.
