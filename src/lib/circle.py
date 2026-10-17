@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Matrix, sqrt
+from sympy import Expr, ImmutableMatrix, Matrix, sqrt
 
 from lib.matrix import conic_matrix
 from lib.point import ORIGIN, point_to_vec3, point_to_xy
@@ -79,7 +79,7 @@ def director_circle(conic: Matrix) -> Matrix:
 
 
 #: The circle at the origin with radius 1.
-UNIT_CIRCLE: Matrix = circle(ORIGIN, r=1)
+UNIT_CIRCLE: ImmutableMatrix = ImmutableMatrix(circle(ORIGIN, r=1))
 
 #: The circle at the origin with radius 𝑖.
-IMAGINARY_UNIT_CIRCLE: Matrix = Matrix.eye(3)
+IMAGINARY_UNIT_CIRCLE: ImmutableMatrix = ImmutableMatrix.eye(3)

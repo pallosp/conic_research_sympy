@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Matrix, sign, sqrt
+from sympy import Expr, ImmutableMatrix, Matrix, sign, sqrt
 
 from lib.point import point_to_vec3, point_to_xy
 
@@ -148,12 +148,12 @@ def are_perpendicular(line1: Matrix, line2: Matrix) -> bool | None:
 
 
 #: The projective line at infinity.
-IDEAL_LINE: Matrix = Matrix([0, 0, 1])
+IDEAL_LINE: ImmutableMatrix = ImmutableMatrix([0, 0, 1])
 
 #: The horizontal line at y=0. Substituting a point at y>0 to the line's
 #: equation will evaluate to a positive value.
-X_AXIS: Matrix = horizontal_line(0)
+X_AXIS: ImmutableMatrix = ImmutableMatrix(horizontal_line(0))
 
 #: The vertical line at x=0. Substituting a point at x<0 to the line's equation
 #: will evaluate to a positive value.
-Y_AXIS: Matrix = vertical_line(0)
+Y_AXIS: ImmutableMatrix = ImmutableMatrix(vertical_line(0))

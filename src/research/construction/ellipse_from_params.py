@@ -11,7 +11,7 @@ scaling = scale_xy(r1, r2)
 rotation = rotate(angle)
 translation = translate(center)
 transformation = translation * rotation * scaling
-ellipse = transform_conic(UNIT_CIRCLE, transformation)
+ellipse = transform_conic(UNIT_CIRCLE, transformation).as_mutable()
 
 a, b, c = symbols("a,b,c")
 for i in (2, 5, 6, 7, 8):

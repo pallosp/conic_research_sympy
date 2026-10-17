@@ -14,7 +14,7 @@ C(θ) = ⎢d  e  f⎥ * ⎢sin θ⎥
 from collections.abc import Sequence
 from enum import Enum
 
-from sympy import Expr, I, Matrix, atan2, cos, sign, sin, sqrt
+from sympy import Expr, I, ImmutableMatrix, Matrix, atan2, cos, sign, sin, sqrt
 
 from lib.central_conic import conic_center, primary_radius, secondary_radius
 from lib.circle import UNIT_CIRCLE
@@ -23,7 +23,7 @@ from lib.point import point_to_vec3
 from lib.transform import rotate
 
 #: The circle at the origin with radius 1, in polar matrix form.
-POLAR_UNIT_CIRCLE: Matrix = Matrix.eye(3)
+POLAR_UNIT_CIRCLE: ImmutableMatrix = ImmutableMatrix.eye(3)
 
 
 class PolarOrigin(Enum):
