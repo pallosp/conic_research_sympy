@@ -133,9 +133,10 @@ class NonzeroCross(Function):
     """Finds a column and a row in a matrix whose intersection is a non-zero
     element.
 
+    Returns the column and the transposed row, i.e. two column vectors.
+
     Returns an unevaluated `sympy.Function` if none of the elements can be
-    proven to be non-zero, or a zero column and a zero row in case of a zero
-    matrix.
+    proven to be non-zero, or two zero vectors in case of a zero matrix.
     """
 
     @classmethod
@@ -145,11 +146,11 @@ class NonzeroCross(Function):
         for i in range(len(matrix)):
             el = matrix[i]
             if el.is_nonzero:
-                return (matrix.col(i % matrix.cols), matrix.row(i // matrix.cols))
+                return (matrix.col(i % matrix.cols), matrix.row(i // matrix.cols).T)
             if all_zero and not el.is_zero:
                 all_zero = False
         if all_zero:
-            return (matrix.col(0), matrix.row(0))
+            return (matrix.col(0), matrix.row(0).T)
         return None
 
 

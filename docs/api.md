@@ -286,9 +286,10 @@ class NonzeroCross(Function)
 Finds a column and a row in a matrix whose intersection is a non-zero
 element.
 
+Returns the column and the transposed row, i.e. two column vectors.
+
 Returns an unevaluated `sympy.Function` if none of the elements can be
-proven to be non-zero, or a zero column and a zero row in case of a zero
-matrix.
+proven to be non-zero, or two zero vectors in case of a zero matrix.
 
 <a id="matrix.NonzeroCross.eval"></a>
 
@@ -299,7 +300,7 @@ matrix.
 def eval(cls, matrix: Matrix) -> tuple[Matrix, Matrix] | None
 ```
 
-([source](../src/lib/matrix.py#L142))
+([source](../src/lib/matrix.py#L143))
 
 Internal implementation. Call `NonZeroCross(matrix)` directly.
 
@@ -311,7 +312,7 @@ Internal implementation. Call `NonZeroCross(matrix)` directly.
 def is_real_matrix(matrix: Matrix) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L156))
+([source](../src/lib/matrix.py#L157))
 
 Checks if all elements of a matrix are real.
 
@@ -325,7 +326,7 @@ Returns a bool or `None` if undecidable.
 def is_definite_matrix(matrix: Matrix) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L164))
+([source](../src/lib/matrix.py#L165))
 
 Checks if a real matrix is either positive or negative definite.
 
@@ -341,7 +342,7 @@ def is_full_rank(matrix: Matrix,
                  simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L194))
+([source](../src/lib/matrix.py#L195))
 
 Tells whether a matrix has full rank.
 

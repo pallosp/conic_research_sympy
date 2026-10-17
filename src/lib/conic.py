@@ -159,7 +159,7 @@ class IdealPoints(Function):
         cross = NonzeroCross(Matrix([[c, -b - disc, 0], [-b + disc, a, 0], [0, 0, 0]]))
         if isinstance(cross, NonzeroCross):
             return None
-        return (cross[0], cross[1].T)
+        return cross
 
 
 def projective_conic_center(conic: Matrix) -> Matrix:

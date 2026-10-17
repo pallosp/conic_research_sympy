@@ -88,7 +88,7 @@ class SplitToLines(Function):
         cross = NonzeroCross(conic)
         if isinstance(cross, NonzeroCross):
             return None
-        return (cross[0], cross[1].T)
+        return cross
 
 
 class ExtractPoint(Function):

@@ -56,7 +56,4 @@ def conic_x_line(
     m = skew_mat.T * conic * skew_mat
     alpha = sqrt(-quadratic_form(conic.adjugate(), line))
     intersections = m + alpha * skew_mat
-    points = NonzeroCross(intersections)
-    if isinstance(points, NonzeroCross):
-        return points
-    return (points[0], points[1].T)
+    return NonzeroCross(intersections)

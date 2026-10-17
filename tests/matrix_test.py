@@ -130,16 +130,16 @@ class TestQuadraticForm:
 class TestNonZeroCross:
     def test_full_matrix(self):
         matrix = Matrix([[1, 2], [3, 4]])
-        assert NonzeroCross(matrix) == (Matrix([1, 3]), Matrix([1, 2]).T)
+        assert NonzeroCross(matrix) == (Matrix([1, 3]), Matrix([1, 2]))
 
     def test_sparse_matrix(self):
         matrix = Matrix([[0, 1], [2, 0]])
-        assert NonzeroCross(matrix) == (Matrix([1, 0]), Matrix([0, 1]).T)
+        assert NonzeroCross(matrix) == (Matrix([1, 0]), Matrix([0, 1]))
 
     def test_zero_matrix(self):
         assert NonzeroCross(Matrix.zeros(2, 3)) == (
             Matrix.zeros(2, 1),
-            Matrix.zeros(1, 3),
+            Matrix.zeros(3, 1),
         )
 
     def test_undecidable(self):
@@ -149,7 +149,7 @@ class TestNonZeroCross:
 
     def test_symbols_in_elements(self):
         x = symbols("x", nonnegative=True)
-        assert NonzeroCross(Matrix([[x - x, 0], [1, 0]]))[1] == Matrix([1, 0]).T
+        assert NonzeroCross(Matrix([[x - x, 0], [1, 0]]))[1] == Matrix([1, 0])
         assert NonzeroCross(Matrix([[0, 0], [x + 1, 0]]))[0] == Matrix([0, x + 1])
 
 
