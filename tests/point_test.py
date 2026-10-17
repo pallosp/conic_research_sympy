@@ -10,6 +10,7 @@ from lib.matrix import is_nonzero_multiple
 from lib.point import (
     CIRCULAR_POINT_I,
     CIRCULAR_POINT_J,
+    ZERO_POINT,
     centroid,
     ideal_point_on_line,
     perpendicular_foot,
@@ -43,7 +44,7 @@ class TestIdealPointOnLine:
         assert line.dot(point) == 0  # point should be on the line
 
     def test_ideal_line(self):
-        assert ideal_point_on_line(IDEAL_LINE) == Matrix([0, 0, 0])
+        assert ideal_point_on_line(IDEAL_LINE) == ZERO_POINT
 
 
 class TestCentroid:

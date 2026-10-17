@@ -1,9 +1,12 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Function, Matrix, sqrt
+from sympy import Expr, Function, ImmutableMatrix, Matrix, sqrt
 
 from lib.matrix import NonzeroCross, conic_matrix, skew_matrix
-from lib.point import point_to_vec3
+from lib.point import ZERO_POINT, point_to_vec3
+
+#: The zero matrix. Every point satisfies its equation.
+ZERO_CONIC: ImmutableMatrix = ImmutableMatrix.zeros(3, 3)
 
 
 def line_pair_conic(line1: Matrix, line2: Matrix) -> Matrix:
@@ -111,7 +114,7 @@ class ExtractPoint(Function):
         """Internal implementation. Call `ExtractPoint(conic)` directly."""
         adj = degenerate_conic.adjugate()
         if adj.is_zero_matrix:
-            return Matrix.zeros(3, 1)
+            return ZERO_POINT
         for i in range(3):
             if adj.col(i).is_zero_matrix is False:
                 return adj.col(i)

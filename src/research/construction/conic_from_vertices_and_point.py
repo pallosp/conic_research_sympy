@@ -33,12 +33,11 @@ from sympy import (
     solve,
     sqrt,
     symbols,
-    zeros,
 )
 
 from lib.central_conic import conic_from_center_and_points
 from lib.circle import circle
-from lib.degenerate_conic import double_line_conic, line_pair_conic
+from lib.degenerate_conic import ZERO_CONIC, double_line_conic, line_pair_conic
 from lib.line import line_between, line_through_point
 from lib.point import ORIGIN, point_to_xy
 from lib.transform import reflect_to_line, transform_point
@@ -132,7 +131,7 @@ def conic_formula(center: tuple | Matrix, *, double_line: bool = False) -> MatAd
     # three points
     conic_from_formula = Matrix(formula.doit()).subs(r, radius)
     scale = cancel(conic[0] / conic_from_formula[0])
-    assert (conic - scale * conic_from_formula).applyfunc(cancel) == zeros(3, 3)
+    assert (conic - scale * conic_from_formula).applyfunc(cancel) == ZERO_CONIC
 
     return formula
 

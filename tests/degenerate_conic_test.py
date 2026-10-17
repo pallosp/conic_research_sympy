@@ -5,6 +5,7 @@ from lib.circle import circle
 from lib.conic import IdealPoints, conic_from_poly
 from lib.conic_classes import is_degenerate, is_finite_conic
 from lib.degenerate_conic import (
+    ZERO_CONIC,
     ExtractPoint,
     SplitToLines,
     double_line_conic,
@@ -13,7 +14,7 @@ from lib.degenerate_conic import (
 )
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, horizontal_line, vertical_line
 from lib.matrix import conic_matrix, is_nonzero_multiple, is_real_matrix
-from lib.point import point_to_vec3
+from lib.point import ZERO_POINT, point_to_vec3
 from tests.utils import are_projective_sets_equal
 
 
@@ -110,8 +111,7 @@ class TestExtractPoint:
         assert is_nonzero_multiple(ExtractPoint(conic), point_to_vec3(point))
 
     def test_zero_matrix(self):
-        conic = Matrix.zeros(3, 3)
-        assert ExtractPoint(conic) == Matrix([0, 0, 0])
+        assert ExtractPoint(ZERO_CONIC) == ZERO_POINT
 
     def test_numeric_line_pairs(self):
         line1 = Matrix([1, 2, 3])
@@ -123,4 +123,4 @@ class TestExtractPoint:
     def test_symbolic_double_line(self):
         line = Matrix(symbols("a b c"))
         conic = line_pair_conic(line, line)
-        assert ExtractPoint(conic) == Matrix([0, 0, 0])
+        assert ExtractPoint(conic) == ZERO_POINT

@@ -1,12 +1,19 @@
 from sympy import Function, I, Matrix, nan, sqrt, symbols
 
 from lib.circle import UNIT_CIRCLE
-from lib.degenerate_conic import line_pair_conic
+from lib.degenerate_conic import ZERO_CONIC, line_pair_conic
 from lib.incidence import conic_contains_point
 from lib.intersection import conic_x_line, line_x_line
-from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, horizontal_line, vertical_line
+from lib.line import (
+    IDEAL_LINE,
+    X_AXIS,
+    Y_AXIS,
+    ZERO_LINE,
+    horizontal_line,
+    vertical_line,
+)
 from lib.matrix import conic_matrix, is_nonzero_multiple
-from lib.point import ORIGIN, ideal_point, point_to_xy
+from lib.point import ORIGIN, ZERO_POINT, ideal_point, point_to_xy
 
 
 class TestLineXLine:
@@ -23,7 +30,7 @@ class TestLineXLine:
 
     def test_coincident_lines(self):
         line = Matrix([1, 2, 3])
-        assert line_x_line(line, line) == Matrix([0, 0, 0])
+        assert line_x_line(line, line) == ZERO_POINT
 
 
 class TestConicXLine:
@@ -65,12 +72,10 @@ class TestConicXLine:
         assert conic_x_line(line_pair_conic(X_AXIS, X_AXIS), X_AXIS) is nan
 
     def test_zero_line(self):
-        zero_line = Matrix([0, 0, 0])
-        assert conic_x_line(line_pair_conic(X_AXIS, Y_AXIS), zero_line) is nan
+        assert conic_x_line(line_pair_conic(X_AXIS, Y_AXIS), ZERO_LINE) is nan
 
     def test_zero_conic(self):
-        zero_conic = Matrix.zeros(3, 3)
-        assert conic_x_line(zero_conic, Matrix([1, 2, 3])) is nan
+        assert conic_x_line(ZERO_CONIC, Matrix([1, 2, 3])) is nan
 
     def test_double_intersection(self):
         intersections = conic_x_line(UNIT_CIRCLE, horizontal_line(1))

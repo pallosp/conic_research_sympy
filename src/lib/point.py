@@ -2,6 +2,10 @@ from collections.abc import Sequence
 
 from sympy import Expr, I, ImmutableMatrix, Matrix, S, sympify
 
+#: The zero vector `(0 : 0 : 0)`. It doesn't represent any point. Functions
+#: return it when the resulting point is undefined.
+ZERO_POINT: ImmutableMatrix = ImmutableMatrix([0, 0, 0])
+
 #: The point at (0, 0)
 ORIGIN: ImmutableMatrix = ImmutableMatrix([0, 0, 1])
 

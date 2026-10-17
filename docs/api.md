@@ -45,6 +45,7 @@
   * [line\_normal](#line.line_normal)
   * [are\_parallel](#line.are_parallel)
   * [are\_perpendicular](#line.are_perpendicular)
+  * [ZERO\_LINE](#line.ZERO_LINE)
   * [IDEAL\_LINE](#line.IDEAL_LINE)
   * [X\_AXIS](#line.X_AXIS)
   * [Y\_AXIS](#line.Y_AXIS)
@@ -59,6 +60,7 @@
   * [pole\_point](#conic.pole_point)
   * [polar\_line](#conic.polar_line)
 * [degenerate\_conic](#degenerate_conic)
+  * [ZERO\_CONIC](#degenerate_conic.ZERO_CONIC)
   * [line\_pair\_conic](#degenerate_conic.line_pair_conic)
   * [double\_line\_conic](#degenerate_conic.double_line_conic)
   * [point\_conic](#degenerate_conic.point_conic)
@@ -85,6 +87,7 @@
   * [point\_line\_distance](#distance.point_line_distance)
   * [parallel\_line\_distance](#distance.parallel_line_distance)
 * [point](#point)
+  * [ZERO\_POINT](#point.ZERO_POINT)
   * [ORIGIN](#point.ORIGIN)
   * [CIRCULAR\_POINT\_I](#point.CIRCULAR_POINT_I)
   * [CIRCULAR\_POINT\_J](#point.CIRCULAR_POINT_J)
@@ -927,6 +930,13 @@ Tells whether line1 and line2 are perpendicular.
 Returns `True` if they are perpendicular, `False` if not, `None` if
 undecidable. Considers the ideal line perpendicular to everything.
 
+<a id="line.ZERO_LINE"></a>
+
+#### ZERO\_LINE
+
+The zero vector `(0 : 0 : 0)`. It doesn't represent any line. Functions
+return it when the resulting line is undefined.
+
 <a id="line.IDEAL_LINE"></a>
 
 #### IDEAL\_LINE
@@ -1197,6 +1207,12 @@ References:
 
 # degenerate\_conic
 
+<a id="degenerate_conic.ZERO_CONIC"></a>
+
+#### ZERO\_CONIC
+
+The zero matrix. Every point satisfies its equation.
+
 <a id="degenerate_conic.line_pair_conic"></a>
 
 #### line\_pair\_conic
@@ -1205,7 +1221,7 @@ References:
 def line_pair_conic(line1: Matrix, line2: Matrix) -> Matrix
 ```
 
-([source](../src/lib/degenerate_conic.py#L9))
+([source](../src/lib/degenerate_conic.py#L12))
 
 Constructs a conic section from two projective lines.
 
@@ -1217,7 +1233,7 @@ Constructs a conic section from two projective lines.
 def double_line_conic(line: Matrix) -> Matrix
 ```
 
-([source](../src/lib/degenerate_conic.py#L16))
+([source](../src/lib/degenerate_conic.py#L19))
 
 Constructs a degenerate conic consisting of two coincident lines.
 
@@ -1229,7 +1245,7 @@ Constructs a degenerate conic consisting of two coincident lines.
 def point_conic(point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/degenerate_conic.py#L23))
+([source](../src/lib/degenerate_conic.py#L26))
 
 Constructs a conic that degenerates to a single point.
 
@@ -1258,7 +1274,7 @@ point from the resulting conic.
 class SplitToLines(Function)
 ```
 
-([source](../src/lib/degenerate_conic.py#L54))
+([source](../src/lib/degenerate_conic.py#L57))
 
 Splits a degenerate conic into two lines.
 
@@ -1279,7 +1295,7 @@ section 11.1
 def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None
 ```
 
-([source](../src/lib/degenerate_conic.py#L67))
+([source](../src/lib/degenerate_conic.py#L70))
 
 Internal implementation. Call `SplitToLines(conic)` directly.
 
@@ -1291,7 +1307,7 @@ Internal implementation. Call `SplitToLines(conic)` directly.
 class ExtractPoint(Function)
 ```
 
-([source](../src/lib/degenerate_conic.py#L90))
+([source](../src/lib/degenerate_conic.py#L93))
 
 Extracts the point from a point conic or the intersection of the
 lines from a line pair conic.
@@ -1319,7 +1335,7 @@ at least one of these is a non-zero vector.
 def eval(cls, degenerate_conic: Matrix) -> Matrix | None
 ```
 
-([source](../src/lib/degenerate_conic.py#L110))
+([source](../src/lib/degenerate_conic.py#L113))
 
 Internal implementation. Call `ExtractPoint(conic)` directly.
 
@@ -1642,6 +1658,13 @@ Special cases:
 
 # point
 
+<a id="point.ZERO_POINT"></a>
+
+#### ZERO\_POINT
+
+The zero vector `(0 : 0 : 0)`. It doesn't represent any point. Functions
+return it when the resulting point is undefined.
+
 <a id="point.ORIGIN"></a>
 
 #### ORIGIN
@@ -1673,7 +1696,7 @@ Every circle passes through it.
 def ideal_point(x: Expr, y: Expr) -> Matrix
 ```
 
-([source](../src/lib/point.py#L20))
+([source](../src/lib/point.py#L24))
 
 Creates an ideal point at the given direction.
 
@@ -1685,7 +1708,7 @@ Creates an ideal point at the given direction.
 def ideal_point_on_line(line: Matrix) -> Matrix
 ```
 
-([source](../src/lib/point.py#L25))
+([source](../src/lib/point.py#L29))
 
 Returns the coordinates of the ideal point on the line.
 
@@ -1702,7 +1725,7 @@ If the line is the ideal line, returns `[0, 0, 0]ᵀ`.
 def point_to_xy(point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/point.py#L36))
+([source](../src/lib/point.py#L40))
 
 Computes the Euclidean coordinates of a projective point.
 
@@ -1714,7 +1737,7 @@ Computes the Euclidean coordinates of a projective point.
 def point_to_vec3(point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/point.py#L45))
+([source](../src/lib/point.py#L49))
 
 Computes the homogeneous coordinates of a projective point.
 
@@ -1726,7 +1749,7 @@ Computes the homogeneous coordinates of a projective point.
 def centroid(*points: Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/point.py#L56))
+([source](../src/lib/point.py#L60))
 
 Computes the centroid of a set of points.
 
@@ -1740,7 +1763,7 @@ Returns the point's coordinates as a 2D column vector.
 def perpendicular_foot(point: Matrix | Sequence[Expr], line: Matrix) -> Matrix
 ```
 
-([source](../src/lib/point.py#L72))
+([source](../src/lib/point.py#L76))
 
 Computes the foot of the perpendicular through a point to a line.
 

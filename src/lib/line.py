@@ -147,6 +147,10 @@ def are_perpendicular(line1: Matrix, line2: Matrix) -> bool | None:
     return (a1 * a2 + b1 * b2).expand().is_zero
 
 
+#: The zero vector `(0 : 0 : 0)`. It doesn't represent any line. Functions
+#: return it when the resulting line is undefined.
+ZERO_LINE: ImmutableMatrix = ImmutableMatrix([0, 0, 0])
+
 #: The projective line at infinity.
 IDEAL_LINE: ImmutableMatrix = ImmutableMatrix([0, 0, 1])
 

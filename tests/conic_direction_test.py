@@ -10,7 +10,7 @@ from lib.conic_direction import (
     conjugate_axis_direction,
     focal_axis_direction,
 )
-from lib.degenerate_conic import line_pair_conic, point_conic
+from lib.degenerate_conic import ZERO_CONIC, line_pair_conic, point_conic
 from lib.ellipse import ellipse
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, angle_bisector
 from lib.matrix import (
@@ -19,7 +19,7 @@ from lib.matrix import (
     is_positive_multiple,
     quadratic_form,
 )
-from lib.point import ORIGIN, ideal_point_on_line
+from lib.point import ORIGIN, ZERO_POINT, ideal_point_on_line
 from lib.transform import rotate, transform_conic, translate
 from tests.utils import are_projective_sets_equal
 
@@ -69,7 +69,7 @@ class TestConicNormFactor:
         assert ConicNormFactor(-line_pair) == 1
 
     def test_zero_conic_matrix(self):
-        conic = Matrix.zeros(3, 3)
+        conic = ZERO_CONIC
         assert ConicNormFactor(conic) == 1
 
     def test_undecidable(self):
@@ -150,8 +150,8 @@ class TestAxisDirection:
 
     def test_zero_radius_circle(self):
         point = circle((1, 2), r=0)
-        assert focal_axis_direction(point) == Matrix([0, 0, 0])
-        assert conjugate_axis_direction(point) == Matrix([0, 0, 0])
+        assert focal_axis_direction(point) == ZERO_POINT
+        assert conjugate_axis_direction(point) == ZERO_POINT
 
     def test_lazy_zero_radius_circle(self):
         conic = conic_matrix(*symbols("a b c d e f"))

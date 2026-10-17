@@ -20,7 +20,7 @@ from lib.line import (
     vertical_line,
 )
 from lib.matrix import is_nonzero_multiple
-from lib.point import ORIGIN, centroid, ideal_point_on_line
+from lib.point import ORIGIN, ZERO_POINT, centroid, ideal_point_on_line
 
 
 class TestPerpendicularLine:
@@ -115,7 +115,7 @@ class TestLineNormal:
         assert line_normal(line) == Matrix([1, 2, 0])
         assert line_normal(line, toward=(5, 5)) == Matrix([1, 2, 0])
         assert line_normal(line, toward=(-5, -5)) == Matrix([-1, -2, 0])
-        assert line_normal(line, toward=(-1, -1)) == Matrix([0, 0, 0])
+        assert line_normal(line, toward=(-1, -1)) == ZERO_POINT
         assert line_normal(line, toward=(-5, -5, -1)) == Matrix([-1, -2, 0])
         assert line_normal(line, toward=(-1, 0)) == Matrix([1, 2, 0])
         assert line_normal(line, toward=(-1, 0, 0)) == Matrix([-1, -2, 0])

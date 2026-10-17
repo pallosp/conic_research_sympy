@@ -21,7 +21,7 @@ from lib.conic_classes import (
     is_rectangular_hyperbola,
 )
 from lib.conic_direction import focal_axis_direction
-from lib.degenerate_conic import line_pair_conic, point_conic
+from lib.degenerate_conic import ZERO_CONIC, line_pair_conic, point_conic
 from lib.ellipse import ellipse, ellipse_from_foci_and_point
 from lib.hyperbola import UNIT_HYPERBOLA
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, horizontal_line
@@ -395,7 +395,7 @@ class TestIsCircular:
 
 class TestIsLinePair:
     def test_zero_matrix(self):
-        assert is_line_pair(Matrix.zeros(3, 3)) is False
+        assert is_line_pair(ZERO_CONIC) is False
 
     def test_numeric_line_pair(self):
         assert is_line_pair(line_pair_conic(X_AXIS, X_AXIS)) is True
@@ -438,7 +438,7 @@ class TestIsLinePair:
 
 class TestIsDoubleLine:
     def test_zero_matrix(self):
-        assert is_double_line(Matrix.zeros(3, 3)) is False
+        assert is_double_line(ZERO_CONIC) is False
 
     def test_numeric_line_pair(self):
         assert is_double_line(line_pair_conic(X_AXIS, X_AXIS)) is True
@@ -462,7 +462,7 @@ class TestIsDoubleLine:
 
 class TestIsPointConic:
     def test_zero_matrix(self):
-        assert is_point_conic(Matrix.zeros(3, 3)) is False
+        assert is_point_conic(ZERO_CONIC) is False
 
     def test_zero_radius_circle(self):
         zero_circle = circle(symbols("x,y"), r=0)
