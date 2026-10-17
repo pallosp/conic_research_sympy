@@ -137,6 +137,7 @@ class IdealPoints(Function):
     Returns two points. Special cases:
      - For parabolas these are the same point.
      - For ellipses these are the complex conjugates of each other.
+     - Returns two `[0, 0, 0]ᵀ` vectors if the conic contains the ideal line.
      - For symbolic conics returns an unevaluated `sympy.Function`.
 
     The computation is based on intersecting the conic with the ideal line.

@@ -60,6 +60,7 @@ class SplitToLines(Function):
     Special cases:
      - For non-degenerate conics the result is unspecified.
      - For point conics the lines will be complex conjugates.
+     - Returns two `[0, 0, 0]ᵀ` vectors for the zero matrix.
      - For symbolic conics returns an unevaluated `sympy.Function`.
 
     *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,

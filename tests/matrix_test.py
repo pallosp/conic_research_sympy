@@ -1,4 +1,4 @@
-from sympy import Function, I, Matrix, nan, sqrt, symbols
+from sympy import Function, I, Matrix, sqrt, symbols
 
 from lib.matrix import (
     NonzeroCross,
@@ -137,7 +137,10 @@ class TestNonZeroCross:
         assert NonzeroCross(matrix) == (Matrix([1, 0]), Matrix([0, 1]).T)
 
     def test_zero_matrix(self):
-        assert NonzeroCross(Matrix.zeros(2, 2)) == nan
+        assert NonzeroCross(Matrix.zeros(2, 3)) == (
+            Matrix.zeros(2, 1),
+            Matrix.zeros(1, 3),
+        )
 
     def test_undecidable(self):
         x = symbols("x")

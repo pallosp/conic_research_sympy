@@ -1,9 +1,9 @@
 from collections.abc import Sequence
 
 from sympy import Expr, Matrix, Piecewise, nan, sqrt
-from sympy.core.numbers import NaN
 
 from lib.matrix import NonzeroCross, skew_matrix
+from lib.point import ZERO_POINT
 
 
 def line_x_line(line1: Matrix, line2: Matrix) -> Matrix:
@@ -18,7 +18,7 @@ def line_x_line(line1: Matrix, line2: Matrix) -> Matrix:
 def conic_x_line(
     conic: Matrix,
     line: Matrix,
-) -> tuple[Matrix | Sequence[Expr], Matrix | Sequence[Expr]] | NaN:
+) -> tuple[Matrix | Sequence[Expr], Matrix | Sequence[Expr]] | NonzeroCross:
     """Intersects a conic with a line. Returns two points.
 
     Special cases:
@@ -26,7 +26,7 @@ def conic_x_line(
      - They are complex conjugates if the line doesn't intersect the conic at
        a real point.
      - Returns an unevaluated `sympy.Function` for symbolic conics.
-     - Returns `None` if the conic contains the entire line.
+     - Returns two `[0, 0, 0]ᵀ` vectors if the conic contains the entire line.
 
     *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
     section 11.3
@@ -40,9 +40,9 @@ def conic_x_line(
         (sqrt(m[1] * m[3] - m[0] * m[4]) / c, c != 0),
     )
     if alpha == nan:
-        return nan
+        return (ZERO_POINT, ZERO_POINT)
     intersections = m + alpha * skew_mat
     points = NonzeroCross(intersections)
-    if isinstance(points, (NonzeroCross, NaN)):
+    if isinstance(points, NonzeroCross):
         return points
     return (points[0], points[1].T)

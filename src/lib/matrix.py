@@ -1,8 +1,7 @@
 from collections.abc import Callable, Sequence
 
-from sympy import Expr, Function, Matrix, expand, nan, sqrt
+from sympy import Expr, Function, Matrix, expand, sqrt
 from sympy.core.logic import fuzzy_and, fuzzy_not
-from sympy.core.numbers import NaN
 
 
 def is_nonzero_multiple(
@@ -135,11 +134,12 @@ class NonzeroCross(Function):
     element.
 
     Returns an unevaluated `sympy.Function` if none of the elements can be
-    proven to be non-zero, or `nan` in case of a zero matrix.
+    proven to be non-zero, or a zero column and a zero row in case of a zero
+    matrix.
     """
 
     @classmethod
-    def eval(cls, matrix: Matrix) -> tuple[Matrix, Matrix] | NaN | None:
+    def eval(cls, matrix: Matrix) -> tuple[Matrix, Matrix] | None:
         """Internal implementation. Call `NonZeroCross(matrix)` directly."""
         all_zero = True
         for i in range(len(matrix)):
@@ -149,7 +149,7 @@ class NonzeroCross(Function):
             if all_zero and not el.is_zero:
                 all_zero = False
         if all_zero:
-            return nan
+            return (matrix.col(0), matrix.row(0))
         return None
 
 

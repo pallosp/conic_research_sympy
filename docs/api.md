@@ -175,7 +175,7 @@ def is_nonzero_multiple(m1: Matrix | Sequence[Expr],
                         m2: Matrix | Sequence[Expr]) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L8))
+([source](../src/lib/matrix.py#L7))
 
 Tells whether two matrices are non-zero scalar multiples of each other.
 
@@ -190,7 +190,7 @@ def is_positive_multiple(m1: Matrix | Sequence[Expr],
                          m2: Matrix | Sequence[Expr]) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L42))
+([source](../src/lib/matrix.py#L41))
 
 Tells whether two matrices are positive scalar multiples of each other.
 
@@ -204,7 +204,7 @@ Treats lists and tuples as column vectors. Returns `None` if undecidable.
 def max_eigenvalue(symmetric_matrix_2x2: Matrix) -> Expr
 ```
 
-([source](../src/lib/matrix.py#L75))
+([source](../src/lib/matrix.py#L74))
 
 Returns the higher eigenvalue of a 2x2 symmetric matrix.
 
@@ -216,7 +216,7 @@ Returns the higher eigenvalue of a 2x2 symmetric matrix.
 def min_eigenvalue(symmetric_matrix_2x2: Matrix) -> Expr
 ```
 
-([source](../src/lib/matrix.py#L84))
+([source](../src/lib/matrix.py#L83))
 
 Returns the lower eigenvalue of a 2x2 symmetric matrix.
 
@@ -229,7 +229,7 @@ def conic_matrix(a: Expr, b: Expr, c: Expr, d: Expr, e: Expr,
                  f: Expr) -> Matrix
 ```
 
-([source](../src/lib/matrix.py#L93))
+([source](../src/lib/matrix.py#L92))
 
 Builds a 3x3 symmetric conic matrix from its elements.
 
@@ -250,7 +250,7 @@ or in expanded form `ax² + 2bxy + cy² + 2dx + 2ey + f = 0`
 def quadratic_form(sym_matrix: Matrix, vector: Matrix) -> Expr
 ```
 
-([source](../src/lib/matrix.py#L115))
+([source](../src/lib/matrix.py#L114))
 
 Computes the quadratic form for a n⨯n symmetric matrix and an n-element
 column vector.
@@ -269,7 +269,7 @@ conic.
 def skew_matrix(vector3: Matrix) -> Matrix
 ```
 
-([source](../src/lib/matrix.py#L128))
+([source](../src/lib/matrix.py#L127))
 
 Creates a skew-symmetric matrix from a 3D column vector.
 
@@ -281,13 +281,14 @@ Creates a skew-symmetric matrix from a 3D column vector.
 class NonzeroCross(Function)
 ```
 
-([source](../src/lib/matrix.py#L133))
+([source](../src/lib/matrix.py#L132))
 
 Finds a column and a row in a matrix whose intersection is a non-zero
 element.
 
 Returns an unevaluated `sympy.Function` if none of the elements can be
-proven to be non-zero, or `nan` in case of a zero matrix.
+proven to be non-zero, or a zero column and a zero row in case of a zero
+matrix.
 
 <a id="matrix.NonzeroCross.eval"></a>
 
@@ -295,7 +296,7 @@ proven to be non-zero, or `nan` in case of a zero matrix.
 
 ```python
 @classmethod
-def eval(cls, matrix: Matrix) -> tuple[Matrix, Matrix] | NaN | None
+def eval(cls, matrix: Matrix) -> tuple[Matrix, Matrix] | None
 ```
 
 ([source](../src/lib/matrix.py#L142))
@@ -1103,6 +1104,7 @@ Computes the ideal points on a conic section.
 Returns two points. Special cases:
  - For parabolas these are the same point.
  - For ellipses these are the complex conjugates of each other.
+ - Returns two `[0, 0, 0]ᵀ` vectors if the conic contains the ideal line.
  - For symbolic conics returns an unevaluated `sympy.Function`.
 
 The computation is based on intersecting the conic with the ideal line.
@@ -1124,7 +1126,7 @@ radii. Note that `r₂` is imaginary in case of hyperbolas.
 def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None
 ```
 
-([source](../src/lib/conic.py#L154))
+([source](../src/lib/conic.py#L155))
 
 Internal implementation. Call `IdealPoints(conic)` directly.
 
@@ -1136,7 +1138,7 @@ Internal implementation. Call `IdealPoints(conic)` directly.
 def projective_conic_center(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/conic.py#L164))
+([source](../src/lib/conic.py#L165))
 
 Computes the generalized projective center of a conic.
 
@@ -1160,7 +1162,7 @@ For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
 def pole_point(conic: Matrix, polar_line: Matrix) -> Matrix
 ```
 
-([source](../src/lib/conic.py#L182))
+([source](../src/lib/conic.py#L183))
 
 Computes the pole point of a conic with respect to the given polar line.
 
@@ -1180,7 +1182,7 @@ relationships.
 def polar_line(conic: Matrix, pole_point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/conic.py#L196))
+([source](../src/lib/conic.py#L197))
 
 Computes the polar line of a conic for a given pole point.
 
@@ -1281,6 +1283,7 @@ Splits a degenerate conic into two lines.
 Special cases:
  - For non-degenerate conics the result is unspecified.
  - For point conics the lines will be complex conjugates.
+ - Returns two `[0, 0, 0]ᵀ` vectors for the zero matrix.
  - For symbolic conics returns an unevaluated `sympy.Function`.
 
 *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
@@ -1295,7 +1298,7 @@ section 11.1
 def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None
 ```
 
-([source](../src/lib/degenerate_conic.py#L70))
+([source](../src/lib/degenerate_conic.py#L71))
 
 Internal implementation. Call `SplitToLines(conic)` directly.
 
@@ -1307,7 +1310,7 @@ Internal implementation. Call `SplitToLines(conic)` directly.
 class ExtractPoint(Function)
 ```
 
-([source](../src/lib/degenerate_conic.py#L93))
+([source](../src/lib/degenerate_conic.py#L94))
 
 Extracts the point from a point conic or the intersection of the
 lines from a line pair conic.
@@ -1335,7 +1338,7 @@ at least one of these is a non-zero vector.
 def eval(cls, degenerate_conic: Matrix) -> Matrix | None
 ```
 
-([source](../src/lib/degenerate_conic.py#L113))
+([source](../src/lib/degenerate_conic.py#L114))
 
 Internal implementation. Call `ExtractPoint(conic)` directly.
 
@@ -2793,7 +2796,7 @@ coincide.
 ```python
 def conic_x_line(
     conic: Matrix, line: Matrix
-) -> tuple[Matrix | Sequence[Expr], Matrix | Sequence[Expr]] | NaN
+) -> tuple[Matrix | Sequence[Expr], Matrix | Sequence[Expr]] | NonzeroCross
 ```
 
 ([source](../src/lib/intersection.py#L18))
@@ -2805,7 +2808,7 @@ Special cases:
  - They are complex conjugates if the line doesn't intersect the conic at
    a real point.
  - Returns an unevaluated `sympy.Function` for symbolic conics.
- - Returns `None` if the conic contains the entire line.
+ - Returns two `[0, 0, 0]ᵀ` vectors if the conic contains the entire line.
 
 *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
 section 11.3

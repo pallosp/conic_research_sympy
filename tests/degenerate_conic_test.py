@@ -12,7 +12,14 @@ from lib.degenerate_conic import (
     line_pair_conic,
     point_conic,
 )
-from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, horizontal_line, vertical_line
+from lib.line import (
+    IDEAL_LINE,
+    X_AXIS,
+    Y_AXIS,
+    ZERO_LINE,
+    horizontal_line,
+    vertical_line,
+)
 from lib.matrix import conic_matrix, is_nonzero_multiple, is_real_matrix
 from lib.point import ZERO_POINT, point_to_vec3
 from tests.utils import are_projective_sets_equal
@@ -91,6 +98,9 @@ class TestSplitToLines:
             [Matrix([1, I, 0]), Matrix([1, -I, 0])],
             SplitToLines(conic),
         )
+
+    def test_zero_conic(self):
+        assert SplitToLines(ZERO_CONIC) == (ZERO_LINE, ZERO_LINE)
 
 
 class TestExtractPoint:

@@ -48,7 +48,7 @@ from lib.matrix import (
     is_nonzero_multiple,
     quadratic_form,
 )
-from lib.point import ORIGIN, ideal_point
+from lib.point import ORIGIN, ZERO_POINT, ideal_point
 from tests.utils import are_projective_sets_equal
 
 
@@ -240,6 +240,10 @@ class TestIdealPoints:
             ideal_points,
             [ideal_point(1, I), ideal_point(1, -I)],
         )
+
+    def test_conic_containing_ideal_line(self):
+        conic = line_pair_conic(Matrix([1, 2, 3]), IDEAL_LINE)
+        assert IdealPoints(conic) == (ZERO_POINT, ZERO_POINT)
 
     def test_hyperbola_radius_formula(self):
         # Workaround for no ideal point support in conic_from_center_and_points
