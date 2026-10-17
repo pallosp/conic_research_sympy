@@ -1,9 +1,8 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Matrix, Piecewise, nan, sqrt
+from sympy import Expr, Matrix, sqrt
 
-from lib.matrix import NonzeroCross, skew_matrix
-from lib.point import ZERO_POINT
+from lib.matrix import NonzeroCross, quadratic_form, skew_matrix
 
 
 def line_x_line(line1: Matrix, line2: Matrix) -> Matrix:
@@ -25,22 +24,37 @@ def conic_x_line(
      - The intersection points coincide if the line is tangent to the conic.
      - They are complex conjugates if the line doesn't intersect the conic at
        a real point.
-     - Returns an unevaluated `sympy.Function` for symbolic conics.
+     - May return an unevaluated `NonzeroCross` for symbolic conics or lines,
+       when none of the intersection matrix elements can be proven non-zero.
      - Returns two `[0, 0, 0]ᵀ` vectors if the conic contains the entire line.
 
     *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
     section 11.3
     """
+    # Notation: l = line, C = conic, B = skew_mat.
+    #
+    # The book's algorithm:
+    #  1. m = Bᵀ·C·B is a degenerate conic representing the two intersection
+    #     points p and q as a symmetric matrix: m ~ p·qᵀ + q·pᵀ.
+    #  2. Adding α·B with the right α splits it into the rank-1 matrix p·qᵀ.
+    #     The book computes α from any non-zero coordinate of the line:
+    #     α = √(-adj(m)ᵢᵢ) / lᵢ, where adj(m)ᵢᵢ is the determinant of the 2×2
+    #     matrix left after deleting row i and column i of m.
+    #  3. A non-zero element of p·qᵀ determines the points: its column is p,
+    #     its row is q.
+    #
+    # Branch reduction: step 2 requires picking an i with lᵢ ≠ 0. We avoid it
+    # by computing α without division:
+    #  - adj(m) = adj(B)·adj(C)·adj(Bᵀ), since adj(X·Y) = adj(Y)·adj(X).
+    #  - adj(B) = l·lᵀ for the skew matrix of l.
+    #  - Hence adj(m) = (lᵀ·adj(C)·l)·l·lᵀ, so adj(m)ᵢᵢ / lᵢ² = lᵀ·adj(C)·l.
+    #  - This gives α = √(-lᵀ·adj(C)·l) for any line.
+    #
+    # Only the branch in step 3 (NonzeroCross) remains, and it's unavoidable.
+
     skew_mat = skew_matrix(line)
     m = skew_mat.T * conic * skew_mat
-    a, b, c = line
-    alpha = Piecewise(
-        (sqrt(m[5] * m[7] - m[4] * m[8]) / a, a != 0),
-        (sqrt(m[2] * m[6] - m[0] * m[8]) / b, b != 0),
-        (sqrt(m[1] * m[3] - m[0] * m[4]) / c, c != 0),
-    )
-    if alpha == nan:
-        return (ZERO_POINT, ZERO_POINT)
+    alpha = sqrt(-quadratic_form(conic.adjugate(), line))
     intersections = m + alpha * skew_mat
     points = NonzeroCross(intersections)
     if isinstance(points, NonzeroCross):

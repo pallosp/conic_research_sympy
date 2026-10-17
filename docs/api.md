@@ -2782,7 +2782,7 @@ Special cases:
 def line_x_line(line1: Matrix, line2: Matrix) -> Matrix
 ```
 
-([source](../src/lib/intersection.py#L9))
+([source](../src/lib/intersection.py#L8))
 
 Computes the intersection of two lines.
 
@@ -2799,7 +2799,7 @@ def conic_x_line(
 ) -> tuple[Matrix | Sequence[Expr], Matrix | Sequence[Expr]] | NonzeroCross
 ```
 
-([source](../src/lib/intersection.py#L18))
+([source](../src/lib/intersection.py#L17))
 
 Intersects a conic with a line. Returns two points.
 
@@ -2807,7 +2807,8 @@ Special cases:
  - The intersection points coincide if the line is tangent to the conic.
  - They are complex conjugates if the line doesn't intersect the conic at
    a real point.
- - Returns an unevaluated `sympy.Function` for symbolic conics.
+ - May return an unevaluated `NonzeroCross` for symbolic conics or lines,
+   when none of the intersection matrix elements can be proven non-zero.
  - Returns two `[0, 0, 0]ᵀ` vectors if the conic contains the entire line.
 
 *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,

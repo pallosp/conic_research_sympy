@@ -1,4 +1,4 @@
-from sympy import Function, I, Matrix, sqrt, symbols
+from sympy import I, Matrix, sqrt, symbols
 
 from lib.circle import UNIT_CIRCLE
 from lib.degenerate_conic import ZERO_CONIC, line_pair_conic
@@ -12,7 +12,7 @@ from lib.line import (
     horizontal_line,
     vertical_line,
 )
-from lib.matrix import conic_matrix, is_nonzero_multiple
+from lib.matrix import NonzeroCross, conic_matrix, is_nonzero_multiple
 from lib.point import ORIGIN, ZERO_POINT, ideal_point, point_to_xy
 
 
@@ -50,8 +50,8 @@ class TestConicXLine:
     def test_x_axis_plus_ideal_line_conic(self):
         conic = line_pair_conic(X_AXIS, IDEAL_LINE)
         p1, p2 = conic_x_line(conic, Y_AXIS)
-        assert is_nonzero_multiple(p1, ideal_point(0, 1))
-        assert is_nonzero_multiple(p2, ORIGIN)
+        assert is_nonzero_multiple(p1, ORIGIN)
+        assert is_nonzero_multiple(p2, ideal_point(0, 1))
 
     def test_y_axis_plus_ideal_line_conic(self):
         conic = line_pair_conic(Y_AXIS, IDEAL_LINE)
@@ -93,4 +93,16 @@ class TestConicXLine:
     def test_symbolic_conic(self):
         conic = conic_matrix(*symbols("a b c d e f"))
         intersections = conic_x_line(conic, IDEAL_LINE)
-        assert isinstance(intersections, Function)
+        assert isinstance(intersections, NonzeroCross)
+
+    def test_symbolic_line(self):
+        line = Matrix(symbols("l1 l2 l3"))
+        intersections = conic_x_line(UNIT_CIRCLE, line)
+        assert isinstance(intersections, NonzeroCross)
+
+    def test_partially_symbolic_conic(self):
+        b, c, d, e, f = symbols("b c d e f")
+        conic = conic_matrix(1, b, c, d, e, f)
+        p1, p2 = conic_x_line(conic, IDEAL_LINE)
+        assert conic_contains_point(conic, p1)
+        assert conic_contains_point(conic, p2)
