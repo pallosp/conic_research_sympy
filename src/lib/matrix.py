@@ -148,6 +148,31 @@ class NonzeroColumn(Function):
         return None
 
 
+class OuterProductRoot(Function):
+    """Finds a vector `v` such that `v·vᵀ` equals the given symmetric matrix.
+
+    Such a vector exists iff the matrix has rank ≤ 1. It is unique up to sign,
+    and may be complex. The result is unspecified for other matrices.
+
+    Returns an unevaluated `sympy.Function` if none of the diagonal elements can
+    be proven to be non-zero, or a zero vector in case of a zero matrix.
+
+    *Formula*: `M.col(i) / √Mᵢᵢ` for any `i` with `Mᵢᵢ ≠ 0`, since
+    `(v·vᵀ).col(i) = v·vᵢ` and `(v·vᵀ)ᵢᵢ = vᵢ²`.
+    """
+
+    @classmethod
+    def eval(cls, matrix: Matrix) -> Matrix | None:
+        """Internal implementation. Call `OuterProductRoot(matrix)` directly."""
+        for i in range(matrix.rows):
+            diagonal_element = matrix[i, i]
+            if diagonal_element.is_nonzero:
+                return matrix.col(i) / sqrt(diagonal_element)
+        if matrix.is_zero_matrix:
+            return matrix.col(0)
+        return None
+
+
 class NonzeroCross(Function):
     """Finds a column and a row in a matrix whose intersection is a non-zero
     element.

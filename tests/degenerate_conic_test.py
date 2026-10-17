@@ -102,6 +102,16 @@ class TestSplitToLines:
     def test_zero_conic(self):
         assert SplitToLines(ZERO_CONIC) == (ZERO_LINE, ZERO_LINE)
 
+    def test_symbolic_conic(self):
+        coeffs = symbols("a b c d e f")
+        lines = SplitToLines(conic_matrix(*coeffs))
+        assert isinstance(lines, SplitToLines)
+
+        expected_lines = [Matrix([1, 2, 3]), Matrix([4, 5, 6])]
+        a, _, _, b, c, _, d, e, f = line_pair_conic(*expected_lines)
+        lines = lines.subs(zip(coeffs, (a, b, c, d, e, f), strict=True))
+        assert are_projective_sets_equal(lines, expected_lines)
+
 
 class TestExtractPoint:
     def test_symbolic_real_point_conic(self):

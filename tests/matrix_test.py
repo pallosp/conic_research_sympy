@@ -3,6 +3,7 @@ from sympy import Function, I, Matrix, sqrt, symbols
 from lib.matrix import (
     NonzeroColumn,
     NonzeroCross,
+    OuterProductRoot,
     conic_matrix,
     is_definite_matrix,
     is_full_rank,
@@ -141,6 +142,37 @@ class TestNonzeroColumn:
         x = symbols("x")
         assert isinstance(NonzeroColumn(Matrix.diag([x, 0])), NonzeroColumn)
         assert NonzeroColumn(Matrix.diag([x, 1])) == Matrix([0, 1])
+
+
+class TestOuterProductRoot:
+    def test_real_vector(self):
+        v = Matrix([2, 0, -3])
+        root = OuterProductRoot(v * v.T)
+        assert root * root.T == v * v.T
+
+    def test_first_diagonal_element_zero(self):
+        v = Matrix([0, 1, 2])
+        assert OuterProductRoot(v * v.T) == v
+
+    def test_imaginary_vector(self):
+        v = Matrix([I, 2 * I, 0])
+        root = OuterProductRoot(v * v.T)
+        assert root * root.T == v * v.T
+
+    def test_symbolic_vector(self):
+        x, y = symbols("x y", positive=True)
+        v = Matrix([x, y])
+        assert OuterProductRoot(v * v.T) == v
+
+    def test_zero_matrix(self):
+        assert OuterProductRoot(Matrix.zeros(3, 3)) == Matrix.zeros(3, 1)
+
+    def test_undecidable(self):
+        x = symbols("x")
+        v = Matrix([x, 0])
+        root = OuterProductRoot(v * v.T)
+        assert isinstance(root, OuterProductRoot)
+        assert root.subs(x, 3) == Matrix([3, 0])
 
 
 class TestNonZeroCross:

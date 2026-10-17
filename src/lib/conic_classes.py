@@ -167,11 +167,12 @@ def is_line_pair(conic: Matrix) -> bool | None:
         [
             is_degenerate(conic),
             fuzzy_not(conic.is_zero_matrix),
-            # If all sqrt subexpressions in SplitToLines' implementation
-            # are nonnegative, the conic splits to real lines.
-            (b * b - a * c).factor().is_nonnegative,
-            (d * d - a * f).factor().is_nonnegative,
+            # When C is degenerate, -adj(C) = q·qᵀ (see SplitToLines), where q
+            # is real for real lines and imaginary for complex ones.
+            # Its diagonal elements below are q₁², q₂², and q₃².
             (e * e - c * f).factor().is_nonnegative,
+            (d * d - a * f).factor().is_nonnegative,
+            (b * b - a * c).factor().is_nonnegative,
         ],
     )
 
@@ -205,8 +206,9 @@ def is_point_conic(conic: Matrix) -> bool | None:
     return fuzzy_and(
         [
             is_degenerate(conic),
-            # If any of the sqrt subexpressions in SplitToLines' implementation
-            # are negative, the conic splits to complex lines.
+            # If any of the diagonal elements of -adj(conic), i.e. the values
+            # under the square root in SplitToLines, are negative, the conic
+            # splits to complex lines.
             fuzzy_or(
                 [
                     (b * b - a * c).factor().is_negative,

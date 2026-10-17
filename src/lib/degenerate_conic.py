@@ -1,8 +1,14 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Function, ImmutableMatrix, Matrix, sqrt
+from sympy import Expr, Function, ImmutableMatrix, Matrix
 
-from lib.matrix import NonzeroColumn, NonzeroCross, conic_matrix, skew_matrix
+from lib.matrix import (
+    NonzeroColumn,
+    NonzeroCross,
+    OuterProductRoot,
+    conic_matrix,
+    skew_matrix,
+)
 from lib.point import point_to_vec3
 
 #: The zero matrix. Every point satisfies its equation.
@@ -70,25 +76,36 @@ class SplitToLines(Function):
     @classmethod
     def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None:
         """Internal implementation. Call `SplitToLines(conic)` directly."""
-        adj = conic.adjugate()
-        a, c, f = adj.diagonal()
-
-        # Lemma: If a symmetric 3x3 matrix is singular, the diagonal elements
-        # of its adjugate matrix (a, c, f) are either all ≥0 or all ≤0.
-        # Proof: research/matrices/adjugate_properties.py
-        if a.is_nonzero:
-            conic = conic + skew_matrix(adj.col(0) / sqrt(-a))
-        elif c.is_nonzero:
-            conic = conic + skew_matrix(adj.col(1) / sqrt(-c))
-        elif f.is_nonzero:
-            conic = conic + skew_matrix(adj.col(2) / sqrt(-f))
-        elif not (a.is_zero and c.is_zero and f.is_zero):
+        # The conic consisting of the lines l and m is represented by the
+        # symmetric matrix C = (l·mᵀ + m·lᵀ)/2, or a multiple of it.
+        #
+        # Goal: find the rank-1 matrix l·mᵀ. All its columns are multiples of l
+        # and all its rows are multiples of m, so any non-zero element yields
+        # both lines. NonzeroCross does this final step.
+        #
+        # l·mᵀ differs from C by an antisymmetric matrix, which can be written
+        # as the skew matrix of a vector q:
+        #
+        #   l·mᵀ = C + (l·mᵀ - m·lᵀ)/2 = C + skew(q),   where q = (m⨯l)/2
+        #
+        # q is a multiple of the lines' intersection point. It's unknown, but
+        # it can be computed from C alone, because adj(C) = -q·qᵀ.
+        # OuterProductRoot recovers q from q·qᵀ up to sign. The sign doesn't
+        # matter: C - skew(q) = m·lᵀ, which yields the same lines in swapped
+        # order.
+        #
+        # Special cases:
+        #  - Point conics: l and m are complex conjugates, so q is imaginary.
+        #  - Double lines: l = m, so q = 0 and C = l·lᵀ is split directly.
+        #  - Symbolic conics: SplitToLines stays unevaluated if OuterProductRoot
+        #    or NonzeroCross can't decide which element is non-zero.
+        q = OuterProductRoot(-conic.adjugate())
+        if isinstance(q, OuterProductRoot):
             return None
-
-        cross = NonzeroCross(conic)
-        if isinstance(cross, NonzeroCross):
+        lines = NonzeroCross(conic + skew_matrix(q))
+        if isinstance(lines, NonzeroCross):
             return None
-        return cross
+        return lines
 
 
 def extract_point(degenerate_conic: Matrix) -> Matrix | NonzeroColumn:

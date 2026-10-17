@@ -9,6 +9,7 @@
   * [quadratic\_form](#matrix.quadratic_form)
   * [skew\_matrix](#matrix.skew_matrix)
   * [NonzeroColumn](#matrix.NonzeroColumn)
+  * [OuterProductRoot](#matrix.OuterProductRoot)
   * [NonzeroCross](#matrix.NonzeroCross)
   * [is\_real\_matrix](#matrix.is_real_matrix)
   * [is\_definite\_matrix](#matrix.is_definite_matrix)
@@ -302,6 +303,40 @@ def eval(cls, matrix: Matrix) -> Matrix | None
 
 Internal implementation. Call `NonzeroColumn(matrix)` directly.
 
+<a id="matrix.OuterProductRoot"></a>
+
+## OuterProductRoot
+
+```python
+class OuterProductRoot(Function)
+```
+
+([source](../src/lib/matrix.py#L151))
+
+Finds a vector `v` such that `v·vᵀ` equals the given symmetric matrix.
+
+Such a vector exists iff the matrix has rank ≤ 1. It is unique up to sign,
+and may be complex. The result is unspecified for other matrices.
+
+Returns an unevaluated `sympy.Function` if none of the diagonal elements can
+be proven to be non-zero, or a zero vector in case of a zero matrix.
+
+*Formula*: `M.col(i) / √Mᵢᵢ` for any `i` with `Mᵢᵢ ≠ 0`, since
+`(v·vᵀ).col(i) = v·vᵢ` and `(v·vᵀ)ᵢᵢ = vᵢ²`.
+
+<a id="matrix.OuterProductRoot.eval"></a>
+
+#### OuterProductRoot.eval
+
+```python
+@classmethod
+def eval(cls, matrix: Matrix) -> Matrix | None
+```
+
+([source](../src/lib/matrix.py#L165))
+
+Internal implementation. Call `OuterProductRoot(matrix)` directly.
+
 <a id="matrix.NonzeroCross"></a>
 
 ## NonzeroCross
@@ -310,7 +345,7 @@ Internal implementation. Call `NonzeroColumn(matrix)` directly.
 class NonzeroCross(Function)
 ```
 
-([source](../src/lib/matrix.py#L151))
+([source](../src/lib/matrix.py#L176))
 
 Finds a column and a row in a matrix whose intersection is a non-zero
 element.
@@ -329,7 +364,7 @@ proven to be non-zero, or two zero vectors in case of a zero matrix.
 def eval(cls, matrix: Matrix) -> tuple[Matrix, Matrix] | None
 ```
 
-([source](../src/lib/matrix.py#L162))
+([source](../src/lib/matrix.py#L187))
 
 Internal implementation. Call `NonZeroCross(matrix)` directly.
 
@@ -341,7 +376,7 @@ Internal implementation. Call `NonZeroCross(matrix)` directly.
 def is_real_matrix(matrix: Matrix) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L176))
+([source](../src/lib/matrix.py#L201))
 
 Checks if all elements of a matrix are real.
 
@@ -355,7 +390,7 @@ Returns a bool or `None` if undecidable.
 def is_definite_matrix(matrix: Matrix) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L184))
+([source](../src/lib/matrix.py#L209))
 
 Checks if a real matrix is either positive or negative definite.
 
@@ -371,7 +406,7 @@ def is_full_rank(matrix: Matrix,
                  simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L214))
+([source](../src/lib/matrix.py#L239))
 
 Tells whether a matrix has full rank.
 
@@ -1241,7 +1276,7 @@ The zero matrix. Every point satisfies its equation.
 def line_pair_conic(line1: Matrix, line2: Matrix) -> Matrix
 ```
 
-([source](../src/lib/degenerate_conic.py#L12))
+([source](../src/lib/degenerate_conic.py#L18))
 
 Constructs a conic section from two projective lines.
 
@@ -1253,7 +1288,7 @@ Constructs a conic section from two projective lines.
 def double_line_conic(line: Matrix) -> Matrix
 ```
 
-([source](../src/lib/degenerate_conic.py#L19))
+([source](../src/lib/degenerate_conic.py#L25))
 
 Constructs a degenerate conic consisting of two coincident lines.
 
@@ -1265,7 +1300,7 @@ Constructs a degenerate conic consisting of two coincident lines.
 def point_conic(point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/degenerate_conic.py#L26))
+([source](../src/lib/degenerate_conic.py#L32))
 
 Constructs a conic that degenerates to a single point.
 
@@ -1294,7 +1329,7 @@ point from the resulting conic.
 class SplitToLines(Function)
 ```
 
-([source](../src/lib/degenerate_conic.py#L57))
+([source](../src/lib/degenerate_conic.py#L63))
 
 Splits a degenerate conic into two lines.
 
@@ -1316,7 +1351,7 @@ section 11.1
 def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None
 ```
 
-([source](../src/lib/degenerate_conic.py#L71))
+([source](../src/lib/degenerate_conic.py#L77))
 
 Internal implementation. Call `SplitToLines(conic)` directly.
 
@@ -1328,7 +1363,7 @@ Internal implementation. Call `SplitToLines(conic)` directly.
 def extract_point(degenerate_conic: Matrix) -> Matrix | NonzeroColumn
 ```
 
-([source](../src/lib/degenerate_conic.py#L94))
+([source](../src/lib/degenerate_conic.py#L111))
 
 Extracts the point from a point conic or the intersection of the
 lines from a line pair conic.
@@ -1570,7 +1605,7 @@ Returns `None` if undecidable.
 def is_double_line(conic: Matrix) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L179))
+([source](../src/lib/conic_classes.py#L180))
 
 Tells whether the conic consists of two coincident projective lines.
 
@@ -1584,7 +1619,7 @@ Returns `None` if undecidable.
 def is_point_conic(conic: Matrix) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L196))
+([source](../src/lib/conic_classes.py#L197))
 
 Tells whether the conic consists of a single projective point.
 
@@ -1601,7 +1636,7 @@ complex coordinates.
 def is_finite_point_conic(conic: Matrix) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L221))
+([source](../src/lib/conic_classes.py#L223))
 
 Tells whether the conic consists of a single finite (Euclidean) point.
 
