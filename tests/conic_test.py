@@ -19,12 +19,12 @@ from lib.central_conic import (
 )
 from lib.circle import UNIT_CIRCLE, circle
 from lib.conic import (
-    IdealPoints,
     conic_from_focus_and_directrix,
     conic_from_poly,
     conic_through_points,
     eccentricity,
     focal_axis,
+    ideal_points,
     polar_line,
     pole_point,
     projective_conic_center,
@@ -216,34 +216,34 @@ class TestFocalAxis:
 class TestIdealPoints:
     def test_xy_hyperbola(self):
         hyperbola = conic_from_poly(x * y)
-        ideal_points = IdealPoints(hyperbola)
+        points = ideal_points(hyperbola)
         ideal_x = ideal_point(1, 0)
         ideal_y = ideal_point(0, 1)
-        assert are_projective_sets_equal(ideal_points, [ideal_x, ideal_y])
+        assert are_projective_sets_equal(points, [ideal_x, ideal_y])
 
     def test_unit_hyperbola(self):
         hyperbola = conic_from_poly(x * x - y * y - 1)
-        ideal_points = IdealPoints(hyperbola)
+        points = ideal_points(hyperbola)
         ideal1 = ideal_point(1, 1)
         ideal2 = ideal_point(1, -1)
-        assert are_projective_sets_equal(ideal_points, [ideal1, ideal2])
+        assert are_projective_sets_equal(points, [ideal1, ideal2])
 
     def test_parabola(self):
         parabola = conic_from_poly(x * x - y)
-        ideal_points = IdealPoints(parabola)
-        assert is_nonzero_multiple(ideal_points[0], ideal_point(0, 1))
-        assert is_nonzero_multiple(ideal_points[1], ideal_point(0, 1))
+        points = ideal_points(parabola)
+        assert is_nonzero_multiple(points[0], ideal_point(0, 1))
+        assert is_nonzero_multiple(points[1], ideal_point(0, 1))
 
     def test_circle(self):
-        ideal_points = IdealPoints(UNIT_CIRCLE)
+        points = ideal_points(UNIT_CIRCLE)
         assert are_projective_sets_equal(
-            ideal_points,
+            points,
             [ideal_point(1, I), ideal_point(1, -I)],
         )
 
     def test_conic_containing_ideal_line(self):
         conic = line_pair_conic(Matrix([1, 2, 3]), IDEAL_LINE)
-        assert IdealPoints(conic) == (ZERO_POINT, ZERO_POINT)
+        assert ideal_points(conic) == (ZERO_POINT, ZERO_POINT)
 
     def test_hyperbola_radius_formula(self):
         # Workaround for no ideal point support in conic_from_center_and_points
@@ -263,7 +263,7 @@ class TestIdealPoints:
         ip1 = Matrix([r1 * cos_a - I * r2 * sin_a, r1 * sin_a + I * r2 * cos_a, 0])
         ip2 = Matrix([r1 * cos_a + I * r2 * sin_a, r1 * sin_a - I * r2 * cos_a, 0])
 
-        assert are_projective_sets_equal(IdealPoints(hyperbola), [ip1, ip2])
+        assert are_projective_sets_equal(ideal_points(hyperbola), [ip1, ip2])
 
 
 class TestProjectiveConicCenter:
@@ -288,7 +288,7 @@ class TestProjectiveConicCenter:
         directrix = Matrix(symbols("a,b,c", positive=True))
         parabola = conic_from_focus_and_directrix(focus, directrix, 1)
         center = projective_conic_center(parabola)
-        ideal_point = IdealPoints(parabola)[0]
+        ideal_point = ideal_points(parabola)[0]
         assert is_nonzero_multiple(center, ideal_point)
 
     def test_parallel_line_pair(self):

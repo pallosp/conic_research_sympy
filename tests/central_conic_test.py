@@ -18,7 +18,7 @@ from lib.central_conic import (
     shrink_conic_to_zero,
 )
 from lib.circle import IMAGINARY_UNIT_CIRCLE, UNIT_CIRCLE, circle
-from lib.conic import IdealPoints, conic_from_focus_and_directrix, conic_from_poly
+from lib.conic import conic_from_focus_and_directrix, conic_from_poly, ideal_points
 from lib.conic_classes import is_point_conic
 from lib.degenerate_conic import ZERO_CONIC, line_pair_conic, point_conic
 from lib.ellipse import ellipse, ellipse_from_foci_and_point
@@ -414,7 +414,7 @@ class TestShrinkToZero:
         shrunk = shrink_conic_to_zero(hyperbola)
         assert shrunk.det() == 0
         assert conic_center(hyperbola) == conic_center(shrunk)
-        assert are_projective_sets_equal(IdealPoints(hyperbola), IdealPoints(shrunk))
+        assert are_projective_sets_equal(ideal_points(hyperbola), ideal_points(shrunk))
 
     def test_circle(self):
         symbolic_circle = circle(symbols("x y"), r=symbols("r"))

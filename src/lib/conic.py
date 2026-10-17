@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Function, Matrix, Poly, Symbol, abc, sqrt
+from sympy import Expr, Matrix, Poly, Symbol, abc, sqrt
 
 from lib.conic_direction import ConicNormFactor, focal_axis_direction
 from lib.matrix import NonzeroCross
@@ -131,14 +131,15 @@ def focal_axis(conic: Matrix) -> Matrix:
     return polar_line(conic, (-y, x, 0))
 
 
-class IdealPoints(Function):
+def ideal_points(conic: Matrix) -> tuple[Matrix, Matrix] | NonzeroCross:
     """Computes the ideal points on a conic section.
 
     Returns two points. Special cases:
      - For parabolas these are the same point.
      - For ellipses these are the complex conjugates of each other.
      - Returns two `[0, 0, 0]ᵀ` vectors if the conic contains the ideal line.
-     - For symbolic conics returns an unevaluated `sympy.Function`.
+     - May return an unevaluated `NonzeroCross` for symbolic conics, when none
+       of the intersection matrix elements can be proven non-zero.
 
     The computation is based on intersecting the conic with the ideal line.
 
@@ -150,16 +151,9 @@ class IdealPoints(Function):
     *Research*:
     [research/conic_properties/ideal_points.py](../src/research/conic_properties/ideal_points.py)
     """
-
-    @classmethod
-    def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None:
-        """Internal implementation. Call `IdealPoints(conic)` directly."""
-        a, b, c = conic[0], conic[1], conic[4]
-        disc = sqrt(b * b - a * c)
-        cross = NonzeroCross(Matrix([[c, -b - disc, 0], [-b + disc, a, 0], [0, 0, 0]]))
-        if isinstance(cross, NonzeroCross):
-            return None
-        return cross
+    a, b, c = conic[0], conic[1], conic[4]
+    disc = sqrt(b * b - a * c)
+    return NonzeroCross(Matrix([[c, -b - disc, 0], [-b + disc, a, 0], [0, 0, 0]]))
 
 
 def projective_conic_center(conic: Matrix) -> Matrix:

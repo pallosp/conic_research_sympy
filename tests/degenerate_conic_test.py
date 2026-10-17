@@ -2,7 +2,7 @@ import pytest
 from sympy import I, Matrix, symbols
 
 from lib.circle import circle
-from lib.conic import IdealPoints, conic_from_poly
+from lib.conic import conic_from_poly, ideal_points
 from lib.conic_classes import is_degenerate, is_finite_conic
 from lib.degenerate_conic import (
     ZERO_CONIC,
@@ -62,7 +62,7 @@ class TestPointConic:
         point = (1, 2, 0)
         conic = point_conic(point)
         assert is_degenerate(conic) is True
-        assert are_projective_sets_equal(IdealPoints(conic), [point, point])
+        assert are_projective_sets_equal(ideal_points(conic), [point, point])
         assert is_real_matrix(SplitToLines(conic)[0]) is False
 
 

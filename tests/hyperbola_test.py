@@ -3,7 +3,7 @@ from sympy import I, Matrix, Rational, acos, nan, pi, sqrt, symbols
 from sympy.abc import x, y
 
 from lib.circle import circle
-from lib.conic import IdealPoints, conic_from_poly, projective_conic_center
+from lib.conic import conic_from_poly, ideal_points, projective_conic_center
 from lib.conic_direction import focal_axis_direction
 from lib.degenerate_conic import line_pair_conic, point_conic
 from lib.ellipse import ellipse
@@ -130,8 +130,8 @@ class TestUnitHyperbola:
         assert conic_from_poly(x * x - y * y - 1) == UNIT_HYPERBOLA
 
     def test_ideal_points(self):
-        ideal_points = [Matrix([1, 1, 0]), Matrix([1, -1, 0])]
-        assert are_projective_sets_equal(IdealPoints(UNIT_HYPERBOLA), ideal_points)
+        points = [Matrix([1, 1, 0]), Matrix([1, -1, 0])]
+        assert are_projective_sets_equal(ideal_points(UNIT_HYPERBOLA), points)
 
     def test_contains_foci(self):
         focus1 = Matrix([sqrt(2), 0, 1])

@@ -21,7 +21,7 @@ from sympy import (
 )
 from sympy.abc import x, y
 
-from lib.conic import IdealPoints, conic_from_poly
+from lib.conic import conic_from_poly, ideal_points
 from lib.conic_direction import ConicNormFactor
 from lib.hyperbola import asymptote_focal_axis_angle
 from lib.intersection import conic_x_line
@@ -62,10 +62,10 @@ for a_hint, b_hint, c_hint in product(
     c = Symbol("c", **c_hint)
     if a.equals(0) and b.equals(0) and c.equals(0):
         continue
-    ideal_points = conic_x_line(conic_matrix(a, b, c, *symbols("d,e,f")), IDEAL_LINE)
-    if str(ideal_points) not in shown:
-        shown.add(str(ideal_points))
-        println_indented(ideal_points)
+    points = conic_x_line(conic_matrix(a, b, c, *symbols("d,e,f")), IDEAL_LINE)
+    if str(points) not in shown:
+        shown.add(str(points))
+        println_indented(points)
 
 ################################################################################
 # Formula based on focal axis angle and radii
@@ -189,7 +189,7 @@ conics = [
 ]
 
 for conic_example in conics:
-    ip1 = IdealPoints(conic_example)
+    ip1 = ideal_points(conic_example)
     ip2 = tuple(
         expand_complex(formula.subs(zip(conic, conic_example, strict=True)))
         for formula in ip_formulae
@@ -202,6 +202,6 @@ print("The formula breaks down for circles:")
 print()
 
 circle = conic_from_poly(x * x + y * y - 1)
-expected = IdealPoints(circle)[0]
+expected = ideal_points(circle)[0]
 actual = ip_formulae[0].subs(zip(conic, circle, strict=True))
 println_indented(Ne(expected, actual, evaluate=False))

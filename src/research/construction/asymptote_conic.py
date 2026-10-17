@@ -3,13 +3,13 @@
 from sympy import gcd, pprint, simplify, symbols
 
 from lib.central_conic import conic_center
-from lib.conic import IdealPoints
+from lib.conic import ideal_points
 from lib.degenerate_conic import line_pair_conic
 from lib.line import line_between
 from lib.matrix import conic_matrix
 
 conic = conic_matrix(*symbols("a,b,c,d,e,f", positive=True))
-ideal_point_1, ideal_point_2 = IdealPoints(conic)
+ideal_point_1, ideal_point_2 = ideal_points(conic)
 center = conic_center(conic)
 asymptote1 = line_between(center, ideal_point_1)
 asymptote2 = line_between(center, ideal_point_2)
