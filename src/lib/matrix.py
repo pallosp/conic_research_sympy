@@ -1,4 +1,5 @@
 from collections.abc import Callable, Sequence
+from typing import Self
 
 from sympy import (
     Expr,
@@ -6,6 +7,7 @@ from sympy import (
     ImmutableMatrix,
     Integer,
     Matrix,
+    MatrixBase,
     MatrixExpr,
     S,
     ShapeError,
@@ -19,8 +21,8 @@ from sympy.printing.pretty.stringpict import prettyForm
 
 
 def is_nonzero_multiple(
-    m1: Matrix | Sequence[Expr],
-    m2: Matrix | Sequence[Expr],
+    m1: MatrixBase | Sequence[Expr],
+    m2: MatrixBase | Sequence[Expr],
 ) -> bool | None:
     """Tells whether two matrices are non-zero scalar multiples of each other.
 
@@ -53,8 +55,8 @@ def is_nonzero_multiple(
 
 
 def is_positive_multiple(
-    m1: Matrix | Sequence[Expr],
-    m2: Matrix | Sequence[Expr],
+    m1: MatrixBase | Sequence[Expr],
+    m2: MatrixBase | Sequence[Expr],
 ) -> bool | None:
     """Tells whether two matrices are positive scalar multiples of each other.
 
@@ -85,7 +87,7 @@ def is_positive_multiple(
     )
 
 
-def max_eigenvalue(symmetric_matrix_2x2: Matrix) -> Expr:
+def max_eigenvalue(symmetric_matrix_2x2: MatrixBase) -> Expr:
     """Returns the higher eigenvalue of a 2x2 symmetric matrix."""
     m = symmetric_matrix_2x2
     if m.shape != (2, 2) or m != m.T:
@@ -94,7 +96,7 @@ def max_eigenvalue(symmetric_matrix_2x2: Matrix) -> Expr:
     return (a + c) / 2 + sqrt((a - c) ** 2 + 4 * b**2) / 2
 
 
-def min_eigenvalue(symmetric_matrix_2x2: Matrix) -> Expr:
+def min_eigenvalue(symmetric_matrix_2x2: MatrixBase) -> Expr:
     """Returns the lower eigenvalue of a 2x2 symmetric matrix."""
     m = symmetric_matrix_2x2
     if m.shape != (2, 2) or m != m.T:
@@ -125,7 +127,7 @@ def conic_matrix(  # noqa: PLR0913, PLR0917 (too-many-arguments, too-many-positi
     return Matrix([[a, b, d], [b, c, e], [d, e, f]])
 
 
-def quadratic_form(sym_matrix: Matrix, vector: Matrix) -> Expr:
+def quadratic_form(sym_matrix: MatrixBase, vector: MatrixBase) -> Expr:
     """Computes the quadratic form for a n⨯n symmetric matrix and an n-element
     column vector.
 
@@ -138,7 +140,7 @@ def quadratic_form(sym_matrix: Matrix, vector: Matrix) -> Expr:
     return vector.dot(vector.T * sym_matrix)
 
 
-def _pivot_index(matrix: Matrix) -> int | None:
+def _pivot_index(matrix: MatrixBase) -> int | None:
     """Finds the first provably non-zero element of a matrix.
 
     Returns 0 for zero matrices, or `None` if undecidable.
@@ -167,20 +169,20 @@ class MatrixFunction(MatrixExpr):
     which retries the evaluation.
     """
 
-    eval: Callable[[Matrix | MatrixExpr], Matrix | None]
+    eval: Callable[[MatrixBase | MatrixExpr], MatrixBase | None]
 
     def __new__(
         cls,
-        matrix: Matrix | MatrixExpr,
+        matrix: MatrixBase | MatrixExpr,
         *,
         evaluate: bool = True,
-    ) -> "Matrix | MatrixFunction":
+    ) -> "MatrixBase | Self":
         """Evaluates the function if possible, unless `evaluate` is false."""
         if evaluate:
             result = cls.eval(matrix)
             if result is not None:
                 return result
-        if not matrix.is_MatrixExpr:
+        if isinstance(matrix, MatrixBase):
             matrix = ImmutableMatrix(matrix)
         return super().__new__(cls, matrix)
 
@@ -198,12 +200,12 @@ class SkewMatrix(MatrixFunction):
     """Unevaluated form of [skew_matrix](#matrix.skew_matrix)."""
 
     @classmethod
-    def eval(cls, vector3: Matrix | MatrixExpr) -> Matrix | None:
+    def eval(cls, vector3: MatrixBase | MatrixExpr) -> MatrixBase | None:
         """Internal implementation. Call `skew_matrix(vector3)` instead."""
         if vector3.shape != (3, 1):
             msg = f"Expected a 3D column vector, got shape {vector3.shape}"
             raise ShapeError(msg)
-        if vector3.is_MatrixExpr:
+        if not isinstance(vector3, MatrixBase):
             return None
         return vector3.hat()
 
@@ -222,7 +224,7 @@ class SkewMatrix(MatrixFunction):
         return element if (i - j) % 3 == 1 else -element
 
 
-def skew_matrix(vector3: Matrix | MatrixExpr) -> Matrix | SkewMatrix:
+def skew_matrix(vector3: MatrixBase | MatrixExpr) -> MatrixBase | SkewMatrix:
     """Creates a skew-symmetric matrix from a 3D column vector.
 
     Returns an unevaluated `MatrixExpr` if the vector is unevaluated.
@@ -234,7 +236,7 @@ class PivotColumn(MatrixFunction):
     """Unevaluated form of [pivot_column](#matrix.pivot_column)."""
 
     @classmethod
-    def eval(cls, matrix: Matrix | MatrixExpr) -> Matrix | None:
+    def eval(cls, matrix: MatrixBase | MatrixExpr) -> MatrixBase | None:
         """Internal implementation. Call `pivot_column(matrix)` instead."""
         matrix = matrix.as_explicit()
         index = _pivot_index(matrix)
@@ -252,7 +254,7 @@ class TransposedPivotRow(MatrixFunction):
     """
 
     @classmethod
-    def eval(cls, matrix: Matrix | MatrixExpr) -> Matrix | None:
+    def eval(cls, matrix: MatrixBase | MatrixExpr) -> MatrixBase | None:
         """Internal implementation. Call `pivot_column_and_row(matrix)` instead."""
         matrix = matrix.as_explicit()
         index = _pivot_index(matrix)
@@ -264,7 +266,7 @@ class TransposedPivotRow(MatrixFunction):
         return (Integer(self.args[0].cols), S.One)
 
 
-def pivot_column(matrix: Matrix | MatrixExpr) -> Matrix | PivotColumn:
+def pivot_column(matrix: MatrixBase | MatrixExpr) -> MatrixBase | PivotColumn:
     """Returns the column of a matrix for its first provably nonzero element.
 
     The result is a zero vector in case of a zero matrix.
@@ -279,8 +281,8 @@ def pivot_column(matrix: Matrix | MatrixExpr) -> Matrix | PivotColumn:
 
 
 def pivot_column_and_row(
-    matrix: Matrix | MatrixExpr,
-) -> tuple[Matrix | PivotColumn, Matrix | TransposedPivotRow]:
+    matrix: MatrixBase | MatrixExpr,
+) -> tuple[MatrixBase | PivotColumn, MatrixBase | TransposedPivotRow]:
     """Returns the column and the transposed row of a matrix for its first
     provably nonzero element, i.e. two column vectors.
 
@@ -306,7 +308,7 @@ class OuterProductRoot(MatrixFunction):
     """Unevaluated form of [outer_product_root](#matrix.outer_product_root)."""
 
     @classmethod
-    def eval(cls, matrix: Matrix | MatrixExpr) -> Matrix | None:
+    def eval(cls, matrix: MatrixBase | MatrixExpr) -> MatrixBase | None:
         """Internal implementation. Call `outer_product_root(matrix)` instead."""
         matrix = matrix.as_explicit()
         diagonal = matrix.diagonal()
@@ -324,7 +326,9 @@ class OuterProductRoot(MatrixFunction):
         return (Integer(self.args[0].rows), S.One)
 
 
-def outer_product_root(matrix: Matrix | MatrixExpr) -> Matrix | OuterProductRoot:
+def outer_product_root(
+    matrix: MatrixBase | MatrixExpr,
+) -> MatrixBase | OuterProductRoot:
     """Finds a vector `v` such that `v·vᵀ` equals the given symmetric matrix.
 
     Such a vector exists iff the matrix has rank ≤ 1. It is unique up to sign,
@@ -340,7 +344,7 @@ def outer_product_root(matrix: Matrix | MatrixExpr) -> Matrix | OuterProductRoot
     return OuterProductRoot(matrix)
 
 
-def is_real_matrix(matrix: Matrix) -> bool | None:
+def is_real_matrix(matrix: MatrixBase) -> bool | None:
     """Checks if all elements of a matrix are real.
 
     Returns a bool or `None` if undecidable.
@@ -348,7 +352,7 @@ def is_real_matrix(matrix: Matrix) -> bool | None:
     return fuzzy_and(el.is_real for el in matrix)
 
 
-def is_definite_matrix(matrix: Matrix) -> bool | None:
+def is_definite_matrix(matrix: MatrixBase) -> bool | None:
     """Checks if a real matrix is either positive or negative definite.
 
     Returns a bool or `None` if the definitess can't be decided.
@@ -379,7 +383,7 @@ def is_definite_matrix(matrix: Matrix) -> bool | None:
 
 
 def is_full_rank(
-    matrix: Matrix,
+    matrix: MatrixBase,
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:

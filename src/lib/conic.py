@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Matrix, MatrixExpr, Poly, Symbol, abc, sqrt
+from sympy import Expr, Matrix, MatrixBase, MatrixExpr, Poly, Symbol, abc, sqrt
 
 from lib.conic_direction import ConicNormFactor, focal_axis_direction
 from lib.matrix import pivot_column_and_row
@@ -35,11 +35,11 @@ def conic_from_poly(
 
 
 def conic_through_points(
-    p1: Matrix | Sequence[Expr],
-    p2: Matrix | Sequence[Expr],
-    p3: Matrix | Sequence[Expr],
-    p4: Matrix | Sequence[Expr],
-    p5: Matrix | Sequence[Expr],
+    p1: MatrixBase | Sequence[Expr],
+    p2: MatrixBase | Sequence[Expr],
+    p3: MatrixBase | Sequence[Expr],
+    p4: MatrixBase | Sequence[Expr],
+    p5: MatrixBase | Sequence[Expr],
 ) -> Matrix:
     """Computes the conic that goes through the given points.
 
@@ -61,10 +61,10 @@ def conic_through_points(
 
 
 def conic_from_focus_and_directrix(
-    focus: Matrix | Sequence[Expr],
-    directrix: Matrix,
+    focus: MatrixBase | Sequence[Expr],
+    directrix: MatrixBase,
     eccentricity: Expr,
-) -> Matrix:
+) -> MatrixBase:
     """Constructs a conic from its focus, directrix and eccentricity.
 
     *Formula*:
@@ -76,7 +76,7 @@ def conic_from_focus_and_directrix(
     return m1 * eccentricity**2 + m2 * (directrix[0] ** 2 + directrix[1] ** 2)
 
 
-def eccentricity(conic: Matrix) -> Expr:
+def eccentricity(conic: MatrixBase) -> Expr:
     """Computes the eccentricity of a conic section.
 
     The result is
@@ -112,7 +112,7 @@ def eccentricity(conic: Matrix) -> Expr:
     return sqrt(2 * s / (s - norm_sign * (a + c)))
 
 
-def focal_axis(conic: Matrix) -> Matrix:
+def focal_axis(conic: MatrixBase) -> MatrixBase:
     """Returns the axis of symmetry going through conic's focus point(s).
 
     Properties:
@@ -132,8 +132,8 @@ def focal_axis(conic: Matrix) -> Matrix:
 
 
 def ideal_points(
-    conic: Matrix,
-) -> tuple[Matrix | MatrixExpr, Matrix | MatrixExpr]:
+    conic: MatrixBase,
+) -> tuple[MatrixBase | MatrixExpr, MatrixBase | MatrixExpr]:
     """Computes the ideal points on a conic section.
 
     Returns two points. Special cases:
@@ -158,7 +158,7 @@ def ideal_points(
     return pivot_column_and_row(intersections)
 
 
-def projective_conic_center(conic: Matrix) -> Matrix:
+def projective_conic_center(conic: MatrixBase) -> MatrixBase:
     """Computes the generalized projective center of a conic.
 
     It's equivalent to [conic_center](#central_conic.conic_center) (returns a
@@ -176,7 +176,7 @@ def projective_conic_center(conic: Matrix) -> Matrix:
     return conic.col(0).cross(conic.col(1))
 
 
-def pole_point(conic: Matrix, polar_line: Matrix) -> Matrix:
+def pole_point(conic: MatrixBase, polar_line: MatrixBase) -> MatrixBase:
     """Computes the pole point of a conic with respect to the given polar line.
 
     If the conic is degenerate, i.e. it factors into `l₁` and `l₂` real or
@@ -190,7 +190,9 @@ def pole_point(conic: Matrix, polar_line: Matrix) -> Matrix:
     return conic.adjugate() * polar_line
 
 
-def polar_line(conic: Matrix, pole_point: Matrix | Sequence[Expr]) -> Matrix:
+def polar_line(
+    conic: MatrixBase, pole_point: MatrixBase | Sequence[Expr]
+) -> MatrixBase:
     """Computes the polar line of a conic for a given pole point.
 
     Example pole/polar relationships:

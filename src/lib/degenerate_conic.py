@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Expr, ImmutableMatrix, Matrix, MatrixExpr
+from sympy import Expr, ImmutableMatrix, Matrix, MatrixBase, MatrixExpr
 
 from lib.matrix import (
     conic_matrix,
@@ -15,21 +15,21 @@ from lib.point import point_to_vec3
 ZERO_CONIC: ImmutableMatrix = ImmutableMatrix.zeros(3, 3)
 
 
-def line_pair_conic(line1: Matrix, line2: Matrix) -> Matrix:
+def line_pair_conic(line1: MatrixBase, line2: MatrixBase) -> Matrix:
     """Constructs a conic section from two projective lines."""
     if line1.shape != (3, 1) or line2.shape != (3, 1):
         raise ValueError("The lines must be 3-dimensional column vectors.")
     return (line1 * line2.T + line2 * line1.T) / 2
 
 
-def double_line_conic(line: Matrix) -> Matrix:
+def double_line_conic(line: MatrixBase) -> MatrixBase:
     """Constructs a degenerate conic consisting of two coincident lines."""
     if line.shape != (3, 1):
         raise ValueError("The line must be a 3-dimensional column vector.")
     return line * line.T
 
 
-def point_conic(point: Matrix | Sequence[Expr]) -> Matrix:
+def point_conic(point: MatrixBase | Sequence[Expr]) -> Matrix:
     """Constructs a conic that degenerates to a single point.
 
     Let the point's homogeneous coordinates be `(x, y, z)` and let
@@ -60,7 +60,9 @@ def point_conic(point: Matrix | Sequence[Expr]) -> Matrix:
     )
 
 
-def split_to_lines(conic: Matrix) -> tuple[Matrix | MatrixExpr, Matrix | MatrixExpr]:
+def split_to_lines(
+    conic: MatrixBase,
+) -> tuple[MatrixBase | MatrixExpr, MatrixBase | MatrixExpr]:
     """Splits a degenerate conic into two lines.
 
     Special cases:
@@ -104,7 +106,7 @@ def split_to_lines(conic: Matrix) -> tuple[Matrix | MatrixExpr, Matrix | MatrixE
     return pivot_column_and_row(conic + skew_matrix(q))
 
 
-def extract_point(degenerate_conic: Matrix) -> Matrix | MatrixExpr:
+def extract_point(degenerate_conic: MatrixBase) -> MatrixBase | MatrixExpr:
     """Extracts the point from a point conic or the intersection of the
     lines from a line pair conic.
 

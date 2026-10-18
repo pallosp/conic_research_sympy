@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Matrix, cos, sin
+from sympy import Expr, Matrix, MatrixBase, cos, sin
 
 from lib.central_conic import conic_from_foci_and_radius
 from lib.distance import point_point_distance
@@ -9,7 +9,7 @@ from lib.point import point_to_xy
 
 
 def ellipse(
-    center: Matrix | Sequence[Expr],
+    center: MatrixBase | Sequence[Expr],
     r1: Expr,
     r2: Expr,
     *,
@@ -48,9 +48,9 @@ def ellipse(
 
 
 def ellipse_from_foci_and_point(
-    focus1: Matrix | Sequence[Expr],
-    focus2: Matrix | Sequence[Expr],
-    point: Matrix | Sequence[Expr],
+    focus1: MatrixBase | Sequence[Expr],
+    focus2: MatrixBase | Sequence[Expr],
+    point: MatrixBase | Sequence[Expr],
 ) -> Matrix:
     """Constructs an ellipse from its focus points and an incident point.
 

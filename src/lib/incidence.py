@@ -1,7 +1,7 @@
 from collections.abc import Callable, Sequence
 from itertools import product
 
-from sympy import Expr, Matrix, expand
+from sympy import Expr, Matrix, MatrixBase, expand
 from sympy.core.logic import fuzzy_not
 
 from lib.matrix import is_full_rank, quadratic_form, skew_matrix
@@ -9,8 +9,8 @@ from lib.point import point_to_vec3
 
 
 def line_contains_point(
-    line: Matrix,
-    point: Matrix | Sequence[Expr],
+    line: MatrixBase,
+    point: MatrixBase | Sequence[Expr],
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
@@ -24,8 +24,8 @@ def line_contains_point(
 
 
 def conic_contains_point(
-    conic: Matrix,
-    point: Matrix | Sequence[Expr],
+    conic: MatrixBase,
+    point: MatrixBase | Sequence[Expr],
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
@@ -39,8 +39,8 @@ def conic_contains_point(
 
 
 def conic_contains_line(
-    conic: Matrix,
-    line: Matrix,
+    conic: MatrixBase,
+    line: MatrixBase,
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
@@ -58,8 +58,8 @@ def conic_contains_line(
 
 
 def polar_conic_contains_point(
-    polar_conic: Matrix,
-    point: Matrix | Sequence[Expr],
+    polar_conic: MatrixBase,
+    point: MatrixBase | Sequence[Expr],
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
@@ -77,7 +77,7 @@ def polar_conic_contains_point(
 
 
 def are_collinear(
-    points: Sequence[Matrix],
+    points: Sequence[MatrixBase],
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
@@ -94,7 +94,7 @@ def are_collinear(
 
 
 def are_concurrent(
-    lines: Sequence[Matrix],
+    lines: Sequence[MatrixBase],
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
@@ -109,14 +109,14 @@ def are_concurrent(
     """
     if len(lines) <= 2:
         return True
-    lines_as_matrix = Matrix.hstack(*lines)
+    lines_as_matrix = MatrixBase.hstack(*lines)
     if len(lines) == 3:
         return lines_as_matrix.det().is_zero
     return simplifier((lines_as_matrix * lines_as_matrix.T).det()).is_zero
 
 
 def are_on_same_conic(
-    points: Sequence[Matrix],
+    points: Sequence[MatrixBase],
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
@@ -145,7 +145,7 @@ def are_on_same_conic(
 
 
 def are_cocircular(
-    points: Sequence[Matrix],
+    points: Sequence[MatrixBase],
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:

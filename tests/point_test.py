@@ -1,5 +1,5 @@
 import pytest
-from sympy import I, Matrix, Rational, nan, symbols, zoo
+from sympy import I, Matrix, MatrixBase, Rational, nan, symbols, zoo
 
 from lib.circle import circle
 from lib.conic_classes import is_circular
@@ -79,21 +79,21 @@ class TestPerpendicularFoot:
 
 class TestCircularPoints:
     @pytest.mark.parametrize("point", [CIRCULAR_POINT_I, CIRCULAR_POINT_J])
-    def test_on_circles(self, point: Matrix) -> None:
+    def test_on_circles(self, point: MatrixBase) -> None:
         assert conic_contains_point(circle((3, -2), r=5), point)
         assert conic_contains_point(circle((3, -2), r=0), point)
         assert conic_contains_point(circle((3, -2), r=2 * I), point)
 
     @pytest.mark.parametrize("point", [CIRCULAR_POINT_I, CIRCULAR_POINT_J])
-    def test_on_double_ideal_line(self, point: Matrix) -> None:
+    def test_on_double_ideal_line(self, point: MatrixBase) -> None:
         assert conic_contains_point(double_line_conic(IDEAL_LINE), point)
 
     @pytest.mark.parametrize("point", [CIRCULAR_POINT_I, CIRCULAR_POINT_J])
-    def test_not_on_non_circular_point_conic(self, point: Matrix) -> None:
+    def test_not_on_non_circular_point_conic(self, point: MatrixBase) -> None:
         conic = point_conic((3, -2))
         assert is_circular(conic) is False
         assert conic_contains_point(conic, point) is False
 
     @pytest.mark.parametrize("point", [CIRCULAR_POINT_I, CIRCULAR_POINT_J])
-    def test_not_on_double_real_line(self, point: Matrix) -> None:
+    def test_not_on_double_real_line(self, point: MatrixBase) -> None:
         assert conic_contains_point(double_line_conic(X_AXIS), point) is False

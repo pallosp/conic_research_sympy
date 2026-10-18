@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Expr, ImmutableMatrix, Matrix, sign, sqrt
+from sympy import Expr, ImmutableMatrix, Matrix, MatrixBase, sign, sqrt
 
 from lib.point import ideal_point, point_to_vec3, point_to_xy
 
@@ -16,16 +16,16 @@ def vertical_line(x: Expr) -> Matrix:
 
 
 def line_between(
-    point1: Matrix | Sequence[Expr],
-    point2: Matrix | Sequence[Expr],
+    point1: MatrixBase | Sequence[Expr],
+    point2: MatrixBase | Sequence[Expr],
 ) -> Matrix:
     """Connects two projective points with a line."""
     return point_to_vec3(point1).cross(point_to_vec3(point2))
 
 
 def parallel_line(
-    with_line: Matrix,
-    through_point: Matrix | Sequence[Expr],
+    with_line: MatrixBase,
+    through_point: MatrixBase | Sequence[Expr],
 ) -> Matrix:
     """Constructs a line through a point parallel to a line."""
     x, y = point_to_xy(through_point)
@@ -34,8 +34,8 @@ def parallel_line(
 
 
 def perpendicular_line(
-    to_line: Matrix,
-    through_point: Matrix | Sequence[Expr],
+    to_line: MatrixBase,
+    through_point: MatrixBase | Sequence[Expr],
 ) -> Matrix:
     """Constructs a line through a point perpendicular to a line."""
     x, y = point_to_xy(through_point)
@@ -44,10 +44,10 @@ def perpendicular_line(
 
 
 def line_through_point(
-    point: Matrix | Sequence[Expr],
+    point: MatrixBase | Sequence[Expr],
     *,
-    direction: Matrix | Sequence[Expr] = None,
-    normal: Matrix | Sequence[Expr] = None,
+    direction: MatrixBase | Sequence[Expr] = None,
+    normal: MatrixBase | Sequence[Expr] = None,
 ) -> Matrix:
     """Constructs a line through a point with the given direction.
 
@@ -72,7 +72,7 @@ def line_through_point(
     return Matrix([nx, ny, -nx * x - ny * y])
 
 
-def angle_bisector(line1: Matrix, line2: Matrix) -> Matrix:
+def angle_bisector(line1: MatrixBase, line2: MatrixBase) -> MatrixBase:
     """Constructs the angle bisector of two lines.
 
     Chooses the bisector whose points substituted into the lines' equations have
@@ -94,8 +94,8 @@ def angle_bisector(line1: Matrix, line2: Matrix) -> Matrix:
 
 
 def perpendicular_bisector(
-    point1: Matrix | Sequence[Expr],
-    point2: Matrix | Sequence[Expr],
+    point1: MatrixBase | Sequence[Expr],
+    point2: MatrixBase | Sequence[Expr],
 ) -> Matrix:
     """Constructs the perpendicular bisector of two points."""
     x1, y1 = point_to_xy(point1)
@@ -104,9 +104,9 @@ def perpendicular_bisector(
 
 
 def line_normal(
-    line: Matrix,
+    line: MatrixBase,
     *,
-    toward: Matrix | Sequence[Expr] = None,
+    toward: MatrixBase | Sequence[Expr] = None,
 ) -> Matrix:
     """Returns the normal vector of a line, represented as an ideal point.
 
@@ -125,7 +125,7 @@ def line_normal(
     return normal * sign(line.dot(point_to_vec3(toward)).factor())
 
 
-def are_parallel(line1: Matrix, line2: Matrix) -> bool | None:
+def are_parallel(line1: MatrixBase, line2: MatrixBase) -> bool | None:
     """Tells whether line1 and line2 are parallel.
 
     Returns `True` if they are parallel, `False` if not, `None` if undecidable.
@@ -136,7 +136,7 @@ def are_parallel(line1: Matrix, line2: Matrix) -> bool | None:
     return (a1 * b2 - a2 * b1).expand().is_zero
 
 
-def are_perpendicular(line1: Matrix, line2: Matrix) -> bool | None:
+def are_perpendicular(line1: MatrixBase, line2: MatrixBase) -> bool | None:
     """Tells whether line1 and line2 are perpendicular.
 
     Returns `True` if they are perpendicular, `False` if not, `None` if

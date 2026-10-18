@@ -1,5 +1,5 @@
 import pytest
-from sympy import I, Matrix, symbols
+from sympy import I, Matrix, MatrixBase, symbols
 
 from lib.circle import circle
 from lib.conic import conic_from_poly, ideal_points
@@ -22,7 +22,7 @@ from lib.line import (
 )
 from lib.matrix import conic_matrix, is_nonzero_multiple, is_real_matrix
 from lib.point import ZERO_POINT, point_to_vec3
-from tests.utils import are_projective_sets_equal
+from tests.utils import are_projective_sets_equal, is_explicit_matrix
 
 
 class TestLinePair:
@@ -78,7 +78,7 @@ class TestSplitToLines:
         ],
         ids=["horizontal", "vertical", "double", "double_ideal", "general"],
     )
-    def test_line_pair(self, lines: list[Matrix]):
+    def test_line_pair(self, lines: list[MatrixBase]):
         conic = line_pair_conic(*lines)
         assert are_projective_sets_equal(lines, split_to_lines(conic))
 
@@ -95,16 +95,16 @@ class TestSplitToLines:
     def test_symbolic_conic(self):
         symbolic_conic = conic_matrix(*symbols("a b c d e f"))
         lines = split_to_lines(symbolic_conic)
-        assert lines[0].is_MatrixExpr
-        assert lines[1].is_MatrixExpr
+        assert not is_explicit_matrix(lines[0])
+        assert not is_explicit_matrix(lines[1])
 
         # Substituting a concrete line pair conic evaluates them to its lines.
         line_pair = [Matrix([1, 2, 3]), Matrix([4, 5, 6])]
         conic = line_pair_conic(*line_pair)
         substitutions = dict(zip(symbolic_conic, conic, strict=True))
         concrete_lines = [line.subs(substitutions) for line in lines]
-        assert not concrete_lines[0].is_MatrixExpr
-        assert not concrete_lines[1].is_MatrixExpr
+        assert is_explicit_matrix(concrete_lines[0])
+        assert is_explicit_matrix(concrete_lines[1])
         assert are_projective_sets_equal(concrete_lines, line_pair)
 
     def test_partially_symbolic_conic(self):
@@ -112,8 +112,8 @@ class TestSplitToLines:
         lines = split_to_lines(symbolic_conic)
         # The intersection point is undecidable, but the pivot isn't: the lines
         # are explicit matrices with unevaluated elements.
-        assert not lines[0].is_MatrixExpr
-        assert not lines[1].is_MatrixExpr
+        assert is_explicit_matrix(lines[0])
+        assert is_explicit_matrix(lines[1])
 
         # Substituting a concrete line pair conic evaluates them to its lines.
         # Its x² coefficient is 1·1 = 1, matching the symbolic conic.

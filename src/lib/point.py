@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Expr, I, ImmutableMatrix, Matrix, S, sympify
+from sympy import Expr, I, ImmutableMatrix, Matrix, MatrixBase, S, sympify
 
 #: The zero vector `(0 : 0 : 0)`. It doesn't represent any point. Functions
 #: return it when the resulting point is undefined.
@@ -26,7 +26,7 @@ def ideal_point(x: Expr, y: Expr) -> Matrix:
     return Matrix([x, y, 0])
 
 
-def ideal_point_on_line(line: Matrix) -> Matrix:
+def ideal_point_on_line(line: MatrixBase) -> Matrix:
     """Returns the coordinates of the ideal point on the line.
 
     The first two coordinates specify the line's direction. The third one is
@@ -37,7 +37,7 @@ def ideal_point_on_line(line: Matrix) -> Matrix:
     return ideal_point(line[1], -line[0])
 
 
-def point_to_xy(point: Matrix | Sequence[Expr]) -> Matrix:
+def point_to_xy(point: MatrixBase | Sequence[Expr]) -> Matrix:
     """Computes the Euclidean coordinates of a projective point."""
     if len(point) not in (2, 3):
         raise ValueError("The point must be a 2D or 3D vector, list or tuple.")
@@ -46,7 +46,7 @@ def point_to_xy(point: Matrix | Sequence[Expr]) -> Matrix:
     return Matrix([x / z, y / z])
 
 
-def point_to_vec3(point: Matrix | Sequence[Expr]) -> Matrix:
+def point_to_vec3(point: MatrixBase | Sequence[Expr]) -> Matrix:
     """Computes the homogeneous coordinates of a projective point."""
     if len(point) not in (2, 3):
         raise ValueError("The point must be a 2D or 3D vector, list or tuple.")
@@ -74,8 +74,8 @@ def centroid(*points: Sequence[Expr]) -> Matrix:
 
 
 def perpendicular_foot(
-    point: Matrix | Sequence[Expr],
-    line: Matrix,
+    point: MatrixBase | Sequence[Expr],
+    line: MatrixBase,
 ) -> Matrix:
     """Computes the foot of the perpendicular through a point to a line.
 

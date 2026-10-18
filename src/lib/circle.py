@@ -1,16 +1,16 @@
 from collections.abc import Sequence
 
-from sympy import Expr, ImmutableMatrix, Matrix, sqrt
+from sympy import Expr, ImmutableMatrix, Matrix, MatrixBase, sqrt
 
 from lib.matrix import conic_matrix
 from lib.point import ORIGIN, point_to_vec3, point_to_xy
 
 
 def circle(
-    center: Matrix | Sequence[Expr],
+    center: MatrixBase | Sequence[Expr],
     *,
     r: Expr | None = None,
-    point: Matrix | Sequence[Expr] | None = None,
+    point: MatrixBase | Sequence[Expr] | None = None,
 ) -> Matrix:
     """Creates a circle from its center and either its radius or a point on it.
 
@@ -42,7 +42,7 @@ def circle(
     return conic_matrix(-1, 0, -1, cx, cy, r * r - cx * cx - cy * cy)
 
 
-def circle_radius(conic: Matrix) -> Expr:
+def circle_radius(conic: MatrixBase) -> Expr:
     """Computes the radius of a circular or a finite point conic.
 
     Return value by conic type:
@@ -59,7 +59,7 @@ def circle_radius(conic: Matrix) -> Expr:
     return sqrt(-a * conic.det()) / a**2
 
 
-def director_circle(conic: Matrix) -> Matrix:
+def director_circle(conic: MatrixBase) -> Matrix:
     """Computes the director circle of a conic.
 
     It's also called orthoptic circle or Fermat–Apollonius circle.

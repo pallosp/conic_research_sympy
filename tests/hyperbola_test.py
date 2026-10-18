@@ -1,5 +1,5 @@
 import pytest
-from sympy import I, Matrix, Rational, acos, nan, pi, sqrt, symbols
+from sympy import I, Matrix, MatrixBase, Rational, acos, nan, pi, sqrt, symbols
 from sympy.abc import x, y
 
 from lib.circle import circle
@@ -102,7 +102,7 @@ class TestAsymptoteAngleVsIdealPoints:
             line_pair_conic(X_AXIS, Matrix([1, 1, -1])),
         ],
     )
-    def test_angle_vs_asymptote_conic_consistency(self, conic: Matrix):
+    def test_angle_vs_asymptote_conic_consistency(self, conic: MatrixBase):
         axis_dir = focal_axis_direction(conic)
         rotation = rotate(asymptote_focal_axis_angle(conic))
         center = projective_conic_center(conic)

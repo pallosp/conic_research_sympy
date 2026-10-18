@@ -1,6 +1,17 @@
 from typing import override
 
-from sympy import Expr, Function, I, Integer, Matrix, Piecewise, S, sign, sqrt
+from sympy import (
+    Expr,
+    Function,
+    I,
+    Integer,
+    Matrix,
+    MatrixBase,
+    Piecewise,
+    S,
+    sign,
+    sqrt,
+)
 
 from lib.conic_classes import is_point_conic
 from lib.point import ideal_point
@@ -29,7 +40,7 @@ class ConicNormFactor(Function):
 
     @classmethod
     def eval(  # noqa: PLR0911 (too-many-return-statements)
-        cls, conic: Matrix
+        cls, conic: MatrixBase
     ) -> int | None:
         """Internal implementation. Call `ConicNormFactor(conic)` directly."""
         det = conic.det().factor()
@@ -82,7 +93,7 @@ def _sqrt_complex(z: Expr) -> tuple[Expr, Expr]:
     return (sqrt((abs_z + x) / 2), sgn * sqrt((abs_z - x) / 2))
 
 
-def focal_axis_direction(conic: Matrix) -> Matrix:
+def focal_axis_direction(conic: MatrixBase) -> Matrix:
     """Returns the ideal point representing the direction of a conic's focal axis.
 
     The focal axis is also known as the transverse axis.
@@ -115,7 +126,7 @@ def focal_axis_direction(conic: Matrix) -> Matrix:
     return ideal_point(x, y)
 
 
-def conjugate_axis_direction(conic: Matrix) -> Matrix:
+def conjugate_axis_direction(conic: MatrixBase) -> Matrix:
     """Returns the ideal point representing the direction of a conic's conjugate axis.
 
     It's equivalent to the ideal point on the directrix.

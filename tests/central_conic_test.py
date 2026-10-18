@@ -1,5 +1,17 @@
 import pytest
-from sympy import AppliedPredicate, Expr, I, Matrix, Q, Rational, nan, pi, symbols, zoo
+from sympy import (
+    AppliedPredicate,
+    Expr,
+    I,
+    Matrix,
+    MatrixBase,
+    Q,
+    Rational,
+    nan,
+    pi,
+    symbols,
+    zoo,
+)
 from sympy.abc import x, y
 
 from lib.central_conic import (
@@ -202,7 +214,9 @@ class TestLinearEccentricity:
         fx, r = symbols("fx r", real=True, nonzero=True)
         conic = conic_from_foci_and_radius((-fx, 0), (fx, 0), r)
 
-        def simplified_lin_ecc(conic: Matrix, assumptions: AppliedPredicate) -> Expr:
+        def simplified_lin_ecc(
+            conic: MatrixBase, assumptions: AppliedPredicate
+        ) -> Expr:
             return (
                 linear_eccentricity(conic)
                 .factor(deep=True)

@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Abs, Expr, Matrix, cos, sin, sqrt
+from sympy import Abs, Expr, Matrix, MatrixBase, cos, sin, sqrt
 
 from lib.conic_direction import (
     ConicNormFactor,
@@ -12,8 +12,8 @@ from lib.point import point_to_xy
 
 
 def conic_from_foci_and_radius(
-    focus1: Matrix | Sequence[Expr],
-    focus2: Matrix | Sequence[Expr],
+    focus1: MatrixBase | Sequence[Expr],
+    focus2: MatrixBase | Sequence[Expr],
     primary_radius: Expr,
 ) -> Matrix:
     """Computes the ellipse or hyperbola with the given focus points and primary radius.
@@ -43,10 +43,10 @@ def conic_from_foci_and_radius(
 
 
 def conic_from_center_and_points(
-    center: Matrix | Sequence[Expr],
-    p1: Matrix | Sequence[Expr],
-    p2: Matrix | Sequence[Expr],
-    p3: Matrix | Sequence[Expr],
+    center: MatrixBase | Sequence[Expr],
+    p1: MatrixBase | Sequence[Expr],
+    p2: MatrixBase | Sequence[Expr],
+    p3: MatrixBase | Sequence[Expr],
 ) -> Matrix:
     """Computes the conic section with the given center and perimeter points.
 
@@ -86,7 +86,7 @@ def conic_from_center_and_points(
     return conic_matrix(a, b, c, d, e, f)
 
 
-def conic_center(conic: Matrix) -> Matrix:
+def conic_center(conic: MatrixBase) -> Matrix:
     """Computes the center point of a conic.
 
     Returns the point's coordinates as a 2D column vector.
@@ -98,7 +98,7 @@ def conic_center(conic: Matrix) -> Matrix:
     return Matrix([x / z, y / z])
 
 
-def semi_axis_lengths(conic: Matrix) -> tuple[Expr, Expr]:
+def semi_axis_lengths(conic: MatrixBase) -> tuple[Expr, Expr]:
     """Computes the semi-axis lengths of a conic in no specific order.
 
     To get the semi-focal or semi-transverse axis length (semi-major /
@@ -116,7 +116,7 @@ def semi_axis_lengths(conic: Matrix) -> tuple[Expr, Expr]:
     )
 
 
-def _selected_radius(conic: Matrix, eigenvalue_selector: Expr) -> Matrix:
+def _selected_radius(conic: MatrixBase, eigenvalue_selector: Expr) -> Matrix:
     """Returns the conic radius corresponding to the selected eigenvalue.
 
     `eigenvalue_selector` is an expression evaluating to ±1. When positive, the
@@ -128,7 +128,7 @@ def _selected_radius(conic: Matrix, eigenvalue_selector: Expr) -> Matrix:
     return sqrt(-conic.det() / (eigenvalue * (a * c - b * b)))
 
 
-def primary_radius(conic: Matrix) -> Expr:
+def primary_radius(conic: MatrixBase) -> Expr:
     """Computes the center-vertex distance of a conic.
 
     This corresponds to the semi-major axis length of real ellipses. In case of
@@ -148,7 +148,7 @@ def primary_radius(conic: Matrix) -> Expr:
     return _selected_radius(conic, ConicNormFactor(conic))
 
 
-def secondary_radius(conic: Matrix) -> Expr:
+def secondary_radius(conic: MatrixBase) -> Expr:
     """Computes the semi-conjugate axis length of a conic.
 
     This corresponds to the semi-minor axis length of real ellipses. In case of
@@ -170,7 +170,10 @@ def secondary_radius(conic: Matrix) -> Expr:
 
 
 def radius_in_direction(
-    conic: Matrix, *, direction: Matrix | Sequence[Expr] = None, angle: Expr = None
+    conic: MatrixBase,
+    *,
+    direction: MatrixBase | Sequence[Expr] = None,
+    angle: Expr = None,
 ) -> Expr:
     """Computes the length of the conic radius in the given direction.
 
@@ -205,7 +208,7 @@ def radius_in_direction(
     return sqrt(-det / (disc * (a * cos_x**2 + 2 * b * cos_x * sin_x + c * sin_x**2)))
 
 
-def linear_eccentricity(conic: Matrix) -> Expr:
+def linear_eccentricity(conic: MatrixBase) -> Expr:
     """Computes the linear eccentricity of a conic section.
 
     The linear eccentricity is the distance between the center and a focus
@@ -231,7 +234,7 @@ def linear_eccentricity(conic: Matrix) -> Expr:
     return sqrt(Abs(conic.det()) * eigenvalue_diff) / Abs(a * c - b * b)
 
 
-def center_to_focus_vector(conic: Matrix) -> Matrix:
+def center_to_focus_vector(conic: MatrixBase) -> Matrix:
     """Returns the 2D vector from a conic's center to one of its foci.
 
     The opposite vector points to the other focus.
@@ -249,7 +252,7 @@ def center_to_focus_vector(conic: Matrix) -> Matrix:
     return Matrix([x, y]) * sqrt(Abs(conic.det())) / (a * c - b * b)
 
 
-def central_conic_foci(conic: Matrix) -> tuple[Matrix, Matrix]:
+def central_conic_foci(conic: MatrixBase) -> tuple[Matrix, Matrix]:
     """Computes the focus points of a central conic.
 
     Returns a pair of 2D vectors.
@@ -259,7 +262,7 @@ def central_conic_foci(conic: Matrix) -> tuple[Matrix, Matrix]:
     return (center + cfv, center - cfv)
 
 
-def center_to_vertex_vector(conic: Matrix) -> Matrix:
+def center_to_vertex_vector(conic: MatrixBase) -> Matrix:
     """Vector from the center of a conic to one of its vertices.
 
     The negated vector points to the opposite vertex.
@@ -280,7 +283,7 @@ def center_to_vertex_vector(conic: Matrix) -> Matrix:
     return Matrix([x, y]) * primary_radius(conic) / sqrt(x**2 + y**2)
 
 
-def central_conic_vertices(conic: Matrix) -> tuple[Matrix, Matrix]:
+def central_conic_vertices(conic: MatrixBase) -> tuple[Matrix, Matrix]:
     """Computes the vertices of a central conic.
 
     Returns a pair of 2D column vectors.
@@ -297,7 +300,7 @@ def central_conic_vertices(conic: Matrix) -> tuple[Matrix, Matrix]:
     return (center + cvv, center - cvv)
 
 
-def center_to_covertex_vector(conic: Matrix) -> Matrix:
+def center_to_covertex_vector(conic: MatrixBase) -> Matrix:
     """Vector from the center of a conic to one of its covertices.
 
     The negated vector points to the opposite covertex.
@@ -318,7 +321,7 @@ def center_to_covertex_vector(conic: Matrix) -> Matrix:
     return Matrix([x, y]) * secondary_radius(conic) / sqrt(x**2 + y**2)
 
 
-def shrink_conic_to_zero(conic: Matrix) -> Matrix:
+def shrink_conic_to_zero(conic: MatrixBase) -> MatrixBase:
     """Scales a conic section from its center with a factor of zero.
 
     Turns hyperbolas to line pair conics consisting of their asymptotes, and

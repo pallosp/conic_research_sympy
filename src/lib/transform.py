@@ -1,14 +1,14 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Matrix, cos, sin
+from sympy import Expr, Matrix, MatrixBase, cos, sin
 
 from lib.point import ORIGIN, point_to_vec3, point_to_xy
 
 
 def transform_point(
-    point: Matrix | Sequence[Expr],
-    transformation: Matrix,
-) -> Matrix:
+    point: MatrixBase | Sequence[Expr],
+    transformation: MatrixBase,
+) -> MatrixBase:
     """Applies a projective transformation to a projective point.
 
     Returns a 3D column vector even if the input point is specified with only
@@ -17,28 +17,30 @@ def transform_point(
     return transformation * point_to_vec3(point)
 
 
-def transform_line(line: Matrix, transformation: Matrix) -> Matrix:
+def transform_line(line: MatrixBase, transformation: MatrixBase) -> MatrixBase:
     """Applies a projective transformation to a projective line."""
     return transformation.adjugate().T * line
 
 
-def transform_conic(conic: Matrix, transformation: Matrix) -> Matrix:
+def transform_conic(conic: MatrixBase, transformation: MatrixBase) -> MatrixBase:
     """Applies a projective transformation to a conic."""
     return transformation.adjugate().T * conic * transformation.adjugate()
 
 
-def transform_polar_conic(polar_conic: Matrix, transformation: Matrix) -> Matrix:
+def transform_polar_conic(
+    polar_conic: MatrixBase, transformation: MatrixBase
+) -> MatrixBase:
     """Applies a projective transformation to a conic in polar representation."""
     return transformation * polar_conic
 
 
-def translate(by: Matrix | Sequence[Expr]) -> Matrix:
+def translate(by: MatrixBase | Sequence[Expr]) -> Matrix:
     """Computes the transformation matrix for a 2D translation."""
     dx, dy = by
     return Matrix([[1, 0, dx], [0, 1, dy], [0, 0, 1]])
 
 
-def rotate(angle_radians: Expr, around: Matrix | Sequence[Expr] = ORIGIN) -> Matrix:
+def rotate(angle_radians: Expr, around: MatrixBase | Sequence[Expr] = ORIGIN) -> Matrix:
     """Computes the transformation matrix for a rotation around a point."""
     x0, y0 = point_to_xy(around)
     cos_angle = cos(angle_radians)
@@ -53,7 +55,7 @@ def rotate(angle_radians: Expr, around: Matrix | Sequence[Expr] = ORIGIN) -> Mat
     )
 
 
-def reflect_to_line(axis: Matrix) -> Matrix:
+def reflect_to_line(axis: MatrixBase) -> Matrix:
     """Computes the transformation matrix for a reflection to a line.
 
     Returns a `nan` matrix if `axis` is the ideal line.
@@ -74,7 +76,7 @@ def reflect_to_line(axis: Matrix) -> Matrix:
 def scale_xy(
     scale_x: Expr,
     scale_y: Expr,
-    center: Sequence[Expr] | Matrix = ORIGIN,
+    center: Sequence[Expr] | MatrixBase = ORIGIN,
 ) -> Matrix:
     """Computes the projective transformation matrix for scaling along the x-
     and y-axes.
@@ -89,7 +91,7 @@ def scale_xy(
     )
 
 
-def scale(scale: Expr, center: Sequence[Expr] | Matrix = ORIGIN) -> Matrix:
+def scale(scale: Expr, center: Sequence[Expr] | MatrixBase = ORIGIN) -> Matrix:
     """Computes the projective transformation matrix for a uniform scaling
     transformation.
     """
@@ -97,8 +99,8 @@ def scale(scale: Expr, center: Sequence[Expr] | Matrix = ORIGIN) -> Matrix:
 
 
 def homography_from_samples(
-    source_points: Sequence[Matrix | Sequence[Expr]],
-    target_points: Sequence[Matrix | Sequence[Expr]],
+    source_points: Sequence[MatrixBase | Sequence[Expr]],
+    target_points: Sequence[MatrixBase | Sequence[Expr]],
 ) -> Matrix:
     """Computes the transformation that maps one quadrilateral to another.
 

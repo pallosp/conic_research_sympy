@@ -1,5 +1,5 @@
 import pytest
-from sympy import Abs, I, Matrix, pi, sign, symbols
+from sympy import Abs, I, Matrix, MatrixBase, pi, sign, symbols
 from sympy.abc import x, y
 
 from lib.central_conic import conic_from_foci_and_radius, shrink_conic_to_zero
@@ -204,7 +204,9 @@ class TestAxisDirection:
             (Matrix([1, 2, 3]), Matrix([4, 5, 6])),
         ],
     )
-    def test_line_pair_focal_axis_vs_angle_bisector(self, line1: Matrix, line2: Matrix):
+    def test_line_pair_focal_axis_vs_angle_bisector(
+        self, line1: MatrixBase, line2: MatrixBase
+    ):
         line_pair = line_pair_conic(line1, line2)
         axis_dir = focal_axis_direction(line_pair)
         bisector = angle_bisector(line1, line2)

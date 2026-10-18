@@ -1,11 +1,11 @@
 from collections.abc import Callable
 
-from sympy import Expr, Matrix, simplify
+from sympy import Expr, Matrix, MatrixBase, simplify
 from sympy.core.logic import fuzzy_and
 
 
 def is_homography(
-    transformation: Matrix,
+    transformation: MatrixBase,
     *,
     simplifier: Callable[[Expr], Expr] = simplify,
 ) -> bool | None:
@@ -25,7 +25,7 @@ def is_homography(
 
 
 def is_affine_transform(
-    transformation: Matrix,
+    transformation: MatrixBase,
     *,
     simplifier: Callable[[Expr], Expr] = simplify,
 ) -> bool | None:
@@ -55,7 +55,7 @@ def is_affine_transform(
 
 
 def is_similarity(
-    transformation: Matrix,
+    transformation: MatrixBase,
     *,
     simplifier: Callable[[Expr], Expr] = simplify,
 ) -> bool | None:
@@ -81,7 +81,7 @@ def is_similarity(
 
 
 def is_congruence(
-    transformation: Matrix,
+    transformation: MatrixBase,
     *,
     simplifier: Callable[[Expr], Expr] = simplify,
 ) -> bool | None:
@@ -105,7 +105,7 @@ def is_congruence(
 
 
 def is_involution(
-    transformation: Matrix,
+    transformation: MatrixBase,
     *,
     simplifier: Callable[[Expr], Expr] = simplify,
 ) -> bool | None:

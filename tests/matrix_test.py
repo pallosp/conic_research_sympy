@@ -16,6 +16,7 @@ from lib.matrix import (
     quadratic_form,
     skew_matrix,
 )
+from tests.utils import is_explicit_matrix
 
 
 class TestIsNonZeroMultiple:
@@ -139,7 +140,7 @@ class TestSkewMatrix:
     def test_matrix_expr(self):
         v = MatrixSymbol("v", 3, 1)
         skew = skew_matrix(v)
-        assert skew.is_MatrixExpr
+        assert not is_explicit_matrix(skew)
         assert skew.shape == (3, 3)
         assert skew.as_explicit() == Matrix(
             [[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]],
@@ -177,7 +178,7 @@ class TestPivotColumn:
     def test_undecidable(self):
         x = symbols("x")
         column = pivot_column(Matrix([[x, 0, 0], [0, x, 0]]))
-        assert column.is_MatrixExpr
+        assert not is_explicit_matrix(column)
         assert column.shape == (2, 1)
         assert column.T.shape == (1, 2)
         assert (Matrix([[1, 2]]) * column).shape == (1, 1)
@@ -217,7 +218,7 @@ class TestPivotColumnAndRow:
         matrix = Matrix([[x, 0, 0], [0, x, 0]])
         column, row = pivot_column_and_row(matrix)
         assert column == pivot_column(matrix)
-        assert row.is_MatrixExpr
+        assert not is_explicit_matrix(row)
         assert row.shape == (3, 1)
         assert column.subs(x, 3) == Matrix([3, 0])
         assert row.subs(x, 3) == Matrix([3, 0, 0])
@@ -256,7 +257,7 @@ class TestOuterProductRoot:
         x = symbols("x")
         v = Matrix([x, 0])
         root = outer_product_root(v * v.T)
-        assert root.is_MatrixExpr
+        assert not is_explicit_matrix(root)
         assert root.shape == (2, 1)
         assert str(root).startswith("OuterProductRoot(")
         assert root.subs(x, 3) == Matrix([3, 0])

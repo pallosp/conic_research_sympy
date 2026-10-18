@@ -1,14 +1,14 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Matrix, sqrt
+from sympy import Expr, MatrixBase, sqrt
 
 from lib.line import are_parallel
 from lib.point import point_to_vec3, point_to_xy
 
 
 def point_point_distance(
-    point1: Matrix | Sequence[Expr],
-    point2: Matrix | Sequence[Expr],
+    point1: MatrixBase | Sequence[Expr],
+    point2: MatrixBase | Sequence[Expr],
 ) -> Expr:
     """Computes the signed distance between two points.
 
@@ -21,7 +21,7 @@ def point_point_distance(
     return sqrt((x2 * z1 - x1 * z2) ** 2 + (y2 * z1 - y1 * z2) ** 2) / (z1 * z2)
 
 
-def point_line_distance(point: Matrix | Sequence[Expr], line: Matrix) -> Expr:
+def point_line_distance(point: MatrixBase | Sequence[Expr], line: MatrixBase) -> Expr:
     """Computes the signed distance between a point and a line.
 
     Special cases:
@@ -33,7 +33,7 @@ def point_line_distance(point: Matrix | Sequence[Expr], line: Matrix) -> Expr:
     return (a * x + b * y + c) / sqrt(a * a + b * b)
 
 
-def parallel_line_distance(line1: Matrix, line2: Matrix) -> Expr:
+def parallel_line_distance(line1: MatrixBase, line2: MatrixBase) -> Expr:
     """Computes the signed distance between two parallel lines.
 
     The return value is positive if the two lines have the same direction,

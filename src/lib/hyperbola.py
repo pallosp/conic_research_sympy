@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Expr, ImmutableMatrix, Matrix, acos, sqrt
+from sympy import Expr, ImmutableMatrix, Matrix, MatrixBase, acos, sqrt
 
 from lib.central_conic import conic_from_foci_and_radius, shrink_conic_to_zero
 from lib.conic_direction import ConicNormFactor
@@ -12,9 +12,9 @@ UNIT_HYPERBOLA: ImmutableMatrix = ImmutableMatrix.diag([1, -1, -1])
 
 
 def hyperbola_from_foci_and_point(
-    focus1: Matrix | Sequence[Expr],
-    focus2: Matrix | Sequence[Expr],
-    point: Matrix | Sequence[Expr],
+    focus1: MatrixBase | Sequence[Expr],
+    focus2: MatrixBase | Sequence[Expr],
+    point: MatrixBase | Sequence[Expr],
 ) -> Matrix:
     """Constructs a hyperbola from its focus points and an incident point.
 
@@ -25,7 +25,7 @@ def hyperbola_from_foci_and_point(
     return conic_from_foci_and_radius(focus1, focus2, r)
 
 
-def asymptote_focal_axis_angle(hyperbola: Matrix) -> Expr:
+def asymptote_focal_axis_angle(hyperbola: MatrixBase) -> Expr:
     """Computes the angle between the axis and an asymptote of a hyperbola.
 
     Return values for other conics:
@@ -55,7 +55,7 @@ def asymptote_focal_axis_angle(hyperbola: Matrix) -> Expr:
     return acos(sqrt((s - norm_sign * (a + c)) / (2 * s)))
 
 
-def asymptote_conic(hyperbola: Matrix) -> Matrix:
+def asymptote_conic(hyperbola: MatrixBase) -> MatrixBase:
     """Computes the line pair conic representing the hyperbola's asymptotes.
 
     Turns ellipses into point conics at their center, preserving the axis
