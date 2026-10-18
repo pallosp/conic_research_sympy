@@ -569,8 +569,8 @@ The returned value is:
 ```python
 def radius_in_direction(conic: MatrixBase,
                         *,
-                        direction: MatrixBase | Sequence[Expr] = None,
-                        angle: Expr = None) -> Expr
+                        direction: MatrixBase | Sequence[Expr] | None = None,
+                        angle: Expr | None = None) -> Expr
 ```
 
 ([source](../src/lib/central_conic.py#L172))
@@ -899,10 +899,11 @@ Constructs a line through a point perpendicular to a line.
 #### line\_through\_point
 
 ```python
-def line_through_point(point: MatrixBase | Sequence[Expr],
-                       *,
-                       direction: MatrixBase | Sequence[Expr] = None,
-                       normal: MatrixBase | Sequence[Expr] = None) -> Matrix
+def line_through_point(
+        point: MatrixBase | Sequence[Expr],
+        *,
+        direction: MatrixBase | Sequence[Expr] | None = None,
+        normal: MatrixBase | Sequence[Expr] | None = None) -> Matrix
 ```
 
 ([source](../src/lib/line.py#L46))
@@ -923,7 +924,7 @@ The direction can be specified as
 def angle_bisector(line1: MatrixBase, line2: MatrixBase) -> MatrixBase
 ```
 
-([source](../src/lib/line.py#L75))
+([source](../src/lib/line.py#L74))
 
 Constructs the angle bisector of two lines.
 
@@ -949,7 +950,7 @@ def perpendicular_bisector(point1: MatrixBase | Sequence[Expr],
                            point2: MatrixBase | Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/line.py#L96))
+([source](../src/lib/line.py#L95))
 
 Constructs the perpendicular bisector of two points.
 
@@ -960,10 +961,10 @@ Constructs the perpendicular bisector of two points.
 ```python
 def line_normal(line: MatrixBase,
                 *,
-                toward: MatrixBase | Sequence[Expr] = None) -> Matrix
+                toward: MatrixBase | Sequence[Expr] | None = None) -> Matrix
 ```
 
-([source](../src/lib/line.py#L106))
+([source](../src/lib/line.py#L105))
 
 Returns the normal vector of a line, represented as an ideal point.
 
@@ -984,7 +985,7 @@ Returns `[0, 0, 0]ᵀ` if the `toward` point lies on the line.
 def are_parallel(line1: MatrixBase, line2: MatrixBase) -> bool | None
 ```
 
-([source](../src/lib/line.py#L128))
+([source](../src/lib/line.py#L127))
 
 Tells whether line1 and line2 are parallel.
 
@@ -999,7 +1000,7 @@ Considers the ideal line parallel to everything.
 def are_perpendicular(line1: MatrixBase, line2: MatrixBase) -> bool | None
 ```
 
-([source](../src/lib/line.py#L139))
+([source](../src/lib/line.py#L138))
 
 Tells whether line1 and line2 are perpendicular.
 
@@ -2786,8 +2787,8 @@ def ellipse(center: MatrixBase | Sequence[Expr],
             r1: Expr,
             r2: Expr,
             *,
-            r1_angle: Expr = None,
-            r1_direction: Expr = None) -> Matrix
+            r1_angle: Expr | None = None,
+            r1_direction: MatrixBase | Sequence[Expr] | None = None) -> Matrix
 ```
 
 ([source](../src/lib/ellipse.py#L11))

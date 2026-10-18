@@ -26,10 +26,10 @@ def circle(
     *Formula*:
     [research/construction/circle.py](../src/research/construction/circle.py)
     """
-    if (r is None) == (point is None):
-        raise ValueError("Exactly one of r and point must be specified.")
     cx, cy = point_to_xy(center)
-    if r is None:
+    if r is not None and point is None:
+        return conic_matrix(-1, 0, -1, cx, cy, r * r - cx * cx - cy * cy)
+    if point is not None and r is None:
         x, y, z = point_to_vec3(point)
         return conic_matrix(
             -(z**2),
@@ -39,7 +39,7 @@ def circle(
             cy * z**2,
             x**2 + y**2 - 2 * z * (cx * x + cy * y),
         )
-    return conic_matrix(-1, 0, -1, cx, cy, r * r - cx * cx - cy * cy)
+    raise ValueError("Exactly one of r and point must be specified.")
 
 
 def circle_radius(conic: MatrixBase) -> Expr:

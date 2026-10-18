@@ -46,8 +46,8 @@ def perpendicular_line(
 def line_through_point(
     point: MatrixBase | Sequence[Expr],
     *,
-    direction: MatrixBase | Sequence[Expr] = None,
-    normal: MatrixBase | Sequence[Expr] = None,
+    direction: MatrixBase | Sequence[Expr] | None = None,
+    normal: MatrixBase | Sequence[Expr] | None = None,
 ) -> Matrix:
     """Constructs a line through a point with the given direction.
 
@@ -57,19 +57,18 @@ def line_through_point(
      - a 2D normal vector: `normal=(nx, ny)`
      - an ideal point on the perpendicular line: `normal=(nx, ny, 0)`
     """
-    # Exactly one of direction or normal must be specified
-    if (direction is None) == (normal is None):
-        raise ValueError("Specify exactly one of direction or normal.")
     x, y = point_to_xy(point)
-    if direction is not None:
+    if direction is not None and normal is None:
         dx, dy, *rest = direction
         if rest not in ([], [0]):
             raise ValueError("Invalid direction vector.")
         return Matrix([-dy, dx, dy * x - dx * y])
-    nx, ny, *rest = normal
-    if rest not in ([], [0]):
-        raise ValueError("Invalid normal vector.")
-    return Matrix([nx, ny, -nx * x - ny * y])
+    if normal is not None and direction is None:
+        nx, ny, *rest = normal
+        if rest not in ([], [0]):
+            raise ValueError("Invalid normal vector.")
+        return Matrix([nx, ny, -nx * x - ny * y])
+    raise ValueError("Specify exactly one of direction or normal.")
 
 
 def angle_bisector(line1: MatrixBase, line2: MatrixBase) -> MatrixBase:
@@ -106,7 +105,7 @@ def perpendicular_bisector(
 def line_normal(
     line: MatrixBase,
     *,
-    toward: MatrixBase | Sequence[Expr] = None,
+    toward: MatrixBase | Sequence[Expr] | None = None,
 ) -> Matrix:
     """Returns the normal vector of a line, represented as an ideal point.
 

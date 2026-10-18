@@ -13,8 +13,8 @@ def ellipse(
     r1: Expr,
     r2: Expr,
     *,
-    r1_angle: Expr = None,
-    r1_direction: Expr = None,
+    r1_angle: Expr | None = None,
+    r1_direction: MatrixBase | Sequence[Expr] | None = None,
 ) -> Matrix:
     """Constructs an ellipse from its center, radii, and the either the
     direction vector of the first radius or its angle to horizontal.

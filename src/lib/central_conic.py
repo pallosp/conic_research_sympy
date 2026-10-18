@@ -172,8 +172,8 @@ def secondary_radius(conic: MatrixBase) -> Expr:
 def radius_in_direction(
     conic: MatrixBase,
     *,
-    direction: MatrixBase | Sequence[Expr] = None,
-    angle: Expr = None,
+    direction: MatrixBase | Sequence[Expr] | None = None,
+    angle: Expr | None = None,
 ) -> Expr:
     """Computes the length of the conic radius in the given direction.
 
