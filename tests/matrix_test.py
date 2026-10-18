@@ -1,7 +1,6 @@
 from sympy import I, Matrix, sqrt, symbols
 
 from lib.matrix import (
-    OuterProductRoot,
     conic_matrix,
     is_definite_matrix,
     is_full_rank,
@@ -10,6 +9,7 @@ from lib.matrix import (
     is_real_matrix,
     max_eigenvalue,
     min_eigenvalue,
+    outer_product_root,
     pivot_column,
     pivot_column_and_row,
     quadratic_form,
@@ -202,31 +202,33 @@ class TestPivotColumnAndRow:
 class TestOuterProductRoot:
     def test_real_vector(self):
         v = Matrix([2, 0, -3])
-        root = OuterProductRoot(v * v.T)
+        root = outer_product_root(v * v.T)
         assert root * root.T == v * v.T
 
     def test_first_diagonal_element_zero(self):
         v = Matrix([0, 1, 2])
-        assert OuterProductRoot(v * v.T) == v
+        assert outer_product_root(v * v.T) == v
 
     def test_imaginary_vector(self):
         v = Matrix([I, 2 * I, 0])
-        root = OuterProductRoot(v * v.T)
+        root = outer_product_root(v * v.T)
         assert root * root.T == v * v.T
 
     def test_symbolic_vector(self):
         x, y = symbols("x y", positive=True)
         v = Matrix([x, y])
-        assert OuterProductRoot(v * v.T) == v
+        assert outer_product_root(v * v.T) == v
 
     def test_zero_matrix(self):
-        assert OuterProductRoot(Matrix.zeros(3, 3)) == Matrix.zeros(3, 1)
+        assert outer_product_root(Matrix.zeros(3, 3)) == Matrix.zeros(3, 1)
 
     def test_undecidable(self):
         x = symbols("x")
         v = Matrix([x, 0])
-        root = OuterProductRoot(v * v.T)
-        assert isinstance(root, OuterProductRoot)
+        root = outer_product_root(v * v.T)
+        assert root.is_MatrixExpr
+        assert root.shape == (2, 1)
+        assert str(root).startswith("OuterProductRoot(")
         assert root.subs(x, 3) == Matrix([3, 0])
 
 

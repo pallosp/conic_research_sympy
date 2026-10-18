@@ -3,8 +3,8 @@ from collections.abc import Sequence
 from sympy import Expr, Function, ImmutableMatrix, Matrix, MatrixExpr
 
 from lib.matrix import (
-    OuterProductRoot,
     conic_matrix,
+    outer_product_root,
     pivot_column,
     pivot_column_and_row,
     skew_matrix,
@@ -90,17 +90,17 @@ class SplitToLines(Function):
         #
         # q is a multiple of the lines' intersection point. It's unknown, but
         # it can be computed from C alone, because adj(C) = -q·qᵀ.
-        # OuterProductRoot recovers q from q·qᵀ up to sign. The sign doesn't
+        # outer_product_root recovers q from q·qᵀ up to sign. The sign doesn't
         # matter: C - skew(q) = m·lᵀ, which yields the same lines in swapped
         # order.
         #
         # Special cases:
         #  - Point conics: l and m are complex conjugates, so q is imaginary.
         #  - Double lines: l = m, so q = 0 and C = l·lᵀ is split directly.
-        #  - Symbolic conics: SplitToLines stays unevaluated if OuterProductRoot
+        #  - Symbolic conics: SplitToLines stays unevaluated if outer_product_root
         #    or pivot_column_and_row can't decide which element is non-zero.
-        q = OuterProductRoot(-conic.adjugate())
-        if isinstance(q, OuterProductRoot):
+        q = outer_product_root(-conic.adjugate())
+        if q.is_MatrixExpr:
             return None
         lines = pivot_column_and_row(conic + skew_matrix(q))
         if lines[0].is_MatrixExpr:

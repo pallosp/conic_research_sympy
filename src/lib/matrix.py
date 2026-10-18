@@ -1,7 +1,6 @@
 from collections.abc import Callable, Sequence
 
 from sympy import (
-    Basic,
     Expr,
     Function,
     ImmutableMatrix,
@@ -16,7 +15,6 @@ from sympy.core.logic import fuzzy_and, fuzzy_not
 from sympy.matrices.expressions.matexpr import MatrixElement
 from sympy.printing.pretty.pretty import PrettyPrinter
 from sympy.printing.pretty.stringpict import prettyForm
-from sympy.printing.str import StrPrinter
 
 
 def is_nonzero_multiple(
@@ -159,70 +157,68 @@ def _pivot_index(matrix: Matrix) -> int | None:
     return 0 if all_zero else None
 
 
-class _PivotVector(MatrixExpr):
-    """Common base of the matrix expressions that select a vector through the
-    pivot of a matrix, i.e. its first provably non-zero element.
+class _MatrixFunction(MatrixExpr):
+    """Common base of matrix valued functions of a matrix, which stay
+    unevaluated until the result can be determined.
 
-    Subclasses implement `_select` and `shape`.
+    Subclasses implement `_try_evaluate` and `shape`.
     """
 
-    _display_name: str
-    _select: Callable[[Matrix, int], Matrix]
+    _try_evaluate: Callable[[Matrix], Matrix | None]
 
     def __new__(
         cls,
         matrix: Matrix,
         *,
         evaluate: bool = True,
-    ) -> "Matrix | _PivotVector":
+    ) -> "Matrix | _MatrixFunction":
         if evaluate:
-            index = _pivot_index(matrix)
-            if index is not None:
-                return cls._select(matrix, index)
+            result = cls._try_evaluate(matrix)
+            if result is not None:
+                return result
         return super().__new__(cls, ImmutableMatrix(matrix))
 
     def _entry(self, i: int, j: int, **_kwargs: object) -> MatrixElement:
         return MatrixElement(self, i, j)
 
-    def _display_form(self) -> Basic:
-        return Function(self._display_name)(self.args[0])
-
     def _pretty(self, printer: PrettyPrinter) -> prettyForm:
+        # Without this, the pretty printer would fall back to str().
         return printer._print(  # noqa: SLF001 (private-member-access)
-            self._display_form()
-        )
-
-    def _sympystr(self, printer: StrPrinter) -> str:
-        return printer._print(  # noqa: SLF001 (private-member-access)
-            self._display_form()
+            Function(type(self).__name__)(*self.args)
         )
 
 
-class _PivotColumn(_PivotVector):
-    _display_name = "pivot_column"
+class PivotColumn(_MatrixFunction):
+    """Unevaluated form of [pivot_column](#matrix.pivot_column)."""
 
     @staticmethod
-    def _select(matrix: Matrix, index: int) -> Matrix:
-        return matrix.col(index % matrix.cols)
+    def _try_evaluate(matrix: Matrix) -> Matrix | None:
+        index = _pivot_index(matrix)
+        return None if index is None else matrix.col(index % matrix.cols)
 
     @property
     def shape(self) -> tuple[Integer, Integer]:
+        """The shape of the result: `(matrix.rows, 1)`."""
         return (Integer(self.args[0].rows), S.One)
 
 
-class _TransposedPivotRow(_PivotVector):
-    _display_name = "transposed_pivot_row"
+class TransposedPivotRow(_MatrixFunction):
+    """Unevaluated form of the transposed row returned by
+    [pivot_column_and_row](#matrix.pivot_column_and_row).
+    """
 
     @staticmethod
-    def _select(matrix: Matrix, index: int) -> Matrix:
-        return matrix.row(index // matrix.cols).T
+    def _try_evaluate(matrix: Matrix) -> Matrix | None:
+        index = _pivot_index(matrix)
+        return None if index is None else matrix.row(index // matrix.cols).T
 
     @property
     def shape(self) -> tuple[Integer, Integer]:
+        """The shape of the result: `(matrix.cols, 1)`."""
         return (Integer(self.args[0].cols), S.One)
 
 
-def pivot_column(matrix: Matrix) -> Matrix | MatrixExpr:
+def pivot_column(matrix: Matrix) -> Matrix | PivotColumn:
     """Returns the column of a matrix for its first provably nonzero element.
 
     The result is a zero vector in case of a zero matrix.
@@ -233,12 +229,12 @@ def pivot_column(matrix: Matrix) -> Matrix | MatrixExpr:
     [pivot_column_and_row](#matrix.pivot_column_and_row) also returns the row
     of the same pivot.
     """
-    return _PivotColumn(matrix)
+    return PivotColumn(matrix)
 
 
 def pivot_column_and_row(
     matrix: Matrix,
-) -> tuple[Matrix | MatrixExpr, Matrix | MatrixExpr]:
+) -> tuple[Matrix | PivotColumn, Matrix | TransposedPivotRow]:
     """Returns the column and the transposed row of a matrix for its first
     provably nonzero element, i.e. two column vectors.
 
@@ -251,27 +247,16 @@ def pivot_column_and_row(
     if index is not None:
         return (matrix.col(index % matrix.cols), matrix.row(index // matrix.cols).T)
     return (
-        _PivotColumn(matrix, evaluate=False),
-        _TransposedPivotRow(matrix, evaluate=False),
+        PivotColumn(matrix, evaluate=False),
+        TransposedPivotRow(matrix, evaluate=False),
     )
 
 
-class OuterProductRoot(Function):
-    """Finds a vector `v` such that `v·vᵀ` equals the given symmetric matrix.
+class OuterProductRoot(_MatrixFunction):
+    """Unevaluated form of [outer_product_root](#matrix.outer_product_root)."""
 
-    Such a vector exists iff the matrix has rank ≤ 1. It is unique up to sign,
-    and may be complex. The result is unspecified for other matrices.
-
-    Returns an unevaluated `sympy.Function` if none of the diagonal elements can
-    be proven to be non-zero, or a zero vector in case of a zero matrix.
-
-    *Formula*: `M.col(i) / √Mᵢᵢ` for any `i` with `Mᵢᵢ ≠ 0`, since
-    `(v·vᵀ).col(i) = v·vᵢ` and `(v·vᵀ)ᵢᵢ = vᵢ²`.
-    """
-
-    @classmethod
-    def eval(cls, matrix: Matrix) -> Matrix | None:
-        """Internal implementation. Call `OuterProductRoot(matrix)` directly."""
+    @staticmethod
+    def _try_evaluate(matrix: Matrix) -> Matrix | None:
         for i in range(matrix.rows):
             diagonal_element = matrix[i, i]
             if diagonal_element.is_nonzero:
@@ -279,6 +264,27 @@ class OuterProductRoot(Function):
         if matrix.is_zero_matrix:
             return matrix.col(0)
         return None
+
+    @property
+    def shape(self) -> tuple[Integer, Integer]:
+        """The shape of the result: `(matrix.rows, 1)`."""
+        return (Integer(self.args[0].rows), S.One)
+
+
+def outer_product_root(matrix: Matrix) -> Matrix | OuterProductRoot:
+    """Finds a vector `v` such that `v·vᵀ` equals the given symmetric matrix.
+
+    Such a vector exists iff the matrix has rank ≤ 1. It is unique up to sign,
+    and may be complex. The result is unspecified for other matrices.
+
+    Returns a zero vector in case of a zero matrix, or an unevaluated column
+    vector shaped `MatrixExpr` if none of the diagonal elements can be proven
+    to be non-zero.
+
+    *Formula*: `M.col(i) / √Mᵢᵢ` for any `i` with `Mᵢᵢ ≠ 0`, since
+    `(v·vᵀ).col(i) = v·vᵢ` and `(v·vᵀ)ᵢᵢ = vᵢ²`.
+    """
+    return OuterProductRoot(matrix)
 
 
 def is_real_matrix(matrix: Matrix) -> bool | None:
