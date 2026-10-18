@@ -43,6 +43,7 @@
   * [PointVector](#type_aliases.PointVector)
   * [Line](#type_aliases.Line)
   * [Conic](#type_aliases.Conic)
+  * [PolarConic](#type_aliases.PolarConic)
   * [Transformation](#type_aliases.Transformation)
 * [line](#line)
   * [horizontal\_line](#line.horizontal_line)
@@ -878,6 +879,13 @@ A projective line `ax + by + c = 0`, represented as the 3D column vector
 
 A conic section `ax² + 2bxy + cy² + 2dx + 2ey + f = 0`, represented as the
 3x3 symmetric matrix `[[a, b, d], [b, c, e], [d, e, f]]`.
+
+<a id="type_aliases.PolarConic"></a>
+
+#### PolarConic
+
+A conic in polar parametric form, represented as a 3x3 matrix `M` such that
+`M * (cos θ, sin θ, 1)ᵀ` traces the homogeneous coordinates of its points.
 
 <a id="type_aliases.Transformation"></a>
 
@@ -1988,7 +1996,7 @@ def transform_point(point: Point,
                     transformation: Transformation) -> PointVector
 ```
 
-([source](../src/lib/transform.py#L17))
+([source](../src/lib/transform.py#L18))
 
 Applies a projective transformation to a projective point.
 
@@ -2003,7 +2011,7 @@ two coordinates.
 def transform_line(line: Line, transformation: Transformation) -> Line
 ```
 
-([source](../src/lib/transform.py#L29))
+([source](../src/lib/transform.py#L30))
 
 Applies a projective transformation to a projective line.
 
@@ -2015,7 +2023,7 @@ Applies a projective transformation to a projective line.
 def transform_conic(conic: Conic, transformation: Transformation) -> Conic
 ```
 
-([source](../src/lib/transform.py#L34))
+([source](../src/lib/transform.py#L35))
 
 Applies a projective transformation to a conic.
 
@@ -2024,11 +2032,11 @@ Applies a projective transformation to a conic.
 #### transform\_polar\_conic
 
 ```python
-def transform_polar_conic(polar_conic: MatrixBase,
-                          transformation: Transformation) -> MatrixBase
+def transform_polar_conic(polar_conic: PolarConic,
+                          transformation: Transformation) -> PolarConic
 ```
 
-([source](../src/lib/transform.py#L39))
+([source](../src/lib/transform.py#L40))
 
 Applies a projective transformation to a conic in polar representation.
 
@@ -2040,7 +2048,7 @@ Applies a projective transformation to a conic in polar representation.
 def translate(by: MatrixBase | Sequence[Scalar]) -> Transformation
 ```
 
-([source](../src/lib/transform.py#L46))
+([source](../src/lib/transform.py#L47))
 
 Computes the transformation matrix for a 2D translation.
 
@@ -2053,7 +2061,7 @@ def rotate(angle_radians: Scalar,
            around: FinitePoint = ORIGIN) -> Transformation
 ```
 
-([source](../src/lib/transform.py#L52))
+([source](../src/lib/transform.py#L53))
 
 Computes the transformation matrix for a rotation around a point.
 
@@ -2065,7 +2073,7 @@ Computes the transformation matrix for a rotation around a point.
 def reflect_to_line(axis: Line) -> Transformation
 ```
 
-([source](../src/lib/transform.py#L67))
+([source](../src/lib/transform.py#L68))
 
 Computes the transformation matrix for a reflection to a line.
 
@@ -2084,7 +2092,7 @@ def scale_xy(scale_x: Scalar,
              center: FinitePoint = ORIGIN) -> Transformation
 ```
 
-([source](../src/lib/transform.py#L85))
+([source](../src/lib/transform.py#L86))
 
 Computes the projective transformation matrix for scaling along the x-
 and y-axes.
@@ -2097,7 +2105,7 @@ and y-axes.
 def scale(scale: Scalar, center: FinitePoint = ORIGIN) -> Transformation
 ```
 
-([source](../src/lib/transform.py#L103))
+([source](../src/lib/transform.py#L104))
 
 Computes the projective transformation matrix for a uniform scaling
 transformation.
@@ -2111,7 +2119,7 @@ def homography_from_samples(source_points: Sequence[Point],
                             target_points: Sequence[Point]) -> Transformation
 ```
 
-([source](../src/lib/transform.py#L110))
+([source](../src/lib/transform.py#L111))
 
 Computes the transformation that maps one quadrilateral to another.
 
@@ -2373,7 +2381,7 @@ The circle at the origin with radius 1, in polar matrix form.
 class PolarOrigin(Enum)
 ```
 
-([source](../src/lib/polar_conic.py#L40))
+([source](../src/lib/polar_conic.py#L39))
 
 Specifies which point of a conic in polar form corresponds to angle 0.
 
@@ -2412,10 +2420,10 @@ An endpoint of the vertical diameter.
 #### point\_at\_angle
 
 ```python
-def point_at_angle(polar_conic: MatrixBase, theta: Scalar) -> PointVector
+def point_at_angle(polar_conic: PolarConic, theta: Scalar) -> PointVector
 ```
 
-([source](../src/lib/polar_conic.py#L59))
+([source](../src/lib/polar_conic.py#L58))
 
 Computes the coordinates of the projective point on a polar conic
 corresponding to a certain angle.
@@ -2425,10 +2433,10 @@ corresponding to a certain angle.
 #### angle\_at\_point
 
 ```python
-def angle_at_point(polar_conic: MatrixBase, point: Point) -> Expr
+def angle_at_point(polar_conic: PolarConic, point: Point) -> Expr
 ```
 
-([source](../src/lib/polar_conic.py#L66))
+([source](../src/lib/polar_conic.py#L65))
 
 Computes the polar angle corresponding to a point on a polar conic.
 
@@ -2439,10 +2447,10 @@ The result is unspecified if the point is not on the conic.
 #### tangent\_at\_angle
 
 ```python
-def tangent_at_angle(polar_conic: MatrixBase, angle_radians: Scalar) -> Line
+def tangent_at_angle(polar_conic: PolarConic, angle_radians: Scalar) -> Line
 ```
 
-([source](../src/lib/polar_conic.py#L76))
+([source](../src/lib/polar_conic.py#L75))
 
 Computes the tangent line to a polar conic at the given angle.
 
@@ -2454,11 +2462,11 @@ Computes the tangent line to a polar conic at the given angle.
 #### curvature\_sign\_at\_angle
 
 ```python
-def curvature_sign_at_angle(polar_conic: MatrixBase,
+def curvature_sign_at_angle(polar_conic: PolarConic,
                             angle_radians: Scalar) -> Expr
 ```
 
-([source](../src/lib/polar_conic.py#L86))
+([source](../src/lib/polar_conic.py#L85))
 
 Tells which direction a polar conic turns at an angle.
 
@@ -2474,10 +2482,10 @@ Tells which direction a polar conic turns at an angle.
 #### conic\_from\_polar\_matrix
 
 ```python
-def conic_from_polar_matrix(polar_conic: MatrixBase) -> Conic
+def conic_from_polar_matrix(polar_conic: PolarConic) -> Conic
 ```
 
-([source](../src/lib/polar_conic.py#L101))
+([source](../src/lib/polar_conic.py#L100))
 
 Transforms a conic from polar to quadratic form.
 
@@ -2489,12 +2497,12 @@ transformation on the unit circle.
 #### ellipse\_to\_polar\_matrix
 
 ```python
-def ellipse_to_polar_matrix(ellipse: Conic,
-                            start: PolarOrigin = PolarOrigin.HORIZONTAL
-                            ) -> Matrix
+def ellipse_to_polar_matrix(
+        ellipse: Conic,
+        start: PolarOrigin = PolarOrigin.HORIZONTAL) -> PolarConic
 ```
 
-([source](../src/lib/polar_conic.py#L111))
+([source](../src/lib/polar_conic.py#L110))
 
 Converts an ellipse to a polar conic matrix representation.
 
@@ -2514,12 +2522,12 @@ The resulting polar form has the following properties:
 #### hyperbola\_to\_polar\_matrix
 
 ```python
-def hyperbola_to_polar_matrix(hyperbola: Conic,
-                              start: PolarOrigin = PolarOrigin.VERTEX
-                              ) -> Matrix
+def hyperbola_to_polar_matrix(
+        hyperbola: Conic,
+        start: PolarOrigin = PolarOrigin.VERTEX) -> PolarConic
 ```
 
-([source](../src/lib/polar_conic.py#L172))
+([source](../src/lib/polar_conic.py#L171))
 
 Converts a hyperbola to a polar conic matrix representation.
 
@@ -2536,11 +2544,11 @@ The resulting polar form has the following properties:
 #### rotate\_polar\_param
 
 ```python
-def rotate_polar_param(polar_conic: MatrixBase,
-                       start_angle: Scalar) -> MatrixBase
+def rotate_polar_param(polar_conic: PolarConic,
+                       start_angle: Scalar) -> PolarConic
 ```
 
-([source](../src/lib/polar_conic.py#L204))
+([source](../src/lib/polar_conic.py#L203))
 
 Shifts the angle origin of a polar conic's parametrization.
 
@@ -2623,7 +2631,7 @@ result is undecidable.
 
 ```python
 def polar_conic_contains_point(
-        polar_conic: MatrixBase,
+        polar_conic: PolarConic,
         point: Point,
         *,
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None

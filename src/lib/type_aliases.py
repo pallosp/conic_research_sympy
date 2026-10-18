@@ -36,6 +36,10 @@ Line: TypeAlias = MatrixBase
 #: 3x3 symmetric matrix `[[a, b, d], [b, c, e], [d, e, f]]`.
 Conic: TypeAlias = MatrixBase
 
+#: A conic in polar parametric form, represented as a 3x3 matrix `M` such that
+#: `M * (cos θ, sin θ, 1)ᵀ` traces the homogeneous coordinates of its points.
+PolarConic: TypeAlias = MatrixBase
+
 #: A projective transformation of the plane, represented as a 3x3 matrix that
 #: maps the homogeneous coordinates of points.
 Transformation: TypeAlias = MatrixBase

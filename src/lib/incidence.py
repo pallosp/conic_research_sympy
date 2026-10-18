@@ -6,7 +6,7 @@ from sympy.core.logic import fuzzy_not
 
 from lib.matrix import is_full_rank, quadratic_form, skew_matrix
 from lib.point import point_to_vec3
-from lib.type_aliases import Conic, Line, Point
+from lib.type_aliases import Conic, Line, Point, PolarConic
 
 
 def line_contains_point(
@@ -59,7 +59,7 @@ def conic_contains_line(
 
 
 def polar_conic_contains_point(
-    polar_conic: MatrixBase,
+    polar_conic: PolarConic,
     point: Point,
     *,
     simplifier: Callable[[Expr], Expr] = expand,

@@ -9,6 +9,7 @@ from lib.type_aliases import (
     Line,
     Point,
     PointVector,
+    PolarConic,
     Scalar,
     Transformation,
 )
@@ -37,8 +38,8 @@ def transform_conic(conic: Conic, transformation: Transformation) -> Conic:
 
 
 def transform_polar_conic(
-    polar_conic: MatrixBase, transformation: Transformation
-) -> MatrixBase:
+    polar_conic: PolarConic, transformation: Transformation
+) -> PolarConic:
     """Applies a projective transformation to a conic in polar representation."""
     return transformation * polar_conic
 
