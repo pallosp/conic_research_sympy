@@ -1,4 +1,14 @@
 repos:
+  - repo: local
+    hooks:
+      - id: check_staged
+        name: Ensure something is staged
+        entry: bash -c 'git diff --cached --quiet && { echo "Nothing is staged."; exit 1; } || exit 0'
+        language: system
+        pass_filenames: false
+        always_run: true
+        fail_fast: true
+
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.16.1
     hooks:
