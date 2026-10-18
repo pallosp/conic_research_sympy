@@ -60,6 +60,12 @@ ruff check
 ruff check --fix
 ```
 
+Running the type checker:
+
+```sh
+pyright
+```
+
 Running all pre-commit checks for the staged files:
 
 ```sh

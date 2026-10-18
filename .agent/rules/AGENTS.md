@@ -10,8 +10,8 @@ A symbolic 2D projective and Euclidean geometry toolkit built on **SymPy**.
 
 - **Language**: Python 3.12+ (uses type unions, `@override`)
 - **Core Lib**: `sympy`
-- **Tooling**: `poetry`, `pre-commit`, `ruff` (strict: `ALL` rules), `pytest`,
-  `pydoc-markdown`
+- **Tooling**: `poetry`, `pre-commit`, `ruff` (strict: `ALL` rules), `pyright`,
+  `pytest`, `pydoc-markdown`
 
 ## 📂 Project structure
 
@@ -44,6 +44,7 @@ A symbolic 2D projective and Euclidean geometry toolkit built on **SymPy**.
 
 - **Lint**: `poetry run ruff check --fix`
 - **Format**: `poetry run ruff format`
+- **Type check**: `poetry run pyright`
 - **Test**: `poetry run pytest`
 - **Regenerate docs**: `poetry run pydoc-markdown`
 - **Pre-commit**: `poetry run pre-commit`
