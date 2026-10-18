@@ -3,6 +3,7 @@ from typing import override
 from sympy import Expr, Function, I, Integer, Matrix, Piecewise, S, sign, sqrt
 
 from lib.conic_classes import is_point_conic
+from lib.point import ideal_point
 
 
 class ConicNormFactor(Function):
@@ -109,7 +110,7 @@ def focal_axis_direction(conic: Matrix) -> Matrix:
     a, b, c = conic[0], conic[3], conic[4]
     norm_sign = ConicNormFactor(conic)
     x, y = _sqrt_complex(norm_sign * (a - c + 2 * I * b))
-    return Matrix([x, y, 0])
+    return ideal_point(x, y)
 
 
 def conjugate_axis_direction(conic: Matrix) -> Matrix:
@@ -133,4 +134,4 @@ def conjugate_axis_direction(conic: Matrix) -> Matrix:
     a, b, c = conic[0], conic[3], conic[4]
     norm_sign = ConicNormFactor(conic)
     x, y = _sqrt_complex(norm_sign * (a - c + 2 * I * b))
-    return Matrix([-y, x, 0])
+    return ideal_point(-y, x)

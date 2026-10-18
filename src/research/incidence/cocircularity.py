@@ -4,10 +4,10 @@ import itertools
 import time
 from collections.abc import Callable, Sequence
 
-from sympy import Determinant, Expr, I, Matrix, S, factor, sqrt, symbols
+from sympy import Determinant, Expr, Matrix, S, factor, sqrt, symbols
 
 from lib.incidence import are_on_same_conic
-from lib.point import point_to_xy
+from lib.point import CIRCULAR_POINT_I, CIRCULAR_POINT_J, point_to_xy
 from research.sympy_utils import println_indented
 
 
@@ -17,7 +17,6 @@ def richter_gebert_poly(p1: Matrix, p2: Matrix, p3: Matrix, p4: Matrix) -> Expr:
     Uses the formula derived at Jürgen Richter-Gebert, Perspectives on
     Projective Geometry, section 18.2 (Cocircularity).
     """
-    i, j = Matrix([-I, 1, 0]), Matrix([I, 1, 0])
     poly = None
 
     def save_poly(p: Expr) -> Expr:
@@ -25,7 +24,8 @@ def richter_gebert_poly(p1: Matrix, p2: Matrix, p3: Matrix, p4: Matrix) -> Expr:
         poly = p
         return p
 
-    are_on_same_conic([p1, p2, p3, p4, i, j], simplifier=save_poly)
+    circular_points = [CIRCULAR_POINT_I, CIRCULAR_POINT_J]
+    are_on_same_conic([p1, p2, p3, p4, *circular_points], simplifier=save_poly)
     return poly
 
 

@@ -20,7 +20,7 @@ from lib.line import (
     vertical_line,
 )
 from lib.matrix import is_nonzero_multiple
-from lib.point import ORIGIN, ZERO_POINT, centroid, ideal_point_on_line
+from lib.point import ORIGIN, ZERO_POINT, centroid, ideal_point, ideal_point_on_line
 
 
 class TestPerpendicularLine:
@@ -112,13 +112,13 @@ class TestPerpendicularBisector:
 class TestLineNormal:
     def test_numeric(self):
         line = Matrix([1, 2, 3])
-        assert line_normal(line) == Matrix([1, 2, 0])
-        assert line_normal(line, toward=(5, 5)) == Matrix([1, 2, 0])
-        assert line_normal(line, toward=(-5, -5)) == Matrix([-1, -2, 0])
+        assert line_normal(line) == ideal_point(1, 2)
+        assert line_normal(line, toward=(5, 5)) == ideal_point(1, 2)
+        assert line_normal(line, toward=(-5, -5)) == ideal_point(-1, -2)
         assert line_normal(line, toward=(-1, -1)) == ZERO_POINT
-        assert line_normal(line, toward=(-5, -5, -1)) == Matrix([-1, -2, 0])
-        assert line_normal(line, toward=(-1, 0)) == Matrix([1, 2, 0])
-        assert line_normal(line, toward=(-1, 0, 0)) == Matrix([-1, -2, 0])
+        assert line_normal(line, toward=(-5, -5, -1)) == ideal_point(-1, -2)
+        assert line_normal(line, toward=(-1, 0)) == ideal_point(1, 2)
+        assert line_normal(line, toward=(-1, 0, 0)) == ideal_point(-1, -2)
 
 
 class TestAreParallel:

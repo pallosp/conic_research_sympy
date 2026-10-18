@@ -34,7 +34,7 @@ def ideal_point_on_line(line: Matrix) -> Matrix:
 
     If the line is the ideal line, returns `[0, 0, 0]ᵀ`.
     """
-    return Matrix([line[1], -line[0], 0])
+    return ideal_point(line[1], -line[0])
 
 
 def point_to_xy(point: Matrix | Sequence[Expr]) -> Matrix:

@@ -26,7 +26,7 @@ from lib.hyperbola import UNIT_HYPERBOLA, hyperbola_from_foci_and_point
 from lib.intersection import line_x_line
 from lib.line import X_AXIS, horizontal_line
 from lib.matrix import is_nonzero_multiple
-from lib.point import ORIGIN, point_to_xy
+from lib.point import ORIGIN, ideal_point, point_to_xy
 from lib.transform import scale_xy, transform_conic
 from tests.utils import are_projective_sets_equal
 
@@ -174,7 +174,7 @@ class TestRadiusInDirection:
     def test_vertical_ellipse(self):
         v_ellipse = ellipse((1, 2), 3, 4)
         assert radius_in_direction(v_ellipse, direction=Matrix([1, 0])) == 3
-        assert radius_in_direction(v_ellipse, direction=Matrix([0, 1, 0])) == 4
+        assert radius_in_direction(v_ellipse, direction=ideal_point(0, 1)) == 4
 
     def test_imaginary_ellipse(self):
         im_ellipse = ellipse((1, 2), 3 * I, 4 * I)

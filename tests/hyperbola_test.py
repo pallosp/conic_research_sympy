@@ -15,7 +15,7 @@ from lib.hyperbola import (
 )
 from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS, horizontal_line, line_through_point
 from lib.matrix import is_nonzero_multiple, quadratic_form
-from lib.point import ORIGIN
+from lib.point import ORIGIN, ideal_point
 from lib.transform import rotate, transform_line, transform_point
 from tests.utils import are_projective_sets_equal
 
@@ -130,7 +130,7 @@ class TestUnitHyperbola:
         assert conic_from_poly(x * x - y * y - 1) == UNIT_HYPERBOLA
 
     def test_ideal_points(self):
-        points = [Matrix([1, 1, 0]), Matrix([1, -1, 0])]
+        points = [ideal_point(1, 1), ideal_point(1, -1)]
         assert are_projective_sets_equal(ideal_points(UNIT_HYPERBOLA), points)
 
     def test_contains_foci(self):

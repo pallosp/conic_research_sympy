@@ -260,8 +260,8 @@ class TestIdealPoints:
         cos_a = dx / sqrt(dx**2 + dy**2).simplify()
         sin_a = dy / sqrt(dx**2 + dy**2).simplify()
 
-        ip1 = Matrix([r1 * cos_a - I * r2 * sin_a, r1 * sin_a + I * r2 * cos_a, 0])
-        ip2 = Matrix([r1 * cos_a + I * r2 * sin_a, r1 * sin_a - I * r2 * cos_a, 0])
+        ip1 = ideal_point(r1 * cos_a - I * r2 * sin_a, r1 * sin_a + I * r2 * cos_a)
+        ip2 = ideal_point(r1 * cos_a + I * r2 * sin_a, r1 * sin_a - I * r2 * cos_a)
 
         assert are_projective_sets_equal(ideal_points(hyperbola), [ip1, ip2])
 

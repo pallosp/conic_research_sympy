@@ -1,7 +1,7 @@
 from sympy import Expr, Matrix, sqrt
 
 from lib.conic_classes import is_parabola
-from lib.point import point_to_xy
+from lib.point import ideal_point, point_to_xy
 
 
 def _parabola_directrix_from_adjugate(parabola_adjugate: Matrix) -> Matrix:
@@ -88,7 +88,7 @@ def parabola_direction(parabola: Matrix) -> Matrix:
     if is_parabola(parabola) is False:
         raise ValueError("Not a parabola")
     x, y, _ = parabola.row(0).cross(parabola.row(1))
-    return Matrix([x, y, 0])
+    return ideal_point(x, y)
 
 
 def parabola_axis(parabola: Matrix) -> Matrix:

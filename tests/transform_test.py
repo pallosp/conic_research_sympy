@@ -4,6 +4,7 @@ from lib.central_conic import conic_center
 from lib.circle import circle
 from lib.line import IDEAL_LINE, X_AXIS, horizontal_line, line_between
 from lib.matrix import conic_matrix, is_nonzero_multiple
+from lib.point import ideal_point
 from lib.polar_conic import conic_from_polar_matrix, point_at_angle
 from lib.transform import (
     homography_from_samples,
@@ -88,7 +89,7 @@ class TestScale:
 class TestTransformPoint:
     def test_translate(self):
         assert transform_point((1, 2), translate((3, 5))) == Matrix([4, 7, 1])
-        assert transform_point((1, 2, 0), translate((3, 5))) == Matrix([1, 2, 0])
+        assert transform_point((1, 2, 0), translate((3, 5))) == ideal_point(1, 2)
 
 
 class TestTransformLine:

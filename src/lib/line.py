@@ -2,7 +2,7 @@ from collections.abc import Sequence
 
 from sympy import Expr, ImmutableMatrix, Matrix, sign, sqrt
 
-from lib.point import point_to_vec3, point_to_xy
+from lib.point import ideal_point, point_to_vec3, point_to_xy
 
 
 def horizontal_line(y: Expr) -> Matrix:
@@ -119,7 +119,7 @@ def line_normal(
 
     Returns `[0, 0, 0]ᵀ` if the `toward` point lies on the line.
     """
-    normal = Matrix([line[0], line[1], 0])
+    normal = ideal_point(line[0], line[1])
     if toward is None:
         return normal
     return normal * sign(line.dot(point_to_vec3(toward)).factor())

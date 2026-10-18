@@ -9,7 +9,7 @@ from lib.central_conic import (
 )
 from lib.distance import point_point_distance
 from lib.ellipse import ellipse
-from lib.point import centroid, point_to_xy
+from lib.point import centroid, ideal_point, point_to_xy
 from lib.transform import (
     homography_from_samples,
     rotate,
@@ -50,8 +50,8 @@ sin_a_plus_b = sin_a * cos_b + cos_a * sin_b
 cos_a_minus_b = cos_a * cos_b + sin_a * sin_b
 sin_a_minus_b = sin_a * cos_b - cos_a * sin_b
 
-ideal_point_1 = Matrix([cos_a_plus_b, sin_a_plus_b, 0])
-ideal_point_2 = Matrix([cos_a_minus_b, sin_a_minus_b, 0])
+ideal_point_1 = ideal_point(cos_a_plus_b, sin_a_plus_b)
+ideal_point_2 = ideal_point(cos_a_minus_b, sin_a_minus_b)
 
 # Ellipse -> hyperbola transformation matrix
 

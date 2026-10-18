@@ -27,6 +27,7 @@ from lib.hyperbola import asymptote_focal_axis_angle
 from lib.intersection import conic_x_line
 from lib.line import IDEAL_LINE
 from lib.matrix import conic_matrix, is_nonzero_multiple
+from lib.point import ideal_point
 from lib.transform import rotate, transform_point
 from research.sympy_utils import eq_chain, println_indented
 
@@ -83,12 +84,9 @@ cos_aa_angle = r1 / lin_ecc
 sin_aa_angle = I * r2 / lin_ecc
 
 # First ideal point angle: axis_angle + aa_angle
-ideal_point_1 = Matrix(
-    [
-        cos(axis_angle) * cos_aa_angle - sin(axis_angle) * sin_aa_angle,
-        cos(axis_angle) * sin_aa_angle + sin(axis_angle) * cos_aa_angle,
-        0,
-    ]
+ideal_point_1 = ideal_point(
+    cos(axis_angle) * cos_aa_angle - sin(axis_angle) * sin_aa_angle,
+    cos(axis_angle) * sin_aa_angle + sin(axis_angle) * cos_aa_angle,
 )
 
 # Second ideal point angle: axis_angle - aa_angle
@@ -126,7 +124,7 @@ def ideal_points_from_asymptotes(conic: Matrix) -> tuple[Matrix, Matrix]:
     # Same as `focal_axis_direction(conic)`, but expressed with trigonometric
     # functions (`cos(atan2(2b, a-c)/2)`) instead of `Piecewise`, which breaks
     # `gcd` and `simplify` ("Piecewise generators do not make sense").
-    axis_dir = Matrix([*sqrt(norm * (a - c + 2 * I * b)).simplify().as_real_imag(), 0])
+    axis_dir = ideal_point(*sqrt(norm * (a - c + 2 * I * b)).simplify().as_real_imag())
     angle = asymptote_focal_axis_angle(conic)
 
     def eliminate_trig(coord: Expr) -> Expr:
