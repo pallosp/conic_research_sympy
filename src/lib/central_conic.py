@@ -117,7 +117,7 @@ def semi_axis_lengths(conic: Conic) -> tuple[Expr, Expr]:
     )
 
 
-def _selected_radius(conic: Conic, eigenvalue_selector: Expr) -> Matrix:
+def _selected_radius(conic: Conic, eigenvalue_selector: Expr) -> Expr:
     """Returns the conic radius corresponding to the selected eigenvalue.
 
     `eigenvalue_selector` is an expression evaluating to ±1. When positive, the

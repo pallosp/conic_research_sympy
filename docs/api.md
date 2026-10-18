@@ -2445,7 +2445,7 @@ Computes the tangent line to a polar conic at the given angle.
 
 ```python
 def curvature_sign_at_angle(polar_conic: MatrixBase,
-                            angle_radians: Scalar) -> Matrix
+                            angle_radians: Scalar) -> Expr
 ```
 
 ([source](../src/lib/polar_conic.py#L86))

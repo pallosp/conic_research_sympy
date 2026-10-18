@@ -83,7 +83,7 @@ def tangent_at_angle(polar_conic: MatrixBase, angle_radians: Scalar) -> Line:
     return adj.T * Matrix([cos(angle_radians), sin(angle_radians), -1])
 
 
-def curvature_sign_at_angle(polar_conic: MatrixBase, angle_radians: Scalar) -> Matrix:
+def curvature_sign_at_angle(polar_conic: MatrixBase, angle_radians: Scalar) -> Expr:
     """Tells which direction a polar conic turns at an angle.
 
     - *Positive*: the curve turns left (counterclockwise).
