@@ -294,8 +294,9 @@ Subclasses implement
    it depends on undecidable assumptions, like `sympy.Function.eval`;
  - the `shape` property of the result.
 
-Unevaluated instances are `MatrixExpr`s. Substitutions such as `subs`
-rebuild them, which retries the evaluation.
+The argument may be an unevaluated `MatrixExpr` itself. Unevaluated
+instances are `MatrixExpr`s too. Substitutions such as `subs` rebuild them,
+which retries the evaluation.
 
 <a id="matrix.MatrixFunction.__new__"></a>
 
@@ -303,12 +304,12 @@ rebuild them, which retries the evaluation.
 
 ```python
 def __new__(cls,
-            matrix: Matrix,
+            matrix: Matrix | MatrixExpr,
             *,
             evaluate: bool = True) -> "Matrix | MatrixFunction"
 ```
 
-([source](../src/lib/matrix.py#L175))
+([source](../src/lib/matrix.py#L176))
 
 Evaluates the function if possible, unless `evaluate` is false.
 
@@ -317,10 +318,10 @@ Evaluates the function if possible, unless `evaluate` is false.
 #### pivot\_column
 
 ```python
-def pivot_column(matrix: Matrix) -> Matrix | PivotColumn
+def pivot_column(matrix: Matrix | MatrixExpr) -> Matrix | PivotColumn
 ```
 
-([source](../src/lib/matrix.py#L230))
+([source](../src/lib/matrix.py#L235))
 
 Returns the column of a matrix for its first provably nonzero element.
 
@@ -338,11 +339,11 @@ of the same pivot.
 
 ```python
 def pivot_column_and_row(
-    matrix: Matrix
+    matrix: Matrix | MatrixExpr
 ) -> tuple[Matrix | PivotColumn, Matrix | TransposedPivotRow]
 ```
 
-([source](../src/lib/matrix.py#L244))
+([source](../src/lib/matrix.py#L249))
 
 Returns the column and the transposed row of a matrix for its first
 provably nonzero element, i.e. two column vectors.
@@ -357,10 +358,11 @@ elements can be proven non-zero.
 #### outer\_product\_root
 
 ```python
-def outer_product_root(matrix: Matrix) -> Matrix | OuterProductRoot
+def outer_product_root(
+        matrix: Matrix | MatrixExpr) -> Matrix | OuterProductRoot
 ```
 
-([source](../src/lib/matrix.py#L285))
+([source](../src/lib/matrix.py#L295))
 
 Finds a vector `v` such that `v·vᵀ` equals the given symmetric matrix.
 
@@ -382,7 +384,7 @@ to be non-zero.
 def is_real_matrix(matrix: Matrix) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L301))
+([source](../src/lib/matrix.py#L311))
 
 Checks if all elements of a matrix are real.
 
@@ -396,7 +398,7 @@ Returns a bool or `None` if undecidable.
 def is_definite_matrix(matrix: Matrix) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L309))
+([source](../src/lib/matrix.py#L319))
 
 Checks if a real matrix is either positive or negative definite.
 
@@ -412,7 +414,7 @@ def is_full_rank(matrix: Matrix,
                  simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L339))
+([source](../src/lib/matrix.py#L349))
 
 Tells whether a matrix has full rank.
 

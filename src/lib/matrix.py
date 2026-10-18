@@ -166,15 +166,16 @@ class MatrixFunction(MatrixExpr):
        it depends on undecidable assumptions, like `sympy.Function.eval`;
      - the `shape` property of the result.
 
-    Unevaluated instances are `MatrixExpr`s. Substitutions such as `subs`
-    rebuild them, which retries the evaluation.
+    The argument may be an unevaluated `MatrixExpr` itself. Unevaluated
+    instances are `MatrixExpr`s too. Substitutions such as `subs` rebuild them,
+    which retries the evaluation.
     """
 
-    eval: Callable[[Matrix], Matrix | None]
+    eval: Callable[[Matrix | MatrixExpr], Matrix | None]
 
     def __new__(
         cls,
-        matrix: Matrix,
+        matrix: Matrix | MatrixExpr,
         *,
         evaluate: bool = True,
     ) -> "Matrix | MatrixFunction":
@@ -183,9 +184,11 @@ class MatrixFunction(MatrixExpr):
             result = cls.eval(matrix)
             if result is not None:
                 return result
-        return super().__new__(cls, ImmutableMatrix(matrix))
+        if not matrix.is_MatrixExpr:
+            matrix = ImmutableMatrix(matrix)
+        return super().__new__(cls, matrix)
 
-    def _entry(self, i: int, j: int, **_kwargs: object) -> MatrixElement:
+    def _entry(self, i: Expr, j: Expr, **_kwargs: object) -> MatrixElement:
         return MatrixElement(self, i, j)
 
     def _pretty(self, printer: PrettyPrinter) -> prettyForm:
@@ -199,8 +202,9 @@ class PivotColumn(MatrixFunction):
     """Unevaluated form of [pivot_column](#matrix.pivot_column)."""
 
     @classmethod
-    def eval(cls, matrix: Matrix) -> Matrix | None:
+    def eval(cls, matrix: Matrix | MatrixExpr) -> Matrix | None:
         """Internal implementation. Call `pivot_column(matrix)` instead."""
+        matrix = matrix.as_explicit()
         index = _pivot_index(matrix)
         return None if index is None else matrix.col(index % matrix.cols)
 
@@ -216,8 +220,9 @@ class TransposedPivotRow(MatrixFunction):
     """
 
     @classmethod
-    def eval(cls, matrix: Matrix) -> Matrix | None:
+    def eval(cls, matrix: Matrix | MatrixExpr) -> Matrix | None:
         """Internal implementation. Call `pivot_column_and_row(matrix)` instead."""
+        matrix = matrix.as_explicit()
         index = _pivot_index(matrix)
         return None if index is None else matrix.row(index // matrix.cols).T
 
@@ -227,7 +232,7 @@ class TransposedPivotRow(MatrixFunction):
         return (Integer(self.args[0].cols), S.One)
 
 
-def pivot_column(matrix: Matrix) -> Matrix | PivotColumn:
+def pivot_column(matrix: Matrix | MatrixExpr) -> Matrix | PivotColumn:
     """Returns the column of a matrix for its first provably nonzero element.
 
     The result is a zero vector in case of a zero matrix.
@@ -242,7 +247,7 @@ def pivot_column(matrix: Matrix) -> Matrix | PivotColumn:
 
 
 def pivot_column_and_row(
-    matrix: Matrix,
+    matrix: Matrix | MatrixExpr,
 ) -> tuple[Matrix | PivotColumn, Matrix | TransposedPivotRow]:
     """Returns the column and the transposed row of a matrix for its first
     provably nonzero element, i.e. two column vectors.
@@ -252,9 +257,13 @@ def pivot_column_and_row(
     Returns unevaluated column vector shaped `MatrixExpr`s if none of the
     elements can be proven non-zero.
     """
-    index = _pivot_index(matrix)
+    explicit = matrix.as_explicit()
+    index = _pivot_index(explicit)
     if index is not None:
-        return (matrix.col(index % matrix.cols), matrix.row(index // matrix.cols).T)
+        return (
+            explicit.col(index % explicit.cols),
+            explicit.row(index // explicit.cols).T,
+        )
     return (
         PivotColumn(matrix, evaluate=False),
         TransposedPivotRow(matrix, evaluate=False),
@@ -265,8 +274,9 @@ class OuterProductRoot(MatrixFunction):
     """Unevaluated form of [outer_product_root](#matrix.outer_product_root)."""
 
     @classmethod
-    def eval(cls, matrix: Matrix) -> Matrix | None:
+    def eval(cls, matrix: Matrix | MatrixExpr) -> Matrix | None:
         """Internal implementation. Call `outer_product_root(matrix)` instead."""
+        matrix = matrix.as_explicit()
         diagonal = matrix.diagonal()
         index = _pivot_index(diagonal)
         if index is None:
@@ -282,7 +292,7 @@ class OuterProductRoot(MatrixFunction):
         return (Integer(self.args[0].rows), S.One)
 
 
-def outer_product_root(matrix: Matrix) -> Matrix | OuterProductRoot:
+def outer_product_root(matrix: Matrix | MatrixExpr) -> Matrix | OuterProductRoot:
     """Finds a vector `v` such that `v·vᵀ` equals the given symmetric matrix.
 
     Such a vector exists iff the matrix has rank ≤ 1. It is unique up to sign,
