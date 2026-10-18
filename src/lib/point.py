@@ -1,6 +1,6 @@
 from sympy import I, ImmutableMatrix, Matrix, MatrixBase, S, sympify
 
-from lib.type_aliases import FinitePoint, Point, Scalar
+from lib.type_aliases import FinitePoint, Point, PointVector, Scalar
 
 #: The zero vector `(0 : 0 : 0)`. It doesn't represent any point. Functions
 #: return it when the resulting point is undefined.
@@ -21,12 +21,12 @@ CIRCULAR_POINT_I: ImmutableMatrix = ImmutableMatrix([1, I, 0])
 CIRCULAR_POINT_J: ImmutableMatrix = ImmutableMatrix([1, -I, 0])
 
 
-def ideal_point(x: Scalar, y: Scalar) -> Matrix:
+def ideal_point(x: Scalar, y: Scalar) -> PointVector:
     """Creates an ideal point at the given direction."""
     return Matrix([x, y, 0])
 
 
-def ideal_point_on_line(line: MatrixBase) -> Matrix:
+def ideal_point_on_line(line: MatrixBase) -> PointVector:
     """Returns the coordinates of the ideal point on the line.
 
     The first two coordinates specify the line's direction. The third one is
@@ -46,7 +46,7 @@ def point_to_xy(point: FinitePoint) -> Matrix:
     return Matrix([x / z, y / z])
 
 
-def point_to_vec3(point: Point) -> Matrix:
+def point_to_vec3(point: Point) -> PointVector:
     """Computes the homogeneous coordinates of a projective point."""
     if len(point) not in (2, 3):
         raise ValueError("The point must be a 2D or 3D vector, list or tuple.")

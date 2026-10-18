@@ -3,7 +3,7 @@ from collections.abc import Sequence
 from sympy import ImmutableMatrix, Matrix, MatrixBase, sign, sqrt
 
 from lib.point import ideal_point, point_to_vec3, point_to_xy
-from lib.type_aliases import FinitePoint, Point, Scalar
+from lib.type_aliases import FinitePoint, Point, PointVector, Scalar
 
 
 def horizontal_line(y: Scalar) -> Matrix:
@@ -19,7 +19,7 @@ def vertical_line(x: Scalar) -> Matrix:
 def line_between(
     point1: Point,
     point2: Point,
-) -> Matrix:
+) -> MatrixBase:
     """Connects two projective points with a line."""
     return point_to_vec3(point1).cross(point_to_vec3(point2))
 
@@ -107,7 +107,7 @@ def line_normal(
     line: MatrixBase,
     *,
     toward: Point | None = None,
-) -> Matrix:
+) -> PointVector:
     """Returns the normal vector of a line, represented as an ideal point.
 
     By default, the normal is chosen such that `line·normal > 0`.

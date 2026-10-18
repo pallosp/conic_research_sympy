@@ -3,7 +3,7 @@ from sympy import Expr, Matrix, MatrixBase, MatrixExpr, Poly, Symbol, abc, sqrt
 from lib.conic_direction import ConicNormFactor, focal_axis_direction
 from lib.matrix import pivot_column_and_row
 from lib.point import point_to_vec3, point_to_xy
-from lib.type_aliases import FinitePoint, Point, Scalar
+from lib.type_aliases import FinitePoint, Point, PointVector, Scalar
 
 
 def conic_from_poly(
@@ -39,7 +39,7 @@ def conic_through_points(
     p3: Point,
     p4: Point,
     p5: Point,
-) -> Matrix:
+) -> MatrixBase:
     """Computes the conic that goes through the given points.
 
     Returns the conic matrix, or a zero matrix if the result is ambiguous.
@@ -132,7 +132,7 @@ def focal_axis(conic: MatrixBase) -> MatrixBase:
 
 def ideal_points(
     conic: MatrixBase,
-) -> tuple[MatrixBase | MatrixExpr, MatrixBase | MatrixExpr]:
+) -> tuple[PointVector | MatrixExpr, PointVector | MatrixExpr]:
     """Computes the ideal points on a conic section.
 
     Returns two points. Special cases:
@@ -157,7 +157,7 @@ def ideal_points(
     return pivot_column_and_row(intersections)
 
 
-def projective_conic_center(conic: MatrixBase) -> MatrixBase:
+def projective_conic_center(conic: MatrixBase) -> PointVector:
     """Computes the generalized projective center of a conic.
 
     It's equivalent to [conic_center](#central_conic.conic_center) (returns a
@@ -175,7 +175,7 @@ def projective_conic_center(conic: MatrixBase) -> MatrixBase:
     return conic.col(0).cross(conic.col(1))
 
 
-def pole_point(conic: MatrixBase, polar_line: MatrixBase) -> MatrixBase:
+def pole_point(conic: MatrixBase, polar_line: MatrixBase) -> PointVector:
     """Computes the pole point of a conic with respect to the given polar line.
 
     If the conic is degenerate, i.e. it factors into `l₁` and `l₂` real or

@@ -22,3 +22,8 @@ Point: TypeAlias = (
 #: Same as [Point](#type_aliases.Point), but conveys that the point is
 #: expected to be finite, i.e. not an ideal point.
 FinitePoint: TypeAlias = Point
+
+#: A point as a homogeneous 3D column vector `(x, y, z)ᵀ`. Functions that
+#: return projective points use this type; those returning Euclidean
+#: coordinates return a 2D `Matrix` instead.
+PointVector: TypeAlias = MatrixBase

@@ -3,13 +3,13 @@ from collections.abc import Sequence
 from sympy import Matrix, MatrixBase, cos, sin
 
 from lib.point import ORIGIN, point_to_vec3, point_to_xy
-from lib.type_aliases import FinitePoint, Point, Scalar
+from lib.type_aliases import FinitePoint, Point, PointVector, Scalar
 
 
 def transform_point(
     point: Point,
     transformation: MatrixBase,
-) -> MatrixBase:
+) -> PointVector:
     """Applies a projective transformation to a projective point.
 
     Returns a 3D column vector even if the input point is specified with only
@@ -102,7 +102,7 @@ def scale(scale: Scalar, center: FinitePoint = ORIGIN) -> Matrix:
 def homography_from_samples(
     source_points: Sequence[Point],
     target_points: Sequence[Point],
-) -> Matrix:
+) -> MatrixBase:
     """Computes the transformation that maps one quadrilateral to another.
 
     Takes 4 projective source and 4 projective target points. Both the source
@@ -116,8 +116,8 @@ def homography_from_samples(
         raise ValueError("Exactly 4 source and 4 target points are required")
 
     # 3x4 matrices of the source and target points
-    s = Matrix.hstack(*[point_to_vec3(p) for p in source_points])
-    t = Matrix.hstack(*[point_to_vec3(p) for p in target_points])
+    s = MatrixBase.hstack(*[point_to_vec3(p) for p in source_points])
+    t = MatrixBase.hstack(*[point_to_vec3(p) for p in target_points])
 
     # Determinants of s and t without columns 0, 1 or 2
     s0, s1, s2 = [s[:, [j for j in range(4) if j != i]].det() for i in range(3)]

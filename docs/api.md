@@ -40,6 +40,7 @@
   * [Scalar](#type_aliases.Scalar)
   * [Point](#type_aliases.Point)
   * [FinitePoint](#type_aliases.FinitePoint)
+  * [PointVector](#type_aliases.PointVector)
 * [line](#line)
   * [horizontal\_line](#line.horizontal_line)
   * [vertical\_line](#line.vertical_line)
@@ -853,6 +854,14 @@ coordinates `(x, y, z)`, as a tuple, a list or a column vector.
 Same as [Point](#type_aliases.Point), but conveys that the point is
 expected to be finite, i.e. not an ideal point.
 
+<a id="type_aliases.PointVector"></a>
+
+#### PointVector
+
+A point as a homogeneous 3D column vector `(x, y, z)ᵀ`. Functions that
+return projective points use this type; those returning Euclidean
+coordinates return a 2D `Matrix` instead.
+
 <a id="line"></a>
 
 # line
@@ -886,7 +895,7 @@ Constructs a vertical line with the given x-coordinate.
 #### line\_between
 
 ```python
-def line_between(point1: Point, point2: Point) -> Matrix
+def line_between(point1: Point, point2: Point) -> MatrixBase
 ```
 
 ([source](../src/lib/line.py#L19))
@@ -982,7 +991,9 @@ Constructs the perpendicular bisector of two points.
 #### line\_normal
 
 ```python
-def line_normal(line: MatrixBase, *, toward: Point | None = None) -> Matrix
+def line_normal(line: MatrixBase,
+                *,
+                toward: Point | None = None) -> PointVector
 ```
 
 ([source](../src/lib/line.py#L106))
@@ -1089,7 +1100,7 @@ Output:
 
 ```python
 def conic_through_points(p1: Point, p2: Point, p3: Point, p4: Point,
-                         p5: Point) -> Matrix
+                         p5: Point) -> MatrixBase
 ```
 
 ([source](../src/lib/conic.py#L36))
@@ -1189,7 +1200,7 @@ Properties:
 ```python
 def ideal_points(
     conic: MatrixBase
-) -> tuple[MatrixBase | MatrixExpr, MatrixBase | MatrixExpr]
+) -> tuple[PointVector | MatrixExpr, PointVector | MatrixExpr]
 ```
 
 ([source](../src/lib/conic.py#L133))
@@ -1217,7 +1228,7 @@ radii. Note that `r₂` is imaginary in case of hyperbolas.
 #### projective\_conic\_center
 
 ```python
-def projective_conic_center(conic: MatrixBase) -> MatrixBase
+def projective_conic_center(conic: MatrixBase) -> PointVector
 ```
 
 ([source](../src/lib/conic.py#L160))
@@ -1241,7 +1252,7 @@ For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
 #### pole\_point
 
 ```python
-def pole_point(conic: MatrixBase, polar_line: MatrixBase) -> MatrixBase
+def pole_point(conic: MatrixBase, polar_line: MatrixBase) -> PointVector
 ```
 
 ([source](../src/lib/conic.py#L178))
@@ -1381,7 +1392,7 @@ section 11.1
 #### extract\_point
 
 ```python
-def extract_point(degenerate_conic: MatrixBase) -> MatrixBase | MatrixExpr
+def extract_point(degenerate_conic: MatrixBase) -> PointVector | MatrixExpr
 ```
 
 ([source](../src/lib/degenerate_conic.py#L108))
@@ -1759,7 +1770,7 @@ Every circle passes through it.
 #### ideal\_point
 
 ```python
-def ideal_point(x: Scalar, y: Scalar) -> Matrix
+def ideal_point(x: Scalar, y: Scalar) -> PointVector
 ```
 
 ([source](../src/lib/point.py#L24))
@@ -1771,7 +1782,7 @@ Creates an ideal point at the given direction.
 #### ideal\_point\_on\_line
 
 ```python
-def ideal_point_on_line(line: MatrixBase) -> Matrix
+def ideal_point_on_line(line: MatrixBase) -> PointVector
 ```
 
 ([source](../src/lib/point.py#L29))
@@ -1800,7 +1811,7 @@ Computes the Euclidean coordinates of a projective point.
 #### point\_to\_vec3
 
 ```python
-def point_to_vec3(point: Point) -> Matrix
+def point_to_vec3(point: Point) -> PointVector
 ```
 
 ([source](../src/lib/point.py#L49))
@@ -1886,7 +1897,7 @@ Internal implementation. Call `ConicNormFactor(conic)` directly.
 #### focal\_axis\_direction
 
 ```python
-def focal_axis_direction(conic: MatrixBase) -> Matrix
+def focal_axis_direction(conic: MatrixBase) -> PointVector
 ```
 
 ([source](../src/lib/conic_direction.py#L96))
@@ -1922,7 +1933,7 @@ Properties:
 #### conjugate\_axis\_direction
 
 ```python
-def conjugate_axis_direction(conic: MatrixBase) -> Matrix
+def conjugate_axis_direction(conic: MatrixBase) -> PointVector
 ```
 
 ([source](../src/lib/conic_direction.py#L129))
@@ -1953,7 +1964,7 @@ Properties:
 #### transform\_point
 
 ```python
-def transform_point(point: Point, transformation: MatrixBase) -> MatrixBase
+def transform_point(point: Point, transformation: MatrixBase) -> PointVector
 ```
 
 ([source](../src/lib/transform.py#L9))
@@ -2076,7 +2087,7 @@ transformation.
 
 ```python
 def homography_from_samples(source_points: Sequence[Point],
-                            target_points: Sequence[Point]) -> Matrix
+                            target_points: Sequence[Point]) -> MatrixBase
 ```
 
 ([source](../src/lib/transform.py#L102))
@@ -2102,7 +2113,7 @@ projective transformation matrix.
 def parabola_directrix(parabola: MatrixBase) -> Matrix
 ```
 
-([source](../src/lib/parabola.py#L18))
+([source](../src/lib/parabola.py#L19))
 
 Computes the directrix of a parabola represented as a conic matrix.
 
@@ -2123,10 +2134,10 @@ Special cases for other conic types:
 #### parabola\_focus
 
 ```python
-def parabola_focus(parabola: MatrixBase) -> MatrixBase
+def parabola_focus(parabola: MatrixBase) -> PointVector
 ```
 
-([source](../src/lib/parabola.py#L46))
+([source](../src/lib/parabola.py#L47))
 
 Computes the focus of a parabola represented as a conic matrix.
 
@@ -2148,7 +2159,7 @@ Special cases for other conic types:
 def parabola_vertex(parabola: MatrixBase) -> Matrix
 ```
 
-([source](../src/lib/parabola.py#L62))
+([source](../src/lib/parabola.py#L63))
 
 Computes the parabola's vertex.
 
@@ -2162,10 +2173,10 @@ Returns the point's coordinates as a 2D column vector.
 #### parabola\_direction
 
 ```python
-def parabola_direction(parabola: MatrixBase) -> Matrix
+def parabola_direction(parabola: MatrixBase) -> PointVector
 ```
 
-([source](../src/lib/parabola.py#L77))
+([source](../src/lib/parabola.py#L78))
 
 Computes the direction of a parabola modulo 2π.
 
@@ -2185,7 +2196,7 @@ coincides with both the ideal point lying on the parabola and its
 def parabola_axis(parabola: MatrixBase) -> MatrixBase
 ```
 
-([source](../src/lib/parabola.py#L94))
+([source](../src/lib/parabola.py#L95))
 
 Computes the parabola's focal axis line.
 
@@ -2206,7 +2217,7 @@ Special cases for other conic types:
 def parabola_focal_parameter(parabola: MatrixBase) -> Expr
 ```
 
-([source](../src/lib/parabola.py#L112))
+([source](../src/lib/parabola.py#L113))
 
 Computes the parabola's focus-directrix distance.
 
@@ -2250,7 +2261,7 @@ Special cases:
 #### circumcenter
 
 ```python
-def circumcenter(point1: Point, point2: Point, point3: Point) -> Matrix
+def circumcenter(point1: Point, point2: Point, point3: Point) -> PointVector
 ```
 
 ([source](../src/lib/triangle.py#L48))
@@ -2380,7 +2391,7 @@ An endpoint of the vertical diameter.
 #### point\_at\_angle
 
 ```python
-def point_at_angle(polar_conic: MatrixBase, theta: Scalar) -> MatrixBase
+def point_at_angle(polar_conic: MatrixBase, theta: Scalar) -> PointVector
 ```
 
 ([source](../src/lib/polar_conic.py#L59))
@@ -2834,10 +2845,10 @@ Special cases:
 #### line\_x\_line
 
 ```python
-def line_x_line(line1: MatrixBase, line2: MatrixBase) -> MatrixBase
+def line_x_line(line1: MatrixBase, line2: MatrixBase) -> PointVector
 ```
 
-([source](../src/lib/intersection.py#L6))
+([source](../src/lib/intersection.py#L7))
 
 Computes the intersection of two lines.
 
@@ -2851,10 +2862,10 @@ coincide.
 ```python
 def conic_x_line(
     conic: MatrixBase, line: MatrixBase
-) -> tuple[MatrixBase | MatrixExpr, MatrixBase | MatrixExpr]
+) -> tuple[PointVector | MatrixExpr, PointVector | MatrixExpr]
 ```
 
-([source](../src/lib/intersection.py#L15))
+([source](../src/lib/intersection.py#L16))
 
 Intersects a conic with a line. Returns two points.
 

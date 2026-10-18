@@ -8,7 +8,7 @@ from lib.matrix import (
     skew_matrix,
 )
 from lib.point import point_to_vec3
-from lib.type_aliases import Point
+from lib.type_aliases import Point, PointVector
 
 #: The zero matrix. Every point satisfies its equation.
 ZERO_CONIC: ImmutableMatrix = ImmutableMatrix.zeros(3, 3)
@@ -105,7 +105,7 @@ def split_to_lines(
     return pivot_column_and_row(conic + skew_matrix(q))
 
 
-def extract_point(degenerate_conic: MatrixBase) -> MatrixBase | MatrixExpr:
+def extract_point(degenerate_conic: MatrixBase) -> PointVector | MatrixExpr:
     """Extracts the point from a point conic or the intersection of the
     lines from a line pair conic.
 

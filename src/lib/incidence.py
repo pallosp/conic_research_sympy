@@ -138,7 +138,7 @@ def are_on_same_conic(
         raise NotImplementedError
     points = [point_to_vec3(p) for p in points]
     d = [
-        Matrix.hstack(p, q, r).det()
+        MatrixBase.hstack(p, q, r).det()
         for p, q, r in product(points[0:2], points[2:4], points[4:6])
     ]
     incidence_poly = d[0] * d[3] * d[5] * d[6] - d[1] * d[2] * d[4] * d[7]

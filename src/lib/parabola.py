@@ -2,6 +2,7 @@ from sympy import Expr, Matrix, MatrixBase, sqrt
 
 from lib.conic_classes import is_parabola
 from lib.point import ideal_point, point_to_xy
+from lib.type_aliases import PointVector
 
 
 def _parabola_directrix_from_adjugate(parabola_adjugate: MatrixBase) -> Matrix:
@@ -33,7 +34,7 @@ def parabola_directrix(parabola: MatrixBase) -> Matrix:
     return _parabola_directrix_from_adjugate(parabola.adjugate())
 
 
-def _parabola_focus_from_adjugate(parabola_adjugate: MatrixBase) -> MatrixBase:
+def _parabola_focus_from_adjugate(parabola_adjugate: MatrixBase) -> PointVector:
     """Computes the focus of a parabola represented as the adjugate of a
     conic matrix. See [parabola_focus](#parabola.parabola_focus) for the details.
     """
@@ -43,7 +44,7 @@ def _parabola_focus_from_adjugate(parabola_adjugate: MatrixBase) -> MatrixBase:
     return parabola_adjugate * Matrix([d, e, -(a + c) / 2])
 
 
-def parabola_focus(parabola: MatrixBase) -> MatrixBase:
+def parabola_focus(parabola: MatrixBase) -> PointVector:
     """Computes the focus of a parabola represented as a conic matrix.
 
     Special cases for other conic types:
@@ -74,7 +75,7 @@ def parabola_vertex(parabola: MatrixBase) -> Matrix:
     return Matrix([vertex_x, vertex_y])
 
 
-def parabola_direction(parabola: MatrixBase) -> Matrix:
+def parabola_direction(parabola: MatrixBase) -> PointVector:
     """Computes the direction of a parabola modulo 2π.
 
     Unlike [focal_axis_direction](#conic_direction.focal_axis_direction), which

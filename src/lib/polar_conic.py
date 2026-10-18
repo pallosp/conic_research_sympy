@@ -31,7 +31,7 @@ from lib.circle import UNIT_CIRCLE
 from lib.conic_direction import focal_axis_direction
 from lib.point import point_to_vec3
 from lib.transform import rotate
-from lib.type_aliases import Point, Scalar
+from lib.type_aliases import Point, PointVector, Scalar
 
 #: The circle at the origin with radius 1, in polar matrix form.
 POLAR_UNIT_CIRCLE: ImmutableMatrix = ImmutableMatrix.eye(3)
@@ -56,7 +56,7 @@ class PolarOrigin(Enum):
     VERTICAL = 4
 
 
-def point_at_angle(polar_conic: MatrixBase, theta: Scalar) -> MatrixBase:
+def point_at_angle(polar_conic: MatrixBase, theta: Scalar) -> PointVector:
     """Computes the coordinates of the projective point on a polar conic
     corresponding to a certain angle.
     """

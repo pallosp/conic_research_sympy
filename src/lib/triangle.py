@@ -2,7 +2,7 @@ from sympy import Matrix
 
 from lib.matrix import conic_matrix
 from lib.point import point_to_vec3, point_to_xy
-from lib.type_aliases import FinitePoint, Point
+from lib.type_aliases import FinitePoint, Point, PointVector
 
 
 def circumcircle(
@@ -49,7 +49,7 @@ def circumcenter(
     point1: Point,
     point2: Point,
     point3: Point,
-) -> Matrix:
+) -> PointVector:
     """Computes the center of the circle through three points.
 
     Returns the center as a homogeneous 3D column vector.
