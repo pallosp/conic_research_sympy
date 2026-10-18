@@ -29,7 +29,6 @@ build-backend = "poetry.core.masonry.api"
 pythonpath = ["src"]
 
 [tool.pyright]
-include = ["src/lib", "tests"]
 pythonVersion = "3.12"
 venvPath = "."
 venv = ".venv"
