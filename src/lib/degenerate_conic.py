@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Function, ImmutableMatrix, Matrix, MatrixExpr
+from sympy import Expr, ImmutableMatrix, Matrix, MatrixExpr
 
 from lib.matrix import (
     conic_matrix,
@@ -60,52 +60,48 @@ def point_conic(point: Matrix | Sequence[Expr]) -> Matrix:
     )
 
 
-class SplitToLines(Function):
+def split_to_lines(conic: Matrix) -> tuple[Matrix | MatrixExpr, Matrix | MatrixExpr]:
     """Splits a degenerate conic into two lines.
 
     Special cases:
      - For non-degenerate conics the result is unspecified.
      - For point conics the lines will be complex conjugates.
      - Returns two `[0, 0, 0]ᵀ` vectors for the zero matrix.
-     - For symbolic conics returns an unevaluated `sympy.Function`.
+     - For symbolic conics the lines may be unevaluated `MatrixExpr`s, or
+       explicit matrices with unevaluated elements such as
+       `OuterProductRoot(...)[0, 0]`. Substitutions evaluate them once the
+       result becomes decidable.
 
     *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
     section 11.1
     """
-
-    @classmethod
-    def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None:
-        """Internal implementation. Call `SplitToLines(conic)` directly."""
-        # The conic consisting of the lines l and m is represented by the
-        # symmetric matrix C = (l·mᵀ + m·lᵀ)/2, or a multiple of it.
-        #
-        # Goal: find the rank-1 matrix l·mᵀ. All its columns are multiples of l
-        # and all its rows are multiples of m, so any non-zero element yields
-        # both lines. pivot_column_and_row does this final step.
-        #
-        # l·mᵀ differs from C by an antisymmetric matrix, which can be written
-        # as the skew matrix of a vector q:
-        #
-        #   l·mᵀ = C + (l·mᵀ - m·lᵀ)/2 = C + skew(q),   where q = (m⨯l)/2
-        #
-        # q is a multiple of the lines' intersection point. It's unknown, but
-        # it can be computed from C alone, because adj(C) = -q·qᵀ.
-        # outer_product_root recovers q from q·qᵀ up to sign. The sign doesn't
-        # matter: C - skew(q) = m·lᵀ, which yields the same lines in swapped
-        # order.
-        #
-        # Special cases:
-        #  - Point conics: l and m are complex conjugates, so q is imaginary.
-        #  - Double lines: l = m, so q = 0 and C = l·lᵀ is split directly.
-        #  - Symbolic conics: SplitToLines stays unevaluated if outer_product_root
-        #    or pivot_column_and_row can't decide which element is non-zero.
-        q = outer_product_root(-conic.adjugate())
-        if q.is_MatrixExpr:
-            return None
-        lines = pivot_column_and_row(conic + skew_matrix(q))
-        if lines[0].is_MatrixExpr:
-            return None
-        return lines
+    # The conic consisting of the lines l and m is represented by the
+    # symmetric matrix C = (l·mᵀ + m·lᵀ)/2, or a multiple of it.
+    #
+    # Goal: find the rank-1 matrix l·mᵀ. All its columns are multiples of l
+    # and all its rows are multiples of m, so any non-zero element yields
+    # both lines. pivot_column_and_row does this final step.
+    #
+    # l·mᵀ differs from C by an antisymmetric matrix, which can be written
+    # as the skew matrix of a vector q:
+    #
+    #   l·mᵀ = C + (l·mᵀ - m·lᵀ)/2 = C + skew(q),   where q = (m⨯l)/2
+    #
+    # q is a multiple of the lines' intersection point. It's unknown, but
+    # it can be computed from C alone, because adj(C) = -q·qᵀ.
+    # outer_product_root recovers q from q·qᵀ up to sign. The sign doesn't
+    # matter: C - skew(q) = m·lᵀ, which yields the same lines in swapped
+    # order.
+    #
+    # Special cases:
+    #  - Point conics: l and m are complex conjugates, so q is imaginary.
+    #  - Double lines: l = m, so q = 0 and C = l·lᵀ is split directly.
+    #  - Symbolic conics: outer_product_root and pivot_column_and_row return
+    #    unevaluated matrix expressions when they can't decide which element
+    #    is non-zero. Each step accepts such expressions, so the lines
+    #    evaluate once substitutions make every step decidable.
+    q = outer_product_root(-conic.adjugate())
+    return pivot_column_and_row(conic + skew_matrix(q))
 
 
 def extract_point(degenerate_conic: Matrix) -> Matrix | MatrixExpr:

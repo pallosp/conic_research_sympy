@@ -67,7 +67,7 @@
   * [line\_pair\_conic](#degenerate_conic.line_pair_conic)
   * [double\_line\_conic](#degenerate_conic.double_line_conic)
   * [point\_conic](#degenerate_conic.point_conic)
-  * [SplitToLines](#degenerate_conic.SplitToLines)
+  * [split\_to\_lines](#degenerate_conic.split_to_lines)
   * [extract\_point](#degenerate_conic.extract_point)
 * [conic\_classes](#conic_classes)
   * [is\_degenerate](#conic_classes.is_degenerate)
@@ -1331,12 +1331,13 @@ This function returns the corresponding conic matrix for the choice
 Hint: Use [extract_point](#degenerate_conic.extract_point) to recover the
 point from the resulting conic.
 
-<a id="degenerate_conic.SplitToLines"></a>
+<a id="degenerate_conic.split_to_lines"></a>
 
-## SplitToLines
+#### split\_to\_lines
 
 ```python
-class SplitToLines(Function)
+def split_to_lines(
+        conic: Matrix) -> tuple[Matrix | MatrixExpr, Matrix | MatrixExpr]
 ```
 
 ([source](../src/lib/degenerate_conic.py#L63))
@@ -1347,23 +1348,13 @@ Special cases:
  - For non-degenerate conics the result is unspecified.
  - For point conics the lines will be complex conjugates.
  - Returns two `[0, 0, 0]ᵀ` vectors for the zero matrix.
- - For symbolic conics returns an unevaluated `sympy.Function`.
+ - For symbolic conics the lines may be unevaluated `MatrixExpr`s, or
+   explicit matrices with unevaluated elements such as
+   `OuterProductRoot(...)[0, 0]`. Substitutions evaluate them once the
+   result becomes decidable.
 
 *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
 section 11.1
-
-<a id="degenerate_conic.SplitToLines.eval"></a>
-
-#### SplitToLines.eval
-
-```python
-@classmethod
-def eval(cls, conic: Matrix) -> tuple[Matrix, Matrix] | None
-```
-
-([source](../src/lib/degenerate_conic.py#L77))
-
-Internal implementation. Call `SplitToLines(conic)` directly.
 
 <a id="degenerate_conic.extract_point"></a>
 
@@ -1373,7 +1364,7 @@ Internal implementation. Call `SplitToLines(conic)` directly.
 def extract_point(degenerate_conic: Matrix) -> Matrix | MatrixExpr
 ```
 
-([source](../src/lib/degenerate_conic.py#L111))
+([source](../src/lib/degenerate_conic.py#L107))
 
 Extracts the point from a point conic or the intersection of the
 lines from a line pair conic.

@@ -6,11 +6,11 @@ from lib.conic import conic_from_poly, ideal_points
 from lib.conic_classes import is_degenerate, is_finite_conic
 from lib.degenerate_conic import (
     ZERO_CONIC,
-    SplitToLines,
     double_line_conic,
     extract_point,
     line_pair_conic,
     point_conic,
+    split_to_lines,
 )
 from lib.line import (
     IDEAL_LINE,
@@ -63,54 +63,75 @@ class TestPointConic:
         conic = point_conic(point)
         assert is_degenerate(conic) is True
         assert are_projective_sets_equal(ideal_points(conic), [point, point])
-        assert is_real_matrix(SplitToLines(conic)[0]) is False
+        assert is_real_matrix(split_to_lines(conic)[0]) is False
 
 
 class TestSplitToLines:
     def test_horizontal_lines(self):
         lines = [horizontal_line(1), horizontal_line(2)]
         conic = line_pair_conic(*lines)
-        assert are_projective_sets_equal(lines, SplitToLines(conic))
+        assert are_projective_sets_equal(lines, split_to_lines(conic))
 
     def test_vertical_lines(self):
         lines = [vertical_line(1), vertical_line(2)]
         conic = line_pair_conic(*lines)
-        assert are_projective_sets_equal(lines, SplitToLines(conic))
+        assert are_projective_sets_equal(lines, split_to_lines(conic))
 
     def test_double_line(self):
         lines = [Matrix([1, 2, 3])] * 2
         conic = line_pair_conic(*lines)
-        assert are_projective_sets_equal(lines, SplitToLines(conic))
+        assert are_projective_sets_equal(lines, split_to_lines(conic))
 
     def test_double_ideal_line(self):
         lines = [IDEAL_LINE] * 2
         conic = line_pair_conic(*lines)
-        assert are_projective_sets_equal(lines, SplitToLines(conic))
+        assert are_projective_sets_equal(lines, split_to_lines(conic))
 
     def test_general_case(self):
         lines = [Matrix([1, 2, 3]), Matrix([4, 5, 6])]
         conic = line_pair_conic(*lines)
-        assert are_projective_sets_equal(lines, SplitToLines(conic))
+        assert are_projective_sets_equal(lines, split_to_lines(conic))
 
     def test_point_conic(self):
         conic = circle((0, 0), r=0)
         assert are_projective_sets_equal(
             [Matrix([1, I, 0]), Matrix([1, -I, 0])],
-            SplitToLines(conic),
+            split_to_lines(conic),
         )
 
     def test_zero_conic(self):
-        assert SplitToLines(ZERO_CONIC) == (ZERO_LINE, ZERO_LINE)
+        assert split_to_lines(ZERO_CONIC) == (ZERO_LINE, ZERO_LINE)
 
     def test_symbolic_conic(self):
-        coeffs = symbols("a b c d e f")
-        lines = SplitToLines(conic_matrix(*coeffs))
-        assert isinstance(lines, SplitToLines)
+        symbolic_conic = conic_matrix(*symbols("a b c d e f"))
+        lines = split_to_lines(symbolic_conic)
+        assert lines[0].is_MatrixExpr
+        assert lines[1].is_MatrixExpr
 
-        expected_lines = [Matrix([1, 2, 3]), Matrix([4, 5, 6])]
-        a, _, _, b, c, _, d, e, f = line_pair_conic(*expected_lines)
-        lines = lines.subs(zip(coeffs, (a, b, c, d, e, f), strict=True))
-        assert are_projective_sets_equal(lines, expected_lines)
+        # Substituting a concrete line pair conic evaluates them to its lines.
+        line_pair = [Matrix([1, 2, 3]), Matrix([4, 5, 6])]
+        conic = line_pair_conic(*line_pair)
+        substitutions = dict(zip(symbolic_conic, conic, strict=True))
+        concrete_lines = [line.subs(substitutions) for line in lines]
+        assert not concrete_lines[0].is_MatrixExpr
+        assert not concrete_lines[1].is_MatrixExpr
+        assert are_projective_sets_equal(concrete_lines, line_pair)
+
+    def test_partially_symbolic_conic(self):
+        symbolic_conic = conic_matrix(1, *symbols("b c d e f"))
+        lines = split_to_lines(symbolic_conic)
+        # The intersection point is undecidable, but the pivot isn't: the lines
+        # are explicit matrices with unevaluated elements.
+        assert not lines[0].is_MatrixExpr
+        assert not lines[1].is_MatrixExpr
+
+        # Substituting a concrete line pair conic evaluates them to its lines.
+        # Its x² coefficient is 1·1 = 1, matching the symbolic conic.
+        line_pair = [Matrix([1, 2, 3]), Matrix([1, 5, 6])]
+        conic = line_pair_conic(*line_pair)
+        substitutions = dict(zip(symbolic_conic, conic, strict=True))
+        concrete_lines = [line.subs(substitutions) for line in lines]
+        assert are_projective_sets_equal(concrete_lines, line_pair)
 
 
 class TestExtractPoint:
