@@ -67,28 +67,18 @@ class TestPointConic:
 
 
 class TestSplitToLines:
-    def test_horizontal_lines(self):
-        lines = [horizontal_line(1), horizontal_line(2)]
-        conic = line_pair_conic(*lines)
-        assert are_projective_sets_equal(lines, split_to_lines(conic))
-
-    def test_vertical_lines(self):
-        lines = [vertical_line(1), vertical_line(2)]
-        conic = line_pair_conic(*lines)
-        assert are_projective_sets_equal(lines, split_to_lines(conic))
-
-    def test_double_line(self):
-        lines = [Matrix([1, 2, 3])] * 2
-        conic = line_pair_conic(*lines)
-        assert are_projective_sets_equal(lines, split_to_lines(conic))
-
-    def test_double_ideal_line(self):
-        lines = [IDEAL_LINE] * 2
-        conic = line_pair_conic(*lines)
-        assert are_projective_sets_equal(lines, split_to_lines(conic))
-
-    def test_general_case(self):
-        lines = [Matrix([1, 2, 3]), Matrix([4, 5, 6])]
+    @pytest.mark.parametrize(
+        "lines",
+        [
+            [horizontal_line(1), horizontal_line(2)],
+            [vertical_line(1), vertical_line(2)],
+            [Matrix([1, 2, 3])] * 2,
+            [IDEAL_LINE] * 2,
+            [Matrix([1, 2, 3]), Matrix([4, 5, 6])],
+        ],
+        ids=["horizontal", "vertical", "double", "double_ideal", "general"],
+    )
+    def test_line_pair(self, lines: list[Matrix]):
         conic = line_pair_conic(*lines)
         assert are_projective_sets_equal(lines, split_to_lines(conic))
 
