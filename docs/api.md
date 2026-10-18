@@ -43,6 +43,7 @@
   * [PointVector](#type_aliases.PointVector)
   * [Line](#type_aliases.Line)
   * [Conic](#type_aliases.Conic)
+  * [Transformation](#type_aliases.Transformation)
 * [line](#line)
   * [horizontal\_line](#line.horizontal_line)
   * [vertical\_line](#line.vertical_line)
@@ -877,6 +878,13 @@ A projective line `ax + by + c = 0`, represented as the 3D column vector
 
 A conic section `ax² + 2bxy + cy² + 2dx + 2ey + f = 0`, represented as the
 3x3 symmetric matrix `[[a, b, d], [b, c, e], [d, e, f]]`.
+
+<a id="type_aliases.Transformation"></a>
+
+#### Transformation
+
+A projective transformation of the plane, represented as a 3x3 matrix that
+maps the homogeneous coordinates of points.
 
 <a id="line"></a>
 
@@ -1976,10 +1984,11 @@ Properties:
 #### transform\_point
 
 ```python
-def transform_point(point: Point, transformation: MatrixBase) -> PointVector
+def transform_point(point: Point,
+                    transformation: Transformation) -> PointVector
 ```
 
-([source](../src/lib/transform.py#L9))
+([source](../src/lib/transform.py#L17))
 
 Applies a projective transformation to a projective point.
 
@@ -1991,10 +2000,10 @@ two coordinates.
 #### transform\_line
 
 ```python
-def transform_line(line: Line, transformation: MatrixBase) -> Line
+def transform_line(line: Line, transformation: Transformation) -> Line
 ```
 
-([source](../src/lib/transform.py#L21))
+([source](../src/lib/transform.py#L29))
 
 Applies a projective transformation to a projective line.
 
@@ -2003,10 +2012,10 @@ Applies a projective transformation to a projective line.
 #### transform\_conic
 
 ```python
-def transform_conic(conic: Conic, transformation: MatrixBase) -> Conic
+def transform_conic(conic: Conic, transformation: Transformation) -> Conic
 ```
 
-([source](../src/lib/transform.py#L26))
+([source](../src/lib/transform.py#L34))
 
 Applies a projective transformation to a conic.
 
@@ -2016,10 +2025,10 @@ Applies a projective transformation to a conic.
 
 ```python
 def transform_polar_conic(polar_conic: MatrixBase,
-                          transformation: MatrixBase) -> MatrixBase
+                          transformation: Transformation) -> MatrixBase
 ```
 
-([source](../src/lib/transform.py#L31))
+([source](../src/lib/transform.py#L39))
 
 Applies a projective transformation to a conic in polar representation.
 
@@ -2028,10 +2037,10 @@ Applies a projective transformation to a conic in polar representation.
 #### translate
 
 ```python
-def translate(by: MatrixBase | Sequence[Scalar]) -> Matrix
+def translate(by: MatrixBase | Sequence[Scalar]) -> Transformation
 ```
 
-([source](../src/lib/transform.py#L38))
+([source](../src/lib/transform.py#L46))
 
 Computes the transformation matrix for a 2D translation.
 
@@ -2040,10 +2049,11 @@ Computes the transformation matrix for a 2D translation.
 #### rotate
 
 ```python
-def rotate(angle_radians: Scalar, around: FinitePoint = ORIGIN) -> Matrix
+def rotate(angle_radians: Scalar,
+           around: FinitePoint = ORIGIN) -> Transformation
 ```
 
-([source](../src/lib/transform.py#L44))
+([source](../src/lib/transform.py#L52))
 
 Computes the transformation matrix for a rotation around a point.
 
@@ -2052,10 +2062,10 @@ Computes the transformation matrix for a rotation around a point.
 #### reflect\_to\_line
 
 ```python
-def reflect_to_line(axis: Line) -> Matrix
+def reflect_to_line(axis: Line) -> Transformation
 ```
 
-([source](../src/lib/transform.py#L59))
+([source](../src/lib/transform.py#L67))
 
 Computes the transformation matrix for a reflection to a line.
 
@@ -2071,10 +2081,10 @@ Returns a `nan` matrix if `axis` is the ideal line.
 ```python
 def scale_xy(scale_x: Scalar,
              scale_y: Scalar,
-             center: FinitePoint = ORIGIN) -> Matrix
+             center: FinitePoint = ORIGIN) -> Transformation
 ```
 
-([source](../src/lib/transform.py#L77))
+([source](../src/lib/transform.py#L85))
 
 Computes the projective transformation matrix for scaling along the x-
 and y-axes.
@@ -2084,10 +2094,10 @@ and y-axes.
 #### scale
 
 ```python
-def scale(scale: Scalar, center: FinitePoint = ORIGIN) -> Matrix
+def scale(scale: Scalar, center: FinitePoint = ORIGIN) -> Transformation
 ```
 
-([source](../src/lib/transform.py#L95))
+([source](../src/lib/transform.py#L103))
 
 Computes the projective transformation matrix for a uniform scaling
 transformation.
@@ -2098,10 +2108,10 @@ transformation.
 
 ```python
 def homography_from_samples(source_points: Sequence[Point],
-                            target_points: Sequence[Point]) -> MatrixBase
+                            target_points: Sequence[Point]) -> Transformation
 ```
 
-([source](../src/lib/transform.py#L102))
+([source](../src/lib/transform.py#L110))
 
 Computes the transformation that maps one quadrilateral to another.
 
@@ -2900,12 +2910,12 @@ section 11.3
 
 ```python
 def is_homography(
-        transformation: MatrixBase,
+        transformation: Transformation,
         *,
         simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
 ```
 
-([source](../src/lib/transform_classes.py#L7))
+([source](../src/lib/transform_classes.py#L9))
 
 Checks whether a transformation matrix represents a homography.
 
@@ -2922,12 +2932,12 @@ simplification, the function returns `None`.
 
 ```python
 def is_affine_transform(
-        transformation: MatrixBase,
+        transformation: Transformation,
         *,
         simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
 ```
 
-([source](../src/lib/transform_classes.py#L27))
+([source](../src/lib/transform_classes.py#L29))
 
 Checks whether a matrix represents an affine transformation.
 
@@ -2946,12 +2956,12 @@ zero or non-zero after simplification, the function returns `None`.
 
 ```python
 def is_similarity(
-        transformation: MatrixBase,
+        transformation: Transformation,
         *,
         simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
 ```
 
-([source](../src/lib/transform_classes.py#L57))
+([source](../src/lib/transform_classes.py#L59))
 
 Checks whether a matrix represents a similarity transformation.
 
@@ -2965,12 +2975,12 @@ zero or non-zero after simplification, the function returns `None`.
 
 ```python
 def is_congruence(
-        transformation: MatrixBase,
+        transformation: Transformation,
         *,
         simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
 ```
 
-([source](../src/lib/transform_classes.py#L83))
+([source](../src/lib/transform_classes.py#L85))
 
 Checks whether a matrix represents a congruence transformation.
 
@@ -2984,12 +2994,12 @@ zero or non-zero after simplification, the function returns `None`.
 
 ```python
 def is_involution(
-        transformation: MatrixBase,
+        transformation: Transformation,
         *,
         simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
 ```
 
-([source](../src/lib/transform_classes.py#L107))
+([source](../src/lib/transform_classes.py#L109))
 
 Checks whether applying the transformation twice is the identity.
 

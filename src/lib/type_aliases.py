@@ -35,3 +35,7 @@ Line: TypeAlias = MatrixBase
 #: A conic section `ax² + 2bxy + cy² + 2dx + 2ey + f = 0`, represented as the
 #: 3x3 symmetric matrix `[[a, b, d], [b, c, e], [d, e, f]]`.
 Conic: TypeAlias = MatrixBase
+
+#: A projective transformation of the plane, represented as a 3x3 matrix that
+#: maps the homogeneous coordinates of points.
+Transformation: TypeAlias = MatrixBase
