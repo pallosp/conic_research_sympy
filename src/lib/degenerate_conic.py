@@ -8,20 +8,20 @@ from lib.matrix import (
     skew_matrix,
 )
 from lib.point import point_to_vec3
-from lib.type_aliases import Point, PointVector
+from lib.type_aliases import Line, Point, PointVector
 
 #: The zero matrix. Every point satisfies its equation.
 ZERO_CONIC: ImmutableMatrix = ImmutableMatrix.zeros(3, 3)
 
 
-def line_pair_conic(line1: MatrixBase, line2: MatrixBase) -> Matrix:
+def line_pair_conic(line1: Line, line2: Line) -> Matrix:
     """Constructs a conic section from two projective lines."""
     if line1.shape != (3, 1) or line2.shape != (3, 1):
         raise ValueError("The lines must be 3-dimensional column vectors.")
     return (line1 * line2.T + line2 * line1.T) / 2
 
 
-def double_line_conic(line: MatrixBase) -> MatrixBase:
+def double_line_conic(line: Line) -> MatrixBase:
     """Constructs a degenerate conic consisting of two coincident lines."""
     if line.shape != (3, 1):
         raise ValueError("The line must be a 3-dimensional column vector.")
@@ -61,7 +61,7 @@ def point_conic(point: Point) -> Matrix:
 
 def split_to_lines(
     conic: MatrixBase,
-) -> tuple[MatrixBase | MatrixExpr, MatrixBase | MatrixExpr]:
+) -> tuple[Line | MatrixExpr, Line | MatrixExpr]:
     """Splits a degenerate conic into two lines.
 
     Special cases:

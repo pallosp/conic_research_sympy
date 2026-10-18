@@ -3,7 +3,7 @@ from collections.abc import Sequence
 from sympy import Matrix, MatrixBase, cos, sin
 
 from lib.point import ORIGIN, point_to_vec3, point_to_xy
-from lib.type_aliases import FinitePoint, Point, PointVector, Scalar
+from lib.type_aliases import FinitePoint, Line, Point, PointVector, Scalar
 
 
 def transform_point(
@@ -18,7 +18,7 @@ def transform_point(
     return transformation * point_to_vec3(point)
 
 
-def transform_line(line: MatrixBase, transformation: MatrixBase) -> MatrixBase:
+def transform_line(line: Line, transformation: MatrixBase) -> Line:
     """Applies a projective transformation to a projective line."""
     return transformation.adjugate().T * line
 
@@ -56,7 +56,7 @@ def rotate(angle_radians: Scalar, around: FinitePoint = ORIGIN) -> Matrix:
     )
 
 
-def reflect_to_line(axis: MatrixBase) -> Matrix:
+def reflect_to_line(axis: Line) -> Matrix:
     """Computes the transformation matrix for a reflection to a line.
 
     Returns a `nan` matrix if `axis` is the ideal line.

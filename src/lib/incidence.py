@@ -6,11 +6,11 @@ from sympy.core.logic import fuzzy_not
 
 from lib.matrix import is_full_rank, quadratic_form, skew_matrix
 from lib.point import point_to_vec3
-from lib.type_aliases import Point
+from lib.type_aliases import Line, Point
 
 
 def line_contains_point(
-    line: MatrixBase,
+    line: Line,
     point: Point,
     *,
     simplifier: Callable[[Expr], Expr] = expand,
@@ -41,7 +41,7 @@ def conic_contains_point(
 
 def conic_contains_line(
     conic: MatrixBase,
-    line: MatrixBase,
+    line: Line,
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
@@ -95,7 +95,7 @@ def are_collinear(
 
 
 def are_concurrent(
-    lines: Sequence[MatrixBase],
+    lines: Sequence[Line],
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:

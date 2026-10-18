@@ -41,6 +41,7 @@
   * [Point](#type_aliases.Point)
   * [FinitePoint](#type_aliases.FinitePoint)
   * [PointVector](#type_aliases.PointVector)
+  * [Line](#type_aliases.Line)
 * [line](#line)
   * [horizontal\_line](#line.horizontal_line)
   * [vertical\_line](#line.vertical_line)
@@ -862,6 +863,13 @@ A point as a homogeneous 3D column vector `(x, y, z)ᵀ`. Functions that
 return projective points use this type; those returning Euclidean
 coordinates return a 2D `Matrix` instead.
 
+<a id="type_aliases.Line"></a>
+
+#### Line
+
+A projective line `ax + by + c = 0`, represented as the 3D column vector
+`(a, b, c)ᵀ`.
+
 <a id="line"></a>
 
 # line
@@ -871,7 +879,7 @@ coordinates return a 2D `Matrix` instead.
 #### horizontal\_line
 
 ```python
-def horizontal_line(y: Scalar) -> Matrix
+def horizontal_line(y: Scalar) -> Line
 ```
 
 ([source](../src/lib/line.py#L9))
@@ -883,7 +891,7 @@ Constructs a horizontal line with the given y-coordinate.
 #### vertical\_line
 
 ```python
-def vertical_line(x: Scalar) -> Matrix
+def vertical_line(x: Scalar) -> Line
 ```
 
 ([source](../src/lib/line.py#L14))
@@ -895,7 +903,7 @@ Constructs a vertical line with the given x-coordinate.
 #### line\_between
 
 ```python
-def line_between(point1: Point, point2: Point) -> MatrixBase
+def line_between(point1: Point, point2: Point) -> Line
 ```
 
 ([source](../src/lib/line.py#L19))
@@ -907,7 +915,7 @@ Connects two projective points with a line.
 #### parallel\_line
 
 ```python
-def parallel_line(with_line: MatrixBase, through_point: FinitePoint) -> Matrix
+def parallel_line(with_line: Line, through_point: FinitePoint) -> Line
 ```
 
 ([source](../src/lib/line.py#L27))
@@ -919,8 +927,7 @@ Constructs a line through a point parallel to a line.
 #### perpendicular\_line
 
 ```python
-def perpendicular_line(to_line: MatrixBase,
-                       through_point: FinitePoint) -> Matrix
+def perpendicular_line(to_line: Line, through_point: FinitePoint) -> Line
 ```
 
 ([source](../src/lib/line.py#L37))
@@ -936,7 +943,7 @@ def line_through_point(
         point: FinitePoint,
         *,
         direction: MatrixBase | Sequence[Scalar] | None = None,
-        normal: MatrixBase | Sequence[Scalar] | None = None) -> Matrix
+        normal: MatrixBase | Sequence[Scalar] | None = None) -> Line
 ```
 
 ([source](../src/lib/line.py#L47))
@@ -954,7 +961,7 @@ The direction can be specified as
 #### angle\_bisector
 
 ```python
-def angle_bisector(line1: MatrixBase, line2: MatrixBase) -> MatrixBase
+def angle_bisector(line1: Line, line2: Line) -> Line
 ```
 
 ([source](../src/lib/line.py#L75))
@@ -979,7 +986,7 @@ Special cases:
 #### perpendicular\_bisector
 
 ```python
-def perpendicular_bisector(point1: FinitePoint, point2: FinitePoint) -> Matrix
+def perpendicular_bisector(point1: FinitePoint, point2: FinitePoint) -> Line
 ```
 
 ([source](../src/lib/line.py#L96))
@@ -991,9 +998,7 @@ Constructs the perpendicular bisector of two points.
 #### line\_normal
 
 ```python
-def line_normal(line: MatrixBase,
-                *,
-                toward: Point | None = None) -> PointVector
+def line_normal(line: Line, *, toward: Point | None = None) -> PointVector
 ```
 
 ([source](../src/lib/line.py#L106))
@@ -1014,7 +1019,7 @@ Returns `[0, 0, 0]ᵀ` if the `toward` point lies on the line.
 #### are\_parallel
 
 ```python
-def are_parallel(line1: MatrixBase, line2: MatrixBase) -> bool | None
+def are_parallel(line1: Line, line2: Line) -> bool | None
 ```
 
 ([source](../src/lib/line.py#L128))
@@ -1029,7 +1034,7 @@ Considers the ideal line parallel to everything.
 #### are\_perpendicular
 
 ```python
-def are_perpendicular(line1: MatrixBase, line2: MatrixBase) -> bool | None
+def are_perpendicular(line1: Line, line2: Line) -> bool | None
 ```
 
 ([source](../src/lib/line.py#L139))
@@ -1119,7 +1124,7 @@ section 10.1
 #### conic\_from\_focus\_and\_directrix
 
 ```python
-def conic_from_focus_and_directrix(focus: FinitePoint, directrix: MatrixBase,
+def conic_from_focus_and_directrix(focus: FinitePoint, directrix: Line,
                                    eccentricity: Scalar) -> MatrixBase
 ```
 
@@ -1174,7 +1179,7 @@ two different corresponding eccentricity values. Evaluate
 #### focal\_axis
 
 ```python
-def focal_axis(conic: MatrixBase) -> MatrixBase
+def focal_axis(conic: MatrixBase) -> Line
 ```
 
 ([source](../src/lib/conic.py#L114))
@@ -1252,7 +1257,7 @@ For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
 #### pole\_point
 
 ```python
-def pole_point(conic: MatrixBase, polar_line: MatrixBase) -> PointVector
+def pole_point(conic: MatrixBase, polar_line: Line) -> PointVector
 ```
 
 ([source](../src/lib/conic.py#L178))
@@ -1272,7 +1277,7 @@ relationships.
 #### polar\_line
 
 ```python
-def polar_line(conic: MatrixBase, pole_point: Point) -> MatrixBase
+def polar_line(conic: MatrixBase, pole_point: Point) -> Line
 ```
 
 ([source](../src/lib/conic.py#L192))
@@ -1313,7 +1318,7 @@ The zero matrix. Every point satisfies its equation.
 #### line\_pair\_conic
 
 ```python
-def line_pair_conic(line1: MatrixBase, line2: MatrixBase) -> Matrix
+def line_pair_conic(line1: Line, line2: Line) -> Matrix
 ```
 
 ([source](../src/lib/degenerate_conic.py#L17))
@@ -1325,7 +1330,7 @@ Constructs a conic section from two projective lines.
 #### double\_line\_conic
 
 ```python
-def double_line_conic(line: MatrixBase) -> MatrixBase
+def double_line_conic(line: Line) -> MatrixBase
 ```
 
 ([source](../src/lib/degenerate_conic.py#L24))
@@ -1367,8 +1372,7 @@ point from the resulting conic.
 
 ```python
 def split_to_lines(
-    conic: MatrixBase
-) -> tuple[MatrixBase | MatrixExpr, MatrixBase | MatrixExpr]
+        conic: MatrixBase) -> tuple[Line | MatrixExpr, Line | MatrixExpr]
 ```
 
 ([source](../src/lib/degenerate_conic.py#L62))
@@ -1698,7 +1702,7 @@ Special cases:
 #### point\_line\_distance
 
 ```python
-def point_line_distance(point: FinitePoint, line: MatrixBase) -> Expr
+def point_line_distance(point: FinitePoint, line: Line) -> Expr
 ```
 
 ([source](../src/lib/distance.py#L23))
@@ -1714,7 +1718,7 @@ Special cases:
 #### parallel\_line\_distance
 
 ```python
-def parallel_line_distance(line1: MatrixBase, line2: MatrixBase) -> Expr
+def parallel_line_distance(line1: Line, line2: Line) -> Expr
 ```
 
 ([source](../src/lib/distance.py#L35))
@@ -1782,7 +1786,7 @@ Creates an ideal point at the given direction.
 #### ideal\_point\_on\_line
 
 ```python
-def ideal_point_on_line(line: MatrixBase) -> PointVector
+def ideal_point_on_line(line: Line) -> PointVector
 ```
 
 ([source](../src/lib/point.py#L29))
@@ -1837,7 +1841,7 @@ Returns the point's coordinates as a 2D column vector.
 #### perpendicular\_foot
 
 ```python
-def perpendicular_foot(point: FinitePoint, line: MatrixBase) -> Matrix
+def perpendicular_foot(point: FinitePoint, line: Line) -> Matrix
 ```
 
 ([source](../src/lib/point.py#L76))
@@ -1979,7 +1983,7 @@ two coordinates.
 #### transform\_line
 
 ```python
-def transform_line(line: MatrixBase, transformation: MatrixBase) -> MatrixBase
+def transform_line(line: Line, transformation: MatrixBase) -> Line
 ```
 
 ([source](../src/lib/transform.py#L21))
@@ -2041,7 +2045,7 @@ Computes the transformation matrix for a rotation around a point.
 #### reflect\_to\_line
 
 ```python
-def reflect_to_line(axis: MatrixBase) -> Matrix
+def reflect_to_line(axis: Line) -> Matrix
 ```
 
 ([source](../src/lib/transform.py#L59))
@@ -2110,7 +2114,7 @@ projective transformation matrix.
 #### parabola\_directrix
 
 ```python
-def parabola_directrix(parabola: MatrixBase) -> Matrix
+def parabola_directrix(parabola: MatrixBase) -> Line
 ```
 
 ([source](../src/lib/parabola.py#L19))
@@ -2193,7 +2197,7 @@ coincides with both the ideal point lying on the parabola and its
 #### parabola\_axis
 
 ```python
-def parabola_axis(parabola: MatrixBase) -> MatrixBase
+def parabola_axis(parabola: MatrixBase) -> Line
 ```
 
 ([source](../src/lib/parabola.py#L95))
@@ -2418,8 +2422,7 @@ The result is unspecified if the point is not on the conic.
 #### tangent\_at\_angle
 
 ```python
-def tangent_at_angle(polar_conic: MatrixBase,
-                     angle_radians: Scalar) -> MatrixBase
+def tangent_at_angle(polar_conic: MatrixBase, angle_radians: Scalar) -> Line
 ```
 
 ([source](../src/lib/polar_conic.py#L76))
@@ -2539,11 +2542,11 @@ Shifts the angle origin of a polar conic's parametrization.
 #### line\_contains\_point
 
 ```python
-def line_contains_point(
-        line: MatrixBase,
-        point: Point,
-        *,
-        simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+def line_contains_point(line: Line,
+                        point: Point,
+                        *,
+                        simplifier: Callable[[Expr],
+                                             Expr] = expand) -> bool | None
 ```
 
 ([source](../src/lib/incidence.py#L12))
@@ -2581,7 +2584,7 @@ undecidable.
 ```python
 def conic_contains_line(
         conic: MatrixBase,
-        line: MatrixBase,
+        line: Line,
         *,
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
@@ -2642,7 +2645,7 @@ polynomial before it gets compared to zero. Returns `None` if undecidable.
 #### are\_concurrent
 
 ```python
-def are_concurrent(lines: Sequence[MatrixBase],
+def are_concurrent(lines: Sequence[Line],
                    *,
                    simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
@@ -2845,7 +2848,7 @@ Special cases:
 #### line\_x\_line
 
 ```python
-def line_x_line(line1: MatrixBase, line2: MatrixBase) -> PointVector
+def line_x_line(line1: Line, line2: Line) -> PointVector
 ```
 
 ([source](../src/lib/intersection.py#L7))
@@ -2861,7 +2864,7 @@ coincide.
 
 ```python
 def conic_x_line(
-    conic: MatrixBase, line: MatrixBase
+        conic: MatrixBase, line: Line
 ) -> tuple[PointVector | MatrixExpr, PointVector | MatrixExpr]
 ```
 

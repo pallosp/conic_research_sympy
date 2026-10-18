@@ -31,7 +31,7 @@ from lib.circle import UNIT_CIRCLE
 from lib.conic_direction import focal_axis_direction
 from lib.point import point_to_vec3
 from lib.transform import rotate
-from lib.type_aliases import Point, PointVector, Scalar
+from lib.type_aliases import Line, Point, PointVector, Scalar
 
 #: The circle at the origin with radius 1, in polar matrix form.
 POLAR_UNIT_CIRCLE: ImmutableMatrix = ImmutableMatrix.eye(3)
@@ -73,7 +73,7 @@ def angle_at_point(polar_conic: MatrixBase, point: Point) -> Expr:
     return atan2(x_times_sin_a, x_times_cos_a)
 
 
-def tangent_at_angle(polar_conic: MatrixBase, angle_radians: Scalar) -> MatrixBase:
+def tangent_at_angle(polar_conic: MatrixBase, angle_radians: Scalar) -> Line:
     """Computes the tangent line to a polar conic at the given angle.
 
     *Formula*:

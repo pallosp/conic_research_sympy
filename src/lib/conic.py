@@ -3,7 +3,7 @@ from sympy import Expr, Matrix, MatrixBase, MatrixExpr, Poly, Symbol, abc, sqrt
 from lib.conic_direction import ConicNormFactor, focal_axis_direction
 from lib.matrix import pivot_column_and_row
 from lib.point import point_to_vec3, point_to_xy
-from lib.type_aliases import FinitePoint, Point, PointVector, Scalar
+from lib.type_aliases import FinitePoint, Line, Point, PointVector, Scalar
 
 
 def conic_from_poly(
@@ -61,7 +61,7 @@ def conic_through_points(
 
 def conic_from_focus_and_directrix(
     focus: FinitePoint,
-    directrix: MatrixBase,
+    directrix: Line,
     eccentricity: Scalar,
 ) -> MatrixBase:
     """Constructs a conic from its focus, directrix and eccentricity.
@@ -111,7 +111,7 @@ def eccentricity(conic: MatrixBase) -> Expr:
     return sqrt(2 * s / (s - norm_sign * (a + c)))
 
 
-def focal_axis(conic: MatrixBase) -> MatrixBase:
+def focal_axis(conic: MatrixBase) -> Line:
     """Returns the axis of symmetry going through conic's focus point(s).
 
     Properties:
@@ -175,7 +175,7 @@ def projective_conic_center(conic: MatrixBase) -> PointVector:
     return conic.col(0).cross(conic.col(1))
 
 
-def pole_point(conic: MatrixBase, polar_line: MatrixBase) -> PointVector:
+def pole_point(conic: MatrixBase, polar_line: Line) -> PointVector:
     """Computes the pole point of a conic with respect to the given polar line.
 
     If the conic is degenerate, i.e. it factors into `l₁` and `l₂` real or
@@ -189,7 +189,7 @@ def pole_point(conic: MatrixBase, polar_line: MatrixBase) -> PointVector:
     return conic.adjugate() * polar_line
 
 
-def polar_line(conic: MatrixBase, pole_point: Point) -> MatrixBase:
+def polar_line(conic: MatrixBase, pole_point: Point) -> Line:
     """Computes the polar line of a conic for a given pole point.
 
     Example pole/polar relationships:

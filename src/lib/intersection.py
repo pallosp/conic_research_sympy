@@ -1,10 +1,10 @@
 from sympy import MatrixBase, MatrixExpr, sqrt
 
 from lib.matrix import pivot_column_and_row, quadratic_form, skew_matrix
-from lib.type_aliases import PointVector
+from lib.type_aliases import Line, PointVector
 
 
-def line_x_line(line1: MatrixBase, line2: MatrixBase) -> PointVector:
+def line_x_line(line1: Line, line2: Line) -> PointVector:
     """Computes the intersection of two lines.
 
     Returns an ideal point if the lines are parallel, or `[0, 0, 0]ᵀ` if they
@@ -15,7 +15,7 @@ def line_x_line(line1: MatrixBase, line2: MatrixBase) -> PointVector:
 
 def conic_x_line(
     conic: MatrixBase,
-    line: MatrixBase,
+    line: Line,
 ) -> tuple[PointVector | MatrixExpr, PointVector | MatrixExpr]:
     """Intersects a conic with a line. Returns two points.
 

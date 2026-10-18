@@ -1,6 +1,6 @@
-from sympy import I, ImmutableMatrix, Matrix, MatrixBase, S, sympify
+from sympy import I, ImmutableMatrix, Matrix, S, sympify
 
-from lib.type_aliases import FinitePoint, Point, PointVector, Scalar
+from lib.type_aliases import FinitePoint, Line, Point, PointVector, Scalar
 
 #: The zero vector `(0 : 0 : 0)`. It doesn't represent any point. Functions
 #: return it when the resulting point is undefined.
@@ -26,7 +26,7 @@ def ideal_point(x: Scalar, y: Scalar) -> PointVector:
     return Matrix([x, y, 0])
 
 
-def ideal_point_on_line(line: MatrixBase) -> PointVector:
+def ideal_point_on_line(line: Line) -> PointVector:
     """Returns the coordinates of the ideal point on the line.
 
     The first two coordinates specify the line's direction. The third one is
@@ -75,7 +75,7 @@ def centroid(*points: FinitePoint) -> Matrix:
 
 def perpendicular_foot(
     point: FinitePoint,
-    line: MatrixBase,
+    line: Line,
 ) -> Matrix:
     """Computes the foot of the perpendicular through a point to a line.
 

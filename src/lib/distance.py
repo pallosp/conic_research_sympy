@@ -1,8 +1,8 @@
-from sympy import Expr, MatrixBase, sqrt
+from sympy import Expr, sqrt
 
 from lib.line import are_parallel
 from lib.point import point_to_vec3, point_to_xy
-from lib.type_aliases import FinitePoint, Point
+from lib.type_aliases import FinitePoint, Line, Point
 
 
 def point_point_distance(
@@ -20,7 +20,7 @@ def point_point_distance(
     return sqrt((x2 * z1 - x1 * z2) ** 2 + (y2 * z1 - y1 * z2) ** 2) / (z1 * z2)
 
 
-def point_line_distance(point: FinitePoint, line: MatrixBase) -> Expr:
+def point_line_distance(point: FinitePoint, line: Line) -> Expr:
     """Computes the signed distance between a point and a line.
 
     Special cases:
@@ -32,7 +32,7 @@ def point_line_distance(point: FinitePoint, line: MatrixBase) -> Expr:
     return (a * x + b * y + c) / sqrt(a * a + b * b)
 
 
-def parallel_line_distance(line1: MatrixBase, line2: MatrixBase) -> Expr:
+def parallel_line_distance(line1: Line, line2: Line) -> Expr:
     """Computes the signed distance between two parallel lines.
 
     The return value is positive if the two lines have the same direction,

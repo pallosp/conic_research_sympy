@@ -2,10 +2,10 @@ from sympy import Expr, Matrix, MatrixBase, sqrt
 
 from lib.conic_classes import is_parabola
 from lib.point import ideal_point, point_to_xy
-from lib.type_aliases import PointVector
+from lib.type_aliases import Line, PointVector
 
 
-def _parabola_directrix_from_adjugate(parabola_adjugate: MatrixBase) -> Matrix:
+def _parabola_directrix_from_adjugate(parabola_adjugate: MatrixBase) -> Line:
     """Computes the directrix of a parabola represented as the adjugate of a
     conic matrix. See [parabola_directrix](#parabola.parabola_directrix) for the
     details.
@@ -16,7 +16,7 @@ def _parabola_directrix_from_adjugate(parabola_adjugate: MatrixBase) -> Matrix:
     return Matrix([d, e, (a + c) / -2])
 
 
-def parabola_directrix(parabola: MatrixBase) -> Matrix:
+def parabola_directrix(parabola: MatrixBase) -> Line:
     """Computes the directrix of a parabola represented as a conic matrix.
 
     Special cases for other conic types:
@@ -92,7 +92,7 @@ def parabola_direction(parabola: MatrixBase) -> PointVector:
     return ideal_point(x, y)
 
 
-def parabola_axis(parabola: MatrixBase) -> MatrixBase:
+def parabola_axis(parabola: MatrixBase) -> Line:
     """Computes the parabola's focal axis line.
 
     It's the polar line corresponding to the ideal point on the directrix.

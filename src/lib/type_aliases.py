@@ -27,3 +27,7 @@ FinitePoint: TypeAlias = Point
 #: return projective points use this type; those returning Euclidean
 #: coordinates return a 2D `Matrix` instead.
 PointVector: TypeAlias = MatrixBase
+
+#: A projective line `ax + by + c = 0`, represented as the 3D column vector
+#: `(a, b, c)ᵀ`.
+Line: TypeAlias = MatrixBase
