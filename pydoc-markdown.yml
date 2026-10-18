@@ -6,7 +6,7 @@ processors:
   - type: filter
     skip_empty_modules: true
     # Hide the unevaluated forms of matrix valued functions, such as PivotColumn.
-    expression: "default() and '_MatrixFunction' not in getattr(obj, 'bases', [])"
+    expression: "default() and 'MatrixFunction' not in getattr(obj, 'bases', [])"
 
 renderer:
   type: markdown

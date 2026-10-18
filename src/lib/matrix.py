@@ -157,23 +157,30 @@ def _pivot_index(matrix: Matrix) -> int | None:
     return 0 if all_zero else None
 
 
-class _MatrixFunction(MatrixExpr):
-    """Common base of matrix valued functions of a matrix, which stay
+class MatrixFunction(MatrixExpr):
+    """Base class of matrix valued functions of a matrix, which stay
     unevaluated until the result can be determined.
 
-    Subclasses implement `_try_evaluate` and `shape`.
+    Subclasses implement
+     - `eval(cls, matrix)` as a class method, returning the result or `None` if
+       it depends on undecidable assumptions, like `sympy.Function.eval`;
+     - the `shape` property of the result.
+
+    Unevaluated instances are `MatrixExpr`s. Substitutions such as `subs`
+    rebuild them, which retries the evaluation.
     """
 
-    _try_evaluate: Callable[[Matrix], Matrix | None]
+    eval: Callable[[Matrix], Matrix | None]
 
     def __new__(
         cls,
         matrix: Matrix,
         *,
         evaluate: bool = True,
-    ) -> "Matrix | _MatrixFunction":
+    ) -> "Matrix | MatrixFunction":
+        """Evaluates the function if possible, unless `evaluate` is false."""
         if evaluate:
-            result = cls._try_evaluate(matrix)
+            result = cls.eval(matrix)
             if result is not None:
                 return result
         return super().__new__(cls, ImmutableMatrix(matrix))
@@ -188,11 +195,12 @@ class _MatrixFunction(MatrixExpr):
         )
 
 
-class PivotColumn(_MatrixFunction):
+class PivotColumn(MatrixFunction):
     """Unevaluated form of [pivot_column](#matrix.pivot_column)."""
 
-    @staticmethod
-    def _try_evaluate(matrix: Matrix) -> Matrix | None:
+    @classmethod
+    def eval(cls, matrix: Matrix) -> Matrix | None:
+        """Internal implementation. Call `pivot_column(matrix)` instead."""
         index = _pivot_index(matrix)
         return None if index is None else matrix.col(index % matrix.cols)
 
@@ -202,13 +210,14 @@ class PivotColumn(_MatrixFunction):
         return (Integer(self.args[0].rows), S.One)
 
 
-class TransposedPivotRow(_MatrixFunction):
+class TransposedPivotRow(MatrixFunction):
     """Unevaluated form of the transposed row returned by
     [pivot_column_and_row](#matrix.pivot_column_and_row).
     """
 
-    @staticmethod
-    def _try_evaluate(matrix: Matrix) -> Matrix | None:
+    @classmethod
+    def eval(cls, matrix: Matrix) -> Matrix | None:
+        """Internal implementation. Call `pivot_column_and_row(matrix)` instead."""
         index = _pivot_index(matrix)
         return None if index is None else matrix.row(index // matrix.cols).T
 
@@ -252,11 +261,12 @@ def pivot_column_and_row(
     )
 
 
-class OuterProductRoot(_MatrixFunction):
+class OuterProductRoot(MatrixFunction):
     """Unevaluated form of [outer_product_root](#matrix.outer_product_root)."""
 
-    @staticmethod
-    def _try_evaluate(matrix: Matrix) -> Matrix | None:
+    @classmethod
+    def eval(cls, matrix: Matrix) -> Matrix | None:
+        """Internal implementation. Call `outer_product_root(matrix)` instead."""
         for i in range(matrix.rows):
             diagonal_element = matrix[i, i]
             if diagonal_element.is_nonzero:
