@@ -1,4 +1,5 @@
-from sympy import I, Matrix, sqrt, symbols
+import pytest
+from sympy import I, Matrix, MatrixSymbol, ShapeError, sqrt, symbols
 
 from lib.matrix import (
     conic_matrix,
@@ -13,6 +14,7 @@ from lib.matrix import (
     pivot_column,
     pivot_column_and_row,
     quadratic_form,
+    skew_matrix,
 )
 
 
@@ -127,6 +129,28 @@ class TestQuadraticForm:
     def test_quadratic_form(self):
         # https://www.wolframalpha.com/input?i={{1,2}}*{{1,2},{3,4}}*{{1},{2}}
         assert quadratic_form(Matrix([[1, 2], [3, 4]]), Matrix([1, 2])) == 27
+
+
+class TestSkewMatrix:
+    def test_cross_product(self):
+        u, v = Matrix([1, 2, 3]), Matrix([4, 5, 6])
+        assert skew_matrix(u) * v == u.cross(v)
+
+    def test_matrix_expr(self):
+        v = MatrixSymbol("v", 3, 1)
+        skew = skew_matrix(v)
+        assert skew.is_MatrixExpr
+        assert skew.shape == (3, 3)
+        assert skew.as_explicit() == Matrix(
+            [[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]],
+        )
+        assert skew.subs(v, Matrix([1, 2, 3])) == skew_matrix(Matrix([1, 2, 3]))
+
+    def test_invalid_shape(self):
+        with pytest.raises(ShapeError, match="3D column vector"):
+            skew_matrix(Matrix([1, 2]))
+        with pytest.raises(ShapeError, match="3D column vector"):
+            skew_matrix(MatrixSymbol("v", 2, 1))
 
 
 class TestPivotColumn:

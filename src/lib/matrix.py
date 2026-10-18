@@ -8,6 +8,7 @@ from sympy import (
     Matrix,
     MatrixExpr,
     S,
+    ShapeError,
     expand,
     sqrt,
 )
@@ -137,11 +138,6 @@ def quadratic_form(sym_matrix: Matrix, vector: Matrix) -> Expr:
     return vector.dot(vector.T * sym_matrix)
 
 
-def skew_matrix(vector3: Matrix) -> Matrix:
-    """Creates a skew-symmetric matrix from a 3D column vector."""
-    return vector3.hat()
-
-
 def _pivot_index(matrix: Matrix) -> int | None:
     """Finds the first provably non-zero element of a matrix.
 
@@ -196,6 +192,42 @@ class MatrixFunction(MatrixExpr):
         return printer._print(  # noqa: SLF001 (private-member-access)
             Function(type(self).__name__)(*self.args)
         )
+
+
+class SkewMatrix(MatrixFunction):
+    """Unevaluated form of [skew_matrix](#matrix.skew_matrix)."""
+
+    @classmethod
+    def eval(cls, vector3: Matrix | MatrixExpr) -> Matrix | None:
+        """Internal implementation. Call `skew_matrix(vector3)` instead."""
+        if vector3.shape != (3, 1):
+            msg = f"Expected a 3D column vector, got shape {vector3.shape}"
+            raise ShapeError(msg)
+        if vector3.is_MatrixExpr:
+            return None
+        return vector3.hat()
+
+    @property
+    def shape(self) -> tuple[Integer, Integer]:
+        """The shape of the result: `(3, 3)`."""
+        return (Integer(3), Integer(3))
+
+    def _entry(self, i: Expr, j: Expr, **_kwargs: object) -> Expr:
+        if not (i.is_Integer and j.is_Integer):
+            return MatrixElement(self, i, j)
+        if i == j:
+            return S.Zero
+        # Same layout as Matrix.hat()
+        element = self.args[0][3 - i - j]
+        return element if (i - j) % 3 == 1 else -element
+
+
+def skew_matrix(vector3: Matrix | MatrixExpr) -> Matrix | SkewMatrix:
+    """Creates a skew-symmetric matrix from a 3D column vector.
+
+    Returns an unevaluated `MatrixExpr` if the vector is unevaluated.
+    """
+    return SkewMatrix(vector3)
 
 
 class PivotColumn(MatrixFunction):

@@ -7,8 +7,8 @@
   * [min\_eigenvalue](#matrix.min_eigenvalue)
   * [conic\_matrix](#matrix.conic_matrix)
   * [quadratic\_form](#matrix.quadratic_form)
-  * [skew\_matrix](#matrix.skew_matrix)
   * [MatrixFunction](#matrix.MatrixFunction)
+  * [skew\_matrix](#matrix.skew_matrix)
   * [pivot\_column](#matrix.pivot_column)
   * [pivot\_column\_and\_row](#matrix.pivot_column_and_row)
   * [outer\_product\_root](#matrix.outer_product_root)
@@ -178,7 +178,7 @@ def is_nonzero_multiple(m1: Matrix | Sequence[Expr],
                         m2: Matrix | Sequence[Expr]) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L20))
+([source](../src/lib/matrix.py#L21))
 
 Tells whether two matrices are non-zero scalar multiples of each other.
 
@@ -193,7 +193,7 @@ def is_positive_multiple(m1: Matrix | Sequence[Expr],
                          m2: Matrix | Sequence[Expr]) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L54))
+([source](../src/lib/matrix.py#L55))
 
 Tells whether two matrices are positive scalar multiples of each other.
 
@@ -207,7 +207,7 @@ Treats lists and tuples as column vectors. Returns `None` if undecidable.
 def max_eigenvalue(symmetric_matrix_2x2: Matrix) -> Expr
 ```
 
-([source](../src/lib/matrix.py#L87))
+([source](../src/lib/matrix.py#L88))
 
 Returns the higher eigenvalue of a 2x2 symmetric matrix.
 
@@ -219,7 +219,7 @@ Returns the higher eigenvalue of a 2x2 symmetric matrix.
 def min_eigenvalue(symmetric_matrix_2x2: Matrix) -> Expr
 ```
 
-([source](../src/lib/matrix.py#L96))
+([source](../src/lib/matrix.py#L97))
 
 Returns the lower eigenvalue of a 2x2 symmetric matrix.
 
@@ -232,7 +232,7 @@ def conic_matrix(a: Expr, b: Expr, c: Expr, d: Expr, e: Expr,
                  f: Expr) -> Matrix
 ```
 
-([source](../src/lib/matrix.py#L105))
+([source](../src/lib/matrix.py#L106))
 
 Builds a 3x3 symmetric conic matrix from its elements.
 
@@ -253,7 +253,7 @@ or in expanded form `ax² + 2bxy + cy² + 2dx + 2ey + f = 0`
 def quadratic_form(sym_matrix: Matrix, vector: Matrix) -> Expr
 ```
 
-([source](../src/lib/matrix.py#L127))
+([source](../src/lib/matrix.py#L128))
 
 Computes the quadratic form for a n⨯n symmetric matrix and an n-element
 column vector.
@@ -264,18 +264,6 @@ conic.
 
 *Formula*: `vᵀ·M·v`
 
-<a id="matrix.skew_matrix"></a>
-
-#### skew\_matrix
-
-```python
-def skew_matrix(vector3: Matrix) -> Matrix
-```
-
-([source](../src/lib/matrix.py#L140))
-
-Creates a skew-symmetric matrix from a 3D column vector.
-
 <a id="matrix.MatrixFunction"></a>
 
 ## MatrixFunction
@@ -284,7 +272,7 @@ Creates a skew-symmetric matrix from a 3D column vector.
 class MatrixFunction(MatrixExpr)
 ```
 
-([source](../src/lib/matrix.py#L160))
+([source](../src/lib/matrix.py#L156))
 
 Base class of matrix valued functions of a matrix, which stay
 unevaluated until the result can be determined.
@@ -309,9 +297,23 @@ def __new__(cls,
             evaluate: bool = True) -> "Matrix | MatrixFunction"
 ```
 
-([source](../src/lib/matrix.py#L176))
+([source](../src/lib/matrix.py#L172))
 
 Evaluates the function if possible, unless `evaluate` is false.
+
+<a id="matrix.skew_matrix"></a>
+
+#### skew\_matrix
+
+```python
+def skew_matrix(vector3: Matrix | MatrixExpr) -> Matrix | SkewMatrix
+```
+
+([source](../src/lib/matrix.py#L225))
+
+Creates a skew-symmetric matrix from a 3D column vector.
+
+Returns an unevaluated `MatrixExpr` if the vector is unevaluated.
 
 <a id="matrix.pivot_column"></a>
 
@@ -321,7 +323,7 @@ Evaluates the function if possible, unless `evaluate` is false.
 def pivot_column(matrix: Matrix | MatrixExpr) -> Matrix | PivotColumn
 ```
 
-([source](../src/lib/matrix.py#L235))
+([source](../src/lib/matrix.py#L267))
 
 Returns the column of a matrix for its first provably nonzero element.
 
@@ -343,7 +345,7 @@ def pivot_column_and_row(
 ) -> tuple[Matrix | PivotColumn, Matrix | TransposedPivotRow]
 ```
 
-([source](../src/lib/matrix.py#L249))
+([source](../src/lib/matrix.py#L281))
 
 Returns the column and the transposed row of a matrix for its first
 provably nonzero element, i.e. two column vectors.
@@ -362,7 +364,7 @@ def outer_product_root(
         matrix: Matrix | MatrixExpr) -> Matrix | OuterProductRoot
 ```
 
-([source](../src/lib/matrix.py#L295))
+([source](../src/lib/matrix.py#L327))
 
 Finds a vector `v` such that `v·vᵀ` equals the given symmetric matrix.
 
@@ -384,7 +386,7 @@ to be non-zero.
 def is_real_matrix(matrix: Matrix) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L311))
+([source](../src/lib/matrix.py#L343))
 
 Checks if all elements of a matrix are real.
 
@@ -398,7 +400,7 @@ Returns a bool or `None` if undecidable.
 def is_definite_matrix(matrix: Matrix) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L319))
+([source](../src/lib/matrix.py#L351))
 
 Checks if a real matrix is either positive or negative definite.
 
@@ -414,7 +416,7 @@ def is_full_rank(matrix: Matrix,
                  simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L349))
+([source](../src/lib/matrix.py#L381))
 
 Tells whether a matrix has full rank.
 
