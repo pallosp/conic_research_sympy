@@ -360,7 +360,7 @@ elements can be proven non-zero.
 def outer_product_root(matrix: Matrix) -> Matrix | OuterProductRoot
 ```
 
-([source](../src/lib/matrix.py#L284))
+([source](../src/lib/matrix.py#L285))
 
 Finds a vector `v` such that `v·vᵀ` equals the given symmetric matrix.
 
@@ -382,7 +382,7 @@ to be non-zero.
 def is_real_matrix(matrix: Matrix) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L300))
+([source](../src/lib/matrix.py#L301))
 
 Checks if all elements of a matrix are real.
 
@@ -396,7 +396,7 @@ Returns a bool or `None` if undecidable.
 def is_definite_matrix(matrix: Matrix) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L308))
+([source](../src/lib/matrix.py#L309))
 
 Checks if a real matrix is either positive or negative definite.
 
@@ -412,7 +412,7 @@ def is_full_rank(matrix: Matrix,
                  simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L338))
+([source](../src/lib/matrix.py#L339))
 
 Tells whether a matrix has full rank.
 

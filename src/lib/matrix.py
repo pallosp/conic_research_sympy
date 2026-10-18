@@ -267,13 +267,14 @@ class OuterProductRoot(MatrixFunction):
     @classmethod
     def eval(cls, matrix: Matrix) -> Matrix | None:
         """Internal implementation. Call `outer_product_root(matrix)` instead."""
-        for i in range(matrix.rows):
-            diagonal_element = matrix[i, i]
-            if diagonal_element.is_nonzero:
-                return matrix.col(i) / sqrt(diagonal_element)
-        if matrix.is_zero_matrix:
+        diagonal = matrix.diagonal()
+        index = _pivot_index(diagonal)
+        if index is None:
+            return None
+        if diagonal[index].is_zero:
+            # All diagonal elements are zero, therefore v = 0.
             return matrix.col(0)
-        return None
+        return matrix.col(index) / sqrt(diagonal[index])
 
     @property
     def shape(self) -> tuple[Integer, Integer]:

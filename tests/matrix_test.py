@@ -214,6 +214,12 @@ class TestOuterProductRoot:
         root = outer_product_root(v * v.T)
         assert root * root.T == v * v.T
 
+    def test_complex_vector(self):
+        # The only non-zero diagonal element, 2i, is not real
+        v = Matrix([1 + I, 0])
+        root = outer_product_root(v * v.T)
+        assert root.expand() == v
+
     def test_symbolic_vector(self):
         x, y = symbols("x y", positive=True)
         v = Matrix([x, y])
