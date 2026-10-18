@@ -32,6 +32,7 @@ from lib.circle import UNIT_CIRCLE
 from lib.conic_direction import focal_axis_direction
 from lib.point import point_to_vec3
 from lib.transform import rotate
+from lib.type_aliases import Scalar
 
 #: The circle at the origin with radius 1, in polar matrix form.
 POLAR_UNIT_CIRCLE: ImmutableMatrix = ImmutableMatrix.eye(3)
@@ -56,14 +57,16 @@ class PolarOrigin(Enum):
     VERTICAL = 4
 
 
-def point_at_angle(polar_conic: MatrixBase, theta: Expr) -> MatrixBase:
+def point_at_angle(polar_conic: MatrixBase, theta: Scalar) -> MatrixBase:
     """Computes the coordinates of the projective point on a polar conic
     corresponding to a certain angle.
     """
     return polar_conic * Matrix([cos(theta), sin(theta), 1])
 
 
-def angle_at_point(polar_conic: MatrixBase, point: MatrixBase | Sequence[Expr]) -> Expr:
+def angle_at_point(
+    polar_conic: MatrixBase, point: MatrixBase | Sequence[Scalar]
+) -> Expr:
     """Computes the polar angle corresponding to a point on a polar conic.
 
     The result is unspecified if the point is not on the conic.
@@ -73,7 +76,7 @@ def angle_at_point(polar_conic: MatrixBase, point: MatrixBase | Sequence[Expr]) 
     return atan2(x_times_sin_a, x_times_cos_a)
 
 
-def tangent_at_angle(polar_conic: MatrixBase, angle_radians: Expr) -> MatrixBase:
+def tangent_at_angle(polar_conic: MatrixBase, angle_radians: Scalar) -> MatrixBase:
     """Computes the tangent line to a polar conic at the given angle.
 
     *Formula*:
@@ -83,7 +86,7 @@ def tangent_at_angle(polar_conic: MatrixBase, angle_radians: Expr) -> MatrixBase
     return adj.T * Matrix([cos(angle_radians), sin(angle_radians), -1])
 
 
-def curvature_sign_at_angle(polar_conic: MatrixBase, angle_radians: Expr) -> Matrix:
+def curvature_sign_at_angle(polar_conic: MatrixBase, angle_radians: Scalar) -> Matrix:
     """Tells which direction a polar conic turns at an angle.
 
     - *Positive*: the curve turns left (counterclockwise).
@@ -201,7 +204,7 @@ def hyperbola_to_polar_matrix(
     raise ValueError("Unsupported PolarOrigin value")
 
 
-def rotate_polar_param(polar_conic: MatrixBase, start_angle: Expr) -> MatrixBase:
+def rotate_polar_param(polar_conic: MatrixBase, start_angle: Scalar) -> MatrixBase:
     """Shifts the angle origin of a polar conic's parametrization.
 
     * `P'(θ) = P(θ + start_angle)` for all `θ`

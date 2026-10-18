@@ -4,11 +4,12 @@ from sympy import Expr, MatrixBase, sqrt
 
 from lib.line import are_parallel
 from lib.point import point_to_vec3, point_to_xy
+from lib.type_aliases import Scalar
 
 
 def point_point_distance(
-    point1: MatrixBase | Sequence[Expr],
-    point2: MatrixBase | Sequence[Expr],
+    point1: MatrixBase | Sequence[Scalar],
+    point2: MatrixBase | Sequence[Scalar],
 ) -> Expr:
     """Computes the signed distance between two points.
 
@@ -21,7 +22,7 @@ def point_point_distance(
     return sqrt((x2 * z1 - x1 * z2) ** 2 + (y2 * z1 - y1 * z2) ** 2) / (z1 * z2)
 
 
-def point_line_distance(point: MatrixBase | Sequence[Expr], line: MatrixBase) -> Expr:
+def point_line_distance(point: MatrixBase | Sequence[Scalar], line: MatrixBase) -> Expr:
     """Computes the signed distance between a point and a line.
 
     Special cases:

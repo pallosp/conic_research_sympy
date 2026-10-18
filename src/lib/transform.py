@@ -1,12 +1,13 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Matrix, MatrixBase, cos, sin
+from sympy import Matrix, MatrixBase, cos, sin
 
 from lib.point import ORIGIN, point_to_vec3, point_to_xy
+from lib.type_aliases import Scalar
 
 
 def transform_point(
-    point: MatrixBase | Sequence[Expr],
+    point: MatrixBase | Sequence[Scalar],
     transformation: MatrixBase,
 ) -> MatrixBase:
     """Applies a projective transformation to a projective point.
@@ -34,13 +35,15 @@ def transform_polar_conic(
     return transformation * polar_conic
 
 
-def translate(by: MatrixBase | Sequence[Expr]) -> Matrix:
+def translate(by: MatrixBase | Sequence[Scalar]) -> Matrix:
     """Computes the transformation matrix for a 2D translation."""
     dx, dy = by
     return Matrix([[1, 0, dx], [0, 1, dy], [0, 0, 1]])
 
 
-def rotate(angle_radians: Expr, around: MatrixBase | Sequence[Expr] = ORIGIN) -> Matrix:
+def rotate(
+    angle_radians: Scalar, around: MatrixBase | Sequence[Scalar] = ORIGIN
+) -> Matrix:
     """Computes the transformation matrix for a rotation around a point."""
     x0, y0 = point_to_xy(around)
     cos_angle = cos(angle_radians)
@@ -74,9 +77,9 @@ def reflect_to_line(axis: MatrixBase) -> Matrix:
 
 
 def scale_xy(
-    scale_x: Expr,
-    scale_y: Expr,
-    center: Sequence[Expr] | MatrixBase = ORIGIN,
+    scale_x: Scalar,
+    scale_y: Scalar,
+    center: MatrixBase | Sequence[Scalar] = ORIGIN,
 ) -> Matrix:
     """Computes the projective transformation matrix for scaling along the x-
     and y-axes.
@@ -91,7 +94,7 @@ def scale_xy(
     )
 
 
-def scale(scale: Expr, center: Sequence[Expr] | MatrixBase = ORIGIN) -> Matrix:
+def scale(scale: Scalar, center: MatrixBase | Sequence[Scalar] = ORIGIN) -> Matrix:
     """Computes the projective transformation matrix for a uniform scaling
     transformation.
     """
@@ -99,8 +102,8 @@ def scale(scale: Expr, center: Sequence[Expr] | MatrixBase = ORIGIN) -> Matrix:
 
 
 def homography_from_samples(
-    source_points: Sequence[MatrixBase | Sequence[Expr]],
-    target_points: Sequence[MatrixBase | Sequence[Expr]],
+    source_points: Sequence[MatrixBase | Sequence[Scalar]],
+    target_points: Sequence[MatrixBase | Sequence[Scalar]],
 ) -> Matrix:
     """Computes the transformation that maps one quadrilateral to another.
 

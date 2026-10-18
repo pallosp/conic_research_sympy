@@ -6,11 +6,12 @@ from sympy.core.logic import fuzzy_not
 
 from lib.matrix import is_full_rank, quadratic_form, skew_matrix
 from lib.point import point_to_vec3
+from lib.type_aliases import Scalar
 
 
 def line_contains_point(
     line: MatrixBase,
-    point: MatrixBase | Sequence[Expr],
+    point: MatrixBase | Sequence[Scalar],
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
@@ -25,7 +26,7 @@ def line_contains_point(
 
 def conic_contains_point(
     conic: MatrixBase,
-    point: MatrixBase | Sequence[Expr],
+    point: MatrixBase | Sequence[Scalar],
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
@@ -59,7 +60,7 @@ def conic_contains_line(
 
 def polar_conic_contains_point(
     polar_conic: MatrixBase,
-    point: MatrixBase | Sequence[Expr],
+    point: MatrixBase | Sequence[Scalar],
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:

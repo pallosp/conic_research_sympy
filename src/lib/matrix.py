@@ -19,10 +19,12 @@ from sympy.matrices.expressions.matexpr import MatrixElement
 from sympy.printing.pretty.pretty import PrettyPrinter
 from sympy.printing.pretty.stringpict import prettyForm
 
+from lib.type_aliases import Scalar
+
 
 def is_nonzero_multiple(
-    m1: MatrixBase | Sequence[Expr],
-    m2: MatrixBase | Sequence[Expr],
+    m1: MatrixBase | Sequence[Scalar],
+    m2: MatrixBase | Sequence[Scalar],
 ) -> bool | None:
     """Tells whether two matrices are non-zero scalar multiples of each other.
 
@@ -55,8 +57,8 @@ def is_nonzero_multiple(
 
 
 def is_positive_multiple(
-    m1: MatrixBase | Sequence[Expr],
-    m2: MatrixBase | Sequence[Expr],
+    m1: MatrixBase | Sequence[Scalar],
+    m2: MatrixBase | Sequence[Scalar],
 ) -> bool | None:
     """Tells whether two matrices are positive scalar multiples of each other.
 
@@ -106,12 +108,12 @@ def min_eigenvalue(symmetric_matrix_2x2: MatrixBase) -> Expr:
 
 
 def conic_matrix(  # noqa: PLR0913, PLR0917 (too-many-arguments, too-many-positional-arguments)
-    a: Expr,
-    b: Expr,
-    c: Expr,
-    d: Expr,
-    e: Expr,
-    f: Expr,
+    a: Scalar,
+    b: Scalar,
+    c: Scalar,
+    d: Scalar,
+    e: Scalar,
+    f: Scalar,
 ) -> Matrix:
     """Builds a 3x3 symmetric conic matrix from its elements.
 

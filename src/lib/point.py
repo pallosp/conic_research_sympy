@@ -1,6 +1,8 @@
 from collections.abc import Sequence
 
-from sympy import Expr, I, ImmutableMatrix, Matrix, MatrixBase, S, sympify
+from sympy import I, ImmutableMatrix, Matrix, MatrixBase, S, sympify
+
+from lib.type_aliases import Scalar
 
 #: The zero vector `(0 : 0 : 0)`. It doesn't represent any point. Functions
 #: return it when the resulting point is undefined.
@@ -21,7 +23,7 @@ CIRCULAR_POINT_I: ImmutableMatrix = ImmutableMatrix([1, I, 0])
 CIRCULAR_POINT_J: ImmutableMatrix = ImmutableMatrix([1, -I, 0])
 
 
-def ideal_point(x: Expr, y: Expr) -> Matrix:
+def ideal_point(x: Scalar, y: Scalar) -> Matrix:
     """Creates an ideal point at the given direction."""
     return Matrix([x, y, 0])
 
@@ -37,7 +39,7 @@ def ideal_point_on_line(line: MatrixBase) -> Matrix:
     return ideal_point(line[1], -line[0])
 
 
-def point_to_xy(point: MatrixBase | Sequence[Expr]) -> Matrix:
+def point_to_xy(point: MatrixBase | Sequence[Scalar]) -> Matrix:
     """Computes the Euclidean coordinates of a projective point."""
     if len(point) not in (2, 3):
         raise ValueError("The point must be a 2D or 3D vector, list or tuple.")
@@ -46,7 +48,7 @@ def point_to_xy(point: MatrixBase | Sequence[Expr]) -> Matrix:
     return Matrix([x / z, y / z])
 
 
-def point_to_vec3(point: MatrixBase | Sequence[Expr]) -> Matrix:
+def point_to_vec3(point: MatrixBase | Sequence[Scalar]) -> Matrix:
     """Computes the homogeneous coordinates of a projective point."""
     if len(point) not in (2, 3):
         raise ValueError("The point must be a 2D or 3D vector, list or tuple.")
@@ -57,7 +59,7 @@ def point_to_vec3(point: MatrixBase | Sequence[Expr]) -> Matrix:
     return Matrix(point)
 
 
-def centroid(*points: Sequence[Expr]) -> Matrix:
+def centroid(*points: MatrixBase | Sequence[Scalar]) -> Matrix:
     """Computes the centroid of a set of points.
 
     Returns the point's coordinates as a 2D column vector.
@@ -74,7 +76,7 @@ def centroid(*points: Sequence[Expr]) -> Matrix:
 
 
 def perpendicular_foot(
-    point: MatrixBase | Sequence[Expr],
+    point: MatrixBase | Sequence[Scalar],
     line: MatrixBase,
 ) -> Matrix:
     """Computes the foot of the perpendicular through a point to a line.

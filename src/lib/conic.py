@@ -5,6 +5,7 @@ from sympy import Expr, Matrix, MatrixBase, MatrixExpr, Poly, Symbol, abc, sqrt
 from lib.conic_direction import ConicNormFactor, focal_axis_direction
 from lib.matrix import pivot_column_and_row
 from lib.point import point_to_vec3, point_to_xy
+from lib.type_aliases import Scalar
 
 
 def conic_from_poly(
@@ -35,11 +36,11 @@ def conic_from_poly(
 
 
 def conic_through_points(
-    p1: MatrixBase | Sequence[Expr],
-    p2: MatrixBase | Sequence[Expr],
-    p3: MatrixBase | Sequence[Expr],
-    p4: MatrixBase | Sequence[Expr],
-    p5: MatrixBase | Sequence[Expr],
+    p1: MatrixBase | Sequence[Scalar],
+    p2: MatrixBase | Sequence[Scalar],
+    p3: MatrixBase | Sequence[Scalar],
+    p4: MatrixBase | Sequence[Scalar],
+    p5: MatrixBase | Sequence[Scalar],
 ) -> Matrix:
     """Computes the conic that goes through the given points.
 
@@ -61,9 +62,9 @@ def conic_through_points(
 
 
 def conic_from_focus_and_directrix(
-    focus: MatrixBase | Sequence[Expr],
+    focus: MatrixBase | Sequence[Scalar],
     directrix: MatrixBase,
-    eccentricity: Expr,
+    eccentricity: Scalar,
 ) -> MatrixBase:
     """Constructs a conic from its focus, directrix and eccentricity.
 
@@ -191,7 +192,7 @@ def pole_point(conic: MatrixBase, polar_line: MatrixBase) -> MatrixBase:
 
 
 def polar_line(
-    conic: MatrixBase, pole_point: MatrixBase | Sequence[Expr]
+    conic: MatrixBase, pole_point: MatrixBase | Sequence[Scalar]
 ) -> MatrixBase:
     """Computes the polar line of a conic for a given pole point.
 

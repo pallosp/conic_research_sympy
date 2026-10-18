@@ -9,12 +9,13 @@ from lib.conic_direction import (
 )
 from lib.matrix import conic_matrix, max_eigenvalue, min_eigenvalue
 from lib.point import point_to_xy
+from lib.type_aliases import Scalar
 
 
 def conic_from_foci_and_radius(
-    focus1: MatrixBase | Sequence[Expr],
-    focus2: MatrixBase | Sequence[Expr],
-    primary_radius: Expr,
+    focus1: MatrixBase | Sequence[Scalar],
+    focus2: MatrixBase | Sequence[Scalar],
+    primary_radius: Scalar,
 ) -> Matrix:
     """Computes the ellipse or hyperbola with the given focus points and primary radius.
 
@@ -43,10 +44,10 @@ def conic_from_foci_and_radius(
 
 
 def conic_from_center_and_points(
-    center: MatrixBase | Sequence[Expr],
-    p1: MatrixBase | Sequence[Expr],
-    p2: MatrixBase | Sequence[Expr],
-    p3: MatrixBase | Sequence[Expr],
+    center: MatrixBase | Sequence[Scalar],
+    p1: MatrixBase | Sequence[Scalar],
+    p2: MatrixBase | Sequence[Scalar],
+    p3: MatrixBase | Sequence[Scalar],
 ) -> Matrix:
     """Computes the conic section with the given center and perimeter points.
 
@@ -172,8 +173,8 @@ def secondary_radius(conic: MatrixBase) -> Expr:
 def radius_in_direction(
     conic: MatrixBase,
     *,
-    direction: MatrixBase | Sequence[Expr] | None = None,
-    angle: Expr | None = None,
+    direction: MatrixBase | Sequence[Scalar] | None = None,
+    angle: Scalar | None = None,
 ) -> Expr:
     """Computes the length of the conic radius in the given direction.
 

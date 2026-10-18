@@ -5,6 +5,7 @@ from sympy import Expr, ImmutableMatrix, Matrix, MatrixBase, acos, sqrt
 from lib.central_conic import conic_from_foci_and_radius, shrink_conic_to_zero
 from lib.conic_direction import ConicNormFactor
 from lib.distance import point_point_distance
+from lib.type_aliases import Scalar
 
 #: The x² - y² = 1 hyperbola.
 #: https://en.wikipedia.org/wiki/Unit_hyperbola
@@ -12,9 +13,9 @@ UNIT_HYPERBOLA: ImmutableMatrix = ImmutableMatrix.diag([1, -1, -1])
 
 
 def hyperbola_from_foci_and_point(
-    focus1: MatrixBase | Sequence[Expr],
-    focus2: MatrixBase | Sequence[Expr],
-    point: MatrixBase | Sequence[Expr],
+    focus1: MatrixBase | Sequence[Scalar],
+    focus2: MatrixBase | Sequence[Scalar],
+    point: MatrixBase | Sequence[Scalar],
 ) -> Matrix:
     """Constructs a hyperbola from its focus points and an incident point.
 
