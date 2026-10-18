@@ -48,7 +48,7 @@ print()
 
 println_indented(conic_x_line(conic_matrix(*symbols("a,b,c,d,e,f")), IDEAL_LINE))
 
-print("Potential NonzeroCross expansions based on the coefficients' signs:")
+print("Potential pivot_column_and_row expansions based on the coefficients' signs:")
 print()
 
 shown = set()

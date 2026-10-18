@@ -1,8 +1,6 @@
-from sympy import Function, I, Matrix, sqrt, symbols
+from sympy import I, Matrix, sqrt, symbols
 
 from lib.matrix import (
-    NonzeroColumn,
-    NonzeroCross,
     OuterProductRoot,
     conic_matrix,
     is_definite_matrix,
@@ -12,6 +10,8 @@ from lib.matrix import (
     is_real_matrix,
     max_eigenvalue,
     min_eigenvalue,
+    pivot_column,
+    pivot_column_and_row,
     quadratic_form,
 )
 
@@ -129,19 +129,74 @@ class TestQuadraticForm:
         assert quadratic_form(Matrix([[1, 2], [3, 4]]), Matrix([1, 2])) == 27
 
 
-class TestNonzeroColumn:
+class TestPivotColumn:
     def test_numeric(self):
-        assert NonzeroColumn(Matrix([[1, 2], [3, 4]])) == Matrix([1, 3])
-        assert NonzeroColumn(Matrix([[0, 1], [0, 2]])) == Matrix([1, 2])
-        assert NonzeroColumn(Matrix.zeros(3, 2)) == Matrix.zeros(3, 1)
+        assert pivot_column(Matrix([[1, 2], [3, 4]])) == Matrix([1, 3])
+        assert pivot_column(Matrix([[0, 1], [0, 2]])) == Matrix([1, 2])
+        assert pivot_column(Matrix([[0, 1], [2, 0]])) == Matrix([1, 0])
+        assert pivot_column(Matrix.zeros(3, 2)) == Matrix.zeros(3, 1)
 
     def test_symbolic(self):
         pos = symbols("p", positive=True)
-        assert NonzeroColumn(Matrix.diag([0, pos])) == Matrix([0, pos])
+        assert pivot_column(Matrix.diag([0, pos])) == Matrix([0, pos])
 
         x = symbols("x")
-        assert isinstance(NonzeroColumn(Matrix.diag([x, 0])), NonzeroColumn)
-        assert NonzeroColumn(Matrix.diag([x, 1])) == Matrix([0, 1])
+        assert pivot_column(Matrix.diag([x, 1])) == Matrix([0, 1])
+
+        x = symbols("x", nonnegative=True)
+        assert pivot_column(Matrix([[x - x, 0], [x + 1, 0]])) == Matrix([0, x + 1])
+
+    def test_complex(self):
+        x = symbols("x")
+        assert pivot_column(Matrix([[x, I], [1, 0]])) == Matrix([I, 0])
+
+    def test_undecidable(self):
+        x = symbols("x")
+        column = pivot_column(Matrix([[x, 0, 0], [0, x, 0]]))
+        assert column.is_MatrixExpr
+        assert column.shape == (2, 1)
+        assert column.T.shape == (1, 2)
+        assert (Matrix([[1, 2]]) * column).shape == (1, 1)
+        assert column.subs(x, 3) == Matrix([3, 0])
+
+
+class TestPivotColumnAndRow:
+    def test_numeric(self):
+        column, row = pivot_column_and_row(Matrix([[0, 1, 2], [3, 4, 5]]))
+        assert column == Matrix([1, 4])
+        assert row == Matrix([0, 1, 2])
+        assert pivot_column_and_row(Matrix([[0, 0], [1, 2]]))[1] == Matrix([1, 2])
+
+    def test_zero_matrix(self):
+        column, row = pivot_column_and_row(Matrix.zeros(2, 3))
+        assert column == Matrix.zeros(2, 1)
+        assert row == Matrix.zeros(3, 1)
+
+    def test_symbolic(self):
+        x = symbols("x", nonnegative=True)
+        assert pivot_column_and_row(Matrix([[x - x, 0], [1, 0]]))[1] == Matrix([1, 0])
+
+    def test_complex(self):
+        x = symbols("x")
+        _, row = pivot_column_and_row(Matrix([[x, 0], [0, 1 + I]]))
+        assert row == Matrix([0, 1 + I])
+
+    def test_same_pivot_as_pivot_column(self):
+        x = symbols("x")
+        matrix = Matrix([[x, 0, 1], [2, 3, 4]])
+        column, row = pivot_column_and_row(matrix)
+        assert column == pivot_column(matrix) == Matrix([1, 4])
+        assert row == Matrix([x, 0, 1])
+
+    def test_undecidable(self):
+        x = symbols("x")
+        matrix = Matrix([[x, 0, 0], [0, x, 0]])
+        column, row = pivot_column_and_row(matrix)
+        assert column == pivot_column(matrix)
+        assert row.is_MatrixExpr
+        assert row.shape == (3, 1)
+        assert column.subs(x, 3) == Matrix([3, 0])
+        assert row.subs(x, 3) == Matrix([3, 0, 0])
 
 
 class TestOuterProductRoot:
@@ -173,32 +228,6 @@ class TestOuterProductRoot:
         root = OuterProductRoot(v * v.T)
         assert isinstance(root, OuterProductRoot)
         assert root.subs(x, 3) == Matrix([3, 0])
-
-
-class TestNonZeroCross:
-    def test_full_matrix(self):
-        matrix = Matrix([[1, 2], [3, 4]])
-        assert NonzeroCross(matrix) == (Matrix([1, 3]), Matrix([1, 2]))
-
-    def test_sparse_matrix(self):
-        matrix = Matrix([[0, 1], [2, 0]])
-        assert NonzeroCross(matrix) == (Matrix([1, 0]), Matrix([0, 1]))
-
-    def test_zero_matrix(self):
-        assert NonzeroCross(Matrix.zeros(2, 3)) == (
-            Matrix.zeros(2, 1),
-            Matrix.zeros(3, 1),
-        )
-
-    def test_undecidable(self):
-        x = symbols("x")
-        # Not evaluated
-        assert isinstance(NonzeroCross(Matrix([x])), Function)
-
-    def test_symbols_in_elements(self):
-        x = symbols("x", nonnegative=True)
-        assert NonzeroCross(Matrix([[x - x, 0], [1, 0]]))[1] == Matrix([1, 0])
-        assert NonzeroCross(Matrix([[0, 0], [x + 1, 0]]))[0] == Matrix([0, x + 1])
 
 
 class TestIsRealMatrix:

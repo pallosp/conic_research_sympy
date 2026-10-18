@@ -1,8 +1,6 @@
-from collections.abc import Sequence
+from sympy import Matrix, MatrixExpr, sqrt
 
-from sympy import Expr, Matrix, sqrt
-
-from lib.matrix import NonzeroCross, quadratic_form, skew_matrix
+from lib.matrix import pivot_column_and_row, quadratic_form, skew_matrix
 
 
 def line_x_line(line1: Matrix, line2: Matrix) -> Matrix:
@@ -17,14 +15,14 @@ def line_x_line(line1: Matrix, line2: Matrix) -> Matrix:
 def conic_x_line(
     conic: Matrix,
     line: Matrix,
-) -> tuple[Matrix | Sequence[Expr], Matrix | Sequence[Expr]] | NonzeroCross:
+) -> tuple[Matrix | MatrixExpr, Matrix | MatrixExpr]:
     """Intersects a conic with a line. Returns two points.
 
     Special cases:
      - The intersection points coincide if the line is tangent to the conic.
      - They are complex conjugates if the line doesn't intersect the conic at
        a real point.
-     - May return an unevaluated `NonzeroCross` for symbolic conics or lines,
+     - May return unevaluated `MatrixExpr`s for symbolic conics or lines,
        when none of the intersection matrix elements can be proven non-zero.
      - Returns two `[0, 0, 0]ᵀ` vectors if the conic contains the entire line.
 
@@ -50,10 +48,11 @@ def conic_x_line(
     #  - Hence adj(m) = (lᵀ·adj(C)·l)·l·lᵀ, so adj(m)ᵢᵢ / lᵢ² = lᵀ·adj(C)·l.
     #  - This gives α = √(-lᵀ·adj(C)·l) for any line.
     #
-    # Only the branch in step 3 (NonzeroCross) remains, and it's unavoidable.
+    # Only the branch in step 3 (pivot_column_and_row) remains, and it's
+    # unavoidable.
 
     skew_mat = skew_matrix(line)
     m = skew_mat.T * conic * skew_mat
     alpha = sqrt(-quadratic_form(conic.adjugate(), line))
     intersections = m + alpha * skew_mat
-    return NonzeroCross(intersections)
+    return pivot_column_and_row(intersections)

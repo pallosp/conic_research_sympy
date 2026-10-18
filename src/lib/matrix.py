@@ -1,7 +1,22 @@
 from collections.abc import Callable, Sequence
 
-from sympy import Expr, Function, Matrix, expand, sqrt
+from sympy import (
+    Basic,
+    Expr,
+    Function,
+    ImmutableMatrix,
+    Integer,
+    Matrix,
+    MatrixExpr,
+    S,
+    expand,
+    sqrt,
+)
 from sympy.core.logic import fuzzy_and, fuzzy_not
+from sympy.matrices.expressions.matexpr import MatrixElement
+from sympy.printing.pretty.pretty import PrettyPrinter
+from sympy.printing.pretty.stringpict import prettyForm
+from sympy.printing.str import StrPrinter
 
 
 def is_nonzero_multiple(
@@ -129,23 +144,116 @@ def skew_matrix(vector3: Matrix) -> Matrix:
     return vector3.hat()
 
 
-class NonzeroColumn(Function):
-    """Finds a non-zero column in a matrix.
+def _pivot_index(matrix: Matrix) -> int | None:
+    """Finds the first provably non-zero element of a matrix.
 
-    Returns an unevaluated `sympy.Function` if none of the columns can be
-    proven to be non-zero, or a zero vector in case of a zero matrix.
+    Returns 0 for zero matrices, or `None` if undecidable.
+    """
+    all_zero = True
+    for i, el in enumerate(matrix):
+        is_zero = el.is_zero
+        if is_zero is False:
+            return i
+        if is_zero is None:
+            all_zero = False
+    return 0 if all_zero else None
+
+
+class _PivotVector(MatrixExpr):
+    """Common base of the matrix expressions that select a vector through the
+    pivot of a matrix, i.e. its first provably non-zero element.
+
+    Subclasses implement `_select` and `shape`.
     """
 
-    @classmethod
-    def eval(cls, matrix: Matrix) -> Matrix | None:
-        """Internal implementation. Call `NonzeroColumn(matrix)` directly."""
-        for j in range(matrix.cols):
-            col = matrix.col(j)
-            if col.is_zero_matrix is False:
-                return col
-        if matrix.is_zero_matrix:
-            return matrix.col(0)
-        return None
+    _display_name: str
+    _select: Callable[[Matrix, int], Matrix]
+
+    def __new__(
+        cls,
+        matrix: Matrix,
+        *,
+        evaluate: bool = True,
+    ) -> "Matrix | _PivotVector":
+        if evaluate:
+            index = _pivot_index(matrix)
+            if index is not None:
+                return cls._select(matrix, index)
+        return super().__new__(cls, ImmutableMatrix(matrix))
+
+    def _entry(self, i: int, j: int, **_kwargs: object) -> MatrixElement:
+        return MatrixElement(self, i, j)
+
+    def _display_form(self) -> Basic:
+        return Function(self._display_name)(self.args[0])
+
+    def _pretty(self, printer: PrettyPrinter) -> prettyForm:
+        return printer._print(  # noqa: SLF001 (private-member-access)
+            self._display_form()
+        )
+
+    def _sympystr(self, printer: StrPrinter) -> str:
+        return printer._print(  # noqa: SLF001 (private-member-access)
+            self._display_form()
+        )
+
+
+class _PivotColumn(_PivotVector):
+    _display_name = "pivot_column"
+
+    @staticmethod
+    def _select(matrix: Matrix, index: int) -> Matrix:
+        return matrix.col(index % matrix.cols)
+
+    @property
+    def shape(self) -> tuple[Integer, Integer]:
+        return (Integer(self.args[0].rows), S.One)
+
+
+class _TransposedPivotRow(_PivotVector):
+    _display_name = "transposed_pivot_row"
+
+    @staticmethod
+    def _select(matrix: Matrix, index: int) -> Matrix:
+        return matrix.row(index // matrix.cols).T
+
+    @property
+    def shape(self) -> tuple[Integer, Integer]:
+        return (Integer(self.args[0].cols), S.One)
+
+
+def pivot_column(matrix: Matrix) -> Matrix | MatrixExpr:
+    """Returns the column of a matrix for its first provably nonzero element.
+
+    The result is a zero vector in case of a zero matrix.
+
+    Returns an unevaluated column vector shaped `MatrixExpr` if none of the
+    elements can be proven non-zero.
+
+    [pivot_column_and_row](#matrix.pivot_column_and_row) also returns the row
+    of the same pivot.
+    """
+    return _PivotColumn(matrix)
+
+
+def pivot_column_and_row(
+    matrix: Matrix,
+) -> tuple[Matrix | MatrixExpr, Matrix | MatrixExpr]:
+    """Returns the column and the transposed row of a matrix for its first
+    provably nonzero element, i.e. two column vectors.
+
+    The column is the same as [pivot_column](#matrix.pivot_column)`(matrix)`.
+
+    Returns unevaluated column vector shaped `MatrixExpr`s if none of the
+    elements can be proven non-zero.
+    """
+    index = _pivot_index(matrix)
+    if index is not None:
+        return (matrix.col(index % matrix.cols), matrix.row(index // matrix.cols).T)
+    return (
+        _PivotColumn(matrix, evaluate=False),
+        _TransposedPivotRow(matrix, evaluate=False),
+    )
 
 
 class OuterProductRoot(Function):
@@ -170,31 +278,6 @@ class OuterProductRoot(Function):
                 return matrix.col(i) / sqrt(diagonal_element)
         if matrix.is_zero_matrix:
             return matrix.col(0)
-        return None
-
-
-class NonzeroCross(Function):
-    """Finds a column and a row in a matrix whose intersection is a non-zero
-    element.
-
-    Returns the column and the transposed row, i.e. two column vectors.
-
-    Returns an unevaluated `sympy.Function` if none of the elements can be
-    proven to be non-zero, or two zero vectors in case of a zero matrix.
-    """
-
-    @classmethod
-    def eval(cls, matrix: Matrix) -> tuple[Matrix, Matrix] | None:
-        """Internal implementation. Call `NonZeroCross(matrix)` directly."""
-        all_zero = True
-        for i in range(len(matrix)):
-            el = matrix[i]
-            if el.is_nonzero:
-                return (matrix.col(i % matrix.cols), matrix.row(i // matrix.cols).T)
-            if all_zero and not el.is_zero:
-                all_zero = False
-        if all_zero:
-            return (matrix.col(0), matrix.row(0).T)
         return None
 
 

@@ -12,7 +12,7 @@ from lib.line import (
     horizontal_line,
     vertical_line,
 )
-from lib.matrix import NonzeroCross, conic_matrix, is_nonzero_multiple
+from lib.matrix import conic_matrix, is_nonzero_multiple
 from lib.point import ORIGIN, ZERO_POINT, ideal_point, point_to_xy
 from tests.utils import are_projective_sets_equal
 
@@ -94,18 +94,20 @@ class TestConicXLine:
     def test_symbolic_conic(self):
         conic = conic_matrix(*symbols("a b c d e f"))
         intersections = conic_x_line(conic, IDEAL_LINE)
-        assert isinstance(intersections, NonzeroCross)
+        assert intersections[0].is_MatrixExpr
 
     def test_symbolic_line(self):
         line = Matrix(symbols("l1 l2 l3"))
         intersections = conic_x_line(UNIT_CIRCLE, line)
-        assert isinstance(intersections, NonzeroCross)
+        assert intersections[0].is_MatrixExpr
 
     def test_symbolic_line_substitution(self):
         line = Matrix(symbols("l1 l2 l3"))
         intersections = conic_x_line(UNIT_CIRCLE, line)
-        assert isinstance(intersections, NonzeroCross)
-        intersections = intersections.subs(zip(line, X_AXIS, strict=True))
+        assert intersections[0].is_MatrixExpr
+        substitutions = dict(zip(line, X_AXIS, strict=True))
+        intersections = [p.subs(substitutions) for p in intersections]
+        assert not any(p.is_MatrixExpr for p in intersections)
         assert are_projective_sets_equal(
             intersections,
             [Matrix([1, 0, 1]), Matrix([-1, 0, 1])],

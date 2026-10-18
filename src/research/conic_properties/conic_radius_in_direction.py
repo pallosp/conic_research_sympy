@@ -32,7 +32,7 @@ radius_angle = symbols("theta", real=True)
 radius_dir = (cos(radius_angle), sin(radius_angle))
 line_through_center = line_through_point(center, direction=radius_dir)
 intersections = conic_x_line(conic, line_through_center)
-intersection = intersections.args[0].row(2)
+intersection = intersections[0].args[0].row(2)
 
 radius = (
     point_point_distance(center, intersection)

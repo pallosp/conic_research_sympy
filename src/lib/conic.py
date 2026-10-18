@@ -1,9 +1,9 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Matrix, Poly, Symbol, abc, sqrt
+from sympy import Expr, Matrix, MatrixExpr, Poly, Symbol, abc, sqrt
 
 from lib.conic_direction import ConicNormFactor, focal_axis_direction
-from lib.matrix import NonzeroCross
+from lib.matrix import pivot_column_and_row
 from lib.point import point_to_vec3, point_to_xy
 
 
@@ -131,15 +131,16 @@ def focal_axis(conic: Matrix) -> Matrix:
     return polar_line(conic, (-y, x, 0))
 
 
-def ideal_points(conic: Matrix) -> tuple[Matrix, Matrix] | NonzeroCross:
+def ideal_points(
+    conic: Matrix,
+) -> tuple[Matrix | MatrixExpr, Matrix | MatrixExpr]:
     """Computes the ideal points on a conic section.
 
     Returns two points. Special cases:
      - For parabolas these are the same point.
      - For ellipses these are the complex conjugates of each other.
      - Returns two `[0, 0, 0]ᵀ` vectors if the conic contains the ideal line.
-     - May return an unevaluated `NonzeroCross` for symbolic conics, when none
-       of the intersection matrix elements can be proven non-zero.
+     - May return unevaluated `MatrixExpr`s for symbolic conics.
 
     The computation is based on intersecting the conic with the ideal line.
 
@@ -153,7 +154,8 @@ def ideal_points(conic: Matrix) -> tuple[Matrix, Matrix] | NonzeroCross:
     """
     a, b, c = conic[0], conic[1], conic[4]
     disc = sqrt(b * b - a * c)
-    return NonzeroCross(Matrix([[c, -b - disc, 0], [-b + disc, a, 0], [0, 0, 0]]))
+    intersections = Matrix([[c, -b - disc, 0], [-b + disc, a, 0], [0, 0, 0]])
+    return pivot_column_and_row(intersections)
 
 
 def projective_conic_center(conic: Matrix) -> Matrix:

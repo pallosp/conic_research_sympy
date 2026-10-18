@@ -1,12 +1,12 @@
 from collections.abc import Sequence
 
-from sympy import Expr, Function, ImmutableMatrix, Matrix
+from sympy import Expr, Function, ImmutableMatrix, Matrix, MatrixExpr
 
 from lib.matrix import (
-    NonzeroColumn,
-    NonzeroCross,
     OuterProductRoot,
     conic_matrix,
+    pivot_column,
+    pivot_column_and_row,
     skew_matrix,
 )
 from lib.point import point_to_vec3
@@ -81,7 +81,7 @@ class SplitToLines(Function):
         #
         # Goal: find the rank-1 matrix l·mᵀ. All its columns are multiples of l
         # and all its rows are multiples of m, so any non-zero element yields
-        # both lines. NonzeroCross does this final step.
+        # both lines. pivot_column_and_row does this final step.
         #
         # l·mᵀ differs from C by an antisymmetric matrix, which can be written
         # as the skew matrix of a vector q:
@@ -98,25 +98,24 @@ class SplitToLines(Function):
         #  - Point conics: l and m are complex conjugates, so q is imaginary.
         #  - Double lines: l = m, so q = 0 and C = l·lᵀ is split directly.
         #  - Symbolic conics: SplitToLines stays unevaluated if OuterProductRoot
-        #    or NonzeroCross can't decide which element is non-zero.
+        #    or pivot_column_and_row can't decide which element is non-zero.
         q = OuterProductRoot(-conic.adjugate())
         if isinstance(q, OuterProductRoot):
             return None
-        lines = NonzeroCross(conic + skew_matrix(q))
-        if isinstance(lines, NonzeroCross):
+        lines = pivot_column_and_row(conic + skew_matrix(q))
+        if lines[0].is_MatrixExpr:
             return None
         return lines
 
 
-def extract_point(degenerate_conic: Matrix) -> Matrix | NonzeroColumn:
+def extract_point(degenerate_conic: Matrix) -> Matrix | MatrixExpr:
     """Extracts the point from a point conic or the intersection of the
     lines from a line pair conic.
 
     Special cases:
      - Returns `[0, 0, 0]ᵀ` for double line pairs.
      - Returns an unspecified 3D column vector if the conic is not degenerate.
-     - May return an unevaluated `NonzeroColumn` for symbolic conics, when the
-       result depends on which coefficients are zero.
+     - May return an unevaluated `MatrixExpr` for symbolic conics.
 
     *Algorithm*:
 
@@ -130,4 +129,4 @@ def extract_point(degenerate_conic: Matrix) -> Matrix | NonzeroColumn:
 
     Since `C` is symmetric, these cross products are the columns of `adj(C)`.
     """
-    return NonzeroColumn(degenerate_conic.adjugate())
+    return pivot_column(degenerate_conic.adjugate())

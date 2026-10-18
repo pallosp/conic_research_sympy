@@ -8,9 +8,9 @@
   * [conic\_matrix](#matrix.conic_matrix)
   * [quadratic\_form](#matrix.quadratic_form)
   * [skew\_matrix](#matrix.skew_matrix)
-  * [NonzeroColumn](#matrix.NonzeroColumn)
+  * [pivot\_column](#matrix.pivot_column)
+  * [pivot\_column\_and\_row](#matrix.pivot_column_and_row)
   * [OuterProductRoot](#matrix.OuterProductRoot)
-  * [NonzeroCross](#matrix.NonzeroCross)
   * [is\_real\_matrix](#matrix.is_real_matrix)
   * [is\_definite\_matrix](#matrix.is_definite_matrix)
   * [is\_full\_rank](#matrix.is_full_rank)
@@ -177,7 +177,7 @@ def is_nonzero_multiple(m1: Matrix | Sequence[Expr],
                         m2: Matrix | Sequence[Expr]) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L7))
+([source](../src/lib/matrix.py#L22))
 
 Tells whether two matrices are non-zero scalar multiples of each other.
 
@@ -192,7 +192,7 @@ def is_positive_multiple(m1: Matrix | Sequence[Expr],
                          m2: Matrix | Sequence[Expr]) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L41))
+([source](../src/lib/matrix.py#L56))
 
 Tells whether two matrices are positive scalar multiples of each other.
 
@@ -206,7 +206,7 @@ Treats lists and tuples as column vectors. Returns `None` if undecidable.
 def max_eigenvalue(symmetric_matrix_2x2: Matrix) -> Expr
 ```
 
-([source](../src/lib/matrix.py#L74))
+([source](../src/lib/matrix.py#L89))
 
 Returns the higher eigenvalue of a 2x2 symmetric matrix.
 
@@ -218,7 +218,7 @@ Returns the higher eigenvalue of a 2x2 symmetric matrix.
 def min_eigenvalue(symmetric_matrix_2x2: Matrix) -> Expr
 ```
 
-([source](../src/lib/matrix.py#L83))
+([source](../src/lib/matrix.py#L98))
 
 Returns the lower eigenvalue of a 2x2 symmetric matrix.
 
@@ -231,7 +231,7 @@ def conic_matrix(a: Expr, b: Expr, c: Expr, d: Expr, e: Expr,
                  f: Expr) -> Matrix
 ```
 
-([source](../src/lib/matrix.py#L92))
+([source](../src/lib/matrix.py#L107))
 
 Builds a 3x3 symmetric conic matrix from its elements.
 
@@ -252,7 +252,7 @@ or in expanded form `ax² + 2bxy + cy² + 2dx + 2ey + f = 0`
 def quadratic_form(sym_matrix: Matrix, vector: Matrix) -> Expr
 ```
 
-([source](../src/lib/matrix.py#L114))
+([source](../src/lib/matrix.py#L129))
 
 Computes the quadratic form for a n⨯n symmetric matrix and an n-element
 column vector.
@@ -271,37 +271,48 @@ conic.
 def skew_matrix(vector3: Matrix) -> Matrix
 ```
 
-([source](../src/lib/matrix.py#L127))
+([source](../src/lib/matrix.py#L142))
 
 Creates a skew-symmetric matrix from a 3D column vector.
 
-<a id="matrix.NonzeroColumn"></a>
+<a id="matrix.pivot_column"></a>
 
-## NonzeroColumn
-
-```python
-class NonzeroColumn(Function)
-```
-
-([source](../src/lib/matrix.py#L132))
-
-Finds a non-zero column in a matrix.
-
-Returns an unevaluated `sympy.Function` if none of the columns can be
-proven to be non-zero, or a zero vector in case of a zero matrix.
-
-<a id="matrix.NonzeroColumn.eval"></a>
-
-#### NonzeroColumn.eval
+#### pivot\_column
 
 ```python
-@classmethod
-def eval(cls, matrix: Matrix) -> Matrix | None
+def pivot_column(matrix: Matrix) -> Matrix | MatrixExpr
 ```
 
-([source](../src/lib/matrix.py#L140))
+([source](../src/lib/matrix.py#L225))
 
-Internal implementation. Call `NonzeroColumn(matrix)` directly.
+Returns the column of a matrix for its first provably nonzero element.
+
+The result is a zero vector in case of a zero matrix.
+
+Returns an unevaluated column vector shaped `MatrixExpr` if none of the
+elements can be proven non-zero.
+
+[pivot_column_and_row](#matrix.pivot_column_and_row) also returns the row
+of the same pivot.
+
+<a id="matrix.pivot_column_and_row"></a>
+
+#### pivot\_column\_and\_row
+
+```python
+def pivot_column_and_row(
+        matrix: Matrix) -> tuple[Matrix | MatrixExpr, Matrix | MatrixExpr]
+```
+
+([source](../src/lib/matrix.py#L239))
+
+Returns the column and the transposed row of a matrix for its first
+provably nonzero element, i.e. two column vectors.
+
+The column is the same as [pivot_column](#matrix.pivot_column)`(matrix)`.
+
+Returns unevaluated column vector shaped `MatrixExpr`s if none of the
+elements can be proven non-zero.
 
 <a id="matrix.OuterProductRoot"></a>
 
@@ -311,7 +322,7 @@ Internal implementation. Call `NonzeroColumn(matrix)` directly.
 class OuterProductRoot(Function)
 ```
 
-([source](../src/lib/matrix.py#L151))
+([source](../src/lib/matrix.py#L259))
 
 Finds a vector `v` such that `v·vᵀ` equals the given symmetric matrix.
 
@@ -333,40 +344,9 @@ be proven to be non-zero, or a zero vector in case of a zero matrix.
 def eval(cls, matrix: Matrix) -> Matrix | None
 ```
 
-([source](../src/lib/matrix.py#L165))
+([source](../src/lib/matrix.py#L273))
 
 Internal implementation. Call `OuterProductRoot(matrix)` directly.
-
-<a id="matrix.NonzeroCross"></a>
-
-## NonzeroCross
-
-```python
-class NonzeroCross(Function)
-```
-
-([source](../src/lib/matrix.py#L176))
-
-Finds a column and a row in a matrix whose intersection is a non-zero
-element.
-
-Returns the column and the transposed row, i.e. two column vectors.
-
-Returns an unevaluated `sympy.Function` if none of the elements can be
-proven to be non-zero, or two zero vectors in case of a zero matrix.
-
-<a id="matrix.NonzeroCross.eval"></a>
-
-#### NonzeroCross.eval
-
-```python
-@classmethod
-def eval(cls, matrix: Matrix) -> tuple[Matrix, Matrix] | None
-```
-
-([source](../src/lib/matrix.py#L187))
-
-Internal implementation. Call `NonZeroCross(matrix)` directly.
 
 <a id="matrix.is_real_matrix"></a>
 
@@ -376,7 +356,7 @@ Internal implementation. Call `NonZeroCross(matrix)` directly.
 def is_real_matrix(matrix: Matrix) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L201))
+([source](../src/lib/matrix.py#L284))
 
 Checks if all elements of a matrix are real.
 
@@ -390,7 +370,7 @@ Returns a bool or `None` if undecidable.
 def is_definite_matrix(matrix: Matrix) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L209))
+([source](../src/lib/matrix.py#L292))
 
 Checks if a real matrix is either positive or negative definite.
 
@@ -406,7 +386,7 @@ def is_full_rank(matrix: Matrix,
                  simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L239))
+([source](../src/lib/matrix.py#L322))
 
 Tells whether a matrix has full rank.
 
@@ -1159,7 +1139,8 @@ Properties:
 #### ideal\_points
 
 ```python
-def ideal_points(conic: Matrix) -> tuple[Matrix, Matrix] | NonzeroCross
+def ideal_points(
+        conic: Matrix) -> tuple[Matrix | MatrixExpr, Matrix | MatrixExpr]
 ```
 
 ([source](../src/lib/conic.py#L134))
@@ -1170,8 +1151,7 @@ Returns two points. Special cases:
  - For parabolas these are the same point.
  - For ellipses these are the complex conjugates of each other.
  - Returns two `[0, 0, 0]ᵀ` vectors if the conic contains the ideal line.
- - May return an unevaluated `NonzeroCross` for symbolic conics, when none
-   of the intersection matrix elements can be proven non-zero.
+ - May return unevaluated `MatrixExpr`s for symbolic conics.
 
 The computation is based on intersecting the conic with the ideal line.
 
@@ -1191,7 +1171,7 @@ radii. Note that `r₂` is imaginary in case of hyperbolas.
 def projective_conic_center(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/conic.py#L159))
+([source](../src/lib/conic.py#L161))
 
 Computes the generalized projective center of a conic.
 
@@ -1215,7 +1195,7 @@ For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
 def pole_point(conic: Matrix, polar_line: Matrix) -> Matrix
 ```
 
-([source](../src/lib/conic.py#L177))
+([source](../src/lib/conic.py#L179))
 
 Computes the pole point of a conic with respect to the given polar line.
 
@@ -1235,7 +1215,7 @@ relationships.
 def polar_line(conic: Matrix, pole_point: Matrix | Sequence[Expr]) -> Matrix
 ```
 
-([source](../src/lib/conic.py#L191))
+([source](../src/lib/conic.py#L193))
 
 Computes the polar line of a conic for a given pole point.
 
@@ -1360,7 +1340,7 @@ Internal implementation. Call `SplitToLines(conic)` directly.
 #### extract\_point
 
 ```python
-def extract_point(degenerate_conic: Matrix) -> Matrix | NonzeroColumn
+def extract_point(degenerate_conic: Matrix) -> Matrix | MatrixExpr
 ```
 
 ([source](../src/lib/degenerate_conic.py#L111))
@@ -1371,8 +1351,7 @@ lines from a line pair conic.
 Special cases:
  - Returns `[0, 0, 0]ᵀ` for double line pairs.
  - Returns an unspecified 3D column vector if the conic is not degenerate.
- - May return an unevaluated `NonzeroColumn` for symbolic conics, when the
-   result depends on which coefficients are zero.
+ - May return an unevaluated `MatrixExpr` for symbolic conics.
 
 *Algorithm*:
 
@@ -2826,7 +2805,7 @@ Special cases:
 def line_x_line(line1: Matrix, line2: Matrix) -> Matrix
 ```
 
-([source](../src/lib/intersection.py#L8))
+([source](../src/lib/intersection.py#L6))
 
 Computes the intersection of two lines.
 
@@ -2839,11 +2818,11 @@ coincide.
 
 ```python
 def conic_x_line(
-    conic: Matrix, line: Matrix
-) -> tuple[Matrix | Sequence[Expr], Matrix | Sequence[Expr]] | NonzeroCross
+        conic: Matrix,
+        line: Matrix) -> tuple[Matrix | MatrixExpr, Matrix | MatrixExpr]
 ```
 
-([source](../src/lib/intersection.py#L17))
+([source](../src/lib/intersection.py#L15))
 
 Intersects a conic with a line. Returns two points.
 
@@ -2851,7 +2830,7 @@ Special cases:
  - The intersection points coincide if the line is tangent to the conic.
  - They are complex conjugates if the line doesn't intersect the conic at
    a real point.
- - May return an unevaluated `NonzeroCross` for symbolic conics or lines,
+ - May return unevaluated `MatrixExpr`s for symbolic conics or lines,
    when none of the intersection matrix elements can be proven non-zero.
  - Returns two `[0, 0, 0]ᵀ` vectors if the conic contains the entire line.
 
