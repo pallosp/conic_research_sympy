@@ -267,7 +267,7 @@ def poly_as_det3_matrix(
         msg = f"{poly} is not invariant under the index shift 1 → 2 → 3 → 1"
         raise ValueError(msg)
 
-    rng = random.Random(seed)  # noqa: S311 (suspicious-non-cryptographic-random-usage)
+    rng = random.Random(seed)
     for _ in range(max_runs):
         row = search.run(rng)
         if row is not None:

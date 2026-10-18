@@ -11,27 +11,28 @@ from lib.point import point_to_vec3
 from research.sympy_utils import println_indented
 
 
-def richter_gebert_poly(six_points: Matrix) -> Expr:
+def richter_gebert_poly(six_points: Sequence[Matrix]) -> Expr:
     """Tells whether six points lie on the same conic.
 
     Uses the formula derived at Jürgen Richter-Gebert, Perspectives on
     Projective Geometry, section 10.2 (Conics and Cross-Ratios)
     """
-    d = []
-    for p in six_points[0:2]:
-        for q in six_points[2:4]:
-            for r in six_points[4:6]:
-                d.append(Matrix.hstack(p, q, r).det())  # noqa: PERF401
+    d = [
+        Matrix.hstack(p, q, r).det()
+        for p, q, r in itertools.product(
+            six_points[0:2], six_points[2:4], six_points[4:6]
+        )
+    ]
     return d[0] * d[3] * d[5] * d[6] - d[1] * d[2] * d[4] * d[7]
 
 
-def conconicity_matrix(points: Matrix) -> Expr:
+def conconicity_matrix(points: Sequence[Matrix]) -> Matrix:
     """Tells whether six points lie on the same conic.
 
     Computes the conconicity determinant.
     """
 
-    def to_matrix_row(point: Matrix) -> Matrix:
+    def to_matrix_row(point: Matrix) -> list[Expr]:
         x, y, z = point_to_vec3(point)
         return [x * x, y * y, z * z, x * y, y * z, z * x]
 

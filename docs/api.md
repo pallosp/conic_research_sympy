@@ -1870,7 +1870,7 @@ Internal implementation. Call `ConicNormFactor(conic)` directly.
 def focal_axis_direction(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/conic_direction.py#L83))
+([source](../src/lib/conic_direction.py#L85))
 
 Returns the ideal point representing the direction of a conic's focal axis.
 
@@ -1906,7 +1906,7 @@ Properties:
 def conjugate_axis_direction(conic: Matrix) -> Matrix
 ```
 
-([source](../src/lib/conic_direction.py#L116))
+([source](../src/lib/conic_direction.py#L118))
 
 Returns the ideal point representing the direction of a conic's conjugate axis.
 
@@ -2523,7 +2523,7 @@ def line_contains_point(
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L10))
+([source](../src/lib/incidence.py#L11))
 
 Tells whether `point` is on `line`.
 
@@ -2543,7 +2543,7 @@ def conic_contains_point(
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L25))
+([source](../src/lib/incidence.py#L26))
 
 Checks if a point lies on a conic.
 
@@ -2563,7 +2563,7 @@ def conic_contains_line(
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L40))
+([source](../src/lib/incidence.py#L41))
 
 Checks if a line lies on a conic.
 
@@ -2586,7 +2586,7 @@ def polar_conic_contains_point(
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L59))
+([source](../src/lib/incidence.py#L60))
 
 Checks if a point lies on a conic that is specified in polar form.
 
@@ -2607,7 +2607,7 @@ def are_collinear(points: Sequence[Matrix],
                   simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L78))
+([source](../src/lib/incidence.py#L79))
 
 Tells whether n points are collinear.
 
@@ -2624,7 +2624,7 @@ def are_concurrent(lines: Sequence[Matrix],
                    simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L95))
+([source](../src/lib/incidence.py#L96))
 
 Tells whether n lines are concurrent, i.e. go through the same point.
 
@@ -2646,7 +2646,7 @@ def are_on_same_conic(
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L117))
+([source](../src/lib/incidence.py#L118))
 
 Tells whether up to 6 points lie on the same conic section.
 

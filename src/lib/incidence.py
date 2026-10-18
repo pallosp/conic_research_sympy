@@ -1,4 +1,5 @@
 from collections.abc import Callable, Sequence
+from itertools import product
 
 from sympy import Expr, Matrix, expand
 from sympy.core.logic import fuzzy_not
@@ -135,11 +136,10 @@ def are_on_same_conic(
     if len(points) > 6:
         raise NotImplementedError
     points = [point_to_vec3(p) for p in points]
-    d = []
-    for p in points[0:2]:
-        for q in points[2:4]:
-            for r in points[4:6]:
-                d.append(Matrix.hstack(p, q, r).det())  # noqa: PERF401
+    d = [
+        Matrix.hstack(p, q, r).det()
+        for p, q, r in product(points[0:2], points[2:4], points[4:6])
+    ]
     incidence_poly = d[0] * d[3] * d[5] * d[6] - d[1] * d[2] * d[4] * d[7]
     return simplifier(incidence_poly).is_zero
 

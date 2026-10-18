@@ -28,7 +28,9 @@ class ConicNormFactor(Function):
     is_odd = True
 
     @classmethod
-    def eval(cls, conic: Matrix) -> int | None:  # noqa: PLR0911
+    def eval(  # noqa: PLR0911 (too-many-return-statements)
+        cls, conic: Matrix
+    ) -> int | None:
         """Internal implementation. Call `ConicNormFactor(conic)` directly."""
         det = conic.det().factor()
         if det.is_positive:

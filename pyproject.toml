@@ -49,6 +49,7 @@ ignore = [
   "RUF001",  # Ambiguous Unicode character in string literal
   "RUF002",  # Ambiguous Unicode character in docstring
   "RUF003",  # Ambiguous Unicode character in comment
+  "S311",  # Standard pseudo-random generators are not suitable for cryptographic purposes
   "TRY003",  # Use Exception subclasses instead of messages
 ]
 
