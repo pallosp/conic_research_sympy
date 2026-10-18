@@ -13,7 +13,7 @@ from lib.line import (
     vertical_line,
 )
 from lib.matrix import conic_matrix, is_nonzero_multiple
-from lib.point import ORIGIN, ZERO_POINT, ideal_point, point_to_xy
+from lib.point import ORIGIN, ZERO_POINT, ideal_point
 from tests.utils import are_projective_sets_equal
 
 
@@ -44,28 +44,31 @@ class TestConicXLine:
 
     def test_x_y_axes_conic(self):
         conic = line_pair_conic(X_AXIS, Y_AXIS)
-        p1, p2 = conic_x_line(conic, IDEAL_LINE)
-        assert is_nonzero_multiple(p1, ideal_point(0, 1))
-        assert is_nonzero_multiple(p2, ideal_point(1, 0))
+        assert are_projective_sets_equal(
+            conic_x_line(conic, IDEAL_LINE),
+            [ideal_point(0, 1), ideal_point(1, 0)],
+        )
 
     def test_x_axis_plus_ideal_line_conic(self):
         conic = line_pair_conic(X_AXIS, IDEAL_LINE)
-        p1, p2 = conic_x_line(conic, Y_AXIS)
-        assert is_nonzero_multiple(p1, ORIGIN)
-        assert is_nonzero_multiple(p2, ideal_point(0, 1))
+        assert are_projective_sets_equal(
+            conic_x_line(conic, Y_AXIS),
+            [ORIGIN, ideal_point(0, 1)],
+        )
 
     def test_y_axis_plus_ideal_line_conic(self):
         conic = line_pair_conic(Y_AXIS, IDEAL_LINE)
-        p1, p2 = conic_x_line(conic, X_AXIS)
-        assert is_nonzero_multiple(p1, ideal_point(1, 0))
-        assert is_nonzero_multiple(p2, ORIGIN)
+        assert are_projective_sets_equal(
+            conic_x_line(conic, X_AXIS),
+            [ideal_point(1, 0), ORIGIN],
+        )
 
     def test_double_x_axis_conic(self):
         conic = line_pair_conic(X_AXIS, X_AXIS)
-        assert is_nonzero_multiple(conic_x_line(conic, Y_AXIS)[0], Matrix([0, 0, 1]))
-        assert is_nonzero_multiple(
-            conic_x_line(conic, IDEAL_LINE)[0],
-            Matrix([1, 0, 0]),
+        assert are_projective_sets_equal(conic_x_line(conic, Y_AXIS), [ORIGIN] * 2)
+        assert are_projective_sets_equal(
+            conic_x_line(conic, IDEAL_LINE),
+            [ideal_point(1, 0)] * 2,
         )
 
     def test_conic_contains_line(self):
@@ -82,32 +85,38 @@ class TestConicXLine:
         assert conic_x_line(ZERO_CONIC, Matrix([1, 2, 3])) == zeros
 
     def test_double_intersection(self):
-        intersections = conic_x_line(UNIT_CIRCLE, horizontal_line(1))
-        assert is_nonzero_multiple(intersections[0], Matrix([0, 1, 1]))
-        assert is_nonzero_multiple(intersections[1], Matrix([0, 1, 1]))
+        assert are_projective_sets_equal(
+            conic_x_line(UNIT_CIRCLE, horizontal_line(1)),
+            [Matrix([0, 1, 1])] * 2,
+        )
 
     def test_complex_intersection(self):
-        intersections = conic_x_line(UNIT_CIRCLE, horizontal_line(2))
-        intersections = sorted((tuple(point_to_xy(i)) for i in intersections), key=str)
-        assert intersections == sorted([(-sqrt(3) * I, 2), (sqrt(3) * I, 2)], key=str)
+        assert are_projective_sets_equal(
+            conic_x_line(UNIT_CIRCLE, horizontal_line(2)),
+            [Matrix([sqrt(3) * I, 2, 1]), Matrix([-sqrt(3) * I, 2, 1])],
+        )
 
     def test_symbolic_conic(self):
         conic = conic_matrix(*symbols("a b c d e f"))
         intersections = conic_x_line(conic, IDEAL_LINE)
         assert intersections[0].is_MatrixExpr
+        assert intersections[1].is_MatrixExpr
 
     def test_symbolic_line(self):
         line = Matrix(symbols("l1 l2 l3"))
         intersections = conic_x_line(UNIT_CIRCLE, line)
         assert intersections[0].is_MatrixExpr
+        assert intersections[1].is_MatrixExpr
 
     def test_symbolic_line_substitution(self):
         line = Matrix(symbols("l1 l2 l3"))
         intersections = conic_x_line(UNIT_CIRCLE, line)
         assert intersections[0].is_MatrixExpr
+        assert intersections[1].is_MatrixExpr
         substitutions = dict(zip(line, X_AXIS, strict=True))
         intersections = [p.subs(substitutions) for p in intersections]
-        assert not any(p.is_MatrixExpr for p in intersections)
+        assert not intersections[0].is_MatrixExpr
+        assert not intersections[1].is_MatrixExpr
         assert are_projective_sets_equal(
             intersections,
             [Matrix([1, 0, 1]), Matrix([-1, 0, 1])],
