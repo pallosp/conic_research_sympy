@@ -1,16 +1,14 @@
-from collections.abc import Sequence
-
-from sympy import Matrix, MatrixBase
+from sympy import Matrix
 
 from lib.matrix import conic_matrix
 from lib.point import point_to_vec3, point_to_xy
-from lib.type_aliases import Scalar
+from lib.type_aliases import FinitePoint, Point
 
 
 def circumcircle(
-    point1: MatrixBase | Sequence[Scalar],
-    point2: MatrixBase | Sequence[Scalar],
-    point3: MatrixBase | Sequence[Scalar],
+    point1: Point,
+    point2: Point,
+    point3: Point,
 ) -> Matrix:
     """Computes the circle through three points.
 
@@ -48,9 +46,9 @@ def circumcircle(
 
 
 def circumcenter(
-    point1: MatrixBase | Sequence[Scalar],
-    point2: MatrixBase | Sequence[Scalar],
-    point3: MatrixBase | Sequence[Scalar],
+    point1: Point,
+    point2: Point,
+    point3: Point,
 ) -> Matrix:
     """Computes the center of the circle through three points.
 
@@ -85,9 +83,9 @@ def circumcenter(
 
 
 def steiner_ellipse(
-    point1: MatrixBase | Sequence[Scalar],
-    point2: MatrixBase | Sequence[Scalar],
-    point3: MatrixBase | Sequence[Scalar],
+    point1: FinitePoint,
+    point2: FinitePoint,
+    point3: FinitePoint,
 ) -> Matrix:
     """Constructs the Steiner circumellipse for the given points.
 
@@ -124,9 +122,9 @@ def steiner_ellipse(
 
 
 def steiner_inellipse(
-    point1: MatrixBase | Sequence[Scalar],
-    point2: MatrixBase | Sequence[Scalar],
-    point3: MatrixBase | Sequence[Scalar],
+    point1: FinitePoint,
+    point2: FinitePoint,
+    point3: FinitePoint,
 ) -> Matrix:
     """Computes the Steiner inellipse for the given points.
 

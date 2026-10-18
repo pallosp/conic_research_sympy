@@ -1,8 +1,6 @@
-from collections.abc import Sequence
-
 from sympy import I, ImmutableMatrix, Matrix, MatrixBase, S, sympify
 
-from lib.type_aliases import Scalar
+from lib.type_aliases import FinitePoint, Point, Scalar
 
 #: The zero vector `(0 : 0 : 0)`. It doesn't represent any point. Functions
 #: return it when the resulting point is undefined.
@@ -39,7 +37,7 @@ def ideal_point_on_line(line: MatrixBase) -> Matrix:
     return ideal_point(line[1], -line[0])
 
 
-def point_to_xy(point: MatrixBase | Sequence[Scalar]) -> Matrix:
+def point_to_xy(point: FinitePoint) -> Matrix:
     """Computes the Euclidean coordinates of a projective point."""
     if len(point) not in (2, 3):
         raise ValueError("The point must be a 2D or 3D vector, list or tuple.")
@@ -48,7 +46,7 @@ def point_to_xy(point: MatrixBase | Sequence[Scalar]) -> Matrix:
     return Matrix([x / z, y / z])
 
 
-def point_to_vec3(point: MatrixBase | Sequence[Scalar]) -> Matrix:
+def point_to_vec3(point: Point) -> Matrix:
     """Computes the homogeneous coordinates of a projective point."""
     if len(point) not in (2, 3):
         raise ValueError("The point must be a 2D or 3D vector, list or tuple.")
@@ -59,7 +57,7 @@ def point_to_vec3(point: MatrixBase | Sequence[Scalar]) -> Matrix:
     return Matrix(point)
 
 
-def centroid(*points: MatrixBase | Sequence[Scalar]) -> Matrix:
+def centroid(*points: FinitePoint) -> Matrix:
     """Computes the centroid of a set of points.
 
     Returns the point's coordinates as a 2D column vector.
@@ -76,7 +74,7 @@ def centroid(*points: MatrixBase | Sequence[Scalar]) -> Matrix:
 
 
 def perpendicular_foot(
-    point: MatrixBase | Sequence[Scalar],
+    point: FinitePoint,
     line: MatrixBase,
 ) -> Matrix:
     """Computes the foot of the perpendicular through a point to a line.

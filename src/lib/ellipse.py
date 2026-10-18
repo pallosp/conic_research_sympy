@@ -6,11 +6,11 @@ from lib.central_conic import conic_from_foci_and_radius
 from lib.distance import point_point_distance
 from lib.matrix import conic_matrix
 from lib.point import point_to_xy
-from lib.type_aliases import Scalar
+from lib.type_aliases import FinitePoint, Scalar
 
 
 def ellipse(
-    center: MatrixBase | Sequence[Scalar],
+    center: FinitePoint,
     r1: Scalar,
     r2: Scalar,
     *,
@@ -49,9 +49,9 @@ def ellipse(
 
 
 def ellipse_from_foci_and_point(
-    focus1: MatrixBase | Sequence[Scalar],
-    focus2: MatrixBase | Sequence[Scalar],
-    point: MatrixBase | Sequence[Scalar],
+    focus1: FinitePoint,
+    focus2: FinitePoint,
+    point: FinitePoint,
 ) -> Matrix:
     """Constructs an ellipse from its focus points and an incident point.
 

@@ -1,5 +1,3 @@
-from collections.abc import Sequence
-
 from sympy import ImmutableMatrix, Matrix, MatrixBase, MatrixExpr
 
 from lib.matrix import (
@@ -10,7 +8,7 @@ from lib.matrix import (
     skew_matrix,
 )
 from lib.point import point_to_vec3
-from lib.type_aliases import Scalar
+from lib.type_aliases import Point
 
 #: The zero matrix. Every point satisfies its equation.
 ZERO_CONIC: ImmutableMatrix = ImmutableMatrix.zeros(3, 3)
@@ -30,7 +28,7 @@ def double_line_conic(line: MatrixBase) -> MatrixBase:
     return line * line.T
 
 
-def point_conic(point: MatrixBase | Sequence[Scalar]) -> Matrix:
+def point_conic(point: Point) -> Matrix:
     """Constructs a conic that degenerates to a single point.
 
     Let the point's homogeneous coordinates be `(x, y, z)` and let

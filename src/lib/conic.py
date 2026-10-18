@@ -1,11 +1,9 @@
-from collections.abc import Sequence
-
 from sympy import Expr, Matrix, MatrixBase, MatrixExpr, Poly, Symbol, abc, sqrt
 
 from lib.conic_direction import ConicNormFactor, focal_axis_direction
 from lib.matrix import pivot_column_and_row
 from lib.point import point_to_vec3, point_to_xy
-from lib.type_aliases import Scalar
+from lib.type_aliases import FinitePoint, Point, Scalar
 
 
 def conic_from_poly(
@@ -36,11 +34,11 @@ def conic_from_poly(
 
 
 def conic_through_points(
-    p1: MatrixBase | Sequence[Scalar],
-    p2: MatrixBase | Sequence[Scalar],
-    p3: MatrixBase | Sequence[Scalar],
-    p4: MatrixBase | Sequence[Scalar],
-    p5: MatrixBase | Sequence[Scalar],
+    p1: Point,
+    p2: Point,
+    p3: Point,
+    p4: Point,
+    p5: Point,
 ) -> Matrix:
     """Computes the conic that goes through the given points.
 
@@ -62,7 +60,7 @@ def conic_through_points(
 
 
 def conic_from_focus_and_directrix(
-    focus: MatrixBase | Sequence[Scalar],
+    focus: FinitePoint,
     directrix: MatrixBase,
     eccentricity: Scalar,
 ) -> MatrixBase:
@@ -191,9 +189,7 @@ def pole_point(conic: MatrixBase, polar_line: MatrixBase) -> MatrixBase:
     return conic.adjugate() * polar_line
 
 
-def polar_line(
-    conic: MatrixBase, pole_point: MatrixBase | Sequence[Scalar]
-) -> MatrixBase:
+def polar_line(conic: MatrixBase, pole_point: Point) -> MatrixBase:
     """Computes the polar line of a conic for a given pole point.
 
     Example pole/polar relationships:

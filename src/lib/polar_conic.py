@@ -11,7 +11,6 @@ C(θ) = ⎢d  e  f⎥ * ⎢sin θ⎥
 ```
 """
 
-from collections.abc import Sequence
 from enum import Enum
 
 from sympy import (
@@ -32,7 +31,7 @@ from lib.circle import UNIT_CIRCLE
 from lib.conic_direction import focal_axis_direction
 from lib.point import point_to_vec3
 from lib.transform import rotate
-from lib.type_aliases import Scalar
+from lib.type_aliases import Point, Scalar
 
 #: The circle at the origin with radius 1, in polar matrix form.
 POLAR_UNIT_CIRCLE: ImmutableMatrix = ImmutableMatrix.eye(3)
@@ -64,9 +63,7 @@ def point_at_angle(polar_conic: MatrixBase, theta: Scalar) -> MatrixBase:
     return polar_conic * Matrix([cos(theta), sin(theta), 1])
 
 
-def angle_at_point(
-    polar_conic: MatrixBase, point: MatrixBase | Sequence[Scalar]
-) -> Expr:
+def angle_at_point(polar_conic: MatrixBase, point: Point) -> Expr:
     """Computes the polar angle corresponding to a point on a polar conic.
 
     The result is unspecified if the point is not on the conic.

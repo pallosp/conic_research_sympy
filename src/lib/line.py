@@ -3,7 +3,7 @@ from collections.abc import Sequence
 from sympy import ImmutableMatrix, Matrix, MatrixBase, sign, sqrt
 
 from lib.point import ideal_point, point_to_vec3, point_to_xy
-from lib.type_aliases import Scalar
+from lib.type_aliases import FinitePoint, Point, Scalar
 
 
 def horizontal_line(y: Scalar) -> Matrix:
@@ -17,8 +17,8 @@ def vertical_line(x: Scalar) -> Matrix:
 
 
 def line_between(
-    point1: MatrixBase | Sequence[Scalar],
-    point2: MatrixBase | Sequence[Scalar],
+    point1: Point,
+    point2: Point,
 ) -> Matrix:
     """Connects two projective points with a line."""
     return point_to_vec3(point1).cross(point_to_vec3(point2))
@@ -26,7 +26,7 @@ def line_between(
 
 def parallel_line(
     with_line: MatrixBase,
-    through_point: MatrixBase | Sequence[Scalar],
+    through_point: FinitePoint,
 ) -> Matrix:
     """Constructs a line through a point parallel to a line."""
     x, y = point_to_xy(through_point)
@@ -36,7 +36,7 @@ def parallel_line(
 
 def perpendicular_line(
     to_line: MatrixBase,
-    through_point: MatrixBase | Sequence[Scalar],
+    through_point: FinitePoint,
 ) -> Matrix:
     """Constructs a line through a point perpendicular to a line."""
     x, y = point_to_xy(through_point)
@@ -45,7 +45,7 @@ def perpendicular_line(
 
 
 def line_through_point(
-    point: MatrixBase | Sequence[Scalar],
+    point: FinitePoint,
     *,
     direction: MatrixBase | Sequence[Scalar] | None = None,
     normal: MatrixBase | Sequence[Scalar] | None = None,
@@ -94,8 +94,8 @@ def angle_bisector(line1: MatrixBase, line2: MatrixBase) -> MatrixBase:
 
 
 def perpendicular_bisector(
-    point1: MatrixBase | Sequence[Scalar],
-    point2: MatrixBase | Sequence[Scalar],
+    point1: FinitePoint,
+    point2: FinitePoint,
 ) -> Matrix:
     """Constructs the perpendicular bisector of two points."""
     x1, y1 = point_to_xy(point1)
@@ -106,7 +106,7 @@ def perpendicular_bisector(
 def line_normal(
     line: MatrixBase,
     *,
-    toward: MatrixBase | Sequence[Scalar] | None = None,
+    toward: Point | None = None,
 ) -> Matrix:
     """Returns the normal vector of a line, represented as an ideal point.
 

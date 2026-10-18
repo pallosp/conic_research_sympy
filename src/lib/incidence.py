@@ -6,12 +6,12 @@ from sympy.core.logic import fuzzy_not
 
 from lib.matrix import is_full_rank, quadratic_form, skew_matrix
 from lib.point import point_to_vec3
-from lib.type_aliases import Scalar
+from lib.type_aliases import Point
 
 
 def line_contains_point(
     line: MatrixBase,
-    point: MatrixBase | Sequence[Scalar],
+    point: Point,
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
@@ -26,7 +26,7 @@ def line_contains_point(
 
 def conic_contains_point(
     conic: MatrixBase,
-    point: MatrixBase | Sequence[Scalar],
+    point: Point,
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
@@ -60,7 +60,7 @@ def conic_contains_line(
 
 def polar_conic_contains_point(
     polar_conic: MatrixBase,
-    point: MatrixBase | Sequence[Scalar],
+    point: Point,
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
@@ -78,7 +78,7 @@ def polar_conic_contains_point(
 
 
 def are_collinear(
-    points: Sequence[MatrixBase],
+    points: Sequence[Point],
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
@@ -117,7 +117,7 @@ def are_concurrent(
 
 
 def are_on_same_conic(
-    points: Sequence[MatrixBase],
+    points: Sequence[Point],
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
@@ -146,7 +146,7 @@ def are_on_same_conic(
 
 
 def are_cocircular(
-    points: Sequence[MatrixBase],
+    points: Sequence[Point],
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:

@@ -9,12 +9,12 @@ from lib.conic_direction import (
 )
 from lib.matrix import conic_matrix, max_eigenvalue, min_eigenvalue
 from lib.point import point_to_xy
-from lib.type_aliases import Scalar
+from lib.type_aliases import FinitePoint, Scalar
 
 
 def conic_from_foci_and_radius(
-    focus1: MatrixBase | Sequence[Scalar],
-    focus2: MatrixBase | Sequence[Scalar],
+    focus1: FinitePoint,
+    focus2: FinitePoint,
     primary_radius: Scalar,
 ) -> Matrix:
     """Computes the ellipse or hyperbola with the given focus points and primary radius.
@@ -44,10 +44,10 @@ def conic_from_foci_and_radius(
 
 
 def conic_from_center_and_points(
-    center: MatrixBase | Sequence[Scalar],
-    p1: MatrixBase | Sequence[Scalar],
-    p2: MatrixBase | Sequence[Scalar],
-    p3: MatrixBase | Sequence[Scalar],
+    center: FinitePoint,
+    p1: FinitePoint,
+    p2: FinitePoint,
+    p3: FinitePoint,
 ) -> Matrix:
     """Computes the conic section with the given center and perimeter points.
 

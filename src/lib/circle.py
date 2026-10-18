@@ -1,17 +1,15 @@
-from collections.abc import Sequence
-
 from sympy import Expr, ImmutableMatrix, Matrix, MatrixBase, sqrt
 
 from lib.matrix import conic_matrix
 from lib.point import ORIGIN, point_to_vec3, point_to_xy
-from lib.type_aliases import Scalar
+from lib.type_aliases import FinitePoint, Point, Scalar
 
 
 def circle(
-    center: MatrixBase | Sequence[Scalar],
+    center: FinitePoint,
     *,
     r: Scalar | None = None,
-    point: MatrixBase | Sequence[Scalar] | None = None,
+    point: Point | None = None,
 ) -> Matrix:
     """Creates a circle from its center and either its radius or a point on it.
 
