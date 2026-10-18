@@ -3,7 +3,7 @@ from collections.abc import Sequence
 from sympy import Matrix, MatrixBase, cos, sin
 
 from lib.point import ORIGIN, point_to_vec3, point_to_xy
-from lib.type_aliases import FinitePoint, Line, Point, PointVector, Scalar
+from lib.type_aliases import Conic, FinitePoint, Line, Point, PointVector, Scalar
 
 
 def transform_point(
@@ -23,7 +23,7 @@ def transform_line(line: Line, transformation: MatrixBase) -> Line:
     return transformation.adjugate().T * line
 
 
-def transform_conic(conic: MatrixBase, transformation: MatrixBase) -> MatrixBase:
+def transform_conic(conic: Conic, transformation: MatrixBase) -> Conic:
     """Applies a projective transformation to a conic."""
     return transformation.adjugate().T * conic * transformation.adjugate()
 

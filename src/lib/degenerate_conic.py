@@ -1,4 +1,4 @@
-from sympy import ImmutableMatrix, Matrix, MatrixBase, MatrixExpr
+from sympy import ImmutableMatrix, MatrixExpr
 
 from lib.matrix import (
     conic_matrix,
@@ -8,27 +8,27 @@ from lib.matrix import (
     skew_matrix,
 )
 from lib.point import point_to_vec3
-from lib.type_aliases import Line, Point, PointVector
+from lib.type_aliases import Conic, Line, Point, PointVector
 
 #: The zero matrix. Every point satisfies its equation.
 ZERO_CONIC: ImmutableMatrix = ImmutableMatrix.zeros(3, 3)
 
 
-def line_pair_conic(line1: Line, line2: Line) -> Matrix:
+def line_pair_conic(line1: Line, line2: Line) -> Conic:
     """Constructs a conic section from two projective lines."""
     if line1.shape != (3, 1) or line2.shape != (3, 1):
         raise ValueError("The lines must be 3-dimensional column vectors.")
     return (line1 * line2.T + line2 * line1.T) / 2
 
 
-def double_line_conic(line: Line) -> MatrixBase:
+def double_line_conic(line: Line) -> Conic:
     """Constructs a degenerate conic consisting of two coincident lines."""
     if line.shape != (3, 1):
         raise ValueError("The line must be a 3-dimensional column vector.")
     return line * line.T
 
 
-def point_conic(point: Point) -> Matrix:
+def point_conic(point: Point) -> Conic:
     """Constructs a conic that degenerates to a single point.
 
     Let the point's homogeneous coordinates be `(x, y, z)` and let
@@ -60,7 +60,7 @@ def point_conic(point: Point) -> Matrix:
 
 
 def split_to_lines(
-    conic: MatrixBase,
+    conic: Conic,
 ) -> tuple[Line | MatrixExpr, Line | MatrixExpr]:
     """Splits a degenerate conic into two lines.
 
@@ -105,7 +105,7 @@ def split_to_lines(
     return pivot_column_and_row(conic + skew_matrix(q))
 
 
-def extract_point(degenerate_conic: MatrixBase) -> PointVector | MatrixExpr:
+def extract_point(degenerate_conic: Conic) -> PointVector | MatrixExpr:
     """Extracts the point from a point conic or the intersection of the
     lines from a line pair conic.
 

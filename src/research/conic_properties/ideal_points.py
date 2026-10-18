@@ -29,6 +29,7 @@ from lib.line import IDEAL_LINE
 from lib.matrix import conic_matrix, is_nonzero_multiple
 from lib.point import ideal_point
 from lib.transform import rotate, transform_point
+from lib.type_aliases import Conic
 from research.sympy_utils import eq_chain, println_indented
 
 HORIZONTAL_LINE = "-" * 80
@@ -110,7 +111,7 @@ conic = conic_matrix(a, b, c, d, e, f)
 eigen_minus, eigen_plus = symbols("lambda^- lambda^+", real=True)
 
 
-def ideal_points_from_asymptotes(conic: Matrix) -> tuple[Matrix, Matrix]:
+def ideal_points_from_asymptotes(conic: Conic) -> tuple[Matrix, Matrix]:
     """Rotates the focal axis direction by the ± asymptote-axis angle.
 
     The intermediate expressions are written with the eigenvalues `eigen_plus`

@@ -1,13 +1,14 @@
 from collections.abc import Callable
 
-from sympy import Expr, MatrixBase, factor
+from sympy import Expr, factor
 from sympy.core.logic import fuzzy_and, fuzzy_not, fuzzy_or
 
 from lib.matrix import is_definite_matrix
+from lib.type_aliases import Conic
 
 
 def is_degenerate(
-    conic: MatrixBase,
+    conic: Conic,
     *,
     simplifier: Callable[[Expr], Expr] = lambda expr: expr,
 ) -> bool | None:
@@ -24,7 +25,7 @@ def is_degenerate(
 
 
 def is_nondegenerate(
-    conic: MatrixBase,
+    conic: Conic,
     *,
     simplifier: Callable[[Expr], Expr] = lambda expr: expr,
 ) -> bool | None:
@@ -41,7 +42,7 @@ def is_nondegenerate(
 
 
 def is_central_conic(
-    conic: MatrixBase,
+    conic: Conic,
     *,
     simplifier: Callable[[Expr], Expr] = lambda expr: expr,
 ) -> bool | None:
@@ -55,7 +56,7 @@ def is_central_conic(
 
 
 def is_finite_conic(
-    conic: MatrixBase,
+    conic: Conic,
     *,
     simplifier: Callable[[Expr], Expr] = factor,
 ) -> bool | None:
@@ -68,7 +69,7 @@ def is_finite_conic(
     return simplifier(conic[:2, :2].det()).is_positive
 
 
-def is_imaginary_ellipse(conic: MatrixBase) -> bool | None:
+def is_imaginary_ellipse(conic: Conic) -> bool | None:
     """Tells whether the conic is an imaginary ellipse.
 
     Imaginary ellipses have real center and focus points, but imaginary radii
@@ -80,7 +81,7 @@ def is_imaginary_ellipse(conic: MatrixBase) -> bool | None:
     return is_definite_matrix(conic)
 
 
-def is_ellipse(conic: MatrixBase) -> bool | None:
+def is_ellipse(conic: Conic) -> bool | None:
     """Tells whether the conic is an ellipse.
 
     Returns `False` for
@@ -96,7 +97,7 @@ def is_ellipse(conic: MatrixBase) -> bool | None:
     )
 
 
-def is_circle(conic: MatrixBase) -> bool | None:
+def is_circle(conic: Conic) -> bool | None:
     """Tells whether the conic is a circle.
 
     Returns `None` if undecidable.
@@ -111,7 +112,7 @@ def is_circle(conic: MatrixBase) -> bool | None:
     )
 
 
-def is_parabola(conic: MatrixBase) -> bool | None:
+def is_parabola(conic: Conic) -> bool | None:
     """Tells whether the conic is a parabola.
 
     Returns `None` if undecidable.
@@ -119,7 +120,7 @@ def is_parabola(conic: MatrixBase) -> bool | None:
     return fuzzy_and([is_nondegenerate(conic), conic[:2, :2].det().is_zero])
 
 
-def is_hyperbola(conic: MatrixBase) -> bool | None:
+def is_hyperbola(conic: Conic) -> bool | None:
     """Tells whether the conic is a hyperbola.
 
     Returns `None` if undecidable.
@@ -127,7 +128,7 @@ def is_hyperbola(conic: MatrixBase) -> bool | None:
     return fuzzy_and([is_nondegenerate(conic), conic[:2, :2].det().is_negative])
 
 
-def is_rectangular_hyperbola(conic: MatrixBase) -> bool | None:
+def is_rectangular_hyperbola(conic: Conic) -> bool | None:
     """Tells whether the conic is a rectangular hyperbola.
 
     It's also called equilateral hyperbola or right hyperbola.
@@ -141,7 +142,7 @@ def is_rectangular_hyperbola(conic: MatrixBase) -> bool | None:
     return fuzzy_and([is_nondegenerate(conic), (a + c).is_zero])
 
 
-def is_circular(conic: MatrixBase) -> bool | None:
+def is_circular(conic: Conic) -> bool | None:
     """Tells whether there is a single center point around which the conic is
     invariant under all rotations.
 
@@ -157,7 +158,7 @@ def is_circular(conic: MatrixBase) -> bool | None:
     )
 
 
-def is_line_pair(conic: MatrixBase) -> bool | None:
+def is_line_pair(conic: Conic) -> bool | None:
     """Tells whether the conic is the union of two projective lines.
 
     Returns `None` if undecidable.
@@ -177,7 +178,7 @@ def is_line_pair(conic: MatrixBase) -> bool | None:
     )
 
 
-def is_double_line(conic: MatrixBase) -> bool | None:
+def is_double_line(conic: Conic) -> bool | None:
     """Tells whether the conic consists of two coincident projective lines.
 
     Returns `None` if undecidable.
@@ -194,7 +195,7 @@ def is_double_line(conic: MatrixBase) -> bool | None:
     )
 
 
-def is_point_conic(conic: MatrixBase) -> bool | None:
+def is_point_conic(conic: Conic) -> bool | None:
     """Tells whether the conic consists of a single projective point.
 
     Returns `None` if undecidable.
@@ -220,7 +221,7 @@ def is_point_conic(conic: MatrixBase) -> bool | None:
     )
 
 
-def is_finite_point_conic(conic: MatrixBase) -> bool | None:
+def is_finite_point_conic(conic: Conic) -> bool | None:
     """Tells whether the conic consists of a single finite (Euclidean) point.
 
     Returns `None` if undecidable.

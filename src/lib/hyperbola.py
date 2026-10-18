@@ -1,9 +1,9 @@
-from sympy import Expr, ImmutableMatrix, Matrix, MatrixBase, acos, sqrt
+from sympy import Expr, ImmutableMatrix, acos, sqrt
 
 from lib.central_conic import conic_from_foci_and_radius, shrink_conic_to_zero
 from lib.conic_direction import ConicNormFactor
 from lib.distance import point_point_distance
-from lib.type_aliases import FinitePoint
+from lib.type_aliases import Conic, FinitePoint
 
 #: The x² - y² = 1 hyperbola.
 #: https://en.wikipedia.org/wiki/Unit_hyperbola
@@ -14,7 +14,7 @@ def hyperbola_from_foci_and_point(
     focus1: FinitePoint,
     focus2: FinitePoint,
     point: FinitePoint,
-) -> Matrix:
+) -> Conic:
     """Constructs a hyperbola from its focus points and an incident point.
 
     *Formula*:
@@ -24,7 +24,7 @@ def hyperbola_from_foci_and_point(
     return conic_from_foci_and_radius(focus1, focus2, r)
 
 
-def asymptote_focal_axis_angle(hyperbola: MatrixBase) -> Expr:
+def asymptote_focal_axis_angle(hyperbola: Conic) -> Expr:
     """Computes the angle between the axis and an asymptote of a hyperbola.
 
     Return values for other conics:
@@ -54,7 +54,7 @@ def asymptote_focal_axis_angle(hyperbola: MatrixBase) -> Expr:
     return acos(sqrt((s - norm_sign * (a + c)) / (2 * s)))
 
 
-def asymptote_conic(hyperbola: MatrixBase) -> MatrixBase:
+def asymptote_conic(hyperbola: Conic) -> Conic:
     """Computes the line pair conic representing the hyperbola's asymptotes.
 
     Turns ellipses into point conics at their center, preserving the axis

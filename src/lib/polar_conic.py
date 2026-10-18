@@ -31,7 +31,7 @@ from lib.circle import UNIT_CIRCLE
 from lib.conic_direction import focal_axis_direction
 from lib.point import point_to_vec3
 from lib.transform import rotate
-from lib.type_aliases import Line, Point, PointVector, Scalar
+from lib.type_aliases import Conic, Line, Point, PointVector, Scalar
 
 #: The circle at the origin with radius 1, in polar matrix form.
 POLAR_UNIT_CIRCLE: ImmutableMatrix = ImmutableMatrix.eye(3)
@@ -98,7 +98,7 @@ def curvature_sign_at_angle(polar_conic: MatrixBase, angle_radians: Scalar) -> M
     return sign((g * cos(angle_radians) + h * sin(angle_radians) + i) * det)
 
 
-def conic_from_polar_matrix(polar_conic: MatrixBase) -> MatrixBase:
+def conic_from_polar_matrix(polar_conic: MatrixBase) -> Conic:
     """Transforms a conic from polar to quadratic form.
 
     The algorithm is essentially applying the polar matrix as a projective
@@ -109,7 +109,7 @@ def conic_from_polar_matrix(polar_conic: MatrixBase) -> MatrixBase:
 
 
 def ellipse_to_polar_matrix(
-    ellipse: MatrixBase,
+    ellipse: Conic,
     start: PolarOrigin = PolarOrigin.HORIZONTAL,
 ) -> Matrix:
     """Converts an ellipse to a polar conic matrix representation.
@@ -170,7 +170,7 @@ def ellipse_to_polar_matrix(
 
 
 def hyperbola_to_polar_matrix(
-    hyperbola: MatrixBase,
+    hyperbola: Conic,
     start: PolarOrigin = PolarOrigin.VERTEX,
 ) -> Matrix:
     """Converts a hyperbola to a polar conic matrix representation.

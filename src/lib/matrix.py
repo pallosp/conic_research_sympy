@@ -19,7 +19,7 @@ from sympy.matrices.expressions.matexpr import MatrixElement
 from sympy.printing.pretty.pretty import PrettyPrinter
 from sympy.printing.pretty.stringpict import prettyForm
 
-from lib.type_aliases import Scalar
+from lib.type_aliases import Conic, Scalar
 
 
 def is_nonzero_multiple(
@@ -114,7 +114,7 @@ def conic_matrix(  # noqa: PLR0913, PLR0917 (too-many-arguments, too-many-positi
     d: Scalar,
     e: Scalar,
     f: Scalar,
-) -> Matrix:
+) -> Conic:
     """Builds a 3x3 symmetric conic matrix from its elements.
 
     The conic equation looks like this:

@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
-from sympy import Abs, Eq, Expr, Matrix, symbols
+from sympy import Abs, Eq, Expr, symbols
 
 from lib.conic import conic_from_poly
 from lib.distance import point_point_distance
+from lib.type_aliases import Conic
 from research.sympy_utils import mul_eq, println_indented, sub_eq
 
 cx, cy = symbols("cx cy", real=True)  # center
@@ -19,7 +20,7 @@ def compute_conic_from_foci_and_radius(
     focus2: tuple[Expr, Expr],
     radius: Expr,
     conic_type: str,
-) -> Matrix:
+) -> Conic:
     assert conic_type in ("Ellipse", "Hyperbola")
 
     print(f"{conic_type} equation from focal points and radius:\n")

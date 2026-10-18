@@ -31,3 +31,7 @@ PointVector: TypeAlias = MatrixBase
 #: A projective line `ax + by + c = 0`, represented as the 3D column vector
 #: `(a, b, c)ᵀ`.
 Line: TypeAlias = MatrixBase
+
+#: A conic section `ax² + 2bxy + cy² + 2dx + 2ey + f = 0`, represented as the
+#: 3x3 symmetric matrix `[[a, b, d], [b, c, e], [d, e, f]]`.
+Conic: TypeAlias = MatrixBase

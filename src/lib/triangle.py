@@ -2,14 +2,14 @@ from sympy import Matrix
 
 from lib.matrix import conic_matrix
 from lib.point import point_to_vec3, point_to_xy
-from lib.type_aliases import FinitePoint, Point, PointVector
+from lib.type_aliases import Conic, FinitePoint, Point, PointVector
 
 
 def circumcircle(
     point1: Point,
     point2: Point,
     point3: Point,
-) -> Matrix:
+) -> Conic:
     """Computes the circle through three points.
 
     If the points are in counterclockwise order, the sign of the matrix matches
@@ -86,7 +86,7 @@ def steiner_ellipse(
     point1: FinitePoint,
     point2: FinitePoint,
     point3: FinitePoint,
-) -> Matrix:
+) -> Conic:
     """Constructs the Steiner circumellipse for the given points.
 
     The ellipse goes through the three points and is centered at the triangle's
@@ -125,7 +125,7 @@ def steiner_inellipse(
     point1: FinitePoint,
     point2: FinitePoint,
     point3: FinitePoint,
-) -> Matrix:
+) -> Conic:
     """Computes the Steiner inellipse for the given points.
 
     The ellipse is centered at the triangle's centroid, and is tangent to the

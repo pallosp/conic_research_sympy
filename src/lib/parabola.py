@@ -2,7 +2,7 @@ from sympy import Expr, Matrix, MatrixBase, sqrt
 
 from lib.conic_classes import is_parabola
 from lib.point import ideal_point, point_to_xy
-from lib.type_aliases import Line, PointVector
+from lib.type_aliases import Conic, Line, PointVector
 
 
 def _parabola_directrix_from_adjugate(parabola_adjugate: MatrixBase) -> Line:
@@ -16,7 +16,7 @@ def _parabola_directrix_from_adjugate(parabola_adjugate: MatrixBase) -> Line:
     return Matrix([d, e, (a + c) / -2])
 
 
-def parabola_directrix(parabola: MatrixBase) -> Line:
+def parabola_directrix(parabola: Conic) -> Line:
     """Computes the directrix of a parabola represented as a conic matrix.
 
     Special cases for other conic types:
@@ -44,7 +44,7 @@ def _parabola_focus_from_adjugate(parabola_adjugate: MatrixBase) -> PointVector:
     return parabola_adjugate * Matrix([d, e, -(a + c) / 2])
 
 
-def parabola_focus(parabola: MatrixBase) -> PointVector:
+def parabola_focus(parabola: Conic) -> PointVector:
     """Computes the focus of a parabola represented as a conic matrix.
 
     Special cases for other conic types:
@@ -60,7 +60,7 @@ def parabola_focus(parabola: MatrixBase) -> PointVector:
     return _parabola_focus_from_adjugate(parabola.adjugate())
 
 
-def parabola_vertex(parabola: MatrixBase) -> Matrix:
+def parabola_vertex(parabola: Conic) -> Matrix:
     """Computes the parabola's vertex.
 
     Returns the point's coordinates as a 2D column vector.
@@ -75,7 +75,7 @@ def parabola_vertex(parabola: MatrixBase) -> Matrix:
     return Matrix([vertex_x, vertex_y])
 
 
-def parabola_direction(parabola: MatrixBase) -> PointVector:
+def parabola_direction(parabola: Conic) -> PointVector:
     """Computes the direction of a parabola modulo 2π.
 
     Unlike [focal_axis_direction](#conic_direction.focal_axis_direction), which
@@ -92,7 +92,7 @@ def parabola_direction(parabola: MatrixBase) -> PointVector:
     return ideal_point(x, y)
 
 
-def parabola_axis(parabola: MatrixBase) -> Line:
+def parabola_axis(parabola: Conic) -> Line:
     """Computes the parabola's focal axis line.
 
     It's the polar line corresponding to the ideal point on the directrix.
@@ -110,7 +110,7 @@ def parabola_axis(parabola: MatrixBase) -> Line:
     return parabola * Matrix([-y, x, 0])
 
 
-def parabola_focal_parameter(parabola: MatrixBase) -> Expr:
+def parabola_focal_parameter(parabola: Conic) -> Expr:
     """Computes the parabola's focus-directrix distance.
 
     *Formula*:

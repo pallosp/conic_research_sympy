@@ -1,7 +1,7 @@
-from sympy import MatrixBase, MatrixExpr, sqrt
+from sympy import MatrixExpr, sqrt
 
 from lib.matrix import pivot_column_and_row, quadratic_form, skew_matrix
-from lib.type_aliases import Line, PointVector
+from lib.type_aliases import Conic, Line, PointVector
 
 
 def line_x_line(line1: Line, line2: Line) -> PointVector:
@@ -14,7 +14,7 @@ def line_x_line(line1: Line, line2: Line) -> PointVector:
 
 
 def conic_x_line(
-    conic: MatrixBase,
+    conic: Conic,
     line: Line,
 ) -> tuple[PointVector | MatrixExpr, PointVector | MatrixExpr]:
     """Intersects a conic with a line. Returns two points.
