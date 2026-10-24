@@ -1886,10 +1886,10 @@ Degenerates to `[nan, nan]ᵀ` when `point`, `line` or both are infinite.
 ## ConicNormFactor
 
 ```python
-class ConicNormFactor(Function)
+class ConicNormFactor(DefinedFunction)
 ```
 
-([source](../src/lib/conic_direction.py#L19))
+([source](../src/lib/conic_direction.py#L17))
 
 Computes a normalization factor (±1) for a conic matrix `C`.
 
@@ -1913,10 +1913,10 @@ following properties:
 
 ```python
 @classmethod
-def eval(cls, conic: Conic) -> int | None
+def eval(cls, conic: Conic) -> Expr | None
 ```
 
-([source](../src/lib/conic_direction.py#L41))
+([source](../src/lib/conic_direction.py#L39))
 
 Internal implementation. Call `ConicNormFactor(conic)` directly.
 
@@ -1928,7 +1928,7 @@ Internal implementation. Call `ConicNormFactor(conic)` directly.
 def focal_axis_direction(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic_direction.py#L95))
+([source](../src/lib/conic_direction.py#L92))
 
 Returns the ideal point representing the direction of a conic's focal axis.
 
@@ -1964,7 +1964,7 @@ Properties:
 def conjugate_axis_direction(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic_direction.py#L128))
+([source](../src/lib/conic_direction.py#L125))
 
 Returns the ideal point representing the direction of a conic's conjugate axis.
 

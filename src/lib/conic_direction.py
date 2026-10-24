@@ -1,8 +1,5 @@
-from typing import override
-
 from sympy import (
     Expr,
-    Function,
     I,
     Integer,
     Piecewise,
@@ -10,13 +7,14 @@ from sympy import (
     sign,
     sqrt,
 )
+from sympy.core.function import DefinedFunction
 
 from lib.conic_classes import is_point_conic
 from lib.point import ideal_point
 from lib.type_aliases import Conic, PointVector
 
 
-class ConicNormFactor(Function):
+class ConicNormFactor(DefinedFunction):
     """Computes a normalization factor (±1) for a conic matrix `C`.
 
     When `C` is multiplied by this factor, the resulting conic has the
@@ -40,13 +38,13 @@ class ConicNormFactor(Function):
     @classmethod
     def eval(  # noqa: PLR0911 (too-many-return-statements)
         cls, conic: Conic
-    ) -> int | None:
+    ) -> Expr | None:
         """Internal implementation. Call `ConicNormFactor(conic)` directly."""
         det = conic.det().factor()
         if det.is_positive:
-            return 1
+            return S.One
         if det.is_negative:
-            return -1
+            return S.NegativeOne
         if det.is_real and det.is_nonzero:
             return sign(det)
 
@@ -56,20 +54,19 @@ class ConicNormFactor(Function):
 
             # line pair
             if is_point is False:
-                return 1
+                return S.One
 
             # point conic
             if is_point is True:
                 diag = conic.diagonal()
                 if any(e.is_positive for e in diag):
-                    return -1
+                    return S.NegativeOne
                 if any(e.is_negative for e in diag):
-                    return 1
+                    return S.One
 
         return None
 
-    @override
-    def _eval_Abs(self) -> Integer:
+    def _eval_Abs(self) -> Integer:  # noqa: N802 (hook name looked up by Abs)
         return S.One
 
     def _eval_power(self, exponent: Expr) -> Expr | None:
