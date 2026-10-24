@@ -1736,7 +1736,7 @@ dev = ["hypothesis (>=6.70.0)", "pytest (>=7.1.0)"]
 type = "git"
 url = "https://github.com/sympy/sympy.git"
 reference = "master"
-resolved_reference = "024e2c84a64dd43501b30887faa8e44c6254d181"
+resolved_reference = "fbf557ab210f4f0dd1a5c05129b9905073d24150"
 
 [[package]]
 name = "tomli"
