@@ -16,7 +16,7 @@ asymptote2 = line_between(center, ideal_point_2)
 asymptote_conic = line_pair_conic(asymptote1, asymptote2)
 
 asymptote_conic = asymptote_conic.applyfunc(simplify)
-asymptote_conic /= gcd(list(asymptote_conic))
+asymptote_conic /= gcd(asymptote_conic.flat())
 
 print("\nDegenerate conic from the two asymptotes:\n")
 pprint(asymptote_conic)

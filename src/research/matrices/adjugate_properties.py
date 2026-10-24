@@ -25,7 +25,7 @@ println_indented(eq_chain(symbols("adj"), adj_matrix, adj_matrix_value))
 print("Adjugate of its adjugate\n")
 
 double_adj = conic.adjugate().adjugate().applyfunc(factor)
-common_factor = gcd(list(double_adj))
+common_factor = gcd(double_adj.flat())
 det_value = conic.det()
 det = symbols("det")
 double_adj = MatMul(

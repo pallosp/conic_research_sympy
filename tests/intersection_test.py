@@ -113,7 +113,7 @@ class TestConicXLine:
         intersections = conic_x_line(UNIT_CIRCLE, line)
         assert not is_explicit_matrix(intersections[0])
         assert not is_explicit_matrix(intersections[1])
-        substitutions = dict(zip(line, X_AXIS, strict=True))
+        substitutions = list(zip(line.flat(), X_AXIS.flat(), strict=True))
         intersections = [p.subs(substitutions) for p in intersections]
         assert is_explicit_matrix(intersections[0])
         assert is_explicit_matrix(intersections[1])

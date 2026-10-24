@@ -37,7 +37,7 @@ HORIZONTAL_LINE = "-" * 80
 
 def normalize(point: Matrix) -> Matrix:
     """Divides out the common factor of the coordinates."""
-    return (point / gcd(list(point))).applyfunc(factor)
+    return (point / gcd(point.flat())).applyfunc(factor)
 
 
 ################################################################################
@@ -190,8 +190,8 @@ conics = [
 for conic_example in conics:
     ip1 = ideal_points(conic_example)
     ip2 = tuple(
-        expand_complex(formula.subs(zip(conic, conic_example, strict=True)))
-        for formula in ip_formulae
+        expand_complex(f.subs(zip(conic.flat(), conic_example.flat(), strict=True)))
+        for f in ip_formulae
     )
     assert any(is_nonzero_multiple(ip1[0], p) for p in ip2)
     assert any(is_nonzero_multiple(ip1[1], p) for p in ip2)
@@ -202,5 +202,5 @@ print()
 
 circle = conic_from_poly(x * x + y * y - 1)
 expected = ideal_points(circle)[0]
-actual = ip_formulae[0].subs(zip(conic, circle, strict=True))
+actual = ip_formulae[0].subs(zip(conic.flat(), circle.flat(), strict=True))
 println_indented(Ne(expected, actual, evaluate=False))

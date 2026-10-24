@@ -80,7 +80,7 @@ class TestParabolaFocusAndDirectrix:
         focus = parabola_focus(conic)
         directrix = parabola_directrix(conic)
         polar = polar_line(conic, focus).applyfunc(factor)
-        assert directrix == polar / gcd(list(polar))
+        assert directrix == polar / gcd(polar.flat())
 
 
 class TestParabolaVertex:

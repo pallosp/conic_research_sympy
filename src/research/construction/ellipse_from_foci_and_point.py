@@ -27,7 +27,7 @@ r1 = symbols("r1")
 r2 = sqrt(r1**2 - linear_ecc**2)
 
 ellipse = ellipse(center, r1, r2, r1_direction=major_axis_dir)
-ellipse /= gcd(list(ellipse))
+ellipse /= gcd(ellipse.flat())
 ellipse = ellipse.applyfunc(cancel)
 
 print("  Conic matrix:\n")

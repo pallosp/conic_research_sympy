@@ -10,7 +10,7 @@ polar_matrix = Matrix(3, 3, symbols("a,b,c,d,e,f,g,h,i"))
 
 conic = conic_from_polar_matrix(polar_matrix)
 center = projective_conic_center(conic)
-center /= -gcd(list(center))
+center /= -gcd(center.flat())
 
 print("\nCenter point of a conic in polar representation:\n")
 

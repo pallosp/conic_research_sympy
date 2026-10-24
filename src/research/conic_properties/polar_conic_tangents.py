@@ -13,7 +13,7 @@ conic = conic_from_polar_matrix(polar_matrix)
 
 tangent = polar_line(conic, point)
 tangent = tangent.applyfunc(lambda el: el.factor().collect([cos(angle), sin(angle)]))
-tangent /= gcd(list(tangent))
+tangent /= gcd(tangent.flat())
 
 print("\nTangent to a conic in polar representation:\n")
 

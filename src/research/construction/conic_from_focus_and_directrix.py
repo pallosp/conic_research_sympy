@@ -46,7 +46,7 @@ ecc_matrix = conic_matrix.applyfunc(
 )
 
 remainder = conic_matrix - ecc_square * ecc_matrix
-remainder_gcd = gcd(list(remainder))
+remainder_gcd = gcd(remainder.flat())
 remainder = MatMul(
     remainder.applyfunc(lambda el: (el / remainder_gcd).factor()),
     remainder_gcd,

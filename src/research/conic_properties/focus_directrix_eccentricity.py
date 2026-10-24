@@ -332,7 +332,7 @@ adj_symbols = Matrix([[aa, ba, da], [ba, ca, ea], [da, ea, fa]])
 adj_values = conic_abc.adjugate()
 
 println_indented(eq_chain(symbols("adj"), adj_symbols, adj_values))
-fx_value = fx_value.subs(zip(adj_values, adj_symbols, strict=True))
+fx_value = fx_value.subs(zip(adj_values.flat(), adj_symbols.flat(), strict=True))
 println_indented(eq_chain(fx, fx_value, fx_value.factor()))
 
 print("Using the parabola determinant identities:\n")
@@ -349,7 +349,9 @@ fx_value = fx_value.factor()
 fx_value = fx_value.subs(D * det, d_times_det).subs((A + C) * det, a_plus_c_times_det)
 println_indented(eq_chain(fx, fx_value.factor().collect(da)))
 
-fy_value = fy_value.subs(zip(adj_values, adj_symbols, strict=True)).factor()
+fy_value = fy_value.subs(
+    zip(adj_values.flat(), adj_symbols.flat(), strict=True)
+).factor()
 fy_value = fy_value.subs(E * det, e_times_det).subs((A + C) * det, a_plus_c_times_det)
 println_indented(eq_chain(fy, fy_value.factor().collect(ea)))
 

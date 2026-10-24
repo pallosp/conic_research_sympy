@@ -46,7 +46,9 @@ print(
 )
 print()
 
-polar_ellipse = polar_ellipse.subs(zip(polar_ellipse.col(2), (cx, cy, 1), strict=True))
+polar_ellipse = polar_ellipse.subs(
+    zip(polar_ellipse.col(2).flat(), (cx, cy, 1), strict=True)
+)
 println_indented(eq_chain(symbols("P"), polar_ellipse))
 
 print(
@@ -127,7 +129,7 @@ r_horizontal_value = radius_in_direction(cartesian_conic, angle=0)
 discriminant = symbols("disc", positive=True)
 
 polar_ellipse_h = (
-    polar_ellipse_h.subs(zip((cx, cy), center, strict=True))
+    polar_ellipse_h.subs(zip((cx, cy), center.flat(), strict=True))
     .subs(r_horizontal, r_horizontal_value)
     .subs(cartesian_conic.det(), symbols("det"))
     .subs(a * c - b * b, discriminant)
@@ -176,7 +178,7 @@ r_vertical_value = radius_in_direction(cartesian_conic, angle=pi / 2)
 discriminant = symbols("disc", positive=True)
 
 polar_ellipse_v = (
-    polar_ellipse_v.subs(zip((cx, cy), center, strict=True))
+    polar_ellipse_v.subs(zip((cx, cy), center.flat(), strict=True))
     .subs(r_vertical, r_vertical_value)
     .subs(cartesian_conic.det(), symbols("det"))
     .subs(a * c - b * b, discriminant)

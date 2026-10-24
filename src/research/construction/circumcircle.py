@@ -21,6 +21,6 @@ println_indented(circumcircle.applyfunc(lambda e: normalize_det3(poly_as_det3(e)
 print("Circumcenter:\n")
 
 circumcenter = projective_conic_center(circumcircle)
-circumcenter = (circumcenter / gcd(list(circumcenter))).applyfunc(cancel)
+circumcenter = (circumcenter / gcd(circumcenter.flat())).applyfunc(cancel)
 
 println_indented(circumcenter.applyfunc(lambda e: normalize_det3(poly_as_det3(e))))

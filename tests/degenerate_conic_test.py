@@ -101,7 +101,7 @@ class TestSplitToLines:
         # Substituting a concrete line pair conic evaluates them to its lines.
         line_pair = [Matrix([1, 2, 3]), Matrix([4, 5, 6])]
         conic = line_pair_conic(*line_pair)
-        substitutions = dict(zip(symbolic_conic, conic, strict=True))
+        substitutions = list(zip(symbolic_conic.flat(), conic.flat(), strict=True))
         concrete_lines = [line.subs(substitutions) for line in lines]
         assert is_explicit_matrix(concrete_lines[0])
         assert is_explicit_matrix(concrete_lines[1])
@@ -119,7 +119,7 @@ class TestSplitToLines:
         # Its x² coefficient is 1·1 = 1, matching the symbolic conic.
         line_pair = [Matrix([1, 2, 3]), Matrix([1, 5, 6])]
         conic = line_pair_conic(*line_pair)
-        substitutions = dict(zip(symbolic_conic, conic, strict=True))
+        substitutions = list(zip(symbolic_conic.flat(), conic.flat(), strict=True))
         concrete_lines = [line.subs(substitutions) for line in lines]
         assert are_projective_sets_equal(concrete_lines, line_pair)
 

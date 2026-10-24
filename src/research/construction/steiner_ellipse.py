@@ -115,7 +115,7 @@ assert conic_contains_point(conic, Matrix([x1, y1, 1]))
 # yc = (y₁+y₂+y₃)/3.
 
 steiner = conic.subs({xc: (x1 + x2 + x3) / 3, yc: (y1 + y2 + y3) / 3})
-steiner = cancel(steiner / gcd(list(steiner)) * 18)
+steiner = cancel(steiner / gcd(steiner.flat()) * 18)
 
 print("\nSteiner ellipse matrix:\n")
 

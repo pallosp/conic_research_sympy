@@ -60,7 +60,7 @@ t = homography_from_samples(
     [vertex_1, vertex_2, ideal_point_1, ideal_point_2],
 )
 t = t.applyfunc(lambda el: el.factor(deep=True))
-t = t / gcd(list(t)).factor()
+t = t / gcd(t.flat()).factor()
 
 println_indented(t)
 
@@ -83,7 +83,9 @@ print("Interesting fact: the transformation is independent on the secondary radi
 h_ellipse = ellipse((4, 3), 2, 1)
 hyperbola = transform_conic(
     h_ellipse,
-    t.subs(zip(vertex_1, (6, 3), strict=True)).subs(zip(vertex_2, (2, 3), strict=True)),
+    t.subs(zip(vertex_1.flat(), (6, 3), strict=True)).subs(
+        zip(vertex_2.flat(), (2, 3), strict=True)
+    ),
 )
 
 assert point_to_xy(conic_center(hyperbola)) == Matrix([4, 3])

@@ -157,7 +157,7 @@ class TestAxisDirection:
         conic = conic_matrix(*symbols("a b c d e f"))
         point = circle((1, 2), r=0)
         direction = focal_axis_direction(conic)
-        direction = direction.subs(zip(conic, point, strict=True))
+        direction = direction.subs(zip(conic.flat(), point.flat(), strict=True))
         assert direction.is_zero_matrix
 
     def test_hyperbola(self):
