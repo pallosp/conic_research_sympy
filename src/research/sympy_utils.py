@@ -1,7 +1,7 @@
 from textwrap import indent as indent_multiline
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, TypeAlias, cast
 
-from sympy import Eq, Equality, Expr, Pow, pretty
+from sympy import Basic, Eq, Equality, Expr, MatrixBase, Pow, pretty
 
 from lib.type_aliases import Scalar
 
@@ -67,7 +67,11 @@ def swap_eq(equation: ExprEq) -> ExprEq:
     return eq(equation.rhs, equation.lhs)
 
 
-def eq_chain(*expressions: Expr) -> Eq | Expr:
+#: An item of an equation chain built by `eq_chain`.
+EqChainItem: TypeAlias = Basic | MatrixBase | tuple[object, ...] | int | float
+
+
+def eq_chain(*expressions: EqChainItem) -> Eq | EqChainItem:
     """Creates a chain of equations, i.e. `expr_1 = expr_2 = ... = expr_n`."""
     if not expressions:
         raise ValueError("At least one expression is required")
