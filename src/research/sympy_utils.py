@@ -55,9 +55,9 @@ def factor_radicals(expr: Expr) -> Expr:
     return expr.replace(Pow, lambda base, exp: Pow(base.factor(), exp))
 
 
-def print_indented(expr: Expr, *, indent: int = 2) -> None:
+def print_indented(expr: object, *, indent: int = 2) -> None:
     print(indent_multiline(pretty(expr), " " * indent))
 
 
-def println_indented(expr: Expr, *, indent: int = 2) -> None:
+def println_indented(expr: object, *, indent: int = 2) -> None:
     print(indent_multiline(pretty(expr), " " * indent) + "\n")
