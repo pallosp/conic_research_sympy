@@ -120,7 +120,7 @@ def is_involution(
     if transformation.shape != (3, 3):
         return False
 
-    double_transformation = simplifier(transformation * transformation)
+    double_transformation = (transformation * transformation).applyfunc(simplifier)
     if double_transformation[0, 0].is_zero:
         return False
     double_transformation /= double_transformation[0, 0]

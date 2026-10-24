@@ -1,4 +1,4 @@
-from sympy import I, ImmutableMatrix, Matrix, S, sympify
+from sympy import I, ImmutableMatrix, Matrix, S
 
 from lib.type_aliases import FinitePoint, Line, Point, PointVector, Scalar
 
@@ -41,8 +41,8 @@ def point_to_xy(point: FinitePoint) -> Matrix:
     """Computes the Euclidean coordinates of a projective point."""
     if len(point) not in (2, 3):
         raise ValueError("The point must be a 2D or 3D vector, list or tuple.")
-    x, y, *z = sympify(point)
-    z = sympify(z[0]) if z else S.One
+    x, y, *z = Matrix(point).flat()
+    z = z[0] if z else S.One
     return Matrix([x / z, y / z])
 
 
