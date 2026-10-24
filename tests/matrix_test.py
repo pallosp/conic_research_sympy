@@ -1,5 +1,16 @@
 import pytest
-from sympy import I, Matrix, MatrixSymbol, ShapeError, sqrt, symbols
+from sympy import (
+    I,
+    Identity,
+    ImmutableMatrix,
+    Matrix,
+    MatrixSymbol,
+    ShapeError,
+    Transpose,
+    ZeroMatrix,
+    sqrt,
+    symbols,
+)
 
 from lib.matrix import (
     conic_matrix,
@@ -65,6 +76,21 @@ class TestIsNonZeroMultiple:
     def test_undecidable(self):
         x = symbols("x")
         assert is_nonzero_multiple([1, 2], [x, x * 2]) is None
+
+    def test_matrix_expressions(self):
+        assert is_nonzero_multiple(Identity(2), Matrix([[3, 0], [0, 3]])) is True
+        assert is_nonzero_multiple(Identity(2), Matrix([[1, 1], [1, 1]])) is False
+        assert is_nonzero_multiple(Identity(2), Matrix([1, 1])) is False
+        assert is_nonzero_multiple(ZeroMatrix(2, 1), [0, 0]) is True
+        assert is_nonzero_multiple(ZeroMatrix(2, 1), [1, 2]) is False
+        column = Transpose(ImmutableMatrix([[1, 2, 3]]))
+        assert is_nonzero_multiple(column, [2, 4, 6]) is True
+        assert is_nonzero_multiple([2, 4, 6], column) is True
+
+    def test_undecidable_matrix_expressions(self):
+        v = MatrixSymbol("v", 2, 1)
+        w = MatrixSymbol("w", 2, 1)
+        assert is_nonzero_multiple(v, w) is None
 
 
 class TestIsPositiveMultiple:

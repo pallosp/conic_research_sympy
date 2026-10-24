@@ -23,12 +23,13 @@ from lib.type_aliases import Conic, Scalar
 
 
 def is_nonzero_multiple(
-    m1: MatrixBase | Sequence[Scalar],
-    m2: MatrixBase | Sequence[Scalar],
+    m1: MatrixBase | MatrixExpr | Sequence[Scalar],
+    m2: MatrixBase | MatrixExpr | Sequence[Scalar],
 ) -> bool | None:
     """Tells whether two matrices are non-zero scalar multiples of each other.
 
-    Treats lists and tuples as column vectors. Returns `None` if undecidable.
+    Treats lists and tuples as column vectors, and compares unevaluated matrix
+    expressions element-wise. Returns `None` if undecidable.
     """
     if not isinstance(m1, Matrix):
         m1 = Matrix(m1)
