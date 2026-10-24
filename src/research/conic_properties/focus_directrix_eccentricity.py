@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
+from typing import cast
+
 from sympy import (
     Eq,
     Matrix,
     Piecewise,
-    Pow,
     Q,
     atan2,
     cos,
@@ -21,8 +22,10 @@ from sympy import (
 from lib.conic import conic_from_focus_and_directrix, projective_conic_center
 from lib.matrix import conic_matrix
 from research.sympy_utils import (
+    ExprEq,
     add_eq,
     div_eq,
+    eq,
     eq_chain,
     factor_radicals,
     mul_eq,
@@ -48,20 +51,20 @@ print(f"\n{HORIZONTAL_LINE}\n")
 print("Equations to determine the foci, directrices and eccentricity:\n")
 
 coeff_eq = [
-    Eq(A, conic_fde[0]),
-    Eq(B, conic_fde[3]),
-    Eq(C, conic_fde[4]),
-    Eq(D, conic_fde[6]),
-    Eq(E, conic_fde[7]),
-    Eq(F, conic_fde[8]),
+    eq(A, conic_fde[0]),
+    eq(B, conic_fde[3]),
+    eq(C, conic_fde[4]),
+    eq(D, conic_fde[6]),
+    eq(E, conic_fde[7]),
+    eq(F, conic_fde[8]),
 ]
-for eq in coeff_eq:
-    print_indented(eq)
+for equation in coeff_eq:
+    print_indented(equation)
 
 print("\nSince a² + b² = 1:\n")
 
 for i in range(len(coeff_eq)):
-    coeff_eq[i] = coeff_eq[i].subs(a * a + b * b, 1)
+    coeff_eq[i] = cast("ExprEq", coeff_eq[i].subs(a * a + b * b, 1))
     print_indented(coeff_eq[i])
 
 print("\nDeterminant of the conic matrix:\n")
@@ -77,9 +80,7 @@ print("Calculate the eigenvalues of the top left submatrix.\n")
 
 min_eigen_abc, max_eigen_abc = Matrix([[A, B], [B, C]]).eigenvals()
 min_eigen_fde, max_eigen_fde = (
-    e.subs([(eq.lhs, eq.rhs) for eq in coeff_eq])
-    .factor()
-    .replace(Pow, lambda base, exp: Pow(base.factor(), exp))
+    e.subs([(equation.lhs, equation.rhs) for equation in coeff_eq])
     .subs(b * b, 1 - a * a)
     .factor()
     .collect(ecc)
@@ -88,13 +89,16 @@ min_eigen_fde, max_eigen_fde = (
 
 
 min_eigen, max_eigen = symbols("min_eigen,max_eigen", real=True, nonzero=True)
-eigenvalue_min_eq_abc = Eq(min_eigen, min_eigen_abc)
-eigenvalue_max_eq_abc = Eq(max_eigen, max_eigen_abc)
+eigenvalue_min_eq_abc = eq(min_eigen, min_eigen_abc)
+eigenvalue_max_eq_abc = eq(max_eigen, max_eigen_abc)
 eigenvalue_sum_eq_abc = add_eq(eigenvalue_min_eq_abc, eigenvalue_max_eq_abc)
-eigenvalue_prod_eq_abc = simplify(mul_eq(eigenvalue_max_eq_abc, eigenvalue_min_eq_abc))
+eigenvalue_prod_eq_abc = cast(
+    "ExprEq",
+    simplify(mul_eq(eigenvalue_max_eq_abc, eigenvalue_min_eq_abc)),
+)
 eigenvalue_diff_eq_abc = sub_eq(eigenvalue_max_eq_abc, eigenvalue_min_eq_abc)
-eigenvalue_min_eq_fde = Eq(min_eigen, min_eigen_fde)
-eigenvalue_max_eq_fde = Eq(max_eigen, max_eigen_fde)
+eigenvalue_min_eq_fde = eq(min_eigen, min_eigen_fde)
+eigenvalue_max_eq_fde = eq(max_eigen, max_eigen_fde)
 eigenvalue_sum_eq_fde = factor(add_eq(eigenvalue_min_eq_fde, eigenvalue_max_eq_fde))
 eigenvalue_diff_eq_fde = factor(sub_eq(eigenvalue_max_eq_fde, eigenvalue_min_eq_fde))
 
@@ -110,19 +114,19 @@ eigenvalue_eqs = [
     eigenvalue_diff_eq_fde,
 ]
 
-for eq in eigenvalue_eqs:
-    println_indented(eq)
+for equation in eigenvalue_eqs:
+    println_indented(equation)
 
 print("As sign(λ) = sign(det):\n")
 
-eigenvalue_diff_eq_fde = Eq(
+eigenvalue_diff_eq_fde = eq(
     (max_eigen - min_eigen) * sign(det, evaluate=False),
     ecc**2 * L,
 )
 println_indented(eigenvalue_diff_eq_fde)
 
 lambda_eq = div_eq(sub_eq(eigenvalue_diff_eq_fde, eigenvalue_sum_eq_fde), 2)
-lambda_eq = swap_eq(factor(lambda_eq))
+lambda_eq = swap_eq(cast("ExprEq", factor(lambda_eq)))
 
 println_indented(lambda_eq)
 
@@ -130,7 +134,7 @@ lambda_eq_piecewise = Eq(L, Piecewise((-min_eigen, det > 0), (-max_eigen, True))
 println_indented(lambda_eq_piecewise)
 
 eigen_to_abc = {min_eigen: min_eigen_abc, max_eigen: max_eigen_abc}
-lambda_eq_abc = factor(lambda_eq.subs(eigen_to_abc))
+lambda_eq_abc = cast("ExprEq", factor(lambda_eq.subs(eigen_to_abc)))
 println_indented(lambda_eq_abc)
 
 ecc_square_eq = swap_eq(div_eq(eigenvalue_diff_eq_fde, L))
@@ -143,8 +147,8 @@ print(HORIZONTAL_LINE)
 
 print("Directrix normal vector a.k.a. focal axis direction:\n")
 
-aa_eq = Eq(a**2, solve(coeff_eq[0], a**2)[0])
-bb_eq = Eq(b**2, solve(coeff_eq[2], b**2)[0])
+aa_eq = eq(a**2, solve(coeff_eq[0], a**2)[0])
+bb_eq = eq(b**2, solve(coeff_eq[2], b**2)[0])
 ab_eq = swap_eq(div_eq(coeff_eq[1], ecc**2 * L))
 println_indented(aa_eq)
 println_indented(bb_eq)
@@ -155,11 +159,17 @@ print("As a² + b² = 1, substitute a = cos(θ), b = sin(θ)\n")
 theta = symbols("theta")
 println_indented(sub_eq(aa_eq, bb_eq))
 println_indented(sub_eq(aa_eq, bb_eq).subs({a: cos(theta), b: sin(theta)}))
-cos2_eq = sub_eq(aa_eq, bb_eq).subs({a: cos(theta), b: sin(theta)}).simplify()
+cos2_eq = cast(
+    "ExprEq",
+    sub_eq(aa_eq, bb_eq).subs({a: cos(theta), b: sin(theta)}).simplify(),
+)
 println_indented(cos2_eq)
 println_indented(mul_eq(ab_eq, 2))
 println_indented(mul_eq(ab_eq, 2).subs({a: cos(theta), b: sin(theta)}))
-sin2_eq = mul_eq(ab_eq, 2).subs({a: cos(theta), b: sin(theta)}).simplify()
+sin2_eq = cast(
+    "ExprEq",
+    mul_eq(ab_eq, 2).subs({a: cos(theta), b: sin(theta)}).simplify(),
+)
 println_indented(sin2_eq)
 theta_eq = Eq(theta, atan2(sin2_eq.rhs, cos2_eq.rhs) / 2)
 println_indented(theta_eq)
@@ -180,7 +190,7 @@ println_indented(Eq(fy, fy_formula))
 
 f_eq = coeff_eq[5]
 println_indented(f_eq)
-f_eq = f_eq.subs({fx: fx_formula, fy: fy_formula})
+f_eq = cast("ExprEq", f_eq.subs({fx: fx_formula, fy: fy_formula}))
 println_indented(f_eq)
 
 print("\nSolutions when there are two directrices:\n")
@@ -232,7 +242,7 @@ print("Special case: parabola\n")
 println_indented(f_eq)
 
 println_indented(Eq(ecc, 1))
-f_eq = f_eq.subs(ecc, 1)
+f_eq = cast("ExprEq", f_eq.subs(ecc, 1))
 println_indented(f_eq)
 
 f_eq = Eq(f_eq.lhs, f_eq.rhs.expand().collect(c * c * L))

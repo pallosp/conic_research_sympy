@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
+from typing import cast
+
 from sympy import Abs, Eq, Expr, symbols
 
 from lib.conic import conic_from_poly
 from lib.distance import point_point_distance
 from lib.type_aliases import Conic
-from research.sympy_utils import mul_eq, println_indented, sub_eq
+from research.sympy_utils import ExprEq, eq, mul_eq, println_indented, sub_eq
 
 cx, cy = symbols("cx cy", real=True)  # center
 focus = symbols("fx fy")
@@ -26,7 +28,7 @@ def compute_conic_from_foci_and_radius(
     print(f"{conic_type} equation from focal points and radius:\n")
 
     d1, d2 = symbols("d1 d2", real=True)
-    conic_eq = Eq(
+    conic_eq = eq(
         radius,
         (d1 + d2) / 2 if conic_type == "Ellipse" else Abs(d1 - d2) / 2,
     )
@@ -36,7 +38,7 @@ def compute_conic_from_foci_and_radius(
     println_indented(conic_eq)
 
     conic_eq = sub_eq(conic_eq, (d1**2 + d2**2) / 4)
-    conic_eq = Eq(conic_eq.lhs, conic_eq.rhs.simplify())
+    conic_eq = eq(conic_eq.lhs, conic_eq.rhs.simplify())
     println_indented(conic_eq)
 
     conic_eq = mul_eq(conic_eq, conic_eq)
@@ -49,8 +51,8 @@ def compute_conic_from_foci_and_radius(
     point_on_hyperbola = (x, y)
     dist_focus1 = point_point_distance(focus1, point_on_hyperbola)
     dist_focus2 = point_point_distance(focus2, point_on_hyperbola)
-    conic_eq = conic_eq.subs(d1, dist_focus1).subs(d2, dist_focus2)
-    conic_eq = Eq(conic_eq.lhs.expand().collect((x, y)), 0)
+    conic_eq = cast("ExprEq", conic_eq.subs(d1, dist_focus1).subs(d2, dist_focus2))
+    conic_eq = eq(conic_eq.lhs.expand().collect((x, y)), 0)
     println_indented(conic_eq)
 
     print("In matrix form:\n")

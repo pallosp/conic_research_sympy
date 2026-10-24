@@ -3,6 +3,8 @@ from typing import TYPE_CHECKING, cast
 
 from sympy import Eq, Equality, Expr, Pow, pretty
 
+from lib.type_aliases import Scalar
+
 if TYPE_CHECKING:
 
     class ExprEq(Equality):
@@ -26,7 +28,7 @@ else:
     ExprEq = Equality
 
 
-def eq(lhs: Expr, rhs: Expr) -> ExprEq:
+def eq(lhs: Scalar, rhs: Scalar) -> ExprEq:
     """Creates a sympy equation without evaluating it to True or False."""
     return cast("ExprEq", Eq(lhs, rhs, evaluate=False))
 
@@ -48,14 +50,14 @@ def sub_eq(eq0: ExprEq, eq1: Expr | ExprEq) -> ExprEq:
     return eq(eq0.lhs - lhs, eq0.rhs - rhs)
 
 
-def mul_eq(equation: ExprEq, factor: Expr | ExprEq) -> ExprEq:
+def mul_eq(equation: ExprEq, factor: Scalar | ExprEq) -> ExprEq:
     """Multiplies a sympy equation by a factor or another equation."""
     lhs = factor.lhs if isinstance(factor, ExprEq) else factor
     rhs = factor.rhs if isinstance(factor, ExprEq) else factor
     return eq(equation.lhs * lhs, equation.rhs * rhs)
 
 
-def div_eq(equation: ExprEq, denom: Expr) -> ExprEq:
+def div_eq(equation: ExprEq, denom: Scalar) -> ExprEq:
     """Divides a sympy equation by a denominator."""
     return eq(equation.lhs / denom, equation.rhs / denom)
 
