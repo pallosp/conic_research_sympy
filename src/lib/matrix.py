@@ -1,5 +1,5 @@
 from collections.abc import Callable, Sequence
-from typing import Self
+from typing import Self, cast
 
 from sympy import (
     Expr,
@@ -148,7 +148,7 @@ def _pivot_index(matrix: MatrixBase) -> int | None:
     Returns 0 for zero matrices, or `None` if undecidable.
     """
     all_zero = True
-    for i, el in enumerate(matrix):
+    for i, el in enumerate(matrix.flat()):
         is_zero = el.is_zero
         if is_zero is False:
             return i
@@ -188,12 +188,17 @@ class MatrixFunction(MatrixExpr):
             matrix = ImmutableMatrix(matrix)
         return super().__new__(cls, matrix)
 
-    def _entry(self, i: Expr, j: Expr, **_kwargs: object) -> MatrixElement:
+    @property
+    def matrix(self) -> MatrixBase | MatrixExpr:
+        """The argument of the function."""
+        return cast("MatrixBase | MatrixExpr", self.args[0])
+
+    def _entry(self, i: Expr, j: Expr, **_kwargs: object) -> Expr:
         return MatrixElement(self, i, j)
 
     def _pretty(self, printer: PrettyPrinter) -> prettyForm:
         # Without this, the pretty printer would fall back to str().
-        return printer._print(  # noqa: SLF001 (private-member-access)
+        return printer._print_Function(  # noqa: SLF001 (private-member-access)
             Function(type(self).__name__)(*self.args)
         )
 
@@ -222,7 +227,7 @@ class SkewMatrix(MatrixFunction):
         if i == j:
             return S.Zero
         # Same layout as Matrix.hat()
-        element = self.args[0][3 - i - j]
+        element = self.matrix[int(3 - i - j)]
         return element if (i - j) % 3 == 1 else -element
 
 
@@ -247,7 +252,7 @@ class PivotColumn(MatrixFunction):
     @property
     def shape(self) -> tuple[Integer, Integer]:
         """The shape of the result: `(matrix.rows, 1)`."""
-        return (Integer(self.args[0].rows), S.One)
+        return (Integer(self.matrix.rows), S.One)
 
 
 class TransposedPivotRow(MatrixFunction):
@@ -265,7 +270,7 @@ class TransposedPivotRow(MatrixFunction):
     @property
     def shape(self) -> tuple[Integer, Integer]:
         """The shape of the result: `(matrix.cols, 1)`."""
-        return (Integer(self.args[0].cols), S.One)
+        return (Integer(self.matrix.cols), S.One)
 
 
 def pivot_column(matrix: MatrixBase | MatrixExpr) -> MatrixBase | PivotColumn:
@@ -325,7 +330,7 @@ class OuterProductRoot(MatrixFunction):
     @property
     def shape(self) -> tuple[Integer, Integer]:
         """The shape of the result: `(matrix.rows, 1)`."""
-        return (Integer(self.args[0].rows), S.One)
+        return (Integer(self.matrix.rows), S.One)
 
 
 def outer_product_root(

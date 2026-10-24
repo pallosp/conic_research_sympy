@@ -310,6 +310,19 @@ def __new__(cls,
 
 Evaluates the function if possible, unless `evaluate` is false.
 
+<a id="matrix.MatrixFunction.matrix"></a>
+
+#### MatrixFunction.matrix
+
+```python
+@property
+def matrix() -> MatrixBase | MatrixExpr
+```
+
+([source](../src/lib/matrix.py#L192))
+
+The argument of the function.
+
 <a id="matrix.skew_matrix"></a>
 
 #### skew\_matrix
@@ -318,7 +331,7 @@ Evaluates the function if possible, unless `evaluate` is false.
 def skew_matrix(vector3: MatrixBase | MatrixExpr) -> MatrixBase | SkewMatrix
 ```
 
-([source](../src/lib/matrix.py#L229))
+([source](../src/lib/matrix.py#L234))
 
 Creates a skew-symmetric matrix from a 3D column vector.
 
@@ -332,7 +345,7 @@ Returns an unevaluated `MatrixExpr` if the vector is unevaluated.
 def pivot_column(matrix: MatrixBase | MatrixExpr) -> MatrixBase | PivotColumn
 ```
 
-([source](../src/lib/matrix.py#L271))
+([source](../src/lib/matrix.py#L276))
 
 Returns the column of a matrix for its first provably nonzero element.
 
@@ -354,7 +367,7 @@ def pivot_column_and_row(
 ) -> tuple[MatrixBase | PivotColumn, MatrixBase | TransposedPivotRow]
 ```
 
-([source](../src/lib/matrix.py#L285))
+([source](../src/lib/matrix.py#L290))
 
 Returns the column and the transposed row of a matrix for its first
 provably nonzero element, i.e. two column vectors.
@@ -373,7 +386,7 @@ def outer_product_root(
         matrix: MatrixBase | MatrixExpr) -> MatrixBase | OuterProductRoot
 ```
 
-([source](../src/lib/matrix.py#L331))
+([source](../src/lib/matrix.py#L336))
 
 Finds a vector `v` such that `v·vᵀ` equals the given symmetric matrix.
 
@@ -395,7 +408,7 @@ to be non-zero.
 def is_real_matrix(matrix: MatrixBase) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L349))
+([source](../src/lib/matrix.py#L354))
 
 Checks if all elements of a matrix are real.
 
@@ -409,7 +422,7 @@ Returns a bool or `None` if undecidable.
 def is_definite_matrix(matrix: MatrixBase) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L357))
+([source](../src/lib/matrix.py#L362))
 
 Checks if a real matrix is either positive or negative definite.
 
@@ -425,7 +438,7 @@ def is_full_rank(matrix: MatrixBase,
                  simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L387))
+([source](../src/lib/matrix.py#L392))
 
 Tells whether a matrix has full rank.
 
