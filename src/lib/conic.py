@@ -2,7 +2,7 @@ from sympy import Expr, Matrix, MatrixExpr, Poly, Symbol, abc, sqrt
 
 from lib.conic_direction import ConicNormFactor, focal_axis_direction
 from lib.matrix import pivot_column_and_row
-from lib.point import point_to_vec3, point_to_xy
+from lib.point import direction_to_xy, point_to_vec3, point_to_xy
 from lib.type_aliases import Conic, FinitePoint, Line, Point, PointVector, Scalar
 
 
@@ -126,7 +126,7 @@ def focal_axis(conic: Conic) -> Line:
     - The focal axis of `line_pair(l1, l2)`, and `angle_bisector(l1, l2)`
       coincide.
     """
-    x, y, _ = focal_axis_direction(conic)
+    x, y = direction_to_xy(focal_axis_direction(conic))
     return polar_line(conic, (-y, x, 0))
 
 

@@ -2,7 +2,7 @@ from collections.abc import Sequence
 
 from sympy import ImmutableMatrix, Matrix, MatrixBase, sign, sqrt
 
-from lib.point import ideal_point, point_to_vec3, point_to_xy
+from lib.point import direction_to_xy, ideal_point, point_to_vec3, point_to_xy
 from lib.type_aliases import FinitePoint, Line, Point, PointVector, Scalar
 
 
@@ -60,14 +60,10 @@ def line_through_point(
     """
     x, y = point_to_xy(point)
     if direction is not None and normal is None:
-        dx, dy, *rest = direction
-        if rest not in ([], [0]):
-            raise ValueError("Invalid direction vector.")
+        dx, dy = direction_to_xy(direction)
         return Matrix([-dy, dx, dy * x - dx * y])
     if normal is not None and direction is None:
-        nx, ny, *rest = normal
-        if rest not in ([], [0]):
-            raise ValueError("Invalid normal vector.")
+        nx, ny = direction_to_xy(normal)
         return Matrix([nx, ny, -nx * x - ny * y])
     raise ValueError("Specify exactly one of direction or normal.")
 

@@ -5,7 +5,7 @@ from sympy import MatrixBase, cos, sin
 from lib.central_conic import conic_from_foci_and_radius
 from lib.distance import point_point_distance
 from lib.matrix import conic_matrix
-from lib.point import point_to_xy
+from lib.point import direction_to_xy, point_to_xy
 from lib.type_aliases import Conic, FinitePoint, Scalar
 
 
@@ -35,9 +35,7 @@ def ellipse(
     if r1_angle is not None:
         dx, dy = cos(r1_angle), sin(r1_angle)
     elif r1_direction is not None:
-        dx, dy, *rest = r1_direction
-        if rest not in ([], [0]):
-            raise ValueError("r1_direction must be a 2D vector or an ideal point")
+        dx, dy = direction_to_xy(r1_direction)
 
     a = -((r1 * dy) ** 2 + (r2 * dx) ** 2)
     b = (r1**2 - r2**2) * dx * dy

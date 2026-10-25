@@ -173,7 +173,7 @@ class TestRadiusInDirection:
             radius_in_direction(UNIT_CIRCLE)
         with pytest.raises(ValueError, match="exactly one of"):
             radius_in_direction(UNIT_CIRCLE, angle=0, direction=(1, 0))
-        with pytest.raises(ValueError, match="Invalid direction"):
+        with pytest.raises(ValueError, match="must be a 2D vector or an ideal point"):
             radius_in_direction(UNIT_CIRCLE, direction=(1, 2, 3))
 
     def test_symbolic_circle(self):

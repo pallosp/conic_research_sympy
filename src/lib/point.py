@@ -1,4 +1,6 @@
-from sympy import I, ImmutableMatrix, Matrix, MatrixBase, S
+from collections.abc import Sequence
+
+from sympy import Expr, I, ImmutableMatrix, Matrix, MatrixBase, S, sympify
 
 from lib.type_aliases import FinitePoint, Line, Point, PointVector, Scalar
 
@@ -44,6 +46,17 @@ def point_to_xy(point: FinitePoint) -> Matrix:
     x, y, *z = Matrix(point).flat()
     z = z[0] if z else S.One
     return Matrix([x / z, y / z])
+
+
+def direction_to_xy(direction: MatrixBase | Sequence[Scalar]) -> tuple[Expr, Expr]:
+    """Returns the components of a 2D direction vector or an ideal point."""
+    if isinstance(direction, MatrixBase):
+        dx, dy, *rest = direction.flat()
+    else:
+        dx, dy, *rest = map(sympify, direction)
+    if rest not in ([], [0]):
+        raise ValueError("The direction must be a 2D vector or an ideal point.")
+    return dx, dy
 
 
 def point_to_vec3(point: Point) -> PointVector:

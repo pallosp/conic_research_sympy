@@ -8,7 +8,7 @@ from lib.conic_direction import (
     focal_axis_direction,
 )
 from lib.matrix import conic_matrix, max_eigenvalue, min_eigenvalue
-from lib.point import point_to_xy
+from lib.point import direction_to_xy, point_to_xy
 from lib.type_aliases import Conic, FinitePoint, Scalar
 
 
@@ -193,9 +193,7 @@ def radius_in_direction(
     cos_x, sin_x = None, None
 
     if direction is not None:
-        dx, dy, *rest = direction
-        if rest not in ([], [0]):
-            raise ValueError("Invalid direction vector.")
+        dx, dy = direction_to_xy(direction)
         cos_x = dx / sqrt(dx**2 + dy**2)
         sin_x = dy / sqrt(dx**2 + dy**2)
     else:
@@ -245,7 +243,7 @@ def center_to_focus_vector(conic: Conic) -> Matrix:
     will contain infinite or `nan` elements when the conic lacks a finite
     center.
     """
-    x, y, _ = focal_axis_direction(conic)
+    x, y = direction_to_xy(focal_axis_direction(conic))
 
     # Center-to-focus vector = [x, y] / √(x² + y²) * linear eccentricity
     # The √(x² + y²) = ∜((a-c)² + 4b²) factor vanishes.
@@ -280,7 +278,7 @@ def center_to_vertex_vector(conic: Conic) -> Matrix:
      - *Parabolas and degenerate conics without a finite center*:
        one or more components are infinite or `nan`.
     """
-    x, y, _ = focal_axis_direction(conic)
+    x, y = direction_to_xy(focal_axis_direction(conic))
     return Matrix([x, y]) * primary_radius(conic) / sqrt(x**2 + y**2)
 
 
@@ -318,7 +316,7 @@ def center_to_covertex_vector(conic: Conic) -> Matrix:
      - *Parabolas and degenerate conics without a finite center*:
        one or more components are infinite or `nan`
     """
-    x, y, _ = conjugate_axis_direction(conic)
+    x, y = direction_to_xy(conjugate_axis_direction(conic))
     return Matrix([x, y]) * secondary_radius(conic) / sqrt(x**2 + y**2)
 
 
