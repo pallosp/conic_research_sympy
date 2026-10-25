@@ -5,5 +5,11 @@
       "envManager": "ms-python.python:poetry",
       "packageManager": "ms-python.python:pip"
     }
-  ]
+  ],
+  // Format with ruff, like pre-commit. Black can move `# pyright: ignore`
+  // comments off their line.
+  // Install: code --install-extension charliermarsh.ruff
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  }
 }
