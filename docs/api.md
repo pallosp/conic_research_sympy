@@ -61,6 +61,8 @@
   * [IDEAL\_LINE](#line.IDEAL_LINE)
   * [X\_AXIS](#line.X_AXIS)
   * [Y\_AXIS](#line.Y_AXIS)
+* [polygon](#polygon)
+  * [signed\_area](#polygon.signed_area)
 * [conic](#conic)
   * [conic\_from\_poly](#conic.conic_from_poly)
   * [conic\_through\_points](#conic.conic_through_points)
@@ -1110,6 +1112,29 @@ equation will evaluate to a positive value.
 
 The vertical line at x=0. Substituting a point at x<0 to the line's equation
 will evaluate to a positive value.
+
+<a id="polygon"></a>
+
+# polygon
+
+<a id="polygon.signed_area"></a>
+
+#### signed\_area
+
+```python
+def signed_area(*points: FinitePoint) -> Expr
+```
+
+([source](../src/lib/polygon.py#L7))
+
+Computes the signed area of the polygon with the given vertices.
+
+The area is positive if the vertices are in counterclockwise order, and
+negative if they are in clockwise order. For a self-intersecting polygon,
+it is the sum of the signed areas of its loops. It is zero for fewer than
+three points.
+
+*Formula*: <https://en.wikipedia.org/wiki/Shoelace_formula>
 
 <a id="conic"></a>
 
