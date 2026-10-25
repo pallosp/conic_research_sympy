@@ -7,6 +7,7 @@ from sympy import Determinant, MatMul, Matrix, S, factor, gcd, pi, symbols
 
 from lib.transform import homography_from_samples, rotate, scale
 from lib.type_aliases import Scalar
+from research.poly_as_det import normalize_det3, poly_as_det3
 from research.sympy_utils import print_indented
 
 """Calculates the transformation that maps (xᵢ,yᵢ) to (uᵢ,vᵢ) for i=0..3.
@@ -147,5 +148,4 @@ print("\nTransformation from (1,0,0), (0,1,0), (0,0,1), (1,1,1) to (uᵢ,vᵢ,w�
 special_source_points = ((1, 0, 0), (0, 1, 0), (0, 0, 1), (1, 1, 1))
 special_t = homography_from_samples(special_source_points, homogeneous_target)
 special_t *= w0 * w1 * w2 * w3
-for el in special_t:
-    print_indented(el)
+print_indented(special_t.applyfunc(lambda e: normalize_det3(poly_as_det3(e))))

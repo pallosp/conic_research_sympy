@@ -1,8 +1,9 @@
 """Expresses a cyclic polynomial as a 3x3 determinant.
 
 The rows of the matrix are cyclic shifts of each other: the next row is the
-previous one with the variable indices shifted by 1 → 2 → 3 → 1. The entries
-of a column have the same degree, non-increasing from left to right.
+previous one with the variable indices shifted by i → j → k → i, e.g.
+1 → 2 → 3 → 1. The indices are detected from the polynomial. The entries of a
+column have the same degree, non-increasing from left to right.
 
 Search: start from a monomial matrix whose determinant is the closest to the
 polynomial, then keep adding ±monomials to the entries of the first row as
@@ -33,6 +34,7 @@ from typing import TypeVar, cast
 
 from sympy import (
     ZZ,
+    Add,
     Determinant,
     Expr,
     Matrix,
@@ -51,21 +53,30 @@ Row = tuple[PolyElement, PolyElement, PolyElement]  # first row of the matrix
 T = TypeVar("T")
 
 
-def _index_shift(symbols: Iterable[Symbol]) -> dict[Symbol, Symbol]:
-    """Maps x1 → x2, x2 → x3, x3 → x1 for every prefix x with all 3 indices.
+def _suffix(symbol: Symbol) -> int | None:
+    """The numeric suffix of the symbol's name, such as 12 for x12."""
+    match = re.fullmatch(r".*\D(\d+)", symbol.name)
+    return int(match[1]) if match else None
 
-    Other symbols, such as k1 without k2 and k3, or x12, are mapped to
-    themselves.
+
+def _index_shift(
+    symbols: Iterable[Symbol], indices: tuple[int, int, int]
+) -> dict[Symbol, Symbol]:
+    """Maps xᵢ → xⱼ, xⱼ → xₖ, xₖ → xᵢ for every prefix x with all 3 indices.
+
+    (i, j, k) are the given indices. Other symbols, such as c₁ without c₂ and
+    c₃, or x₁₂ if 12 is not among the indices, are mapped to themselves.
     """
     by_name = {s.name: s for s in symbols}
     shift = {s: s for s in by_name.values()}
     for name, symbol in by_name.items():
-        match = re.fullmatch(r"(.*\D)([123])", name)
-        if not match:
+        index = _suffix(symbol)
+        if index not in indices:
             continue
-        prefix, index = match.groups()
-        if all(f"{prefix}{i}" in by_name for i in (1, 2, 3)):
-            shift[symbol] = by_name[f"{prefix}{int(index) % 3 + 1}"]
+        prefix = name.removesuffix(str(index))
+        names = [f"{prefix}{i}" for i in indices]
+        if all(n in by_name for n in names):
+            shift[symbol] = by_name[names[(names.index(name) + 1) % 3]]
     return shift
 
 
@@ -110,12 +121,16 @@ class _Search:
         gens = cast("list[Symbol]", list(self.ring.symbols))
         self.shift_perm = [gens.index(index_shift[g]) for g in gens]
         self.max_degree = max_degree
-        # Candidate monomials for the matrix entries, grouped by degree
-        self.monomials: dict[int, list[Exponents]] = defaultdict(list)
+
+    @cached_property
+    def monomials(self) -> dict[int, list[Exponents]]:
+        """Candidate monomials for the matrix entries, grouped by degree."""
+        monomials: dict[int, list[Exponents]] = defaultdict(list)
         for exps in sorted(
-            {d for m in target.monoms() for d in _divisors(m) if self._fits(d)}
+            {d for m in self.target.monoms() for d in _divisors(m) if self._fits(d)}
         ):
-            self.monomials[sum(exps)].append(exps)
+            monomials[sum(exps)].append(exps)
+        return monomials
 
     def _fits(self, exps: Exponents) -> bool:
         """Tells whether the monomial is within the degree limit."""
@@ -131,7 +146,7 @@ class _Search:
         return exps
 
     def shift(self, p: PolyElement, times: int = 1) -> PolyElement:
-        """Shifts the indices of the variables in p: x1 → x2 → x3 → x1."""
+        """Shifts the indices of the variables in p, e.g. x₁ → x₂ → x₃ → x₁."""
         return self.ring.from_dict(
             {self._shift_exps(m, times): c for m, c in p.terms()}
         )
@@ -230,6 +245,42 @@ class _Search:
         return row
 
 
+def _variables(p: PolyElement) -> list[Symbol]:
+    """The variables of the ring that occur in p."""
+    # The ring is built from Symbols, but PolyRing.symbols is typed as Expr
+    gens = cast("list[Symbol]", list(p.ring.symbols))
+    exps_by_gen = zip(*p.monoms(), strict=True)
+    return [g for g, exps in zip(gens, exps_by_gen, strict=True) if any(exps)]
+
+
+def _index_shifts(
+    poly: Expr, target: PolyElement
+) -> list[tuple[tuple[int, int, int], dict[Symbol, Symbol]]]:
+    """Finds the index shifts i → j → k → i that leave target invariant.
+
+    target is poly divided by its terms' gcd. Only shifts that change some of
+    target's variables count. Returns the indices i < j < k and the shift for
+    each. Raises ValueError if target is constant or there is no such shift.
+    """
+    variables = _variables(target)
+    if not variables:
+        msg = f"cannot express {poly} as a 3x3 determinant"
+        raise ValueError(msg)
+    # The ring is built from Symbols, but PolyRing.symbols is typed as Expr
+    gens = cast("list[Symbol]", list(target.ring.symbols))
+    suffixes = sorted({i for v in variables if (i := _suffix(v)) is not None})
+    candidates = []
+    for indices in itertools.combinations(suffixes, 3):
+        index_shift = _index_shift(gens, indices)
+        moves = any(index_shift[v] != v for v in variables)
+        if moves and _Search(target, index_shift, None).shift(target) == target:
+            candidates.append((indices, index_shift))
+    if not candidates:
+        msg = f"{poly} is not invariant under any cyclic index shift"
+        raise ValueError(msg)
+    return candidates
+
+
 def poly_as_det3_matrix(
     poly: Expr,
     *,
@@ -242,18 +293,22 @@ def poly_as_det3_matrix(
     k is the gcd of the terms: the rational gcd of the coefficients times the
     common monomial factor, or 0 if poly is 0. The entries of M are sums of
     ±monomials of degree at most max_degree, its rows are cyclic shifts of each
-    other, and its column degrees are non-increasing. Raises ValueError if poly
-    is not a cyclic polynomial with rational coefficients, or no matrix is found
-    in max_runs randomized runs.
+    other, and its column degrees are non-increasing.
+
+    The next row is the previous one with the variable indices shifted by
+    a → b → c → a, for indices a < b < c whose shift leaves poly/k invariant
+    and changes some of its variables. If there are several such shifts, each
+    run picks one at random. Raises ValueError if poly is not a polynomial with
+    rational coefficients, poly/k is constant or has no such shift, or no
+    matrix is found in max_runs randomized runs.
     """
     poly = sympify(poly).expand()
     if poly == 0:
         return Rational(0), zeros(3, 3)
+    symbols = poly.free_symbols
     if not poly.is_polynomial() or not all(
-        # as_coefficients_dict() is unannotated, so its values are inferred as
-        # int; they're SymPy numbers (fix upstream).
-        c.is_Rational
-        for c in cast("dict[Expr, Expr]", poly.as_coefficients_dict()).values()
+        term.as_independent(*symbols, as_Add=False)[0].is_Rational
+        for term in Add.make_args(poly)
     ):
         msg = f"{poly} is not a polynomial with rational coefficients"
         raise ValueError(msg)
@@ -261,8 +316,8 @@ def poly_as_det3_matrix(
     k, primitive = poly.as_content_primitive()
     # A polynomial's free symbols are Symbols, but free_symbols is typed as
     # set[Basic].
-    index_shift = _index_shift(cast("set[Symbol]", primitive.free_symbols))
-    ring = PolyRing(sorted(index_shift, key=str), ZZ)
+    gens = sorted(cast("set[Symbol]", primitive.free_symbols), key=str)
+    ring = PolyRing(gens, ZZ)
     target = ring.from_expr(primitive)
     common_exps = tuple(min(col) for col in zip(*target.monoms(), strict=True))
     monomial = ring.from_dict({common_exps: 1})
@@ -270,20 +325,25 @@ def poly_as_det3_matrix(
     target = target.exquo(monomial)
     if target.LC < 0:  # makes the search independent of the sign of poly
         k, target = -k, -target
-    search = _Search(target, index_shift, max_degree)
-    if search.shift(target) != target:
-        msg = f"{poly} is not invariant under the index shift 1 → 2 → 3 → 1"
-        raise ValueError(msg)
+    shifts = _index_shifts(poly, target)
+    searches = [_Search(target, shift, max_degree) for _, shift in shifts]
 
     rng = random.Random(seed)
     for _ in range(max_runs):
+        # With a single shift, no random number is drawn to choose it, so the
+        # result for a given seed only depends on the search.
+        search = searches[0] if len(searches) == 1 else rng.choice(searches)
         row = search.run(rng)
         if row is not None:
             return k, Matrix([[e.as_expr() for e in r] for r in search.rows(row)])
     msg = f"cannot express {poly} as a 3x3 determinant"
-    if constants := sorted(
-        s.name for s, t in index_shift.items() if s == t and s.name[-1] in "123"
-    ):
+    constants = sorted(
+        v.name
+        for v in _variables(target)
+        if all(shift[v] == v for _, shift in shifts)
+        and any(_suffix(v) in indices for indices, _ in shifts)
+    )
+    if constants:
         msg += f" (treated as constants: {', '.join(constants)})"
     raise ValueError(msg)
 
@@ -312,7 +372,7 @@ def normalize_det3(det: Expr) -> Expr:
     1. Negates rows and columns of M to minimize the number of minus signs,
        then the number of entries with a negative leading term.
     2. Sorts the columns by non-increasing degree, then the rows and columns by
-       the variable indices of the entries in reading order (x1 before x2).
+       the variable indices of the entries in reading order (x₁ before x₂).
     3. Moves the sign change of the determinant into k.
     """
     if det == 0:
