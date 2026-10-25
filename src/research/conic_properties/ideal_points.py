@@ -28,7 +28,7 @@ from lib.conic_direction import ConicNormFactor
 from lib.hyperbola import asymptote_focal_axis_angle
 from lib.intersection import conic_x_line
 from lib.line import IDEAL_LINE
-from lib.matrix import conic_matrix, is_nonzero_multiple
+from lib.matrix import conic_coefficients, conic_matrix, is_nonzero_multiple
 from lib.point import ideal_point
 from lib.transform import rotate, transform_point
 from lib.type_aliases import Conic
@@ -124,7 +124,7 @@ def ideal_points_from_asymptotes(conic: Conic) -> tuple[Matrix, Matrix]:
     and `eigen_minus` of the conic's quadratic part. They cancel out in the
     result.
     """
-    a, _, _, b, c, _, _, _, _ = conic.flat()
+    a, b, c, *_ = conic_coefficients(conic)
     eigen_diff_square = (a - c) ** 2 + 4 * b**2
     norm = ConicNormFactor(conic)
 

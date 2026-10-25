@@ -3,7 +3,7 @@ from collections.abc import Callable
 from sympy import Expr, factor
 from sympy.core.logic import fuzzy_and, fuzzy_not, fuzzy_or
 
-from lib.matrix import is_definite_matrix
+from lib.matrix import conic_coefficients, is_definite_matrix
 from lib.type_aliases import Conic
 
 
@@ -102,7 +102,7 @@ def is_circle(conic: Conic) -> bool | None:
 
     Returns `None` if undecidable.
     """
-    a, _, _, b, c, _, _, _, _ = conic.flat()
+    a, b, c, *_ = conic_coefficients(conic)
     return fuzzy_and(
         [
             (a - c).expand().is_zero,
@@ -149,13 +149,8 @@ def is_circular(conic: Conic) -> bool | None:
     Circles, imaginary circles, zero-radius circles have such circular symmetry.
     Double ideal lines are not considered circular. Returns `None` if undecidable.
     """
-    return fuzzy_and(
-        [
-            conic[0].is_nonzero,
-            conic[3].is_zero,
-            (conic[0] - conic[4]).expand().is_zero,
-        ],
-    )
+    a, b, c, *_ = conic_coefficients(conic)
+    return fuzzy_and([a.is_nonzero, b.is_zero, (a - c).expand().is_zero])
 
 
 def is_line_pair(conic: Conic) -> bool | None:
@@ -163,7 +158,7 @@ def is_line_pair(conic: Conic) -> bool | None:
 
     Returns `None` if undecidable.
     """
-    a, _, _, b, c, _, d, e, f = conic.flat()
+    a, b, c, d, e, f = conic_coefficients(conic)
     return fuzzy_and(
         [
             is_degenerate(conic),
@@ -203,7 +198,7 @@ def is_point_conic(conic: Conic) -> bool | None:
     A conic is a point conic iff it's degenerate and splits to two lines with
     complex coordinates.
     """
-    a, _, _, b, c, _, d, e, f = conic.flat()
+    a, b, c, d, e, f = conic_coefficients(conic)
     return fuzzy_and(
         [
             is_degenerate(conic),

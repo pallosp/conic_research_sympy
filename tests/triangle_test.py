@@ -6,7 +6,7 @@ from lib.circle import circle
 from lib.degenerate_conic import line_pair_conic
 from lib.incidence import conic_contains_point
 from lib.line import IDEAL_LINE, line_between
-from lib.matrix import is_nonzero_multiple, is_positive_multiple
+from lib.matrix import conic_coefficients, is_nonzero_multiple, is_positive_multiple
 from lib.point import centroid, ideal_point, point_to_vec3
 from lib.triangle import (
     circumcenter,
@@ -31,8 +31,9 @@ class TestCircumcircle:
     def test_symbolic_points(self):
         p1, p2, p3 = (2, -1), (x, y), (6, 5)
         conic = circumcircle(p1, p2, p3)
-        assert conic[0] == conic[4]
-        assert conic[1] == 0
+        a, b, c, *_ = conic_coefficients(conic)
+        assert a == c
+        assert b == 0
         assert conic_contains_point(conic, p1)
         assert conic_contains_point(conic, (x, y))
         assert conic_contains_point(conic, p3)

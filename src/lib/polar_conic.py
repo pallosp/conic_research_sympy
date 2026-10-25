@@ -28,6 +28,7 @@ from sympy import (
 from lib.central_conic import conic_center, primary_radius, secondary_radius
 from lib.circle import UNIT_CIRCLE
 from lib.conic_direction import focal_axis_direction
+from lib.matrix import conic_coefficients
 from lib.point import point_to_vec3
 from lib.transform import rotate
 from lib.type_aliases import Conic, Line, Point, PointVector, PolarConic, Scalar
@@ -124,7 +125,7 @@ def ellipse_to_polar_matrix(
     *Formula*:
     [research/construction/polar_ellipse.py](../src/research/construction/polar_ellipse.py)
     """
-    a, _, _, b, c, _, d, e, _ = ellipse.flat()
+    a, b, c, d, e, _ = conic_coefficients(ellipse)
     disc = a * c - b * b
     cx = (b * e - c * d) / disc
     cy = (b * d - a * e) / disc

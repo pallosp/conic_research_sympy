@@ -130,6 +130,15 @@ def conic_matrix(  # noqa: PLR0913, PLR0917 (too-many-arguments, too-many-positi
     return Matrix([[a, b, d], [b, c, e], [d, e, f]])
 
 
+def conic_coefficients(conic: Conic) -> tuple[Expr, Expr, Expr, Expr, Expr, Expr]:
+    """Returns the elements `(a, b, c, d, e, f)` of a conic matrix.
+
+    It's the inverse of [conic_matrix](#matrix.conic_matrix).
+    """
+    a, _, _, b, c, _, d, e, f = conic.flat()
+    return a, b, c, d, e, f
+
+
 def quadratic_form(sym_matrix: MatrixBase, vector: MatrixBase) -> Expr:
     """Computes the quadratic form for a n⨯n symmetric matrix and an n-element
     column vector.

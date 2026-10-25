@@ -1,7 +1,7 @@
 from sympy import Expr, Matrix, MatrixExpr, Poly, Symbol, abc, sqrt
 
 from lib.conic_direction import ConicNormFactor, focal_axis_direction
-from lib.matrix import pivot_column_and_row
+from lib.matrix import conic_coefficients, pivot_column_and_row
 from lib.point import direction_to_xy, point_to_vec3, point_to_xy
 from lib.type_aliases import Conic, FinitePoint, Line, Point, PointVector, Scalar
 
@@ -105,7 +105,7 @@ def eccentricity(conic: Conic) -> Expr:
     *Own research*:
     [research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)
     """
-    a, b, c = conic[0], conic[1], conic[4]
+    a, b, c, *_ = conic_coefficients(conic)
     s = sqrt(((a - c) ** 2 + 4 * b**2).factor())
     norm_sign = ConicNormFactor(conic)
     return sqrt(2 * s / (s - norm_sign * (a + c)))
@@ -151,7 +151,7 @@ def ideal_points(
     *Research*:
     [research/conic_properties/ideal_points.py](../src/research/conic_properties/ideal_points.py)
     """
-    a, b, c = conic[0], conic[1], conic[4]
+    a, b, c, *_ = conic_coefficients(conic)
     disc = sqrt(b * b - a * c)
     intersections = Matrix([[c, -b - disc, 0], [-b + disc, a, 0], [0, 0, 0]])
     return pivot_column_and_row(intersections)

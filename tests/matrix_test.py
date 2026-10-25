@@ -13,6 +13,7 @@ from sympy import (
 )
 
 from lib.matrix import (
+    conic_coefficients,
     conic_matrix,
     is_definite_matrix,
     is_full_rank,
@@ -150,6 +151,9 @@ class TestConicMatrix:
         assert conic_matrix(1, 2, 3, 4, 5, 6) == Matrix(
             [[1, 2, 4], [2, 3, 5], [4, 5, 6]],
         )
+
+    def test_conic_coefficients(self):
+        assert conic_coefficients(conic_matrix(1, 2, 3, 4, 5, 6)) == (1, 2, 3, 4, 5, 6)
 
 
 class TestQuadraticForm:

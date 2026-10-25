@@ -10,6 +10,7 @@ from sympy import (
 from sympy.core.function import DefinedFunction
 
 from lib.conic_classes import is_point_conic
+from lib.matrix import conic_coefficients
 from lib.point import ideal_point
 from lib.type_aliases import Conic, PointVector
 
@@ -116,7 +117,7 @@ def focal_axis_direction(conic: Conic) -> PointVector:
     *Related research* (trigonometric identities):
     [research/conic_properties/focal_axis_angle_identities.py](../src/research/conic_properties/focal_axis_angle_identities.py)
     """
-    a, b, c = conic[0], conic[3], conic[4]
+    a, b, c, *_ = conic_coefficients(conic)
     norm_sign = ConicNormFactor(conic)
     x, y = _sqrt_complex(norm_sign * (a - c + 2 * I * b))
     return ideal_point(x, y)
@@ -140,7 +141,7 @@ def conjugate_axis_direction(conic: Conic) -> PointVector:
       [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(hyperbola)
       have no such property.
     """
-    a, b, c = conic[0], conic[3], conic[4]
+    a, b, c, *_ = conic_coefficients(conic)
     norm_sign = ConicNormFactor(conic)
     x, y = _sqrt_complex(norm_sign * (a - c + 2 * I * b))
     return ideal_point(-y, x)

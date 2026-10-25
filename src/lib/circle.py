@@ -1,6 +1,6 @@
 from sympy import Expr, ImmutableMatrix, Matrix, sqrt
 
-from lib.matrix import conic_matrix
+from lib.matrix import conic_coefficients, conic_matrix
 from lib.point import ORIGIN, point_to_vec3, point_to_xy
 from lib.type_aliases import Conic, FinitePoint, Point, Scalar
 
@@ -67,7 +67,7 @@ def director_circle(conic: Conic) -> Conic:
     *Formula*:
     [research/construction/director_circle.py](../src/research/construction/director_circle.py)
     """
-    a, _, _, _, c, _, d, e, f = conic.adjugate().flat()
+    a, _, c, d, e, f = conic_coefficients(conic.adjugate())
     return Matrix(
         [
             [-1, 0, d / f],

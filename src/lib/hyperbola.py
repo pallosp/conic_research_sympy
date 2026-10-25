@@ -3,6 +3,7 @@ from sympy import Expr, ImmutableMatrix, acos, sqrt
 from lib.central_conic import conic_from_foci_and_radius, shrink_conic_to_zero
 from lib.conic_direction import ConicNormFactor
 from lib.distance import point_point_distance
+from lib.matrix import conic_coefficients
 from lib.type_aliases import Conic, FinitePoint
 
 #: The x² - y² = 1 hyperbola.
@@ -48,7 +49,7 @@ def asymptote_focal_axis_angle(hyperbola: Conic) -> Expr:
     [research/conic_properties/asymptote_angle.py](../src/research/conic_properties/asymptote_angle.py)<br>
     *Formula*: `acos(1 / eccentricity)`
     """
-    a, _, _, b, c, _, _, _, _ = hyperbola.flat()
+    a, b, c, *_ = conic_coefficients(hyperbola)
     s = sqrt(((a - c) ** 2 + 4 * b**2).factor())
     norm_sign = ConicNormFactor(hyperbola)
     return acos(sqrt((s - norm_sign * (a + c)) / (2 * s)))

@@ -4,7 +4,7 @@ from sympy import simplify, sqrt, symbols
 
 from lib.central_conic import conic_center, primary_radius, secondary_radius
 from lib.circle import circle
-from lib.matrix import conic_matrix
+from lib.matrix import conic_coefficients, conic_matrix
 from research.sympy_utils import println_indented
 
 conic = conic_matrix(*symbols("a,b,c,d,e,f"))
@@ -23,7 +23,7 @@ println_indented(director_circle)
 
 print("\nDirector circle matrix in adjugate form:\n")
 
-a_adj, _, _, b_adj, c_adj, _, d_adj, e_adj, f_adj = conic.adjugate().flat()
+a_adj, b_adj, c_adj, d_adj, e_adj, f_adj = conic_coefficients(conic.adjugate())
 println_indented(
     director_circle.subs(
         zip(

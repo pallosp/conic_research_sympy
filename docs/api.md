@@ -6,6 +6,7 @@
   * [max\_eigenvalue](#matrix.max_eigenvalue)
   * [min\_eigenvalue](#matrix.min_eigenvalue)
   * [conic\_matrix](#matrix.conic_matrix)
+  * [conic\_coefficients](#matrix.conic_coefficients)
   * [quadratic\_form](#matrix.quadratic_form)
   * [MatrixFunction](#matrix.MatrixFunction)
   * [skew\_matrix](#matrix.skew_matrix)
@@ -259,6 +260,21 @@ The conic equation looks like this:
 
 or in expanded form `ax² + 2bxy + cy² + 2dx + 2ey + f = 0`
 
+<a id="matrix.conic_coefficients"></a>
+
+#### conic\_coefficients
+
+```python
+def conic_coefficients(
+        conic: Conic) -> tuple[Expr, Expr, Expr, Expr, Expr, Expr]
+```
+
+([source](../src/lib/matrix.py#L133))
+
+Returns the elements `(a, b, c, d, e, f)` of a conic matrix.
+
+It's the inverse of [conic_matrix](#matrix.conic_matrix).
+
 <a id="matrix.quadratic_form"></a>
 
 #### quadratic\_form
@@ -267,7 +283,7 @@ or in expanded form `ax² + 2bxy + cy² + 2dx + 2ey + f = 0`
 def quadratic_form(sym_matrix: MatrixBase, vector: MatrixBase) -> Expr
 ```
 
-([source](../src/lib/matrix.py#L133))
+([source](../src/lib/matrix.py#L142))
 
 Computes the quadratic form for a n⨯n symmetric matrix and an n-element
 column vector.
@@ -286,7 +302,7 @@ conic.
 class MatrixFunction(MatrixExpr)
 ```
 
-([source](../src/lib/matrix.py#L161))
+([source](../src/lib/matrix.py#L170))
 
 Base class of matrix valued functions of a matrix, which stay
 unevaluated until the result can be determined.
@@ -311,7 +327,7 @@ def __new__(cls,
             evaluate: bool = True) -> "MatrixBase | Self"
 ```
 
-([source](../src/lib/matrix.py#L177))
+([source](../src/lib/matrix.py#L186))
 
 Evaluates the function if possible, unless `evaluate` is false.
 
@@ -324,7 +340,7 @@ Evaluates the function if possible, unless `evaluate` is false.
 def matrix() -> MatrixBase | MatrixExpr
 ```
 
-([source](../src/lib/matrix.py#L193))
+([source](../src/lib/matrix.py#L202))
 
 The argument of the function.
 
@@ -336,7 +352,7 @@ The argument of the function.
 def skew_matrix(vector3: MatrixBase | MatrixExpr) -> MatrixBase | SkewMatrix
 ```
 
-([source](../src/lib/matrix.py#L239))
+([source](../src/lib/matrix.py#L248))
 
 Creates a skew-symmetric matrix from a 3D column vector.
 
@@ -351,7 +367,7 @@ Returns an explicit matrix for an explicit vector, and an unevaluated
 def pivot_column(matrix: MatrixBase | MatrixExpr) -> MatrixBase | PivotColumn
 ```
 
-([source](../src/lib/matrix.py#L282))
+([source](../src/lib/matrix.py#L291))
 
 Returns the column of a matrix for its first provably nonzero element.
 
@@ -373,7 +389,7 @@ def pivot_column_and_row(
 ) -> tuple[MatrixBase | PivotColumn, MatrixBase | TransposedPivotRow]
 ```
 
-([source](../src/lib/matrix.py#L296))
+([source](../src/lib/matrix.py#L305))
 
 Returns the column and the transposed row of a matrix for its first
 provably nonzero element, i.e. two column vectors.
@@ -392,7 +408,7 @@ def outer_product_root(
         matrix: MatrixBase | MatrixExpr) -> MatrixBase | OuterProductRoot
 ```
 
-([source](../src/lib/matrix.py#L342))
+([source](../src/lib/matrix.py#L351))
 
 Finds a vector `v` such that `v·vᵀ` equals the given symmetric matrix.
 
@@ -414,7 +430,7 @@ to be non-zero.
 def is_real_matrix(matrix: MatrixBase) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L360))
+([source](../src/lib/matrix.py#L369))
 
 Checks if all elements of a matrix are real.
 
@@ -428,7 +444,7 @@ Returns a bool or `None` if undecidable.
 def is_definite_matrix(matrix: MatrixBase) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L368))
+([source](../src/lib/matrix.py#L377))
 
 Checks if a real matrix is either positive or negative definite.
 
@@ -444,7 +460,7 @@ def is_full_rank(matrix: MatrixBase,
                  simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L399))
+([source](../src/lib/matrix.py#L408))
 
 Tells whether a matrix has full rank.
 
@@ -1693,7 +1709,7 @@ Double ideal lines are not considered circular. Returns `None` if undecidable.
 def is_line_pair(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L161))
+([source](../src/lib/conic_classes.py#L156))
 
 Tells whether the conic is the union of two projective lines.
 
@@ -1707,7 +1723,7 @@ Returns `None` if undecidable.
 def is_double_line(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L181))
+([source](../src/lib/conic_classes.py#L176))
 
 Tells whether the conic consists of two coincident projective lines.
 
@@ -1721,7 +1737,7 @@ Returns `None` if undecidable.
 def is_point_conic(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L198))
+([source](../src/lib/conic_classes.py#L193))
 
 Tells whether the conic consists of a single projective point.
 
@@ -1738,7 +1754,7 @@ complex coordinates.
 def is_finite_point_conic(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L224))
+([source](../src/lib/conic_classes.py#L219))
 
 Tells whether the conic consists of a single finite (Euclidean) point.
 
@@ -1948,7 +1964,7 @@ Degenerates to `[nan, nan]ᵀ` when `point`, `line` or both are infinite.
 class ConicNormFactor(DefinedFunction)
 ```
 
-([source](../src/lib/conic_direction.py#L17))
+([source](../src/lib/conic_direction.py#L18))
 
 Computes a normalization factor (±1) for a conic matrix `C`.
 
@@ -1975,7 +1991,7 @@ following properties:
 def eval(cls, conic: Conic) -> Expr | None
 ```
 
-([source](../src/lib/conic_direction.py#L39))
+([source](../src/lib/conic_direction.py#L40))
 
 Internal implementation. Call `ConicNormFactor(conic)` directly.
 
@@ -1987,7 +2003,7 @@ Internal implementation. Call `ConicNormFactor(conic)` directly.
 def focal_axis_direction(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic_direction.py#L92))
+([source](../src/lib/conic_direction.py#L93))
 
 Returns the ideal point representing the direction of a conic's focal axis.
 
@@ -2023,7 +2039,7 @@ Properties:
 def conjugate_axis_direction(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic_direction.py#L125))
+([source](../src/lib/conic_direction.py#L126))
 
 Returns the ideal point representing the direction of a conic's conjugate axis.
 
@@ -2201,7 +2217,7 @@ projective transformation matrix.
 def parabola_directrix(parabola: Conic) -> Line
 ```
 
-([source](../src/lib/parabola.py#L19))
+([source](../src/lib/parabola.py#L20))
 
 Computes the directrix of a parabola represented as a conic matrix.
 
@@ -2225,7 +2241,7 @@ Special cases for other conic types:
 def parabola_focus(parabola: Conic) -> PointVector
 ```
 
-([source](../src/lib/parabola.py#L47))
+([source](../src/lib/parabola.py#L48))
 
 Computes the focus of a parabola represented as a conic matrix.
 
@@ -2247,7 +2263,7 @@ Special cases for other conic types:
 def parabola_vertex(parabola: Conic) -> Matrix
 ```
 
-([source](../src/lib/parabola.py#L63))
+([source](../src/lib/parabola.py#L64))
 
 Computes the parabola's vertex.
 
@@ -2264,7 +2280,7 @@ Returns the point's coordinates as a 2D column vector.
 def parabola_direction(parabola: Conic) -> PointVector
 ```
 
-([source](../src/lib/parabola.py#L78))
+([source](../src/lib/parabola.py#L79))
 
 Computes the direction of a parabola modulo 2π.
 
@@ -2284,7 +2300,7 @@ coincides with both the ideal point lying on the parabola and its
 def parabola_axis(parabola: Conic) -> Line
 ```
 
-([source](../src/lib/parabola.py#L95))
+([source](../src/lib/parabola.py#L96))
 
 Computes the parabola's focal axis line.
 
@@ -2305,7 +2321,7 @@ Special cases for other conic types:
 def parabola_focal_parameter(parabola: Conic) -> Expr
 ```
 
-([source](../src/lib/parabola.py#L113))
+([source](../src/lib/parabola.py#L114))
 
 Computes the parabola's focus-directrix distance.
 
@@ -2440,7 +2456,7 @@ The circle at the origin with radius 1, in polar matrix form.
 class PolarOrigin(Enum)
 ```
 
-([source](../src/lib/polar_conic.py#L39))
+([source](../src/lib/polar_conic.py#L40))
 
 Specifies which point of a conic in polar form corresponds to angle 0.
 
@@ -2482,7 +2498,7 @@ An endpoint of the vertical diameter.
 def point_at_angle(polar_conic: PolarConic, theta: Scalar) -> PointVector
 ```
 
-([source](../src/lib/polar_conic.py#L58))
+([source](../src/lib/polar_conic.py#L59))
 
 Computes the coordinates of the projective point on a polar conic
 corresponding to a certain angle.
@@ -2495,7 +2511,7 @@ corresponding to a certain angle.
 def angle_at_point(polar_conic: PolarConic, point: Point) -> Expr
 ```
 
-([source](../src/lib/polar_conic.py#L65))
+([source](../src/lib/polar_conic.py#L66))
 
 Computes the polar angle corresponding to a point on a polar conic.
 
@@ -2509,7 +2525,7 @@ The result is unspecified if the point is not on the conic.
 def tangent_at_angle(polar_conic: PolarConic, angle_radians: Scalar) -> Line
 ```
 
-([source](../src/lib/polar_conic.py#L75))
+([source](../src/lib/polar_conic.py#L76))
 
 Computes the tangent line to a polar conic at the given angle.
 
@@ -2525,7 +2541,7 @@ def curvature_sign_at_angle(polar_conic: PolarConic,
                             angle_radians: Scalar) -> Expr
 ```
 
-([source](../src/lib/polar_conic.py#L85))
+([source](../src/lib/polar_conic.py#L86))
 
 Tells which direction a polar conic turns at an angle.
 
@@ -2544,7 +2560,7 @@ Tells which direction a polar conic turns at an angle.
 def conic_from_polar_matrix(polar_conic: PolarConic) -> Conic
 ```
 
-([source](../src/lib/polar_conic.py#L100))
+([source](../src/lib/polar_conic.py#L101))
 
 Transforms a conic from polar to quadratic form.
 
@@ -2561,7 +2577,7 @@ def ellipse_to_polar_matrix(
         start: PolarOrigin = PolarOrigin.HORIZONTAL) -> PolarConic
 ```
 
-([source](../src/lib/polar_conic.py#L110))
+([source](../src/lib/polar_conic.py#L111))
 
 Converts an ellipse to a polar conic matrix representation.
 
@@ -2586,7 +2602,7 @@ def hyperbola_to_polar_matrix(
         start: PolarOrigin = PolarOrigin.VERTEX) -> PolarConic
 ```
 
-([source](../src/lib/polar_conic.py#L171))
+([source](../src/lib/polar_conic.py#L172))
 
 Converts a hyperbola to a polar conic matrix representation.
 
@@ -2607,7 +2623,7 @@ def rotate_polar_param(polar_conic: PolarConic,
                        start_angle: Scalar) -> PolarConic
 ```
 
-([source](../src/lib/polar_conic.py#L203))
+([source](../src/lib/polar_conic.py#L204))
 
 Shifts the angle origin of a polar conic's parametrization.
 
@@ -2814,7 +2830,7 @@ def hyperbola_from_foci_and_point(focus1: FinitePoint, focus2: FinitePoint,
                                   point: FinitePoint) -> Conic
 ```
 
-([source](../src/lib/hyperbola.py#L13))
+([source](../src/lib/hyperbola.py#L14))
 
 Constructs a hyperbola from its focus points and an incident point.
 
@@ -2829,7 +2845,7 @@ Constructs a hyperbola from its focus points and an incident point.
 def asymptote_focal_axis_angle(hyperbola: Conic) -> Expr
 ```
 
-([source](../src/lib/hyperbola.py#L27))
+([source](../src/lib/hyperbola.py#L28))
 
 Computes the angle between the axis and an asymptote of a hyperbola.
 
@@ -2862,7 +2878,7 @@ Return values for other conics:
 def asymptote_conic(hyperbola: Conic) -> Conic
 ```
 
-([source](../src/lib/hyperbola.py#L57))
+([source](../src/lib/hyperbola.py#L58))
 
 Computes the line pair conic representing the hyperbola's asymptotes.
 

@@ -1,6 +1,7 @@
 from sympy import Expr, Matrix, MatrixBase, sqrt
 
 from lib.conic_classes import is_parabola
+from lib.matrix import conic_coefficients
 from lib.point import ideal_point, point_to_xy
 from lib.type_aliases import Conic, Line, PointVector
 
@@ -10,7 +11,7 @@ def _parabola_directrix_from_adjugate(parabola_adjugate: MatrixBase) -> Line:
     conic matrix. See [parabola_directrix](#parabola.parabola_directrix) for the
     details.
     """
-    a, _, _, _, c, _, d, e, f = parabola_adjugate.flat()
+    a, _, c, d, e, f = conic_coefficients(parabola_adjugate)
     if f.is_zero is False:
         raise ValueError("Not a parabola (or a degenerate conic with one ideal point)")
     return Matrix([d, e, (a + c) / -2])
@@ -38,7 +39,7 @@ def _parabola_focus_from_adjugate(parabola_adjugate: MatrixBase) -> PointVector:
     """Computes the focus of a parabola represented as the adjugate of a
     conic matrix. See [parabola_focus](#parabola.parabola_focus) for the details.
     """
-    a, _, _, _, c, _, d, e, f = parabola_adjugate.flat()
+    a, _, c, d, e, f = conic_coefficients(parabola_adjugate)
     if f.is_zero is False:
         raise ValueError("Not a parabola (or a degenerate conic with one ideal point)")
     return parabola_adjugate * Matrix([d, e, -(a + c) / 2])
@@ -68,7 +69,7 @@ def parabola_vertex(parabola: Conic) -> Matrix:
     *Formula*:
     [research/conic_properties/parabola_vertex.py](../src/research/conic_properties/parabola_vertex.py)
     """
-    a, _, _, b, c, _, d, e, _ = parabola.flat()
+    a, b, c, d, e, _ = conic_coefficients(parabola)
     focus_x, focus_y = point_to_xy(parabola_focus(parabola))
     vertex_x = focus_x - (b * e - c * d) / (2 * (a + c) ** 2)
     vertex_y = focus_y - (b * d - a * e) / (2 * (a + c) ** 2)
