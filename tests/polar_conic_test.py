@@ -30,10 +30,12 @@ from lib.transform import homography_from_samples
 
 
 class TestAngleAtPoint:
-    polar_conic = Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 0]])
-    for angle in [0, pi / 4, pi / 2, pi, -pi / 2]:
-        point = point_at_angle(polar_conic, angle)
-        assert angle == angle_at_point(polar_conic, point)
+    def test_round_trip(self):
+        polar_conic = Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 0]])
+        angles = [0, pi / 4, pi / 2, pi, -pi / 2]
+        for angle in angles:
+            point = point_at_angle(polar_conic, angle)
+            assert angle == angle_at_point(polar_conic, point)
 
 
 class TestTangentAtAngle:
