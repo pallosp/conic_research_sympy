@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-import itertools
 import time
-from collections.abc import Callable, Sequence
+from collections.abc import Callable
+from typing import cast
 
 from sympy import Determinant, Expr, Matrix, S, factor, sqrt, symbols
 
@@ -26,10 +26,10 @@ def richter_gebert_poly(p1: Matrix, p2: Matrix, p3: Matrix, p4: Matrix) -> Expr:
 
     circular_points = [CIRCULAR_POINT_I, CIRCULAR_POINT_J]
     are_on_same_conic([p1, p2, p3, p4, *circular_points], simplifier=save_poly)
-    return poly
+    return cast("Expr", poly)
 
 
-def cocircularity_matrix(p1: Matrix, p2: Matrix, p3: Matrix, p4: Matrix) -> Expr:
+def cocircularity_matrix(p1: Matrix, p2: Matrix, p3: Matrix, p4: Matrix) -> Matrix:
     """Tells whether p1, p2, p3 and p4 are cocircular.
 
     Uses the cocircularity determinant described in the paper
@@ -61,15 +61,8 @@ def measure_ms(func: Callable) -> float:
     return int((time.time() - start) * 10000) / 10
 
 
-def eval_cocircularity_expr(
-    expr: Expr,
-    substitutions: Sequence[tuple[Expr, Expr]],
-) -> float:
-    _ = expr.subs(substitutions).doit().is_zero
-
-
 points = [Matrix(symbols(f"x{i} y{i} z{i}")) for i in range(1, 5)]
-coordinates = list(itertools.chain.from_iterable(points))
+coordinates = [c for p in points for c in p.flat()]
 rational_substitutions = [(coordinates[i], S.One / i) for i in range(12)]
 sqrt_substitutions = [(coordinates[i], 1 + sqrt(i)) for i in range(12)]
 
