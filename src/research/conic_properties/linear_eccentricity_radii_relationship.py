@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
-from sympy import Abs, Eq, pprint, symbols
+from sympy import Abs, Eq, Symbol, pprint, symbols
 
 from lib.central_conic import linear_eccentricity, primary_radius, secondary_radius
 from lib.conic_direction import ConicNormFactor
 from lib.matrix import conic_matrix
 
 conic = conic_matrix(*symbols("a b c d e f", real=True))
-det = symbols("det", real=True)
+det = Symbol("det", real=True)
 
 le_square = (linear_eccentricity(conic) ** 2).subs(conic.det(), det).factor()
 

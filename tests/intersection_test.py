@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING, cast
+
 from sympy import I, Matrix, sqrt, symbols
 
 from lib.circle import UNIT_CIRCLE
@@ -15,6 +17,9 @@ from lib.line import (
 from lib.matrix import conic_matrix, is_nonzero_multiple
 from lib.point import ORIGIN, ZERO_POINT, ideal_point
 from tests.utils import are_projective_sets_equal, is_explicit_matrix
+
+if TYPE_CHECKING:
+    from lib.type_aliases import PointVector
 
 
 class TestLineXLine:
@@ -38,7 +43,9 @@ class TestConicXLine:
     def test_general_case(self):
         conic = conic_matrix(1, 2, 3, 4, 5, 6)
         line = Matrix([1, 2, 3])
-        p1, p2 = conic_x_line(conic, line)
+        # conic_x_line() returns explicit points here, which pyright can't know (not
+        # an upstream issue).
+        p1, p2 = cast("tuple[PointVector, PointVector]", conic_x_line(conic, line))
         assert conic_contains_point(conic, p1)
         assert conic_contains_point(conic, p2)
 
@@ -117,14 +124,20 @@ class TestConicXLine:
         intersections = [p.subs(substitutions) for p in intersections]
         assert is_explicit_matrix(intersections[0])
         assert is_explicit_matrix(intersections[1])
+        # The points are explicit, as asserted above. SymPy types
+        # MatrixExpr.subs() as returning Expr (fix upstream).
         assert are_projective_sets_equal(
-            intersections,
+            cast("list[PointVector]", intersections),
             [Matrix([1, 0, 1]), Matrix([-1, 0, 1])],
         )
 
     def test_partially_symbolic_conic(self):
         b, c, d, e, f = symbols("b c d e f")
         conic = conic_matrix(1, b, c, d, e, f)
-        p1, p2 = conic_x_line(conic, IDEAL_LINE)
+        # conic_x_line() returns explicit points here, which pyright can't know (not
+        # an upstream issue).
+        p1, p2 = cast(
+            "tuple[PointVector, PointVector]", conic_x_line(conic, IDEAL_LINE)
+        )
         assert conic_contains_point(conic, p1)
         assert conic_contains_point(conic, p2)

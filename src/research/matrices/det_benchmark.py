@@ -3,14 +3,16 @@
 import time
 from collections.abc import Callable, Sequence
 
-from sympy import Expr, Matrix, S, sqrt, symbols
+from sympy import Matrix, S, sqrt, symbols
+
+from lib.type_aliases import Scalar
 
 WARMUP_TIMES = 1
 
 
 def measure_det(
     matrix_size: int,
-    element_gen: Callable[[int], Expr],
+    element_gen: Callable[[int], Scalar],
     method: str | None,
     *,
     expand: bool = False,
@@ -27,7 +29,7 @@ def measure_det(
     return time.time() - start_sec
 
 
-def measure_rank(matrix_size: int, element_gen: Callable[[int], Expr]) -> float:
+def measure_rank(matrix_size: int, element_gen: Callable[[int], Scalar]) -> float:
     elements = [element_gen(i) for i in range(matrix_size**2)]
     m = Matrix(matrix_size, matrix_size, elements)
     for _ in range(WARMUP_TIMES):
@@ -39,7 +41,7 @@ def measure_rank(matrix_size: int, element_gen: Callable[[int], Expr]) -> float:
 
 def benchmark_group(
     matrix_sizes: Sequence[int],
-    element_gen: Callable[[int], Expr],
+    element_gen: Callable[[int], Scalar],
     matrix_type: str,
     subject: str,  # det | expanded_det | rank
     det_method: str | None = None,

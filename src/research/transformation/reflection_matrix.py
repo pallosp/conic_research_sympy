@@ -4,9 +4,10 @@ from sympy import Expr, Matrix, factor, pprint, symbols
 
 from lib.point import perpendicular_foot
 from lib.transform import homography_from_samples
+from lib.type_aliases import Scalar
 
 
-def reflect(point: tuple[Expr, Expr], axis: Matrix) -> tuple[Expr, Expr]:
+def reflect(point: tuple[Scalar, Scalar], axis: Matrix) -> tuple[Expr, Expr]:
     foot = perpendicular_foot(point, axis)
     return (2 * foot[0] - point[0], 2 * foot[1] - point[1])
 

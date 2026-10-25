@@ -1,5 +1,5 @@
 from collections.abc import Callable, Sequence
-from typing import Self, cast
+from typing import Self, cast, overload
 
 from sympy import (
     Expr,
@@ -232,10 +232,15 @@ class SkewMatrix(MatrixFunction):
         return element if (i - j) % 3 == 1 else -element
 
 
+@overload
+def skew_matrix(vector3: MatrixBase) -> MatrixBase: ...
+@overload
+def skew_matrix(vector3: MatrixExpr) -> SkewMatrix: ...
 def skew_matrix(vector3: MatrixBase | MatrixExpr) -> MatrixBase | SkewMatrix:
     """Creates a skew-symmetric matrix from a 3D column vector.
 
-    Returns an unevaluated `MatrixExpr` if the vector is unevaluated.
+    Returns an explicit matrix for an explicit vector, and an unevaluated
+    `SkewMatrix` for a matrix expression.
     """
     return SkewMatrix(vector3)
 

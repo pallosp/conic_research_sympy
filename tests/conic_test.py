@@ -1,3 +1,5 @@
+from typing import cast
+
 from sympy import (
     I,
     Matrix,
@@ -131,7 +133,10 @@ class TestEccentricity:
 
     def test_numeric_degenerate_conic(self):
         conic = line_pair_conic(X_AXIS, Matrix([24, 7, 0]))
-        ecc1, ecc2 = eccentricity(conic), eccentricity(-conic)
+        # The eccentricities are Rationals. sorted() doesn't accept Exprs because
+        # SymPy's Boolean doesn't declare __bool__ (fix upstream).
+        ecc1 = cast("Rational", eccentricity(conic))
+        ecc2 = cast("Rational", eccentricity(-conic))
         assert sorted([ecc1, ecc2]) == [Rational(5, 4), Rational(5, 3)]
 
     def test_symbolic_ellipse(self):
@@ -312,7 +317,9 @@ class TestPolePolar:
         conic = conic_matrix(*symbols("a b c d e f"))
         pole = Matrix(symbols("x y z"))
         polar = polar_line(conic, pole)
-        assert pole_point(conic, polar).equals(pole * conic.det())
+        # pole_point() returns a Matrix here. SymPy declares equals() on
+        # RepMatrix, not MatrixBase (fix upstream).
+        assert cast("Matrix", pole_point(conic, polar)).equals(pole * conic.det())
 
     def test_point_on_polar(self):
         conic = conic_matrix(*symbols("a b c d e f"))

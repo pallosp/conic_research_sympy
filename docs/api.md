@@ -333,11 +333,12 @@ The argument of the function.
 def skew_matrix(vector3: MatrixBase | MatrixExpr) -> MatrixBase | SkewMatrix
 ```
 
-([source](../src/lib/matrix.py#L235))
+([source](../src/lib/matrix.py#L239))
 
 Creates a skew-symmetric matrix from a 3D column vector.
 
-Returns an unevaluated `MatrixExpr` if the vector is unevaluated.
+Returns an explicit matrix for an explicit vector, and an unevaluated
+`SkewMatrix` for a matrix expression.
 
 <a id="matrix.pivot_column"></a>
 
@@ -347,7 +348,7 @@ Returns an unevaluated `MatrixExpr` if the vector is unevaluated.
 def pivot_column(matrix: MatrixBase | MatrixExpr) -> MatrixBase | PivotColumn
 ```
 
-([source](../src/lib/matrix.py#L277))
+([source](../src/lib/matrix.py#L282))
 
 Returns the column of a matrix for its first provably nonzero element.
 
@@ -369,7 +370,7 @@ def pivot_column_and_row(
 ) -> tuple[MatrixBase | PivotColumn, MatrixBase | TransposedPivotRow]
 ```
 
-([source](../src/lib/matrix.py#L291))
+([source](../src/lib/matrix.py#L296))
 
 Returns the column and the transposed row of a matrix for its first
 provably nonzero element, i.e. two column vectors.
@@ -388,7 +389,7 @@ def outer_product_root(
         matrix: MatrixBase | MatrixExpr) -> MatrixBase | OuterProductRoot
 ```
 
-([source](../src/lib/matrix.py#L337))
+([source](../src/lib/matrix.py#L342))
 
 Finds a vector `v` such that `v·vᵀ` equals the given symmetric matrix.
 
@@ -410,7 +411,7 @@ to be non-zero.
 def is_real_matrix(matrix: MatrixBase) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L355))
+([source](../src/lib/matrix.py#L360))
 
 Checks if all elements of a matrix are real.
 
@@ -424,7 +425,7 @@ Returns a bool or `None` if undecidable.
 def is_definite_matrix(matrix: MatrixBase) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L363))
+([source](../src/lib/matrix.py#L368))
 
 Checks if a real matrix is either positive or negative definite.
 
@@ -440,7 +441,7 @@ def is_full_rank(matrix: MatrixBase,
                  simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L393))
+([source](../src/lib/matrix.py#L398))
 
 Tells whether a matrix has full rank.
 
@@ -1438,7 +1439,7 @@ section 11.1
 def extract_point(degenerate_conic: Conic) -> PointVector | MatrixExpr
 ```
 
-([source](../src/lib/degenerate_conic.py#L108))
+([source](../src/lib/degenerate_conic.py#L109))
 
 Extracts the point from a point conic or the intersection of the
 lines from a line pair conic.

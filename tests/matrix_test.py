@@ -171,7 +171,9 @@ class TestSkewMatrix:
         assert skew.as_explicit() == Matrix(
             [[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]],
         )
-        assert skew.subs(v, Matrix([1, 2, 3])) == skew_matrix(Matrix([1, 2, 3]))
+        # SymPy's subs() stubs only accept Basic values, but matrices work (fix
+        # upstream).
+        assert skew.subs(v, Matrix([1, 2, 3])) == skew_matrix(Matrix([1, 2, 3]))  # pyright: ignore[reportCallIssue, reportArgumentType]
 
     def test_invalid_shape(self):
         with pytest.raises(ShapeError, match="3D column vector"):

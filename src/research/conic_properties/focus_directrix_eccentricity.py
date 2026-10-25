@@ -7,6 +7,8 @@ from sympy import (
     Matrix,
     Piecewise,
     Q,
+    S,
+    Symbol,
     atan2,
     cos,
     factor,
@@ -88,7 +90,10 @@ min_eigen_fde, max_eigen_fde = (
 )
 
 
-min_eigen, max_eigen = symbols("min_eigen,max_eigen", real=True, nonzero=True)
+# symbols() is typed as returning Any (sympy#27354).
+min_eigen, max_eigen = cast(
+    "tuple[Symbol, ...]", symbols("min_eigen,max_eigen", real=True, nonzero=True)
+)
 eigenvalue_min_eq_abc = eq(min_eigen, min_eigen_abc)
 eigenvalue_max_eq_abc = eq(max_eigen, max_eigen_abc)
 eigenvalue_sum_eq_abc = add_eq(eigenvalue_min_eq_abc, eigenvalue_max_eq_abc)
@@ -293,7 +298,7 @@ println_indented(Eq(c, c_solution))
 
 print("\nNormalized coordinates:\n")
 
-multiplier = 1 / gcd(a_value, b_value)
+multiplier = S.One / gcd(a_value, b_value)
 
 directrix_a = (a_value * multiplier).factor()
 directrix_b = (b_value * multiplier).factor()

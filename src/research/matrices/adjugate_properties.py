@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
-from sympy import Ge, MatMul, factor, gcd, symbols
+from typing import cast
+
+from sympy import Expr, Ge, MatMul, factor, gcd, symbols
 
 from lib.matrix import conic_matrix
 from research.sympy_utils import eq_chain, println_indented
@@ -25,7 +27,9 @@ println_indented(eq_chain(symbols("adj"), adj_matrix, adj_matrix_value))
 print("Adjugate of its adjugate\n")
 
 double_adj = conic.adjugate().adjugate().applyfunc(factor)
-common_factor = gcd(double_adj.flat())
+# gcd() is typed to also return polynomial domain elements; with expressions it
+# returns an Expr (could be fixed upstream with an overload).
+common_factor = cast("Expr", gcd(double_adj.flat()))
 det_value = conic.det()
 det = symbols("det")
 double_adj = MatMul(

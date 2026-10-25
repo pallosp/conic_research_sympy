@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from typing import cast
+
 from sympy import (
     Determinant,
     Eq,
@@ -16,7 +18,7 @@ from lib.central_conic import conic_center
 from lib.distance import point_point_distance
 from lib.intersection import conic_x_line
 from lib.line import line_through_point
-from lib.matrix import conic_matrix
+from lib.matrix import PivotColumn, conic_matrix
 from research.sympy_utils import println_indented
 
 HORIZONTAL_LINE = "=" * 80
@@ -32,7 +34,8 @@ radius_angle = symbols("theta", real=True)
 radius_dir = (cos(radius_angle), sin(radius_angle))
 line_through_center = line_through_point(center, direction=radius_dir)
 intersections = conic_x_line(conic, line_through_center)
-intersection = intersections[0].args[0].row(2)
+# For this symbolic conic, the intersections are unevaluated PivotColumns.
+intersection = cast("PivotColumn", intersections[0]).matrix.as_explicit().row(2)
 
 radius = (
     point_point_distance(center, intersection)

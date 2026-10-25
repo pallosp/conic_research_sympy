@@ -29,13 +29,14 @@ import re
 from collections import defaultdict
 from collections.abc import Iterable, Iterator
 from functools import cached_property
-from typing import TypeVar
+from typing import TypeVar, cast
 
 from sympy import (
     ZZ,
     Determinant,
     Expr,
     Matrix,
+    MatrixBase,
     Poly,
     Rational,
     Symbol,
@@ -105,7 +106,8 @@ class _Search:
     ) -> None:
         self.target = target
         self.ring = target.ring
-        gens = list(self.ring.symbols)
+        # The ring is built from Symbols, but PolyRing.symbols is typed as Expr
+        gens = cast("list[Symbol]", list(self.ring.symbols))
         self.shift_perm = [gens.index(index_shift[g]) for g in gens]
         self.max_degree = max_degree
         # Candidate monomials for the matrix entries, grouped by degree
@@ -211,7 +213,8 @@ class _Search:
                     (self.shift(addend, i) * c for i, c in enumerate(cofactors)),
                     self.ring.zero,
                 )
-                new_row = (*row[:col], row[col] + addend, *row[col + 1 :])
+                # Pyright can't infer the length of a tuple built from slices
+                new_row = cast("Row", (*row[:col], row[col] + addend, *row[col + 1 :]))
                 yield _distance(remainder - change), new_row
 
     def run(self, rng: random.Random) -> Row | None:
@@ -247,13 +250,18 @@ def poly_as_det3_matrix(
     if poly == 0:
         return Rational(0), zeros(3, 3)
     if not poly.is_polynomial() or not all(
-        c.is_Rational for c in poly.as_coefficients_dict().values()
+        # as_coefficients_dict() is unannotated, so its values are inferred as
+        # int; they're SymPy numbers (fix upstream).
+        c.is_Rational
+        for c in cast("dict[Expr, Expr]", poly.as_coefficients_dict()).values()
     ):
         msg = f"{poly} is not a polynomial with rational coefficients"
         raise ValueError(msg)
 
     k, primitive = poly.as_content_primitive()
-    index_shift = _index_shift(primitive.free_symbols)
+    # A polynomial's free symbols are Symbols, but free_symbols is typed as
+    # set[Basic].
+    index_shift = _index_shift(cast("set[Symbol]", primitive.free_symbols))
     ring = PolyRing(sorted(index_shift, key=str), ZZ)
     target = ring.from_expr(primitive)
     common_exps = tuple(min(col) for col in zip(*target.monoms(), strict=True))
@@ -313,7 +321,9 @@ def normalize_det3(det: Expr) -> Expr:
     if not isinstance(determinant, Determinant):
         msg = f"{det} is not of the form k⋅det(M)"
         raise TypeError(msg)
-    matrix = determinant.arg
+    # Determinant.arg is unannotated, so it's typed as Basic; it's a matrix (fix
+    # upstream).
+    matrix = cast("MatrixBase", determinant.arg)
     gens = sorted(matrix.free_symbols, key=str)
     if not gens:
         return det
@@ -336,7 +346,9 @@ def normalize_det3(det: Expr) -> Expr:
         ((*s, 1) for s in itertools.product((1, -1), repeat=5)), key=minus_signs
     )
 
-    degrees = [max(polys[i][j].total_degree() for i in range(3)) for j in range(3)]
+    # SymPy's Boolean doesn't declare __bool__, so comparisons returning it,
+    # such as with -oo for a zero entry, aren't accepted by max() (fix upstream).
+    degrees = [max(polys[i][j].total_degree() for i in range(3)) for j in range(3)]  # pyright: ignore[reportArgumentType]
     keys = [[[tuple(-e for e in m) for m in p.monoms()] for p in row] for row in polys]
 
     def sorted_rows(cols: tuple[int, ...]) -> list[int]:

@@ -8,6 +8,7 @@ from collections.abc import Sequence
 from sympy import Determinant, Expr, Matrix, symbols
 
 from lib.point import point_to_vec3
+from lib.type_aliases import Scalar
 from research.sympy_utils import println_indented
 
 
@@ -45,7 +46,7 @@ def fibonacci(n: int) -> int:
 
 def benchmark_conconicity_expr_ms(
     expr: Expr,
-    substitutions: Sequence[tuple[Expr, Expr]],
+    substitutions: Sequence[tuple[Expr, Scalar]],
 ) -> int:
     start = time.time()
     _ = expr.subs(substitutions).doit().is_zero
@@ -53,7 +54,7 @@ def benchmark_conconicity_expr_ms(
 
 
 points = [Matrix(symbols(f"x{i} y{i} z{i}")) for i in range(1, 7)]
-coordinates = list(itertools.chain.from_iterable(points))
+coordinates = [c for p in points for c in p.flat()]
 substitutions = [(coordinates[i], fibonacci(i)) for i in range(18)]
 
 print("\nRichter-Gebert conconicity polynomial:\n")

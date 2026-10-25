@@ -26,6 +26,7 @@ def richter_gebert_poly(p1: Matrix, p2: Matrix, p3: Matrix, p4: Matrix) -> Expr:
 
     circular_points = [CIRCULAR_POINT_I, CIRCULAR_POINT_J]
     are_on_same_conic([p1, p2, p3, p4, *circular_points], simplifier=save_poly)
+    # are_on_same_conic() calls save_poly for 6 points, which pyright can't know.
     return cast("Expr", poly)
 
 

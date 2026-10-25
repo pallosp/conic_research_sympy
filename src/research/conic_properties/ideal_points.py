@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 
 from itertools import product
+from typing import cast
 
 from sympy import (
     Abs,
     Expr,
     I,
     Matrix,
+    MatrixBase,
     Ne,
     Symbol,
     cos,
@@ -35,7 +37,7 @@ from research.sympy_utils import eq_chain, println_indented
 HORIZONTAL_LINE = "-" * 80
 
 
-def normalize(point: Matrix) -> Matrix:
+def normalize(point: MatrixBase) -> MatrixBase:
     """Divides out the common factor of the coordinates."""
     return (point / gcd(point.flat())).applyfunc(factor)
 
@@ -104,11 +106,15 @@ print()
 print("Branch-free, asymptote direction based formula with complex coordinates:")
 print()
 
-a, c, d, e, f = symbols("a c d e f", real=True)
+# symbols() is typed as returning Any (sympy#27354).
+a, c, d, e, f = cast("tuple[Symbol, ...]", symbols("a c d e f", real=True))
 b = Symbol("b", real=True)
 conic = conic_matrix(a, b, c, d, e, f)
 
-eigen_minus, eigen_plus = symbols("lambda^- lambda^+", real=True)
+# symbols() is typed as returning Any (sympy#27354).
+eigen_minus, eigen_plus = cast(
+    "tuple[Symbol, ...]", symbols("lambda^- lambda^+", real=True)
+)
 
 
 def ideal_points_from_asymptotes(conic: Conic) -> tuple[Matrix, Matrix]:

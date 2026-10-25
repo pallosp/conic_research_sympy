@@ -102,7 +102,8 @@ def split_to_lines(
     #    is non-zero. Each step accepts such expressions, so the lines
     #    evaluate once substitutions make every step decidable.
     q = outer_product_root(-conic.adjugate())
-    return pivot_column_and_row(conic + skew_matrix(q))
+    # SymPy's stubs reject Matrix + MatrixExpr (fix upstream).
+    return pivot_column_and_row(conic + skew_matrix(q))  # pyright: ignore[reportOperatorIssue]
 
 
 def extract_point(degenerate_conic: Conic) -> PointVector | MatrixExpr:

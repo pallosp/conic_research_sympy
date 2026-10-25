@@ -3,9 +3,10 @@
 from collections.abc import Sequence
 from itertools import chain, combinations
 
-from sympy import Determinant, Expr, MatMul, Matrix, S, factor, gcd, pi, symbols
+from sympy import Determinant, MatMul, Matrix, S, factor, gcd, pi, symbols
 
 from lib.transform import homography_from_samples, rotate, scale
+from lib.type_aliases import Scalar
 from research.sympy_utils import print_indented
 
 """Calculates the transformation that maps (xᵢ,yᵢ) to (uᵢ,vᵢ) for i=0..3.
@@ -33,8 +34,8 @@ u0, v0, u1, v1, u2, v2, u3, v3 = symbols("u0,v0,u1,v1,u2,v2,u3,v3")
 
 
 def transformation_from_2d_samples(
-    source_points: Sequence[tuple[Expr, Expr]],
-    target_points: Sequence[tuple[Expr, Expr]],
+    source_points: Sequence[tuple[Scalar, Scalar]],
+    target_points: Sequence[tuple[Scalar, Scalar]],
 ) -> Matrix:
     (x0, y0), (x1, y1), (x2, y2), (x3, y3) = source_points
     (u0, v0), (u1, v1), (u2, v2), (u3, v3) = target_points
@@ -52,7 +53,7 @@ def transformation_from_2d_samples(
         ],
     )
     uv = Matrix([u0, v0, u1, v1, u2, v2, u3, v3])
-    coefficients = [*list(m.inv() * uv), S.One]
+    coefficients = [*(m.inv() * uv).flat(), S.One]
     return Matrix(3, 3, coefficients).applyfunc(factor)
 
 

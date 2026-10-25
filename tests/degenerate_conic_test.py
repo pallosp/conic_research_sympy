@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING, cast
+
 import pytest
 from sympy import I, Matrix, MatrixBase, symbols
 
@@ -23,6 +25,9 @@ from lib.line import (
 from lib.matrix import conic_matrix, is_nonzero_multiple, is_real_matrix
 from lib.point import ZERO_POINT, point_to_vec3
 from tests.utils import are_projective_sets_equal, is_explicit_matrix
+
+if TYPE_CHECKING:
+    from lib.type_aliases import Line
 
 
 class TestLinePair:
@@ -63,7 +68,9 @@ class TestPointConic:
         conic = point_conic(point)
         assert is_degenerate(conic) is True
         assert are_projective_sets_equal(ideal_points(conic), [point, point])
-        assert is_real_matrix(split_to_lines(conic)[0]) is False
+        line = split_to_lines(conic)[0]
+        assert is_explicit_matrix(line)
+        assert is_real_matrix(line) is False
 
 
 class TestSplitToLines:
@@ -105,7 +112,9 @@ class TestSplitToLines:
         concrete_lines = [line.subs(substitutions) for line in lines]
         assert is_explicit_matrix(concrete_lines[0])
         assert is_explicit_matrix(concrete_lines[1])
-        assert are_projective_sets_equal(concrete_lines, line_pair)
+        # The lines are explicit, as asserted above. SymPy types MatrixExpr.subs()
+        # as returning Expr (fix upstream).
+        assert are_projective_sets_equal(cast("list[Line]", concrete_lines), line_pair)
 
     def test_partially_symbolic_conic(self):
         symbolic_conic = conic_matrix(1, *symbols("b c d e f"))
@@ -121,7 +130,11 @@ class TestSplitToLines:
         conic = line_pair_conic(*line_pair)
         substitutions = list(zip(symbolic_conic.flat(), conic.flat(), strict=True))
         concrete_lines = [line.subs(substitutions) for line in lines]
-        assert are_projective_sets_equal(concrete_lines, line_pair)
+        assert is_explicit_matrix(concrete_lines[0])
+        assert is_explicit_matrix(concrete_lines[1])
+        # The lines are explicit, as asserted above. SymPy types MatrixExpr.subs()
+        # as returning Expr (fix upstream).
+        assert are_projective_sets_equal(cast("list[Line]", concrete_lines), line_pair)
 
 
 class TestExtractPoint:

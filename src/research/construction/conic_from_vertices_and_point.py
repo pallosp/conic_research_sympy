@@ -15,6 +15,7 @@ results express the conic as a sum of two members of this pencil:
 """
 
 from itertools import combinations
+from typing import cast
 
 from sympy import (
     Add,
@@ -71,7 +72,9 @@ def difference_of_squares(expr: Expr) -> Expr:
                 return Mul(*factors)
         return product
 
-    return expr.replace(lambda e: isinstance(e, Mul), rewrite)
+    # replace() is typed as returning Basic; replacing products keeps an Expr
+    # (not an upstream issue).
+    return cast("Expr", expr.replace(lambda e: isinstance(e, Mul), rewrite))
 
 
 def conic_formula(center: tuple | Matrix, *, double_line: bool = False) -> MatAdd:
@@ -133,7 +136,9 @@ def conic_formula(center: tuple | Matrix, *, double_line: bool = False) -> MatAd
     scale = cancel(conic[0] / conic_from_formula[0])
     assert (conic - scale * conic_from_formula).applyfunc(cancel) == ZERO_CONIC
 
-    return formula
+    # subs() is typed as returning Basic; it keeps the MatAdd (not an upstream
+    # issue).
+    return cast("MatAdd", formula)
 
 
 print("\nConic with vertices at center ± v through a point (r = |v|):\n")

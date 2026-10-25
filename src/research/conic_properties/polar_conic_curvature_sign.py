@@ -2,9 +2,12 @@
 
 """Curvature sign computation for conics in polar form."""
 
-from sympy import Determinant, Matrix, diff, pprint, sign, symbols
+from typing import cast
+
+from sympy import Determinant, Expr, Matrix, diff, sign, symbols
 
 from lib.polar_conic import point_at_angle
+from research.sympy_utils import println_indented
 
 a, b, c, d, e, f, g, h, i, theta = symbols("a,b,c,d,e,f,g,h,i,theta")
 polar_matrix = Matrix([[a, b, c], [d, e, f], [g, h, i]])
@@ -23,10 +26,11 @@ discriminant = (xd * ydd - yd * xdd).factor().simplify()
 
 # Multiplying with a full square doesn't change the sign but makes the formula
 # work for points at infinity.
-discriminant *= discriminant.as_numer_denom()[1].args[0] ** 4
+# .args is typed as Basic; this argument is an Expr (not an upstream issue).
+discriminant *= cast("Expr", discriminant.as_numer_denom()[1].args[0]) ** 4
 
 # Un-evaluate the polar matrix determinant
 discriminant = discriminant.subs(polar_matrix.det(), Determinant(polar_matrix))
 
 print("\nSign of the polar conic's curvature at θ:\n")
-pprint(sign(discriminant, evaluate=False))
+println_indented(sign(discriminant, evaluate=False))
