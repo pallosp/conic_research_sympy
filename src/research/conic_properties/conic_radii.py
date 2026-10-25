@@ -15,11 +15,11 @@ conic = conic_matrix(a, b, c, d, e, f)
 det = conic.det()
 
 # Translate the center to the origin
-conic = simplify(transform_conic(conic, translate(-conic_center(conic))))
+conic = transform_conic(conic, translate(-conic_center(conic))).applyfunc(simplify)
 
 # Rotate with theta
 theta = symbols("theta")
-conic = simplify(transform_conic(conic, rotate(theta)))
+conic = transform_conic(conic, rotate(theta)).applyfunc(simplify)
 
 # Choose an angle for which the conic will be axis-aligned, i.e. the xy term
 # vanishes.
@@ -31,8 +31,10 @@ subexpr_var = symbols("s")
 angle = angle.subs(subexpr_val, subexpr_var)
 
 conic = conic.subs(det, symbols("det"))
-conic = conic.subs(theta, angle).simplify()
-conic = conic.subs(4 * b**2, 4 * b**2 + subexpr_var**2 - subexpr_val**2).simplify()
+conic = conic.subs(theta, angle).applyfunc(simplify)
+conic = conic.subs(4 * b**2, 4 * b**2 + subexpr_var**2 - subexpr_val**2).applyfunc(
+    simplify
+)
 conic = conic.subs(subexpr_var, subexpr_val)
 
 # After the rotation the conic should be diagonal.
@@ -47,10 +49,10 @@ println_indented(Eq(symbols("r2") ** 2, -f / c))
 print("In terms of the 2x2 submatrix eigenvalues:\n")
 
 eigenvals = list(conic[:2, :2].eigenvals())
-eigenval_subs = {
-    eigenvals[0]: symbols("lambda_1"),
-    eigenvals[1]: symbols("lambda_2"),
-}
+eigenval_subs = [
+    (eigenvals[0], symbols("lambda_1")),
+    (eigenvals[1], symbols("lambda_2")),
+]
 
 println_indented(Eq(symbols("r1") ** 2, -f / a.subs(eigenval_subs)))
 println_indented(Eq(symbols("r2") ** 2, -f / c.subs(eigenval_subs)))

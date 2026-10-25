@@ -17,7 +17,7 @@ dir2 = ideal_point_on_line(-line2)
 dir_bisector = dir1.normalized() + dir2.normalized()
 
 angle_bisector = line_through_point(vertex, direction=dir_bisector)
-angle_bisector = simplify(angle_bisector)
+angle_bisector = angle_bisector.applyfunc(simplify)
 
 print("\nAngle bisector of two lines:\n")
 pprint(angle_bisector)

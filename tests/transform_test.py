@@ -50,14 +50,14 @@ class TestRotate:
         orig_circle = circle(center, r=r)
         rotation = rotate(angle, center)
         rotated_circle = transform_conic(orig_circle, rotation)
-        assert orig_circle == simplify(rotated_circle)
+        assert orig_circle == rotated_circle.applyfunc(simplify)
 
     def test_rotation_around_point(self):
         angle = symbols("theta")
         center = Matrix(symbols("x y"))
         rotation = rotate(angle, center)
         rotation_sequence = translate(center) * rotate(angle) * translate(-center)
-        assert simplify(rotation) == simplify(rotation_sequence)
+        assert rotation.applyfunc(simplify) == rotation_sequence.applyfunc(simplify)
 
 
 class TestReflection:
@@ -76,14 +76,14 @@ class TestScale:
         x0, y0, s = symbols("x0,y0,s")
         scaling = scale(s, center=(x0, y0))
         scaling_sequence = translate((x0, y0)) * scale(s) * translate((-x0, -y0))
-        assert simplify(scaling) == simplify(scaling_sequence)
+        assert scaling.applyfunc(simplify) == scaling_sequence.applyfunc(simplify)
 
     def test_scaling_unevenly_around_point(self):
         sx, sy = symbols("sx sy")
         center = Matrix(symbols("x0 y0"))
         scaling = scale_xy(sx, sy, center)
         scaling_sequence = translate(center) * scale_xy(sx, sy) * translate(-center)
-        assert simplify(scaling) == simplify(scaling_sequence)
+        assert scaling.applyfunc(simplify) == scaling_sequence.applyfunc(simplify)
 
 
 class TestTransformPoint:

@@ -19,7 +19,7 @@ print("\nScaled conic - only the f coefficient differs:\n")
 
 factor = symbols("lambda")
 x, y = conic_center(conic)
-scaled_conic = simplify(transform_conic(conic, scale(factor, center=(x, y))))
+scaled_conic = transform_conic(conic, scale(factor, center=(x, y))).applyfunc(simplify)
 scaled_conic = Matrix(scaled_conic / gcd(scaled_conic.flat()))
 scaled_conic[8] = (scaled_conic[8] - f).factor() + f
 scaled_conic[8] = scaled_conic[8].subs(conic.det(), Symbol("det"))

@@ -18,7 +18,7 @@ println_indented(radius.subs(conic.det(), symbols("det")))
 print("\nDirector circle matrix:\n")
 
 center = conic_center(conic)
-director_circle = simplify(circle(center, r=radius))
+director_circle = circle(center, r=radius).applyfunc(simplify)
 println_indented(director_circle)
 
 print("\nDirector circle matrix in adjugate form:\n")
