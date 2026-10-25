@@ -883,7 +883,8 @@ expected to be finite, i.e. not an ideal point.
 
 A point as a homogeneous 3D column vector `(x, y, z)ᵀ`. Functions that
 return projective points use this type; those returning Euclidean
-coordinates return a 2D `Matrix` instead.
+coordinates return a 2D `Matrix` instead, except
+[point_to_xy](#point.point_to_xy), which returns a tuple.
 
 <a id="type_aliases.Line"></a>
 
@@ -1869,12 +1870,12 @@ If the line is the ideal line, returns `[0, 0, 0]ᵀ`.
 #### point\_to\_xy
 
 ```python
-def point_to_xy(point: FinitePoint) -> Matrix
+def point_to_xy(point: FinitePoint) -> tuple[Expr, Expr]
 ```
 
 ([source](../src/lib/point.py#L42))
 
-Computes the Euclidean coordinates of a projective point.
+Computes the Euclidean coordinates of a projective point as an `(x, y)` tuple.
 
 <a id="point.direction_to_xy"></a>
 

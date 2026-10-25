@@ -91,8 +91,9 @@ def conic_formula(center: FinitePoint, *, double_line: bool = False) -> MatAdd:
 
     The result is expressed with `r = |v|`: `vx² + vy²` is replaced with `r²`.
     """
-    vertex1 = point_to_xy(center) + v
-    vertex2 = point_to_xy(center) - v
+    center_xy = Matrix(point_to_xy(center))
+    vertex1 = center_xy + v
+    vertex2 = center_xy - v
 
     # The line through the vertices is an axis of the conic, therefore the
     # reflection of `p` to it is also on the conic.

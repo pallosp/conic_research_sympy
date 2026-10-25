@@ -120,7 +120,7 @@ class TestEllipseToPolarMatrix:
         e = ellipse((1, 2), 3, 4, r1_direction=(5, 6))
         p = ellipse_to_polar_matrix(e, start=PolarOrigin.VERTEX)
         start_point = point_at_angle(p, 0)
-        assert point_to_xy(start_point) == central_conic_vertices(e)[0]
+        assert point_to_xy(start_point) == point_to_xy(central_conic_vertices(e)[0])
 
     def test_covertex_angle(self):
         center = Matrix([1, 2])
@@ -155,7 +155,7 @@ class TestHyperbolaToPolarMatrix:
 
         start_point = point_at_angle(polar_hyperbolas[PolarOrigin.VERTEX], 0)
         vertex = central_conic_vertices(hyperbola)[0]
-        assert point_to_xy(start_point) == vertex
+        assert point_to_xy(start_point) == point_to_xy(vertex)
 
     def test_unsupported_polar_origin(self):
         with pytest.raises(ValueError, match="Unsupported PolarOrigin"):

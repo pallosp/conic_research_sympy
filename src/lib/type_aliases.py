@@ -25,7 +25,8 @@ FinitePoint: TypeAlias = Point
 
 #: A point as a homogeneous 3D column vector `(x, y, z)ᵀ`. Functions that
 #: return projective points use this type; those returning Euclidean
-#: coordinates return a 2D `Matrix` instead.
+#: coordinates return a 2D `Matrix` instead, except
+#: [point_to_xy](#point.point_to_xy), which returns a tuple.
 PointVector: TypeAlias = MatrixBase
 
 #: A projective line `ax + by + c = 0`, represented as the 3D column vector

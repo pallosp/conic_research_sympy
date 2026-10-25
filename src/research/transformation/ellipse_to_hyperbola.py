@@ -9,7 +9,7 @@ from lib.central_conic import (
 )
 from lib.distance import point_point_distance
 from lib.ellipse import ellipse
-from lib.point import centroid, ideal_point, point_to_xy
+from lib.point import centroid, ideal_point
 from lib.transform import (
     homography_from_samples,
     rotate,
@@ -88,6 +88,6 @@ hyperbola = transform_conic(
     ),
 )
 
-assert point_to_xy(conic_center(hyperbola)) == Matrix([4, 3])
+assert conic_center(hyperbola) == Matrix([4, 3])
 assert center_to_vertex_vector(hyperbola) == Matrix([2, 0])
 assert center_to_covertex_vector(hyperbola) == Matrix([0, I])

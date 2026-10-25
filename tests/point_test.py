@@ -43,20 +43,20 @@ class TestPointToVec3:
 
 class TestPointToXy:
     def test_2d(self):
-        assert point_to_xy((1, 2)) == Matrix([1, 2])
-        assert point_to_xy([1, 2]) == Matrix([1, 2])
-        assert point_to_xy(Matrix([1, 2])) == Matrix([1, 2])
+        assert point_to_xy((1, 2)) == (1, 2)
+        assert point_to_xy([1, 2]) == (1, 2)
+        assert point_to_xy(Matrix([1, 2])) == (1, 2)
 
     def test_3d(self):
-        assert point_to_xy((1, 2, 3)) == Matrix([Rational(1, 3), Rational(2, 3)])
-        assert point_to_xy([-3, -2, -1]) == Matrix([3, 2])
-        assert point_to_xy(Matrix([-3, -2, -1])) == Matrix([3, 2])
+        assert point_to_xy((1, 2, 3)) == (Rational(1, 3), Rational(2, 3))
+        assert point_to_xy([-3, -2, -1]) == (3, 2)
+        assert point_to_xy(Matrix([-3, -2, -1])) == (3, 2)
 
     def test_ideal_point(self):
-        assert point_to_xy((1, 2, 0)) == Matrix([zoo, zoo])
+        assert point_to_xy((1, 2, 0)) == (zoo, zoo)
 
     def test_zero_vector(self):
-        assert point_to_xy((0, 0, 0)) == Matrix([nan, nan])
+        assert point_to_xy((0, 0, 0)) == (nan, nan)
 
 
 class TestDirectionToXy:

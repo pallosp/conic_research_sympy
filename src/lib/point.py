@@ -39,13 +39,13 @@ def ideal_point_on_line(line: Line) -> PointVector:
     return ideal_point(line[1], -line[0])
 
 
-def point_to_xy(point: FinitePoint) -> Matrix:
-    """Computes the Euclidean coordinates of a projective point."""
+def point_to_xy(point: FinitePoint) -> tuple[Expr, Expr]:
+    """Computes the Euclidean coordinates of a projective point as an `(x, y)` tuple."""
     if len(point) not in (2, 3):
         raise ValueError("The point must be a 2D or 3D vector, list or tuple.")
     x, y, *z = Matrix(point).flat()
     z = z[0] if z else S.One
-    return Matrix([x / z, y / z])
+    return x / z, y / z
 
 
 def direction_to_xy(direction: MatrixBase | Sequence[Scalar]) -> tuple[Expr, Expr]:

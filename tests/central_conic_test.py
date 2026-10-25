@@ -35,10 +35,9 @@ from lib.conic_classes import is_point_conic
 from lib.degenerate_conic import ZERO_CONIC, line_pair_conic, point_conic
 from lib.ellipse import ellipse, ellipse_from_foci_and_point
 from lib.hyperbola import UNIT_HYPERBOLA, hyperbola_from_foci_and_point
-from lib.intersection import line_x_line
 from lib.line import X_AXIS, horizontal_line
 from lib.matrix import is_nonzero_multiple
-from lib.point import ORIGIN, ideal_point, point_to_xy
+from lib.point import ORIGIN, ideal_point
 from lib.transform import scale_xy, transform_conic
 from tests.utils import are_projective_sets_equal
 
@@ -331,8 +330,7 @@ class TestCentralConicFoci:
         line1 = Matrix([1, 2, 3])
         line2 = Matrix([4, 5, 6])
         line_pair = line_pair_conic(line1, line2)
-        intersection = point_to_xy(line_x_line(line1, line2))
-        assert central_conic_foci(line_pair) == (intersection, intersection)
+        assert central_conic_foci(line_pair) == tuple([Matrix([1, -2])] * 2)
 
 
 class TestVertices:
