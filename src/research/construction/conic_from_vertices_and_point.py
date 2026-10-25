@@ -42,6 +42,7 @@ from lib.degenerate_conic import ZERO_CONIC, double_line_conic, line_pair_conic
 from lib.line import line_between, line_through_point
 from lib.point import ORIGIN, point_to_xy
 from lib.transform import reflect_to_line, transform_point
+from lib.type_aliases import FinitePoint
 from research.sympy_utils import println_indented
 
 vx, vy, cx, cy, x, y = symbols("vx vy cx cy x y")
@@ -77,7 +78,7 @@ def difference_of_squares(expr: Expr) -> Expr:
     return cast("Expr", expr.replace(lambda e: isinstance(e, Mul), rewrite))
 
 
-def conic_formula(center: tuple | Matrix, *, double_line: bool = False) -> MatAdd:
+def conic_formula(center: FinitePoint, *, double_line: bool = False) -> MatAdd:
     """Derives the conic with vertices at `center ± v` through `p` as an
     unevaluated sum of two matrices.
 
