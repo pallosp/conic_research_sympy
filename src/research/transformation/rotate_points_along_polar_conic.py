@@ -29,7 +29,7 @@ def decode_polar_matrix_row(point_coord: Expr, angle: Expr) -> list[Expr]:
     return [components[cos(angle)], components[sin(angle)], components[1]]
 
 
-polar_matrix_for_alpha = Matrix([decode_polar_matrix_row(c, alpha) for c in p1])
+polar_matrix_for_alpha = Matrix([decode_polar_matrix_row(c, alpha) for c in p1.flat()])
 pre_rotation = (polar_conic.inv() * polar_matrix_for_alpha).expand().applyfunc(factor)
 
 print("\nHow to rotate the points of a polar conic P along the curve?\n")

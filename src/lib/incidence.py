@@ -73,7 +73,7 @@ def polar_conic_contains_point(
     *Formula*:
     [research/incidence/polar_conic_point_incidence.py](../src/research/incidence/polar_conic_point_incidence.py)
     """
-    c, s, i = polar_conic.adjugate() * point_to_vec3(point)
+    c, s, i = (polar_conic.adjugate() * point_to_vec3(point)).flat()
     return simplifier(c * c + s * s - i * i).is_zero
 
 
@@ -168,7 +168,7 @@ def are_cocircular(
 
     cc_matrix_elements = []
     for p in points:
-        x, y, z = point_to_vec3(p)
+        x, y, z = point_to_vec3(p).flat()
         cc_matrix_elements.append([x * z, y * z, x**2 + y**2, z**2])
 
     cocircularity_matrix = Matrix(cc_matrix_elements)

@@ -11,7 +11,7 @@ from research.sympy_utils import println_indented
 
 a, b, c, d, e, f, g, h, i, theta = symbols("a,b,c,d,e,f,g,h,i,theta")
 polar_matrix = Matrix([[a, b, c], [d, e, f], [g, h, i]])
-x, y, z = point_at_angle(polar_matrix, theta)
+x, y, z = point_at_angle(polar_matrix, theta).flat()
 
 # According to https://en.wikipedia.org/wiki/Curvature
 # curvature = (x'y'' - y'x'') / (x'² + y'²)^(3/2)

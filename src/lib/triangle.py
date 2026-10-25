@@ -28,9 +28,9 @@ def circumcircle(
     *Formula*:
     [research/construction/circumcircle.py](../src/research/construction/circumcircle.py)
     """
-    x1, y1, z1 = point_to_vec3(point1)
-    x2, y2, z2 = point_to_vec3(point2)
-    x3, y3, z3 = point_to_vec3(point3)
+    x1, y1, z1 = point_to_vec3(point1).flat()
+    x2, y2, z2 = point_to_vec3(point2).flat()
+    x3, y3, z3 = point_to_vec3(point3).flat()
     s_col = [x1**2 + y1**2, x2**2 + y2**2, x3**2 + y3**2]
     x_col = [x1, x2, x3]
     y_col = [y1, y2, y3]
@@ -66,9 +66,9 @@ def circumcenter(
     *Formula*:
     [research/construction/circumcircle.py](../src/research/construction/circumcircle.py)
     """
-    x1, y1, z1 = point_to_vec3(point1)
-    x2, y2, z2 = point_to_vec3(point2)
-    x3, y3, z3 = point_to_vec3(point3)
+    x1, y1, z1 = point_to_vec3(point1).flat()
+    x2, y2, z2 = point_to_vec3(point2).flat()
+    x3, y3, z3 = point_to_vec3(point3).flat()
     s_col = [x1**2 + y1**2, x2**2 + y2**2, x3**2 + y3**2]
     x_col = [x1, x2, x3]
     y_col = [y1, y2, y3]

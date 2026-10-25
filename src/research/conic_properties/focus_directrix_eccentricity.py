@@ -273,7 +273,7 @@ c_solution = c_solution.subs(L, -(A + C)).simplify()
 println_indented(Eq(c, c_solution))
 
 print("\nThe (a, b) vector is parallel to the ideal point's direction\n")
-x, y, _ = projective_conic_center(conic_abc)
+x, y, _ = projective_conic_center(conic_abc).flat()
 
 a_value = x / sqrt(x * x + y * y)
 println_indented(Eq(a, a_value))

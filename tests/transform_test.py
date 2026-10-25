@@ -29,16 +29,16 @@ class TestTranslate:
         transformation = translate((dx, dy))
         orig_circle = circle((x, y), r=r)
         translated_circle = transform_conic(orig_circle, transformation)
-        new_center_x, new_center_y = conic_center(translated_circle)
+        new_center_x, new_center_y = conic_center(translated_circle).flat()
         assert new_center_x == x + dx
         assert new_center_y == y + dy
 
     def test_translate_conic(self):
-        center_x, center_y = conic_center(conic)
+        center_x, center_y = conic_center(conic).flat()
         dx, dy = symbols("dx,dy")
         transformation = translate((dx, dy))
         new_conic = transform_conic(conic, transformation)
-        new_center_x, new_center_y = conic_center(new_conic)
+        new_center_x, new_center_y = conic_center(new_conic).flat()
         assert dx == simplify(new_center_x - center_x)
         assert dy == simplify(new_center_y - center_y)
 

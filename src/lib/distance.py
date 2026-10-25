@@ -15,8 +15,8 @@ def point_point_distance(
      - the distance between finite and ideal points is infinity
      - the distance between two ideal points is `nan`
     """
-    x1, y1, z1 = point_to_vec3(point1)
-    x2, y2, z2 = point_to_vec3(point2)
+    x1, y1, z1 = point_to_vec3(point1).flat()
+    x2, y2, z2 = point_to_vec3(point2).flat()
     return sqrt((x2 * z1 - x1 * z2) ** 2 + (y2 * z1 - y1 * z2) ** 2) / (z1 * z2)
 
 
@@ -28,7 +28,7 @@ def point_line_distance(point: FinitePoint, line: Line) -> Expr:
      - the distance between ideal points and any projective lines is `nan`
     """
     x, y = point_to_xy(point)
-    a, b, c = line
+    a, b, c = line.flat()
     return (a * x + b * y + c) / sqrt(a * a + b * b)
 
 
@@ -47,8 +47,8 @@ def parallel_line_distance(line1: Line, line2: Line) -> Expr:
     """
     if are_parallel(line1, line2) is False:
         raise ValueError("The lines must be parallel")
-    a1, b1, c1 = line1
-    a2, b2, c2 = line2
+    a1, b1, c1 = line1.flat()
+    a2, b2, c2 = line2.flat()
     return sqrt((a1 * c2 - a2 * c1) ** 2 + (b1 * c2 - b2 * c1) ** 2) / (
         a1 * a2 + b1 * b2
     )

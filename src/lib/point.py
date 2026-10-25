@@ -102,6 +102,6 @@ def perpendicular_foot(
     *Formula*: <https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line>
     """
     x, y = point_to_xy(point)
-    a, b, c = line
+    a, b, c = line.flat()
     f = (a * x + b * y + c) / (a * a + b * b)
     return Matrix([x - a * f, y - b * f])

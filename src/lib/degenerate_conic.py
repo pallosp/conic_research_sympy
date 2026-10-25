@@ -48,7 +48,7 @@ def point_conic(point: Point) -> Conic:
     Hint: Use [extract_point](#degenerate_conic.extract_point) to recover the
     point from the resulting conic.
     """
-    x, y, z = point_to_vec3(point)
+    x, y, z = point_to_vec3(point).flat()
     return conic_matrix(
         -y * y - z * z,
         x * y,

@@ -68,7 +68,7 @@ def angle_at_point(polar_conic: PolarConic, point: Point) -> Expr:
     The result is unspecified if the point is not on the conic.
     """
     point = point_to_vec3(point)
-    x_times_cos_a, x_times_sin_a, _x = polar_conic.adjugate() * point
+    x_times_cos_a, x_times_sin_a, _x = (polar_conic.adjugate() * point).flat()
     return atan2(x_times_sin_a, x_times_cos_a)
 
 
@@ -92,7 +92,7 @@ def curvature_sign_at_angle(polar_conic: PolarConic, angle_radians: Scalar) -> E
     *Formula*:
     [research/conic_properties/polar_conic_curvature_sign.py](../src/research/conic_properties/polar_conic_curvature_sign.py)
     """
-    g, h, i = polar_conic.row(2)
+    g, h, i = polar_conic.row(2).flat()
     det = polar_conic.det()
     return sign((g * cos(angle_radians) + h * sin(angle_radians) + i) * det)
 
@@ -124,7 +124,7 @@ def ellipse_to_polar_matrix(
     *Formula*:
     [research/construction/polar_ellipse.py](../src/research/construction/polar_ellipse.py)
     """
-    a, _, _, b, c, _, d, e, _ = ellipse
+    a, _, _, b, c, _, d, e, _ = ellipse.flat()
     disc = a * c - b * b
     cx = (b * e - c * d) / disc
     cy = (b * d - a * e) / disc
@@ -185,7 +185,7 @@ def hyperbola_to_polar_matrix(
     if start == PolarOrigin.VERTEX:
         fd = focal_axis_direction(hyperbola)
         cos_a, sin_a, _ = fd / fd.norm()
-        cx, cy = conic_center(hyperbola)
+        cx, cy = conic_center(hyperbola).flat()
         r1 = primary_radius(hyperbola)
         r2 = secondary_radius(hyperbola)
 

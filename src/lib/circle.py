@@ -29,7 +29,7 @@ def circle(
     if r is not None and point is None:
         return conic_matrix(-1, 0, -1, cx, cy, r * r - cx * cx - cy * cy)
     if point is not None and r is None:
-        x, y, z = point_to_vec3(point)
+        x, y, z = point_to_vec3(point).flat()
         return conic_matrix(
             -(z**2),
             0,
@@ -67,7 +67,7 @@ def director_circle(conic: Conic) -> Conic:
     *Formula*:
     [research/construction/director_circle.py](../src/research/construction/director_circle.py)
     """
-    a, _, _, _, c, _, d, e, f = conic.adjugate()
+    a, _, _, _, c, _, d, e, f = conic.adjugate().flat()
     return Matrix(
         [
             [-1, 0, d / f],

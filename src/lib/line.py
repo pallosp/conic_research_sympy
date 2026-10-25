@@ -30,7 +30,7 @@ def parallel_line(
 ) -> Line:
     """Constructs a line through a point parallel to a line."""
     x, y = point_to_xy(through_point)
-    a, b, _ = with_line
+    a, b, _ = with_line.flat()
     return Matrix([a, b, -a * x - b * y])
 
 
@@ -40,7 +40,7 @@ def perpendicular_line(
 ) -> Line:
     """Constructs a line through a point perpendicular to a line."""
     x, y = point_to_xy(through_point)
-    a, b, _ = to_line
+    a, b, _ = to_line.flat()
     return Matrix([-b, a, -b * x + a * y])
 
 
@@ -127,8 +127,8 @@ def are_parallel(line1: Line, line2: Line) -> bool | None:
     Returns `True` if they are parallel, `False` if not, `None` if undecidable.
     Considers the ideal line parallel to everything.
     """
-    a1, b1, _ = line1
-    a2, b2, _ = line2
+    a1, b1, _ = line1.flat()
+    a2, b2, _ = line2.flat()
     return (a1 * b2 - a2 * b1).expand().is_zero
 
 
@@ -138,8 +138,8 @@ def are_perpendicular(line1: Line, line2: Line) -> bool | None:
     Returns `True` if they are perpendicular, `False` if not, `None` if
     undecidable. Considers the ideal line perpendicular to everything.
     """
-    a1, b1, _ = line1
-    a2, b2, _ = line2
+    a1, b1, _ = line1.flat()
+    a2, b2, _ = line2.flat()
     return (a1 * a2 + b1 * b2).expand().is_zero
 
 

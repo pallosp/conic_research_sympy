@@ -10,7 +10,7 @@ print("\nConic equation from focus, directrix and eccentricity:\n")
 # eccentricity = |distance(p, focus) / distance(p, directrix)|
 
 directrix = Matrix(symbols("a,b,c"))
-a, b, _ = directrix
+a, b, _ = directrix.flat()
 focus = symbols("fx,fy")
 eccentricity = symbols("e")
 point_on_conic = symbols("x,y")

@@ -23,7 +23,7 @@ println_indented(director_circle)
 
 print("\nDirector circle matrix in adjugate form:\n")
 
-a_adj, _, _, b_adj, c_adj, _, d_adj, e_adj, f_adj = conic.adjugate()
+a_adj, _, _, b_adj, c_adj, _, d_adj, e_adj, f_adj = conic.adjugate().flat()
 println_indented(
     director_circle.subs(
         zip(

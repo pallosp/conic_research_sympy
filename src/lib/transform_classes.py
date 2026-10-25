@@ -70,7 +70,7 @@ def is_similarity(
     if transformation.shape != (3, 3):
         return False
 
-    a, b, c, d = transformation[:2, :2]
+    a, b, c, d = transformation[:2, :2].flat()
 
     return fuzzy_and(
         [
@@ -96,7 +96,7 @@ def is_congruence(
     if transformation.shape != (3, 3):
         return False
 
-    a, b, *_, i = transformation
+    a, b, *_, i = transformation.flat()
 
     return fuzzy_and(
         [

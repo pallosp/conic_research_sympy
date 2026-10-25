@@ -50,7 +50,7 @@ from lib.matrix import (
     is_nonzero_multiple,
     quadratic_form,
 )
-from lib.point import ORIGIN, ZERO_POINT, ideal_point
+from lib.point import ORIGIN, ZERO_POINT, direction_to_xy, ideal_point
 from tests.utils import are_projective_sets_equal
 
 
@@ -261,7 +261,7 @@ class TestIdealPoints:
 
         r1 = primary_radius(hyperbola).factor()
         r2 = secondary_radius(hyperbola).factor()
-        dx, dy, _ = focal_axis_direction(hyperbola)
+        dx, dy = direction_to_xy(focal_axis_direction(hyperbola))
         cos_a = dx / sqrt(dx**2 + dy**2).simplify()
         sin_a = dy / sqrt(dx**2 + dy**2).simplify()
 

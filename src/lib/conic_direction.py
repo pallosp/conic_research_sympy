@@ -58,7 +58,7 @@ class ConicNormFactor(DefinedFunction):
 
             # point conic
             if is_point is True:
-                diag = conic.diagonal()
+                diag = conic.diagonal().flat()
                 if any(e.is_positive for e in diag):
                     return S.NegativeOne
                 if any(e.is_negative for e in diag):

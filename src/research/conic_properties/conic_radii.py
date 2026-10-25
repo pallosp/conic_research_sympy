@@ -42,7 +42,7 @@ assert conic.is_diagonal()
 
 # Standard central conic formula: x²/r1² + y²/r2² = 1
 print("\nSemi-axis lengths:\n")
-a, c, f = conic.diagonal()
+a, c, f = conic.diagonal().flat()
 println_indented(Eq(symbols("r1") ** 2, -f / a))
 println_indented(Eq(symbols("r2") ** 2, -f / c))
 

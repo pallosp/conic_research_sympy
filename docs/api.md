@@ -444,7 +444,7 @@ def is_full_rank(matrix: MatrixBase,
                  simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L398))
+([source](../src/lib/matrix.py#L399))
 
 Tells whether a matrix has full rank.
 

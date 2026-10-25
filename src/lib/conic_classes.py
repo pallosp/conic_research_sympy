@@ -102,7 +102,7 @@ def is_circle(conic: Conic) -> bool | None:
 
     Returns `None` if undecidable.
     """
-    a, _, _, b, c, _, _, _, _ = conic
+    a, _, _, b, c, _, _, _, _ = conic.flat()
     return fuzzy_and(
         [
             (a - c).expand().is_zero,
@@ -138,7 +138,7 @@ def is_rectangular_hyperbola(conic: Conic) -> bool | None:
 
     Returns `None` if undecidable.
     """
-    a, c, _ = conic.diagonal()
+    a, c, _ = conic.diagonal().flat()
     return fuzzy_and([is_nondegenerate(conic), (a + c).is_zero])
 
 
@@ -163,7 +163,7 @@ def is_line_pair(conic: Conic) -> bool | None:
 
     Returns `None` if undecidable.
     """
-    a, _, _, b, c, _, d, e, f = conic
+    a, _, _, b, c, _, d, e, f = conic.flat()
     return fuzzy_and(
         [
             is_degenerate(conic),
@@ -203,7 +203,7 @@ def is_point_conic(conic: Conic) -> bool | None:
     A conic is a point conic iff it's degenerate and splits to two lines with
     complex coordinates.
     """
-    a, _, _, b, c, _, d, e, f = conic
+    a, _, _, b, c, _, d, e, f = conic.flat()
     return fuzzy_and(
         [
             is_degenerate(conic),

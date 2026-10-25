@@ -124,7 +124,7 @@ def ideal_points_from_asymptotes(conic: Conic) -> tuple[Matrix, Matrix]:
     and `eigen_minus` of the conic's quadratic part. They cancel out in the
     result.
     """
-    a, _, _, b, c, _, _, _, _ = conic
+    a, _, _, b, c, _, _, _, _ = conic.flat()
     eigen_diff_square = (a - c) ** 2 + 4 * b**2
     norm = ConicNormFactor(conic)
 

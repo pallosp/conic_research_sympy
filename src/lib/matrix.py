@@ -95,7 +95,7 @@ def max_eigenvalue(symmetric_matrix_2x2: MatrixBase) -> Expr:
     m = symmetric_matrix_2x2
     if m.shape != (2, 2) or m != m.T:
         raise ValueError("The input must be a 2x2 symmetric matrix.")
-    a, b, _, c = m
+    a, b, _, c = m.flat()
     return (a + c) / 2 + sqrt((a - c) ** 2 + 4 * b**2) / 2
 
 
@@ -104,7 +104,7 @@ def min_eigenvalue(symmetric_matrix_2x2: MatrixBase) -> Expr:
     m = symmetric_matrix_2x2
     if m.shape != (2, 2) or m != m.T:
         raise ValueError("The input must be a 2x2 symmetric matrix.")
-    a, b, _, c = m
+    a, b, _, c = m.flat()
     return (a + c) / 2 - sqrt((a - c) ** 2 + 4 * b**2) / 2
 
 
@@ -362,7 +362,7 @@ def is_real_matrix(matrix: MatrixBase) -> bool | None:
 
     Returns a bool or `None` if undecidable.
     """
-    return fuzzy_and(el.is_real for el in matrix)
+    return fuzzy_and(el.is_real for el in matrix.flat())
 
 
 def is_definite_matrix(matrix: MatrixBase) -> bool | None:
@@ -385,8 +385,9 @@ def is_definite_matrix(matrix: MatrixBase) -> bool | None:
         matrix = -matrix
 
     # Take a quick look at the diagonal to potentially prove non-definiteness
-    has_ge_0_diag_el = any(e.is_nonnegative for e in matrix.diagonal())
-    has_le_0_diag_el = any(e.is_nonpositive for e in matrix.diagonal())
+    diag = matrix.diagonal().flat()
+    has_ge_0_diag_el = any(e.is_nonnegative for e in diag)
+    has_le_0_diag_el = any(e.is_nonpositive for e in diag)
     if has_ge_0_diag_el and has_le_0_diag_el:
         return False
 
@@ -407,7 +408,7 @@ def is_full_rank(
     undecidable.
     """
     rows, cols = matrix.shape
-    if all(el.is_Rational for el in matrix):
+    if all(el.is_Rational for el in matrix.flat()):
         return matrix.rank() == min(rows, cols)
 
     if cols < rows:

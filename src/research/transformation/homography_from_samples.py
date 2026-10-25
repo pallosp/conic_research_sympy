@@ -82,7 +82,7 @@ assert rot90 == rotate(pi / 2)
 print("Elements of the normalized transformation matrix:\n")
 
 transform *= transform[0].as_numer_denom()[1]
-for el in transform:
+for el in transform.flat():
     print_indented(el)
 
 ################################################################################
@@ -95,7 +95,7 @@ transform = transformation_from_2d_samples(diamond, target)
 print("Elements of the normalized transformation matrix:\n")
 
 transform *= transform[0].as_numer_denom()[1]
-for el in transform:
+for el in transform.flat():
     print_indented(el)
 
 ################################################################################
@@ -124,7 +124,7 @@ collectibles = [
     )
 ]
 
-for el in t:
+for el in t.flat():
     print_indented(el.collect(collectibles))
 
 ################################################################################

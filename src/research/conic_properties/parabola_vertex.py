@@ -11,7 +11,7 @@ parabola = conic_matrix(a, b, c, d, e, f)
 
 focus = Matrix(symbols("focus.x focus.y"))
 
-d_a, e_a, _ = parabola.row(0).cross(parabola.row(1))
+d_a, e_a, _ = parabola.row(0).cross(parabola.row(1)).flat()
 focal_parameter = sqrt(d_a**2 + e_a**2) / (a + c) ** 2
 
 axis_direction = Matrix([d_a, e_a])

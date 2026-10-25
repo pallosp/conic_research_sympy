@@ -48,7 +48,7 @@ def asymptote_focal_axis_angle(hyperbola: Conic) -> Expr:
     [research/conic_properties/asymptote_angle.py](../src/research/conic_properties/asymptote_angle.py)<br>
     *Formula*: `acos(1 / eccentricity)`
     """
-    a, _, _, b, c, _, _, _, _ = hyperbola
+    a, _, _, b, c, _, _, _, _ = hyperbola.flat()
     s = sqrt(((a - c) ** 2 + 4 * b**2).factor())
     norm_sign = ConicNormFactor(hyperbola)
     return acos(sqrt((s - norm_sign * (a + c)) / (2 * s)))

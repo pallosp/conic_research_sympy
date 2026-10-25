@@ -63,7 +63,7 @@ print(
 )
 print()
 
-A, B, _, D, E, _, G, H, _ = polar_ellipse
+A, B, _, D, E, _, G, H, _ = polar_ellipse.flat()
 polar_ellipse = polar_ellipse.subs(H, 0)
 println_indented(eq_chain(symbols("P"), polar_ellipse))
 

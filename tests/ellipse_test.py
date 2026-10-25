@@ -69,7 +69,7 @@ class TestEllipseFromFociAndPoint:
         p = (0, 0)
         ellipse = ellipse_from_foci_and_point(f1, f2, p)
         assert is_ellipse(ellipse)
-        center = [coord.simplify() for coord in conic_center(ellipse)]
+        center = [coord.simplify() for coord in conic_center(ellipse).flat()]
         assert center == [2, 3]
         assert conic_contains_point(ellipse, p)
 

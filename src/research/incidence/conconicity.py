@@ -34,7 +34,7 @@ def conconicity_matrix(points: Sequence[Matrix]) -> Matrix:
     """
 
     def to_matrix_row(point: Matrix) -> list[Expr]:
-        x, y, z = point_to_vec3(point)
+        x, y, z = point_to_vec3(point).flat()
         return [x * x, y * y, z * z, x * y, y * z, z * x]
 
     return Matrix([to_matrix_row(p) for p in points])

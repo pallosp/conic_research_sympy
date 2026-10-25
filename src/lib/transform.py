@@ -46,7 +46,7 @@ def transform_polar_conic(
 
 def translate(by: MatrixBase | Sequence[Scalar]) -> Transformation:
     """Computes the transformation matrix for a 2D translation."""
-    dx, dy = by
+    dx, dy = Matrix(by).flat()
     return Matrix([[1, 0, dx], [0, 1, dy], [0, 0, 1]])
 
 
@@ -73,7 +73,7 @@ def reflect_to_line(axis: Line) -> Transformation:
     *Formula*:
     [research/transformation/reflection_matrix.py](../src/research/transformation/reflection_matrix.py)
     """
-    a, b, c = axis
+    a, b, c = axis.flat()
     return Matrix(
         [
             [b**2 - a**2, -2 * a * b, -2 * a * c],

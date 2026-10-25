@@ -10,7 +10,7 @@ def _parabola_directrix_from_adjugate(parabola_adjugate: MatrixBase) -> Line:
     conic matrix. See [parabola_directrix](#parabola.parabola_directrix) for the
     details.
     """
-    a, _, _, _, c, _, d, e, f = parabola_adjugate
+    a, _, _, _, c, _, d, e, f = parabola_adjugate.flat()
     if f.is_zero is False:
         raise ValueError("Not a parabola (or a degenerate conic with one ideal point)")
     return Matrix([d, e, (a + c) / -2])
@@ -38,7 +38,7 @@ def _parabola_focus_from_adjugate(parabola_adjugate: MatrixBase) -> PointVector:
     """Computes the focus of a parabola represented as the adjugate of a
     conic matrix. See [parabola_focus](#parabola.parabola_focus) for the details.
     """
-    a, _, _, _, c, _, d, e, f = parabola_adjugate
+    a, _, _, _, c, _, d, e, f = parabola_adjugate.flat()
     if f.is_zero is False:
         raise ValueError("Not a parabola (or a degenerate conic with one ideal point)")
     return parabola_adjugate * Matrix([d, e, -(a + c) / 2])
@@ -68,7 +68,7 @@ def parabola_vertex(parabola: Conic) -> Matrix:
     *Formula*:
     [research/conic_properties/parabola_vertex.py](../src/research/conic_properties/parabola_vertex.py)
     """
-    a, _, _, b, c, _, d, e, _ = parabola
+    a, _, _, b, c, _, d, e, _ = parabola.flat()
     focus_x, focus_y = point_to_xy(parabola_focus(parabola))
     vertex_x = focus_x - (b * e - c * d) / (2 * (a + c) ** 2)
     vertex_y = focus_y - (b * d - a * e) / (2 * (a + c) ** 2)
@@ -88,7 +88,7 @@ def parabola_direction(parabola: Conic) -> PointVector:
     """
     if is_parabola(parabola) is False:
         raise ValueError("Not a parabola")
-    x, y, _ = parabola.row(0).cross(parabola.row(1))
+    x, y, _ = parabola.row(0).cross(parabola.row(1)).flat()
     return ideal_point(x, y)
 
 
@@ -104,7 +104,7 @@ def parabola_axis(parabola: Conic) -> Line:
     - Raises `ValueError` if the conic provably has 0 or 2 ideal points.
     - Returns an unspecified 3D column vector in all other cases.
     """
-    x, y, discriminant = parabola.row(0).cross(parabola.row(1))
+    x, y, discriminant = parabola.row(0).cross(parabola.row(1)).flat()
     if discriminant.is_zero is False:
         raise ValueError("Not a parabola (or a degenerate conic with one ideal point)")
     return parabola * Matrix([-y, x, 0])
@@ -116,5 +116,5 @@ def parabola_focal_parameter(parabola: Conic) -> Expr:
     *Formula*:
     [research/conic_properties/focal_parameter.py](../src/research/conic_properties/focal_parameter.py)
     """
-    a, c, _ = parabola.diagonal()
+    a, c, _ = parabola.diagonal().flat()
     return sqrt(-parabola.det() / (a + c) ** 3)

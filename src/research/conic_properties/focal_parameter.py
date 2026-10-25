@@ -28,7 +28,7 @@ println_indented(focal_parameter.subs(det, symbols("det")))
 
 print("Alternative form:\n")
 
-cx, cy, _ = parabola.row(0).cross(parabola.row(1))
+cx, cy, _ = parabola.row(0).cross(parabola.row(1)).flat()
 focal_parameter = focal_parameter.subs(det, -(cx**2 + cy**2) / (a + c)).simplify()
 
 println_indented(focal_parameter)

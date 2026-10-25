@@ -95,7 +95,7 @@ def conic_center(conic: Conic) -> Matrix:
     *Formula*:
     [research/conic_properties/conic_center.py](../src/research/conic_properties/conic_center.py)
     """
-    x, y, z = conic.col(0).cross(conic.col(1))
+    x, y, z = conic.col(0).cross(conic.col(1)).flat()
     return Matrix([x / z, y / z])
 
 
@@ -124,7 +124,7 @@ def _selected_radius(conic: Conic, eigenvalue_selector: Expr) -> Expr:
     larger, when negative the smaller conic eigenvalue will be used in the
     radius formula.
     """
-    a, _, _, b, c, _, _, _, _ = conic
+    a, _, _, b, c, _, _, _, _ = conic.flat()
     eigenvalue = (a + c + eigenvalue_selector * sqrt((a - c) ** 2 + 4 * b**2)) / 2
     return sqrt(-conic.det() / (eigenvalue * (a * c - b * b)))
 
@@ -200,7 +200,7 @@ def radius_in_direction(
         cos_x = cos(angle)
         sin_x = sin(angle)
 
-    a, _, _, b, c, _, _, _, _ = conic
+    a, _, _, b, c, _, _, _, _ = conic.flat()
     det = conic.det()
     disc = a * c - b * b
 
@@ -228,7 +228,7 @@ def linear_eccentricity(conic: Conic) -> Expr:
     *Related research*:
     [research/conic_properties/linear_eccentricity_radii_relationship.py](../src/research/conic_properties/linear_eccentricity_radii_relationship.py)
     """
-    a, _, _, b, c, _, _, _, _ = conic
+    a, _, _, b, c, _, _, _, _ = conic.flat()
     eigenvalue_diff = sqrt((a - c) ** 2 + 4 * b**2)
     return sqrt(Abs(conic.det()) * eigenvalue_diff) / Abs(a * c - b * b)
 
@@ -247,7 +247,7 @@ def center_to_focus_vector(conic: Conic) -> Matrix:
 
     # Center-to-focus vector = [x, y] / √(x² + y²) * linear eccentricity
     # The √(x² + y²) = ∜((a-c)² + 4b²) factor vanishes.
-    a, _, _, b, c, _, _, _, _ = conic
+    a, _, _, b, c, _, _, _, _ = conic.flat()
     return Matrix([x, y]) * sqrt(Abs(conic.det())) / (a * c - b * b)
 
 
@@ -333,5 +333,5 @@ def shrink_conic_to_zero(conic: Conic) -> Conic:
     *Formula*:
     [research/transformation/scale_conic_from_center.py](../src/research/transformation/scale_conic_from_center.py)
     """
-    a, _, _, b, c, _, _, _, _ = conic
+    a, _, _, b, c, _, _, _, _ = conic.flat()
     return conic - Matrix.diag([0, 0, conic.det() / (a * c - b * b)])
