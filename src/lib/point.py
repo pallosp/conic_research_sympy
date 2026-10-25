@@ -1,4 +1,4 @@
-from sympy import I, ImmutableMatrix, Matrix, S
+from sympy import I, ImmutableMatrix, Matrix, MatrixBase, S
 
 from lib.type_aliases import FinitePoint, Line, Point, PointVector, Scalar
 
@@ -47,13 +47,17 @@ def point_to_xy(point: FinitePoint) -> Matrix:
 
 
 def point_to_vec3(point: Point) -> PointVector:
-    """Computes the homogeneous coordinates of a projective point."""
+    """Computes the homogeneous coordinates of a projective point.
+
+    Returns 3D column vectors as they are, without copying, and reshapes 3D row
+    vectors to columns.
+    """
     if len(point) not in (2, 3):
         raise ValueError("The point must be a 2D or 3D vector, list or tuple.")
     if len(point) == 2:
         return Matrix([point[0], point[1], 1])
-    if point is Matrix:
-        return point
+    if isinstance(point, MatrixBase):
+        return point if point.shape == (3, 1) else point.reshape(3, 1)
     return Matrix(point)
 
 

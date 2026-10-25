@@ -32,11 +32,13 @@ double_adj = conic.adjugate().adjugate().applyfunc(factor)
 common_factor = cast("Expr", gcd(double_adj.flat()))
 det_value = conic.det()
 det = symbols("det")
-double_adj = MatMul(
+double_adj_factored = MatMul(
     common_factor.subs(det_value, det),
     double_adj / common_factor,
 )
-println_indented(eq_chain(symbols("double_adj"), adj_matrix.adjugate(), double_adj))
+println_indented(
+    eq_chain(symbols("double_adj"), adj_matrix.adjugate(), double_adj_factored)
+)
 
 print("Special case: parabola (a⋅c - b² = Fₐ = 0)\n")
 
@@ -44,7 +46,7 @@ println_indented(
     eq_chain(
         symbols("double_adj"),
         adj_matrix.adjugate().subs(adj_symbols[-1], 0),
-        double_adj,
+        double_adj_factored,
     ),
 )
 

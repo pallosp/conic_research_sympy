@@ -1862,6 +1862,9 @@ def point_to_vec3(point: Point) -> PointVector
 
 Computes the homogeneous coordinates of a projective point.
 
+Returns 3D column vectors as they are, without copying, and reshapes 3D row
+vectors to columns.
+
 <a id="point.centroid"></a>
 
 #### centroid
@@ -1870,7 +1873,7 @@ Computes the homogeneous coordinates of a projective point.
 def centroid(*points: FinitePoint) -> Matrix
 ```
 
-([source](../src/lib/point.py#L60))
+([source](../src/lib/point.py#L64))
 
 Computes the centroid of a set of points.
 
@@ -1884,7 +1887,7 @@ Returns the point's coordinates as a 2D column vector.
 def perpendicular_foot(point: FinitePoint, line: Line) -> Matrix
 ```
 
-([source](../src/lib/point.py#L76))
+([source](../src/lib/point.py#L80))
 
 Computes the foot of the perpendicular through a point to a line.
 
@@ -2865,7 +2868,7 @@ def ellipse_from_foci_and_point(focus1: FinitePoint, focus2: FinitePoint,
                                 point: FinitePoint) -> Conic
 ```
 
-([source](../src/lib/ellipse.py#L51))
+([source](../src/lib/ellipse.py#L52))
 
 Constructs an ellipse from its focus points and an incident point.
 

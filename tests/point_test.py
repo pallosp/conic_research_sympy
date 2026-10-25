@@ -14,8 +14,30 @@ from lib.point import (
     centroid,
     ideal_point_on_line,
     perpendicular_foot,
+    point_to_vec3,
     point_to_xy,
 )
+
+
+class TestPointToVec3:
+    def test_2d(self):
+        assert point_to_vec3((1, 2)) == Matrix([1, 2, 1])
+        assert point_to_vec3(Matrix([1, 2])) == Matrix([1, 2, 1])
+
+    def test_3d(self):
+        assert point_to_vec3((1, 2, 3)) == Matrix([1, 2, 3])
+        assert point_to_vec3([1, 2, 3]) == Matrix([1, 2, 3])
+
+    def test_column_vector_is_not_copied(self):
+        point = Matrix([1, 2, 3])
+        assert point_to_vec3(point) is point
+
+    def test_row_vector(self):
+        assert point_to_vec3(Matrix([[1, 2, 3]])) == Matrix([1, 2, 3])
+
+    def test_invalid_length(self):
+        with pytest.raises(ValueError, match="2D or 3D"):
+            point_to_vec3([1, 2, 3, 4])
 
 
 class TestPointToXy:

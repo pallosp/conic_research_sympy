@@ -145,7 +145,7 @@ print_indented(MatMul(left, right))
 print("\nTransformation from (1,0,0), (0,1,0), (0,0,1), (1,1,1) to (uᵢ,vᵢ,wᵢ):\n")
 
 special_source_points = ((1, 0, 0), (0, 1, 0), (0, 0, 1), (1, 1, 1))
-t = homography_from_samples(special_source_points, homogeneous_target)
-t *= w0 * w1 * w2 * w3
-for el in t:
+special_t = homography_from_samples(special_source_points, homogeneous_target)
+special_t *= w0 * w1 * w2 * w3
+for el in special_t:
     print_indented(el)

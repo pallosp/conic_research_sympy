@@ -26,16 +26,16 @@ print("  r₁ = (dist(f₁, p) + dist(f₂, point)) / 2\n")
 r1 = symbols("r1")
 r2 = sqrt(r1**2 - linear_ecc**2)
 
-ellipse = ellipse(center, r1, r2, r1_direction=major_axis_dir)
-ellipse /= gcd(ellipse.flat())
-ellipse = ellipse.applyfunc(cancel)
+ellipse_matrix = ellipse(center, r1, r2, r1_direction=major_axis_dir)
+ellipse_matrix /= gcd(ellipse_matrix.flat())
+ellipse_matrix = ellipse_matrix.applyfunc(cancel)
 
 print("  Conic matrix:\n")
-println_indented(ellipse)
+println_indented(ellipse_matrix)
 
 print("This is equivalent to the matrix computed by ConicFromFociAndRadius:\n")
 
 equiv_ellipse = expand(conic_from_foci_and_radius(focus1, focus2, r1))
 println_indented(equiv_ellipse)
 
-assert ellipse == equiv_ellipse
+assert ellipse_matrix == equiv_ellipse

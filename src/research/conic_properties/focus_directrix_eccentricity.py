@@ -250,7 +250,7 @@ println_indented(Eq(ecc, 1))
 f_eq = cast("ExprEq", f_eq.subs(ecc, 1))
 println_indented(f_eq)
 
-f_eq = Eq(f_eq.lhs, f_eq.rhs.expand().collect(c * c * L))
+f_eq = eq(f_eq.lhs, f_eq.rhs.expand().collect(c * c * L))
 println_indented(f_eq)
 
 println_indented(Eq(a * a + b * b, 1))

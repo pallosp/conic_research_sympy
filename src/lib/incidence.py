@@ -136,10 +136,10 @@ def are_on_same_conic(
         return True
     if len(points) > 6:
         raise NotImplementedError
-    points = [point_to_vec3(p) for p in points]
+    p1, p2, p3, p4, p5, p6 = [point_to_vec3(p) for p in points]
     d = [
         MatrixBase.hstack(p, q, r).det()
-        for p, q, r in product(points[0:2], points[2:4], points[4:6])
+        for p, q, r in product([p1, p2], [p3, p4], [p5, p6])
     ]
     incidence_poly = d[0] * d[3] * d[5] * d[6] - d[1] * d[2] * d[4] * d[7]
     return simplifier(incidence_poly).is_zero

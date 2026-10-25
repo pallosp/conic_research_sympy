@@ -106,15 +106,15 @@ substitutions = {
     y3: y3 - yc,
 }
 
-conic = transform_conic(conic.subs(substitutions), translate((xc, yc)))
+translated_conic = transform_conic(conic.subs(substitutions), translate((xc, yc)))
 
-assert conic_center(conic)[0].equals(xc)
-assert conic_contains_point(conic, Matrix([x1, y1, 1]))
+assert conic_center(translated_conic)[0].equals(xc)
+assert conic_contains_point(translated_conic, Matrix([x1, y1, 1]))
 
 # The Steiner ellipse is a special case when xc = (x₁+x₂+x₃)/3 and
 # yc = (y₁+y₂+y₃)/3.
 
-steiner = conic.subs({xc: (x1 + x2 + x3) / 3, yc: (y1 + y2 + y3) / 3})
+steiner = translated_conic.subs({xc: (x1 + x2 + x3) / 3, yc: (y1 + y2 + y3) / 3})
 steiner = cancel(steiner / gcd(steiner.flat()) * 18)
 
 print("\nSteiner ellipse matrix:\n")

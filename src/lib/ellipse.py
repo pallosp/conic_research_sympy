@@ -30,7 +30,8 @@ def ellipse(
     cx, cy = point_to_xy(center)
 
     # major axis direction
-    dx, dy = 1, 0
+    dx: Scalar = 1
+    dy: Scalar = 0
     if r1_angle is not None:
         dx, dy = cos(r1_angle), sin(r1_angle)
     elif r1_direction is not None:
