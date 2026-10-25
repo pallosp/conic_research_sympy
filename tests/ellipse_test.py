@@ -94,10 +94,10 @@ class TestEllipseFromFociAndPoint:
         f1 = (1, 2)
         f2 = (3, 4, 0)
         p = (5, 6)
-        assert nan in ellipse_from_foci_and_point(f1, f2, p)
+        assert nan in ellipse_from_foci_and_point(f1, f2, p).flat()
 
     def test_ideal_incident_point(self):
         f1 = (1, 2)
         f2 = (3, 4)
         p = (5, 6, 0)
-        assert nan in ellipse_from_foci_and_point(f1, f2, p)
+        assert nan in ellipse_from_foci_and_point(f1, f2, p).flat()

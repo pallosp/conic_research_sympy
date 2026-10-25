@@ -121,13 +121,13 @@ class TestConicXLine:
         assert not is_explicit_matrix(intersections[0])
         assert not is_explicit_matrix(intersections[1])
         substitutions = list(zip(line.flat(), X_AXIS.flat(), strict=True))
-        intersections = [p.subs(substitutions) for p in intersections]
-        assert is_explicit_matrix(intersections[0])
-        assert is_explicit_matrix(intersections[1])
+        substituted = [p.subs(substitutions) for p in intersections]
+        assert is_explicit_matrix(substituted[0])
+        assert is_explicit_matrix(substituted[1])
         # The points are explicit, as asserted above. SymPy types
         # MatrixExpr.subs() as returning Expr (fix upstream).
         assert are_projective_sets_equal(
-            cast("list[PointVector]", intersections),
+            cast("list[PointVector]", substituted),
             [Matrix([1, 0, 1]), Matrix([-1, 0, 1])],
         )
 

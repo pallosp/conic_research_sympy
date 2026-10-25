@@ -147,7 +147,7 @@ print("\nConic with vertices at center ± v through a point (r = |v|):\n")
 
 c = MatrixSymbol("C", 3, 3)
 
-for center, center_name in [(ORIGIN, "the origin"), ((cx, cy), "(cx, cy)")]:
+for center, center_name in [(ORIGIN, "the origin"), (Matrix([cx, cy]), "(cx, cy)")]:
     for double_line, member_name in [
         (False, "circle with the vertices as diameter endpoints"),
         (True, "double line through the vertices"),

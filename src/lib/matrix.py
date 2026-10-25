@@ -183,7 +183,9 @@ class MatrixFunction(MatrixExpr):
 
     eval: Callable[[MatrixBase | MatrixExpr], MatrixBase | None]
 
-    def __new__(
+    # mypy requires __new__ to return an instance of cls, but like
+    # sympy.Function, this evaluates to a different type when possible.
+    def __new__(  # type: ignore[misc]
         cls,
         matrix: MatrixBase | MatrixExpr,
         *,

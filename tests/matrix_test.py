@@ -177,7 +177,7 @@ class TestSkewMatrix:
         )
         # SymPy's subs() stubs only accept Basic values, but matrices work (fix
         # upstream).
-        assert skew.subs(v, Matrix([1, 2, 3])) == skew_matrix(Matrix([1, 2, 3]))  # pyright: ignore[reportCallIssue, reportArgumentType]
+        assert skew.subs(v, Matrix([1, 2, 3])) == skew_matrix(Matrix([1, 2, 3]))  # type: ignore[call-overload]  # pyright: ignore[reportCallIssue, reportArgumentType]
 
     def test_invalid_shape(self):
         with pytest.raises(ShapeError, match="3D column vector"):
