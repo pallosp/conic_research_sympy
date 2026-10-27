@@ -1,7 +1,12 @@
 from sympy import Expr, Matrix, MatrixExpr, Poly, Symbol, abc, sqrt
 
 from lib.conic_direction import ConicNormFactor, focal_axis_direction
-from lib.matrix import conic_coefficients, pivot_column_and_row
+from lib.matrix import (
+    conic_coefficients,
+    pivot_column_and_row,
+    quadratic_form,
+    skew_matrix,
+)
 from lib.point import direction_to_xy, point_to_vec3, point_to_xy
 from lib.type_aliases import Conic, FinitePoint, Line, Point, PointVector, Scalar
 
@@ -213,3 +218,30 @@ def polar_line(conic: Conic, pole_point: Point) -> Line:
 
     """
     return conic * point_to_vec3(pole_point)
+
+
+def tangents_through_point(
+    conic: Conic, point: Point
+) -> tuple[Line | MatrixExpr, Line | MatrixExpr]:
+    """Computes the two tangent lines of a conic through a point.
+
+    They touch the conic where the point's [polar line](#conic.polar_line)
+    intersects it.
+
+    Special cases:
+     - The lines coincide if the point is on the conic.
+     - For real inputs, they are complex conjugates if no real tangent passes
+       through the point, e.g. for points inside an ellipse.
+     - For line pair conics, both are the line through the point and the
+       [singular point](#degenerate_conic.extract_point).
+     - Both are `[0, 0, 0]ᵀ` for double lines, the zero conic, or if the
+       point is [singular](#degenerate_conic.extract_point).
+     - May be unevaluated `MatrixExpr`s for symbolic inputs.
+
+    *Algorithm*: the dual of [conic_x_line](#intersection.conic_x_line).
+    """
+    point = point_to_vec3(point)
+    skew_mat = skew_matrix(point)
+    m = skew_mat.T * conic.adjugate() * skew_mat
+    alpha = sqrt(-conic.det() * quadratic_form(conic, point))
+    return pivot_column_and_row(m + alpha * skew_mat)

@@ -74,6 +74,7 @@
   * [projective\_conic\_center](#conic.projective_conic_center)
   * [pole\_point](#conic.pole_point)
   * [polar\_line](#conic.polar_line)
+  * [tangents\_through\_point](#conic.tangents_through_point)
 * [degenerate\_conic](#degenerate_conic)
   * [ZERO\_CONIC](#degenerate_conic.ZERO_CONIC)
   * [line\_pair\_conic](#degenerate_conic.line_pair_conic)
@@ -1174,7 +1175,7 @@ def conic_from_poly(poly: Expr | Poly,
                     y: Symbol = abc.y) -> Conic
 ```
 
-([source](../src/lib/conic.py#L9))
+([source](../src/lib/conic.py#L14))
 
 Constructs a conic matrix from a two-variable quadratic polynomial.
 
@@ -1196,7 +1197,7 @@ def conic_through_points(p1: Point, p2: Point, p3: Point, p4: Point,
                          p5: Point) -> Conic
 ```
 
-([source](../src/lib/conic.py#L36))
+([source](../src/lib/conic.py#L41))
 
 Computes the conic that goes through the given points.
 
@@ -1216,7 +1217,7 @@ def conic_from_focus_and_directrix(focus: FinitePoint, directrix: Line,
                                    eccentricity: Scalar) -> Conic
 ```
 
-([source](../src/lib/conic.py#L62))
+([source](../src/lib/conic.py#L67))
 
 Constructs a conic from its focus, directrix and eccentricity.
 
@@ -1231,7 +1232,7 @@ Constructs a conic from its focus, directrix and eccentricity.
 def eccentricity(conic: Conic) -> Expr
 ```
 
-([source](../src/lib/conic.py#L78))
+([source](../src/lib/conic.py#L83))
 
 Computes the eccentricity of a conic section.
 
@@ -1270,7 +1271,7 @@ two different corresponding eccentricity values. Evaluate
 def focal_axis(conic: Conic) -> Line
 ```
 
-([source](../src/lib/conic.py#L114))
+([source](../src/lib/conic.py#L119))
 
 Returns the axis of symmetry going through conic's focus point(s).
 
@@ -1296,7 +1297,7 @@ def ideal_points(
 ) -> tuple[PointVector | MatrixExpr, PointVector | MatrixExpr]
 ```
 
-([source](../src/lib/conic.py#L133))
+([source](../src/lib/conic.py#L138))
 
 Computes the ideal points on a conic section.
 
@@ -1324,7 +1325,7 @@ radii. Note that `r₂` is imaginary in case of hyperbolas.
 def projective_conic_center(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic.py#L160))
+([source](../src/lib/conic.py#L165))
 
 Computes the generalized projective center of a conic.
 
@@ -1348,7 +1349,7 @@ For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
 def pole_point(conic: Conic, polar_line: Line) -> PointVector
 ```
 
-([source](../src/lib/conic.py#L178))
+([source](../src/lib/conic.py#L183))
 
 Computes the pole point of a conic with respect to the given polar line.
 
@@ -1368,7 +1369,7 @@ relationships.
 def polar_line(conic: Conic, pole_point: Point) -> Line
 ```
 
-([source](../src/lib/conic.py#L192))
+([source](../src/lib/conic.py#L197))
 
 Computes the polar line of a conic for a given pole point.
 
@@ -1390,6 +1391,35 @@ References:
  - Berndt Schwerdtfeger,
    [Invariants of curves of second order](https://berndt-schwerdtfeger.de/wp-content/uploads/pdf/c2.pdf),
    §3.5. Tangents and polars.
+
+<a id="conic.tangents_through_point"></a>
+
+#### tangents\_through\_point
+
+```python
+def tangents_through_point(
+        conic: Conic,
+        point: Point) -> tuple[Line | MatrixExpr, Line | MatrixExpr]
+```
+
+([source](../src/lib/conic.py#L223))
+
+Computes the two tangent lines of a conic through a point.
+
+They touch the conic where the point's [polar line](#conic.polar_line)
+intersects it.
+
+Special cases:
+ - The lines coincide if the point is on the conic.
+ - For real inputs, they are complex conjugates if no real tangent passes
+   through the point, e.g. for points inside an ellipse.
+ - For line pair conics, both are the line through the point and the
+   [singular point](#degenerate_conic.extract_point).
+ - Both are `[0, 0, 0]ᵀ` for double lines, the zero conic, or if the
+   point is [singular](#degenerate_conic.extract_point).
+ - May be unevaluated `MatrixExpr`s for symbolic inputs.
+
+*Algorithm*: the dual of [conic_x_line](#intersection.conic_x_line).
 
 <a id="degenerate_conic"></a>
 

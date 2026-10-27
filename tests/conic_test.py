@@ -30,11 +30,12 @@ from lib.conic import (
     polar_line,
     pole_point,
     projective_conic_center,
+    tangents_through_point,
 )
 from lib.conic_direction import focal_axis_direction
-from lib.degenerate_conic import line_pair_conic
+from lib.degenerate_conic import ZERO_CONIC, line_pair_conic
 from lib.ellipse import ellipse
-from lib.incidence import conic_contains_point, line_contains_point
+from lib.incidence import conic_contains_point, is_tangent, line_contains_point
 from lib.intersection import conic_x_line, line_x_line
 from lib.line import (
     IDEAL_LINE,
@@ -42,6 +43,7 @@ from lib.line import (
     Y_AXIS,
     angle_bisector,
     horizontal_line,
+    line_between,
     line_through_point,
     perpendicular_line,
 )
@@ -51,7 +53,7 @@ from lib.matrix import (
     quadratic_form,
 )
 from lib.point import ORIGIN, ZERO_POINT, direction_to_xy, ideal_point
-from tests.utils import are_projective_sets_equal
+from tests.utils import are_projective_sets_equal, is_explicit_matrix
 
 
 class TestConicFromPoly:
@@ -370,3 +372,67 @@ class TestPolePolar:
         center = projective_conic_center(conic)
         ideal_point = (*symbols("x y"), 0)
         assert line_contains_point(polar_line(conic, ideal_point), center)
+
+
+class TestTangentsThroughPoint:
+    def test_general_case(self):
+        conic = conic_matrix(1, 2, 3, 4, 5, 6)
+        point = (-1, -1)
+        t1, t2 = tangents_through_point(conic, point)
+        assert line_contains_point(t1, point)
+        assert line_contains_point(t2, point)
+        assert is_tangent(conic, t1)
+        assert is_tangent(conic, t2)
+        assert are_projective_sets_equal([t1, t2], [(1, 2, 3), (5, 6, 11)])
+
+    def test_point_on_conic(self):
+        tangents = tangents_through_point(UNIT_CIRCLE, (0, 1))
+        assert are_projective_sets_equal(tangents, [horizontal_line(1)] * 2)
+
+    def test_point_inside_conic(self):
+        assert are_projective_sets_equal(
+            tangents_through_point(UNIT_CIRCLE, ORIGIN),
+            [Matrix([1, I, 0]), Matrix([1, -I, 0])],
+        )
+
+    def test_ideal_point(self):
+        assert are_projective_sets_equal(
+            tangents_through_point(UNIT_CIRCLE, ideal_point(1, 0)),
+            [horizontal_line(1), horizontal_line(-1)],
+        )
+
+    def test_line_pair_conic(self):
+        conic = line_pair_conic(X_AXIS, Y_AXIS)
+        assert are_projective_sets_equal(
+            tangents_through_point(conic, (1, 2)),
+            [line_between(ORIGIN, (1, 2))] * 2,
+        )
+
+    def test_point_conic(self):
+        conic = circle((3, 2), r=0)
+        assert are_projective_sets_equal(
+            tangents_through_point(conic, (1, 1)),
+            [Matrix([1, -2, 1])] * 2,
+        )
+
+    def test_singular_point_of_line_pair(self):
+        conic = line_pair_conic(X_AXIS, Y_AXIS)
+        assert tangents_through_point(conic, ORIGIN) == (ZERO_POINT, ZERO_POINT)
+
+    def test_double_line_conic(self):
+        conic = line_pair_conic(X_AXIS, X_AXIS)
+        assert tangents_through_point(conic, (1, 2)) == (ZERO_POINT, ZERO_POINT)
+
+    def test_zero_conic(self):
+        assert tangents_through_point(ZERO_CONIC, (1, 2)) == (ZERO_POINT, ZERO_POINT)
+
+    def test_symbolic_conic(self):
+        conic = conic_matrix(*symbols("a b c d e f"))
+        tangents = tangents_through_point(conic, (1, 1))
+        assert not is_explicit_matrix(tangents[0])
+        assert not is_explicit_matrix(tangents[1])
+
+    def test_symbolic_point(self):
+        tangents = tangents_through_point(UNIT_CIRCLE, symbols("x y"))
+        assert not is_explicit_matrix(tangents[0])
+        assert not is_explicit_matrix(tangents[1])
