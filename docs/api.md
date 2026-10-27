@@ -74,6 +74,7 @@
   * [projective\_conic\_center](#conic.projective_conic_center)
   * [pole\_point](#conic.pole_point)
   * [polar\_line](#conic.polar_line)
+  * [tangent\_pair\_conic](#conic.tangent_pair_conic)
   * [tangents\_through\_point](#conic.tangents_through_point)
 * [degenerate\_conic](#degenerate_conic)
   * [ZERO\_CONIC](#degenerate_conic.ZERO_CONIC)
@@ -1394,6 +1395,39 @@ References:
    [Invariants of curves of second order](https://berndt-schwerdtfeger.de/wp-content/uploads/pdf/c2.pdf),
    §3.5. Tangents and polars.
 
+<a id="conic.tangent_pair_conic"></a>
+
+#### tangent\_pair\_conic
+
+```python
+def tangent_pair_conic(conic: Conic, point: Point) -> Conic
+```
+
+([source](../src/lib/conic.py#L223))
+
+Computes the line pair conic consisting of the two tangent lines of a
+conic through a point.
+
+Unlike [tangents_through_point](#conic.tangents_through_point), it doesn't
+split the line pair, so the result is always an explicit matrix.
+
+Special cases:
+ - Double line conic if the point is on the conic.
+ - Point conic if no real tangent passes through the point, e.g. for
+   points inside an ellipse.
+ - For line pair and point conics, the double line between the point and
+   the [singular point](#degenerate_conic.extract_point).
+ - The zero matrix for double lines, the zero conic, or if the point is
+   [singular](#degenerate_conic.extract_point).
+
+*Formula*: `skew(p)ᵀ·adj(C)·skew(p)`
+
+*Proof*:
+ 1. A line `l` is tangent to `C` iff `lᵀ·adj(C)·l = 0`.
+ 2. A point `q` is on a tangent through `p` iff the line through them,
+    `p⨯q = skew(p)·q`, is tangent.
+ 3. Substituting 2 into 1: `qᵀ·skew(p)ᵀ·adj(C)·skew(p)·q = 0`.
+
 <a id="conic.tangents_through_point"></a>
 
 #### tangents\_through\_point
@@ -1404,7 +1438,7 @@ def tangents_through_point(
         point: Point) -> tuple[Line | MatrixExpr, Line | MatrixExpr]
 ```
 
-([source](../src/lib/conic.py#L223))
+([source](../src/lib/conic.py#L251))
 
 Computes the two tangent lines of a conic through a point.
 
@@ -1415,8 +1449,8 @@ Special cases:
  - The lines coincide if the point is on the conic.
  - For real inputs, they are complex conjugates if no real tangent passes
    through the point, e.g. for points inside an ellipse.
- - For line pair conics, both are the line through the point and the
-   [singular point](#degenerate_conic.extract_point).
+ - For line pair and point conics, both are the line between the point
+   and the [singular point](#degenerate_conic.extract_point).
  - Both are `[0, 0, 0]ᵀ` for double lines, the zero conic, or if the
    point is [singular](#degenerate_conic.extract_point).
  - May be unevaluated `MatrixExpr`s for symbolic inputs.
@@ -2954,6 +2988,10 @@ Computes the line pair conic representing the hyperbola's asymptotes.
 Turns ellipses into point conics at their center, preserving the axis
 directions. The function is equivalent to
 [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero).
+
+For non-degenerate hyperbolas, the asymptotes are the tangents through
+the center:
+[tangent_pair_conic](#conic.tangent_pair_conic)`(hyperbola, center)`.
 
 *Research*:
 [research/construction/asymptote_conic.py](../src/research/construction/asymptote_conic.py)

@@ -220,6 +220,34 @@ def polar_line(conic: Conic, pole_point: Point) -> Line:
     return conic * point_to_vec3(pole_point)
 
 
+def tangent_pair_conic(conic: Conic, point: Point) -> Conic:
+    """Computes the line pair conic consisting of the two tangent lines of a
+    conic through a point.
+
+    Unlike [tangents_through_point](#conic.tangents_through_point), it doesn't
+    split the line pair, so the result is always an explicit matrix.
+
+    Special cases:
+     - Double line conic if the point is on the conic.
+     - Point conic if no real tangent passes through the point, e.g. for
+       points inside an ellipse.
+     - For line pair and point conics, the double line between the point and
+       the [singular point](#degenerate_conic.extract_point).
+     - The zero matrix for double lines, the zero conic, or if the point is
+       [singular](#degenerate_conic.extract_point).
+
+    *Formula*: `skew(p)ᵀ·adj(C)·skew(p)`
+
+    *Proof*:
+     1. A line `l` is tangent to `C` iff `lᵀ·adj(C)·l = 0`.
+     2. A point `q` is on a tangent through `p` iff the line through them,
+        `p⨯q = skew(p)·q`, is tangent.
+     3. Substituting 2 into 1: `qᵀ·skew(p)ᵀ·adj(C)·skew(p)·q = 0`.
+    """
+    skew = skew_matrix(point_to_vec3(point))
+    return skew.T * conic.adjugate() * skew
+
+
 def tangents_through_point(
     conic: Conic, point: Point
 ) -> tuple[Line | MatrixExpr, Line | MatrixExpr]:
@@ -232,8 +260,8 @@ def tangents_through_point(
      - The lines coincide if the point is on the conic.
      - For real inputs, they are complex conjugates if no real tangent passes
        through the point, e.g. for points inside an ellipse.
-     - For line pair conics, both are the line through the point and the
-       [singular point](#degenerate_conic.extract_point).
+     - For line pair and point conics, both are the line between the point
+       and the [singular point](#degenerate_conic.extract_point).
      - Both are `[0, 0, 0]ᵀ` for double lines, the zero conic, or if the
        point is [singular](#degenerate_conic.extract_point).
      - May be unevaluated `MatrixExpr`s for symbolic inputs.
@@ -241,7 +269,6 @@ def tangents_through_point(
     *Algorithm*: the dual of [conic_x_line](#intersection.conic_x_line).
     """
     point = point_to_vec3(point)
-    skew_mat = skew_matrix(point)
-    m = skew_mat.T * conic.adjugate() * skew_mat
+    t = tangent_pair_conic(conic, point)
     alpha = sqrt(-conic.det() * quadratic_form(conic, point))
-    return pivot_column_and_row(m + alpha * skew_mat)
+    return pivot_column_and_row(t + alpha * skew_matrix(point))

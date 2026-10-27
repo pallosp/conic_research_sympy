@@ -62,6 +62,10 @@ def asymptote_conic(hyperbola: Conic) -> Conic:
     directions. The function is equivalent to
     [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero).
 
+    For non-degenerate hyperbolas, the asymptotes are the tangents through
+    the center:
+    [tangent_pair_conic](#conic.tangent_pair_conic)`(hyperbola, center)`.
+
     *Research*:
     [research/construction/asymptote_conic.py](../src/research/construction/asymptote_conic.py)
     """

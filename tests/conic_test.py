@@ -5,11 +5,14 @@ from sympy import (
     Matrix,
     Poly,
     Rational,
+    cos,
     exp,
     factor,
     log,
+    sin,
     sqrt,
     symbols,
+    trigsimp,
 )
 from sympy.abc import x, y
 
@@ -30,10 +33,16 @@ from lib.conic import (
     polar_line,
     pole_point,
     projective_conic_center,
+    tangent_pair_conic,
     tangents_through_point,
 )
 from lib.conic_direction import focal_axis_direction
-from lib.degenerate_conic import ZERO_CONIC, line_pair_conic
+from lib.degenerate_conic import (
+    ZERO_CONIC,
+    double_line_conic,
+    line_pair_conic,
+    point_conic,
+)
 from lib.ellipse import ellipse
 from lib.incidence import conic_contains_point, is_tangent, line_contains_point
 from lib.intersection import conic_x_line, line_x_line
@@ -372,6 +381,67 @@ class TestPolePolar:
         center = projective_conic_center(conic)
         ideal_point = (*symbols("x y"), 0)
         assert line_contains_point(polar_line(conic, ideal_point), center)
+
+
+class TestTangentPairConic:
+    def test_general_case(self):
+        conic = conic_matrix(1, 2, 3, 4, 5, 6)
+        tangents = line_pair_conic(Matrix([1, 2, 3]), Matrix([5, 6, 11]))
+        assert is_nonzero_multiple(tangent_pair_conic(conic, (-1, -1)), tangents)
+
+    def test_point_on_conic(self):
+        assert is_nonzero_multiple(
+            tangent_pair_conic(UNIT_CIRCLE, (0, 1)),
+            double_line_conic(horizontal_line(1)),
+        )
+
+    def test_point_inside_conic(self):
+        assert is_nonzero_multiple(
+            tangent_pair_conic(UNIT_CIRCLE, ORIGIN),
+            point_conic(ORIGIN),
+        )
+
+    def test_ideal_point(self):
+        assert is_nonzero_multiple(
+            tangent_pair_conic(UNIT_CIRCLE, ideal_point(1, 0)),
+            line_pair_conic(horizontal_line(1), horizontal_line(-1)),
+        )
+
+    def test_hyperbola_center(self):
+        hyperbola = conic_from_poly(x * x - 4 * y * y - 1)
+        asymptotes = line_pair_conic(Matrix([1, 2, 0]), Matrix([1, -2, 0]))
+        assert is_nonzero_multiple(tangent_pair_conic(hyperbola, ORIGIN), asymptotes)
+
+    def test_line_pair_conic(self):
+        conic = line_pair_conic(X_AXIS, Y_AXIS)
+        assert is_nonzero_multiple(
+            tangent_pair_conic(conic, (1, 2)),
+            double_line_conic(line_between(ORIGIN, (1, 2))),
+        )
+
+    def test_singular_point_of_line_pair(self):
+        conic = line_pair_conic(X_AXIS, Y_AXIS)
+        assert tangent_pair_conic(conic, ORIGIN) == ZERO_CONIC
+
+    def test_double_line_conic(self):
+        conic = double_line_conic(X_AXIS)
+        assert tangent_pair_conic(conic, (1, 2)) == ZERO_CONIC
+
+    def test_zero_conic(self):
+        assert tangent_pair_conic(ZERO_CONIC, (1, 2)) == ZERO_CONIC
+
+    def test_symbolic_conic(self):
+        conic = conic_matrix(*symbols("a b c d e f"))
+        assert is_explicit_matrix(tangent_pair_conic(conic, symbols("x y")))
+
+    def test_symbolic_point_on_circle(self):
+        t = symbols("t", real=True)
+        point = (cos(t), sin(t))
+        tangent = Matrix([cos(t), sin(t), -1])
+        assert is_nonzero_multiple(
+            tangent_pair_conic(UNIT_CIRCLE, point).applyfunc(trigsimp),
+            double_line_conic(tangent),
+        )
 
 
 class TestTangentsThroughPoint:
