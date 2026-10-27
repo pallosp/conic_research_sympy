@@ -29,6 +29,20 @@ FinitePoint: TypeAlias = Point
 #: [point_to_xy](#point.point_to_xy), which returns a tuple.
 PointVector: TypeAlias = MatrixBase
 
+#: A direction given by a 2D vector `(dx, dy)` or by the ideal point
+#: `(dx, dy, 0)`, as a tuple, a list or a column vector. The vector's length
+#: doesn't matter, only its direction.
+Direction: TypeAlias = (
+    MatrixBase
+    | tuple[Scalar, Scalar]
+    | tuple[Scalar, Scalar, Scalar]
+    # Lists are invariant, so list[Scalar] alone would reject e.g. list[Expr].
+    | list[Expr]
+    | list[int]
+    | list[float]
+    | list[Scalar]
+)
+
 #: A projective line `ax + by + c = 0`, represented as the 3D column vector
 #: `(a, b, c)ᵀ`.
 Line: TypeAlias = MatrixBase

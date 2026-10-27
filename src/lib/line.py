@@ -1,9 +1,7 @@
-from collections.abc import Sequence
-
-from sympy import ImmutableMatrix, Matrix, MatrixBase, sign, sqrt
+from sympy import ImmutableMatrix, Matrix, sign, sqrt
 
 from lib.point import direction_to_xy, ideal_point, point_to_vec3, point_to_xy
-from lib.type_aliases import FinitePoint, Line, Point, PointVector, Scalar
+from lib.type_aliases import Direction, FinitePoint, Line, Point, PointVector, Scalar
 
 
 def horizontal_line(y: Scalar) -> Line:
@@ -47,8 +45,8 @@ def perpendicular_line(
 def line_through_point(
     point: FinitePoint,
     *,
-    direction: MatrixBase | Sequence[Scalar] | None = None,
-    normal: MatrixBase | Sequence[Scalar] | None = None,
+    direction: Direction | None = None,
+    normal: Direction | None = None,
 ) -> Line:
     """Constructs a line through a point with the given direction.
 

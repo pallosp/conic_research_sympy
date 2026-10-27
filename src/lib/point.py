@@ -1,9 +1,8 @@
-from collections.abc import Sequence
 from typing import overload
 
 from sympy import Expr, I, ImmutableMatrix, Matrix, MatrixBase, MatrixExpr, S, sympify
 
-from lib.type_aliases import FinitePoint, Line, Point, PointVector, Scalar
+from lib.type_aliases import Direction, FinitePoint, Line, Point, PointVector, Scalar
 
 #: The zero vector `(0 : 0 : 0)`. It doesn't represent any point. Functions
 #: return it when the resulting point is undefined.
@@ -49,7 +48,7 @@ def point_to_xy(point: FinitePoint) -> tuple[Expr, Expr]:
     return x / z, y / z
 
 
-def direction_to_xy(direction: MatrixBase | Sequence[Scalar]) -> tuple[Expr, Expr]:
+def direction_to_xy(direction: Direction) -> tuple[Expr, Expr]:
     """Returns the components of a 2D direction vector or an ideal point."""
     if isinstance(direction, MatrixBase):
         dx, dy, *rest = direction.flat()

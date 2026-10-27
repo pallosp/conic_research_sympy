@@ -1,6 +1,4 @@
-from collections.abc import Sequence
-
-from sympy import Abs, Expr, Matrix, MatrixBase, cos, sin, sqrt
+from sympy import Abs, Expr, Matrix, cos, sin, sqrt
 
 from lib.conic_direction import (
     ConicNormFactor,
@@ -9,7 +7,7 @@ from lib.conic_direction import (
 )
 from lib.matrix import conic_coefficients, conic_matrix, max_eigenvalue, min_eigenvalue
 from lib.point import direction_to_xy, point_to_xy
-from lib.type_aliases import Conic, FinitePoint, Scalar
+from lib.type_aliases import Conic, Direction, FinitePoint, Scalar
 
 
 def conic_from_foci_and_radius(
@@ -173,7 +171,7 @@ def secondary_radius(conic: Conic) -> Expr:
 def radius_in_direction(
     conic: Conic,
     *,
-    direction: MatrixBase | Sequence[Scalar] | None = None,
+    direction: Direction | None = None,
     angle: Scalar | None = None,
 ) -> Expr:
     """Computes the length of the conic radius in the given direction.

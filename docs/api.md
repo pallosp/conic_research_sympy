@@ -42,6 +42,7 @@
   * [Point](#type_aliases.Point)
   * [FinitePoint](#type_aliases.FinitePoint)
   * [PointVector](#type_aliases.PointVector)
+  * [Direction](#type_aliases.Direction)
   * [Line](#type_aliases.Line)
   * [Conic](#type_aliases.Conic)
   * [PolarConic](#type_aliases.PolarConic)
@@ -490,7 +491,7 @@ def conic_from_foci_and_radius(focus1: FinitePoint, focus2: FinitePoint,
                                primary_radius: Scalar) -> Conic
 ```
 
-([source](../src/lib/central_conic.py#L15))
+([source](../src/lib/central_conic.py#L13))
 
 Computes the ellipse or hyperbola with the given focus points and primary radius.
 
@@ -508,7 +509,7 @@ def conic_from_center_and_points(center: FinitePoint, p1: FinitePoint,
                                  p2: FinitePoint, p3: FinitePoint) -> Conic
 ```
 
-([source](../src/lib/central_conic.py#L46))
+([source](../src/lib/central_conic.py#L44))
 
 Computes the conic section with the given center and perimeter points.
 
@@ -530,7 +531,7 @@ May return
 def conic_center(conic: Conic) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L90))
+([source](../src/lib/central_conic.py#L88))
 
 Computes the center point of a conic.
 
@@ -547,7 +548,7 @@ Returns the point's coordinates as a 2D column vector.
 def semi_axis_lengths(conic: Conic) -> tuple[Expr, Expr]
 ```
 
-([source](../src/lib/central_conic.py#L102))
+([source](../src/lib/central_conic.py#L100))
 
 Computes the semi-axis lengths of a conic in no specific order.
 
@@ -567,7 +568,7 @@ semi-minor in case of ellipses), call
 def primary_radius(conic: Conic) -> Expr
 ```
 
-([source](../src/lib/central_conic.py#L132))
+([source](../src/lib/central_conic.py#L130))
 
 Computes the center-vertex distance of a conic.
 
@@ -593,7 +594,7 @@ The returned value is:
 def secondary_radius(conic: Conic) -> Expr
 ```
 
-([source](../src/lib/central_conic.py#L152))
+([source](../src/lib/central_conic.py#L150))
 
 Computes the semi-conjugate axis length of a conic.
 
@@ -619,11 +620,11 @@ The returned value is:
 ```python
 def radius_in_direction(conic: Conic,
                         *,
-                        direction: MatrixBase | Sequence[Scalar] | None = None,
+                        direction: Direction | None = None,
                         angle: Scalar | None = None) -> Expr
 ```
 
-([source](../src/lib/central_conic.py#L173))
+([source](../src/lib/central_conic.py#L171))
 
 Computes the length of the conic radius in the given direction.
 
@@ -644,7 +645,7 @@ it. Its direction can be specified either as
 def linear_eccentricity(conic: Conic) -> Expr
 ```
 
-([source](../src/lib/central_conic.py#L210))
+([source](../src/lib/central_conic.py#L208))
 
 Computes the linear eccentricity of a conic section.
 
@@ -674,7 +675,7 @@ radii of the conic (i.e., the semi-axis lengths in the case of an ellipse).
 def center_to_focus_vector(conic: Conic) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L236))
+([source](../src/lib/central_conic.py#L234))
 
 Returns the 2D vector from a conic's center to one of its foci.
 
@@ -693,7 +694,7 @@ center.
 def central_conic_foci(conic: Conic) -> tuple[Matrix, Matrix]
 ```
 
-([source](../src/lib/central_conic.py#L254))
+([source](../src/lib/central_conic.py#L252))
 
 Computes the focus points of a central conic.
 
@@ -707,7 +708,7 @@ Returns a pair of 2D vectors.
 def center_to_vertex_vector(conic: Conic) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L264))
+([source](../src/lib/central_conic.py#L262))
 
 Vector from the center of a conic to one of its vertices.
 
@@ -733,7 +734,7 @@ Returns a 2D column vector with the following properties:
 def central_conic_vertices(conic: Conic) -> tuple[Matrix, Matrix]
 ```
 
-([source](../src/lib/central_conic.py#L285))
+([source](../src/lib/central_conic.py#L283))
 
 Computes the vertices of a central conic.
 
@@ -754,7 +755,7 @@ Special cases:
 def center_to_covertex_vector(conic: Conic) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L302))
+([source](../src/lib/central_conic.py#L300))
 
 Vector from the center of a conic to one of its covertices.
 
@@ -780,7 +781,7 @@ Returns a 2D column vector with the following properties:
 def shrink_conic_to_zero(conic: Conic) -> Conic
 ```
 
-([source](../src/lib/central_conic.py#L323))
+([source](../src/lib/central_conic.py#L321))
 
 Scales a conic section from its center with a factor of zero.
 
@@ -927,6 +928,14 @@ return projective points use this type; those returning Euclidean
 coordinates return a 2D `Matrix` instead, except
 [point_to_xy](#point.point_to_xy), which returns a tuple.
 
+<a id="type_aliases.Direction"></a>
+
+#### Direction
+
+A direction given by a 2D vector `(dx, dy)` or by the ideal point
+`(dx, dy, 0)`, as a tuple, a list or a column vector. The vector's length
+doesn't matter, only its direction.
+
 <a id="type_aliases.Line"></a>
 
 #### Line
@@ -967,7 +976,7 @@ maps the homogeneous coordinates of points.
 def horizontal_line(y: Scalar) -> Line
 ```
 
-([source](../src/lib/line.py#L9))
+([source](../src/lib/line.py#L7))
 
 Constructs a horizontal line with the given y-coordinate.
 
@@ -979,7 +988,7 @@ Constructs a horizontal line with the given y-coordinate.
 def vertical_line(x: Scalar) -> Line
 ```
 
-([source](../src/lib/line.py#L14))
+([source](../src/lib/line.py#L12))
 
 Constructs a vertical line with the given x-coordinate.
 
@@ -991,7 +1000,7 @@ Constructs a vertical line with the given x-coordinate.
 def line_between(point1: Point, point2: Point) -> Line
 ```
 
-([source](../src/lib/line.py#L19))
+([source](../src/lib/line.py#L17))
 
 Connects two projective points with a line.
 
@@ -1003,7 +1012,7 @@ Connects two projective points with a line.
 def parallel_line(with_line: Line, through_point: FinitePoint) -> Line
 ```
 
-([source](../src/lib/line.py#L27))
+([source](../src/lib/line.py#L25))
 
 Constructs a line through a point parallel to a line.
 
@@ -1015,7 +1024,7 @@ Constructs a line through a point parallel to a line.
 def perpendicular_line(to_line: Line, through_point: FinitePoint) -> Line
 ```
 
-([source](../src/lib/line.py#L37))
+([source](../src/lib/line.py#L35))
 
 Constructs a line through a point perpendicular to a line.
 
@@ -1024,14 +1033,13 @@ Constructs a line through a point perpendicular to a line.
 #### line\_through\_point
 
 ```python
-def line_through_point(
-        point: FinitePoint,
-        *,
-        direction: MatrixBase | Sequence[Scalar] | None = None,
-        normal: MatrixBase | Sequence[Scalar] | None = None) -> Line
+def line_through_point(point: FinitePoint,
+                       *,
+                       direction: Direction | None = None,
+                       normal: Direction | None = None) -> Line
 ```
 
-([source](../src/lib/line.py#L47))
+([source](../src/lib/line.py#L45))
 
 Constructs a line through a point with the given direction.
 
@@ -1049,7 +1057,7 @@ The direction can be specified as
 def angle_bisector(line1: Line, line2: Line) -> Line
 ```
 
-([source](../src/lib/line.py#L71))
+([source](../src/lib/line.py#L69))
 
 Constructs the angle bisector of two lines.
 
@@ -1074,7 +1082,7 @@ Special cases:
 def perpendicular_bisector(point1: FinitePoint, point2: FinitePoint) -> Line
 ```
 
-([source](../src/lib/line.py#L92))
+([source](../src/lib/line.py#L90))
 
 Constructs the perpendicular bisector of two points.
 
@@ -1086,7 +1094,7 @@ Constructs the perpendicular bisector of two points.
 def line_normal(line: Line, *, toward: Point | None = None) -> PointVector
 ```
 
-([source](../src/lib/line.py#L102))
+([source](../src/lib/line.py#L100))
 
 Returns the normal vector of a line, represented as an ideal point.
 
@@ -1107,7 +1115,7 @@ Returns `[0, 0, 0]ᵀ` if the `toward` point lies on the line.
 def are_parallel(line1: Line, line2: Line) -> bool | None
 ```
 
-([source](../src/lib/line.py#L124))
+([source](../src/lib/line.py#L122))
 
 Tells whether line1 and line2 are parallel.
 
@@ -1122,7 +1130,7 @@ Considers the ideal line parallel to everything.
 def are_perpendicular(line1: Line, line2: Line) -> bool | None
 ```
 
-([source](../src/lib/line.py#L135))
+([source](../src/lib/line.py#L133))
 
 Tells whether line1 and line2 are perpendicular.
 
@@ -1952,7 +1960,7 @@ Every circle passes through it.
 def ideal_point(x: Scalar, y: Scalar) -> PointVector
 ```
 
-([source](../src/lib/point.py#L27))
+([source](../src/lib/point.py#L26))
 
 Creates an ideal point at the given direction.
 
@@ -1964,7 +1972,7 @@ Creates an ideal point at the given direction.
 def ideal_point_on_line(line: Line) -> PointVector
 ```
 
-([source](../src/lib/point.py#L32))
+([source](../src/lib/point.py#L31))
 
 Returns the coordinates of the ideal point on the line.
 
@@ -1981,7 +1989,7 @@ If the line is the ideal line, returns `[0, 0, 0]ᵀ`.
 def point_to_xy(point: FinitePoint) -> tuple[Expr, Expr]
 ```
 
-([source](../src/lib/point.py#L43))
+([source](../src/lib/point.py#L42))
 
 Computes the Euclidean coordinates of a projective point as an `(x, y)` tuple.
 
@@ -1990,11 +1998,10 @@ Computes the Euclidean coordinates of a projective point as an `(x, y)` tuple.
 #### direction\_to\_xy
 
 ```python
-def direction_to_xy(
-        direction: MatrixBase | Sequence[Scalar]) -> tuple[Expr, Expr]
+def direction_to_xy(direction: Direction) -> tuple[Expr, Expr]
 ```
 
-([source](../src/lib/point.py#L52))
+([source](../src/lib/point.py#L51))
 
 Returns the components of a 2D direction vector or an ideal point.
 
@@ -2006,7 +2013,7 @@ Returns the components of a 2D direction vector or an ideal point.
 def point_to_vec3(point: Point | MatrixExpr) -> PointVector | MatrixExpr
 ```
 
-([source](../src/lib/point.py#L67))
+([source](../src/lib/point.py#L66))
 
 Computes the homogeneous coordinates of a projective point.
 
@@ -2021,7 +2028,7 @@ row vectors to columns. Accepts unevaluated `MatrixExpr` vectors too.
 def centroid(*points: FinitePoint) -> Matrix
 ```
 
-([source](../src/lib/point.py#L87))
+([source](../src/lib/point.py#L86))
 
 Computes the centroid of a set of points.
 
@@ -2035,7 +2042,7 @@ Returns the point's coordinates as a 2D column vector.
 def perpendicular_foot(point: FinitePoint, line: Line) -> Matrix
 ```
 
-([source](../src/lib/point.py#L103))
+([source](../src/lib/point.py#L102))
 
 Computes the foot of the perpendicular through a point to a line.
 
@@ -3021,16 +3028,15 @@ the center:
 #### ellipse
 
 ```python
-def ellipse(
-        center: FinitePoint,
-        r1: Scalar,
-        r2: Scalar,
-        *,
-        r1_angle: Scalar | None = None,
-        r1_direction: MatrixBase | Sequence[Scalar] | None = None) -> Conic
+def ellipse(center: FinitePoint,
+            r1: Scalar,
+            r2: Scalar,
+            *,
+            r1_angle: Scalar | None = None,
+            r1_direction: Direction | None = None) -> Conic
 ```
 
-([source](../src/lib/ellipse.py#L12))
+([source](../src/lib/ellipse.py#L10))
 
 Constructs an ellipse from its center, radii, and the either the
 direction vector of the first radius or its angle to horizontal.
@@ -3047,7 +3053,7 @@ def ellipse_from_foci_and_point(focus1: FinitePoint, focus2: FinitePoint,
                                 point: FinitePoint) -> Conic
 ```
 
-([source](../src/lib/ellipse.py#L50))
+([source](../src/lib/ellipse.py#L48))
 
 Constructs an ellipse from its focus points and an incident point.
 

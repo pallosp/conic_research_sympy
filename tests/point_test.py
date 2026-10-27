@@ -92,7 +92,7 @@ class TestDirectionToXy:
 
     def test_wrong_length(self):
         with pytest.raises(ValueError, match="must be a 2D vector or an ideal point"):
-            direction_to_xy((1, 2, 0, 0))
+            direction_to_xy([1, 2, 0, 0])
 
 
 class TestIdealPointOnLine:
