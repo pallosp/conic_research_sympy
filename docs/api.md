@@ -155,6 +155,7 @@
   * [line\_contains\_point](#incidence.line_contains_point)
   * [conic\_contains\_point](#incidence.conic_contains_point)
   * [conic\_contains\_line](#incidence.conic_contains_line)
+  * [is\_tangent](#incidence.is_tangent)
   * [polar\_conic\_contains\_point](#incidence.polar_conic_contains_point)
   * [are\_collinear](#incidence.are_collinear)
   * [are\_concurrent](#incidence.are_concurrent)
@@ -2704,6 +2705,33 @@ result is undecidable.
 *Formula*:
 [research/incidence/conic_line_containment.py](../src/research/incidence/conic_line_containment.py)
 
+<a id="incidence.is_tangent"></a>
+
+#### is\_tangent
+
+```python
+def is_tangent(conic: Conic,
+               line: Line | MatrixExpr,
+               *,
+               simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+```
+
+([source](../src/lib/incidence.py#L63))
+
+Tells whether a line is tangent to a conic, i.e. it intersects the conic
+at two coinciding points.
+
+Special cases:
+ - Line pair conics: lines through the intersection of the pair are
+   tangent, including the lines of the pair.
+ - Double line conics: every line is tangent.
+
+Takes an optional `simplifier` callback that simplifies the tangency
+polynomial before it gets compared to zero. Returns `None` if the result is
+undecidable. Accepts unevaluated `MatrixExpr` lines.
+
+*Formula*: `lᵀ·adj(C)·l = 0`, i.e. the line is on the dual conic.
+
 <a id="incidence.polar_conic_contains_point"></a>
 
 #### polar\_conic\_contains\_point
@@ -2716,7 +2744,7 @@ def polar_conic_contains_point(
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L63))
+([source](../src/lib/incidence.py#L86))
 
 Checks if a point lies on a conic that is specified in polar form.
 
@@ -2737,7 +2765,7 @@ def are_collinear(points: Sequence[Point],
                   simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L82))
+([source](../src/lib/incidence.py#L105))
 
 Tells whether n points are collinear.
 
@@ -2754,7 +2782,7 @@ def are_concurrent(lines: Sequence[Line],
                    simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L99))
+([source](../src/lib/incidence.py#L122))
 
 Tells whether n lines are concurrent, i.e. go through the same point.
 
@@ -2776,7 +2804,7 @@ def are_on_same_conic(
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L121))
+([source](../src/lib/incidence.py#L144))
 
 Tells whether up to 6 points lie on the same conic section.
 
@@ -2799,7 +2827,7 @@ def are_cocircular(points: Sequence[Point],
                    simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L150))
+([source](../src/lib/incidence.py#L173))
 
 Tells whether n points lie on the same circle.
 

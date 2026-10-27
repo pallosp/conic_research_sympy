@@ -60,6 +60,29 @@ def conic_contains_line(
     return (skew * conic * skew).applyfunc(simplifier).is_zero_matrix
 
 
+def is_tangent(
+    conic: Conic,
+    line: Line | MatrixExpr,
+    *,
+    simplifier: Callable[[Expr], Expr] = expand,
+) -> bool | None:
+    """Tells whether a line is tangent to a conic, i.e. it intersects the conic
+    at two coinciding points.
+
+    Special cases:
+     - Line pair conics: lines through the intersection of the pair are
+       tangent, including the lines of the pair.
+     - Double line conics: every line is tangent.
+
+    Takes an optional `simplifier` callback that simplifies the tangency
+    polynomial before it gets compared to zero. Returns `None` if the result is
+    undecidable. Accepts unevaluated `MatrixExpr` lines.
+
+    *Formula*: `lᵀ·adj(C)·l = 0`, i.e. the line is on the dual conic.
+    """
+    return simplifier(quadratic_form(conic.adjugate(), line)).is_zero
+
+
 def polar_conic_contains_point(
     polar_conic: PolarConic,
     point: Point,

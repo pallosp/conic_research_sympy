@@ -13,6 +13,7 @@ from lib.incidence import (
     are_on_same_conic,
     conic_contains_line,
     conic_contains_point,
+    is_tangent,
     line_contains_point,
     polar_conic_contains_point,
 )
@@ -94,6 +95,49 @@ class TestConicContainsLine:
         assert conic_contains_line(conic, X_AXIS) is False
         assert conic_contains_line(conic, horizontal_line(1)) is False
         assert conic_contains_line(conic, Matrix([1, I, 0])) is True
+
+
+class TestIsTangent:
+    def test_circle(self):
+        conic = circle((1, 2), r=3)
+        assert is_tangent(conic, horizontal_line(5)) is True
+        assert is_tangent(conic, horizontal_line(2)) is False
+        assert is_tangent(conic, horizontal_line(6)) is False
+        assert is_tangent(conic, horizontal_line(-1)) is True
+
+    def test_ideal_line(self):
+        assert is_tangent(conic_from_poly(y - x**2), IDEAL_LINE) is True
+        assert is_tangent(conic_from_poly(x * y - 6), IDEAL_LINE) is False
+        assert is_tangent(circle((0, 0), r=1), IDEAL_LINE) is False
+
+    def test_hyperbola_asymptote(self):
+        assert is_tangent(conic_from_poly(x * y - 6), X_AXIS) is True
+
+    def test_crossing_line_pair(self):
+        conic = line_pair_conic(X_AXIS, Y_AXIS)
+        assert is_tangent(conic, X_AXIS) is True
+        assert is_tangent(conic, Matrix([1, 1, 0])) is True
+        assert is_tangent(conic, horizontal_line(1)) is False
+
+    def test_parallel_line_pair(self):
+        conic = line_pair_conic(horizontal_line(1), horizontal_line(-1))
+        assert is_tangent(conic, horizontal_line(3)) is True
+        assert is_tangent(conic, Y_AXIS) is False
+
+    def test_double_line(self):
+        conic = line_pair_conic(X_AXIS, X_AXIS)
+        assert is_tangent(conic, Y_AXIS) is True
+        assert is_tangent(conic, Matrix([1, 2, 3])) is True
+
+    def test_symbolic(self):
+        r = symbols("r", positive=True)
+        conic = circle((0, 0), r=r)
+        assert is_tangent(conic, horizontal_line(r)) is True
+        assert is_tangent(conic, horizontal_line(2 * r)) is False
+        assert is_tangent(conic, Matrix(symbols("a b c"))) is None
+
+    def test_matrix_expr(self):
+        assert is_tangent(circle((0, 0), r=1), MatrixSymbol("l", 3, 1)) is None
 
 
 class TestLineContainsPoint:
