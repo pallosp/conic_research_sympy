@@ -478,8 +478,8 @@ class TestIsPointConic:
         assert is_point_conic(point) is True
 
     def test_line_pair(self):
-        line1 = Matrix(symbols("a b c", positive=True))
-        line2 = Matrix(symbols("d e f", positive=True))
+        line1 = Matrix(symbols("a b c", real=True))
+        line2 = Matrix(symbols("d e f", real=True))
         line_pair = line_pair_conic(line1, line2)
         assert is_point_conic(line_pair) is False
 
@@ -503,17 +503,24 @@ class TestIsFinitePointConic:
     def test_circle(self):
         assert is_finite_point_conic(circle(symbols("x,y"), r=1)) is False
 
+    def test_finite_point_conic(self):
+        x, y = symbols("x,y", real=True)
+        z = symbols("z", nonzero=True)
+        finite_point_conic = point_conic((x, y, z))
+        assert is_finite_point_conic(finite_point_conic) is True
+
     def test_ideal_point_conic(self):
-        ideal_point = conic_from_poly(x * x + 1)
+        ideal_point = point_conic((*symbols("x,y"), 0))
         assert is_finite_point_conic(ideal_point) is False
 
-    def test_line_pair(self):
-        assert is_finite_point_conic(line_pair_conic(X_AXIS, Y_AXIS)) is False
-        assert is_finite_point_conic(line_pair_conic(X_AXIS, IDEAL_LINE)) is False
-        assert is_finite_point_conic(line_pair_conic(IDEAL_LINE, IDEAL_LINE)) is False
+    def test_line_pair_symbolic(self):
+        line1 = Matrix(symbols("a b c", real=True))
+        line2 = Matrix(symbols("d e f", real=True))
+        line_pair = line_pair_conic(line1, line2)
+        assert is_finite_point_conic(line_pair) is False
 
     def test_undecidable(self):
-        assert is_finite_point_conic(conic_matrix(*symbols("a,b,c,d,e,f"))) is None
+        assert is_finite_point_conic(point_conic(symbols("x y z"))) is None
 
 
 class TestIsRectangularHyperbola:
