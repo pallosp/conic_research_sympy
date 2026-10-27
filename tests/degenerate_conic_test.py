@@ -109,12 +109,12 @@ class TestSplitToLines:
         line_pair = [Matrix([1, 2, 3]), Matrix([4, 5, 6])]
         conic = line_pair_conic(*line_pair)
         substitutions = list(zip(symbolic_conic.flat(), conic.flat(), strict=True))
-        concrete_lines = [line.subs(substitutions) for line in lines]
+        # The lines are explicit, as asserted below. SymPy types MatrixExpr.subs()
+        # as returning Expr (fix upstream).
+        concrete_lines = [cast("Line", line.subs(substitutions)) for line in lines]
         assert is_explicit_matrix(concrete_lines[0])
         assert is_explicit_matrix(concrete_lines[1])
-        # The lines are explicit, as asserted above. SymPy types MatrixExpr.subs()
-        # as returning Expr (fix upstream).
-        assert are_projective_sets_equal(cast("list[Line]", concrete_lines), line_pair)
+        assert are_projective_sets_equal(concrete_lines, line_pair)
 
     def test_partially_symbolic_conic(self):
         symbolic_conic = conic_matrix(1, *symbols("b c d e f"))
