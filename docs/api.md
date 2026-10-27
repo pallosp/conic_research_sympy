@@ -362,6 +362,8 @@ def skew_matrix(vector3: MatrixBase | MatrixExpr) -> MatrixBase | SkewMatrix
 
 Creates a skew-symmetric matrix from a 3D column vector.
 
+The matrix turns cross products into matrix products: `skew(v)·w = v⨯w`
+
 Returns an explicit matrix for an explicit vector, and an unevaluated
 `SkewMatrix` for a matrix expression.
 
@@ -373,7 +375,7 @@ Returns an explicit matrix for an explicit vector, and an unevaluated
 def pivot_column(matrix: MatrixBase | MatrixExpr) -> MatrixBase | PivotColumn
 ```
 
-([source](../src/lib/matrix.py#L299))
+([source](../src/lib/matrix.py#L301))
 
 Returns the column of a matrix for its first provably nonzero element.
 
@@ -395,7 +397,7 @@ def pivot_column_and_row(
 ) -> tuple[MatrixBase | PivotColumn, MatrixBase | TransposedPivotRow]
 ```
 
-([source](../src/lib/matrix.py#L313))
+([source](../src/lib/matrix.py#L315))
 
 Returns the column and the transposed row of a matrix for its first
 provably nonzero element, i.e. two column vectors.
@@ -414,7 +416,7 @@ def outer_product_root(
         matrix: MatrixBase | MatrixExpr) -> MatrixBase | OuterProductRoot
 ```
 
-([source](../src/lib/matrix.py#L359))
+([source](../src/lib/matrix.py#L361))
 
 Finds a vector `v` such that `v·vᵀ` equals the given symmetric matrix.
 
@@ -436,7 +438,7 @@ to be non-zero.
 def is_real_matrix(matrix: MatrixBase) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L377))
+([source](../src/lib/matrix.py#L379))
 
 Checks if all elements of a matrix are real.
 
@@ -450,7 +452,7 @@ Returns a bool or `None` if undecidable.
 def is_definite_matrix(matrix: MatrixBase) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L385))
+([source](../src/lib/matrix.py#L387))
 
 Checks if a real matrix is either positive or negative definite.
 
@@ -466,7 +468,7 @@ def is_full_rank(matrix: MatrixBase,
                  simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L416))
+([source](../src/lib/matrix.py#L418))
 
 Tells whether a matrix has full rank.
 
