@@ -110,6 +110,11 @@ def extract_point(degenerate_conic: Conic) -> PointVector | MatrixExpr:
     """Extracts the point from a point conic or the intersection of the
     lines from a line pair conic.
 
+    This point is the conic's *singular point*: the point `p` for which
+    `C·p = 0`, i.e. whose [polar line](#conic.polar_line) is undefined.
+    Non-degenerate conics have no singular points, while every point of a
+    double line is singular.
+
     Special cases:
      - Returns `[0, 0, 0]ᵀ` for double line pairs.
      - Returns an unspecified 3D column vector if the conic is not degenerate.
