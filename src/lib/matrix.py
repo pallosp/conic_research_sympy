@@ -139,7 +139,9 @@ def conic_coefficients(conic: Conic) -> tuple[Expr, Expr, Expr, Expr, Expr, Expr
     return a, b, c, d, e, f
 
 
-def quadratic_form(sym_matrix: MatrixBase, vector: MatrixBase) -> Expr:
+def quadratic_form(
+    sym_matrix: MatrixBase | MatrixExpr, vector: MatrixBase | MatrixExpr
+) -> Expr:
     """Computes the quadratic form for a n⨯n symmetric matrix and an n-element
     column vector.
 
@@ -147,9 +149,13 @@ def quadratic_form(sym_matrix: MatrixBase, vector: MatrixBase) -> Expr:
     point, respectively, the quadratic form is zero iff the point is on the
     conic.
 
+    Accepts unevaluated `MatrixExpr` arguments, whose elements appear as
+    `MatrixElement`s in the result.
+
     *Formula*: `vᵀ·M·v`
     """
-    return vector.dot(vector.T * sym_matrix)
+    # SymPy's stubs type MatrixExpr products as Expr (fix upstream).
+    return (vector.T * sym_matrix * vector)[0, 0]  # pyright: ignore[reportIndexIssue]
 
 
 def _pivot_index(matrix: MatrixBase) -> int | None:

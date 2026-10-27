@@ -280,7 +280,8 @@ It's the inverse of [conic_matrix](#matrix.conic_matrix).
 #### quadratic\_form
 
 ```python
-def quadratic_form(sym_matrix: MatrixBase, vector: MatrixBase) -> Expr
+def quadratic_form(sym_matrix: MatrixBase | MatrixExpr,
+                   vector: MatrixBase | MatrixExpr) -> Expr
 ```
 
 ([source](../src/lib/matrix.py#L142))
@@ -292,6 +293,9 @@ Use case: when `sym_matrix` and `vector` represent a conic and a projective
 point, respectively, the quadratic form is zero iff the point is on the
 conic.
 
+Accepts unevaluated `MatrixExpr` arguments, whose elements appear as
+`MatrixElement`s in the result.
+
 *Formula*: `vᵀ·M·v`
 
 <a id="matrix.MatrixFunction"></a>
@@ -302,7 +306,7 @@ conic.
 class MatrixFunction(MatrixExpr)
 ```
 
-([source](../src/lib/matrix.py#L170))
+([source](../src/lib/matrix.py#L176))
 
 Base class of matrix valued functions of a matrix, which stay
 unevaluated until the result can be determined.
@@ -327,7 +331,7 @@ def __new__(cls,
             evaluate: bool = True) -> "MatrixBase | Self"
 ```
 
-([source](../src/lib/matrix.py#L188))
+([source](../src/lib/matrix.py#L194))
 
 Evaluates the function if possible, unless `evaluate` is false.
 
@@ -340,7 +344,7 @@ Evaluates the function if possible, unless `evaluate` is false.
 def matrix() -> MatrixBase | MatrixExpr
 ```
 
-([source](../src/lib/matrix.py#L204))
+([source](../src/lib/matrix.py#L210))
 
 The argument of the function.
 
@@ -352,7 +356,7 @@ The argument of the function.
 def skew_matrix(vector3: MatrixBase | MatrixExpr) -> MatrixBase | SkewMatrix
 ```
 
-([source](../src/lib/matrix.py#L250))
+([source](../src/lib/matrix.py#L256))
 
 Creates a skew-symmetric matrix from a 3D column vector.
 
@@ -367,7 +371,7 @@ Returns an explicit matrix for an explicit vector, and an unevaluated
 def pivot_column(matrix: MatrixBase | MatrixExpr) -> MatrixBase | PivotColumn
 ```
 
-([source](../src/lib/matrix.py#L293))
+([source](../src/lib/matrix.py#L299))
 
 Returns the column of a matrix for its first provably nonzero element.
 
@@ -389,7 +393,7 @@ def pivot_column_and_row(
 ) -> tuple[MatrixBase | PivotColumn, MatrixBase | TransposedPivotRow]
 ```
 
-([source](../src/lib/matrix.py#L307))
+([source](../src/lib/matrix.py#L313))
 
 Returns the column and the transposed row of a matrix for its first
 provably nonzero element, i.e. two column vectors.
@@ -408,7 +412,7 @@ def outer_product_root(
         matrix: MatrixBase | MatrixExpr) -> MatrixBase | OuterProductRoot
 ```
 
-([source](../src/lib/matrix.py#L353))
+([source](../src/lib/matrix.py#L359))
 
 Finds a vector `v` such that `v·vᵀ` equals the given symmetric matrix.
 
@@ -430,7 +434,7 @@ to be non-zero.
 def is_real_matrix(matrix: MatrixBase) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L371))
+([source](../src/lib/matrix.py#L377))
 
 Checks if all elements of a matrix are real.
 
@@ -444,7 +448,7 @@ Returns a bool or `None` if undecidable.
 def is_definite_matrix(matrix: MatrixBase) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L379))
+([source](../src/lib/matrix.py#L385))
 
 Checks if a real matrix is either positive or negative definite.
 
@@ -460,7 +464,7 @@ def is_full_rank(matrix: MatrixBase,
                  simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L410))
+([source](../src/lib/matrix.py#L416))
 
 Tells whether a matrix has full rank.
 
@@ -2642,11 +2646,11 @@ Shifts the angle origin of a polar conic's parametrization.
 #### line\_contains\_point
 
 ```python
-def line_contains_point(line: Line,
-                        point: Point,
-                        *,
-                        simplifier: Callable[[Expr],
-                                             Expr] = expand) -> bool | None
+def line_contains_point(
+        line: Line | MatrixExpr,
+        point: Point | MatrixExpr,
+        *,
+        simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
 ([source](../src/lib/incidence.py#L12))
@@ -2655,27 +2659,27 @@ Tells whether `point` is on `line`.
 
 Takes an optional `simplifier` callback that simplifies the incidence
 polynomial before it gets compared to zero. Returns `None` if the result is
-undecidable.
+undecidable. Accepts unevaluated `MatrixExpr` arguments.
 
 <a id="incidence.conic_contains_point"></a>
 
 #### conic\_contains\_point
 
 ```python
-def conic_contains_point(conic: Conic,
-                         point: Point,
-                         *,
-                         simplifier: Callable[[Expr],
-                                              Expr] = expand) -> bool | None
+def conic_contains_point(
+        conic: Conic | MatrixExpr,
+        point: Point | MatrixExpr,
+        *,
+        simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L27))
+([source](../src/lib/incidence.py#L29))
 
 Checks if a point lies on a conic.
 
 Takes an optional `simplifier` callback that simplifies the incidence
 polynomial before it gets compared to zero. Returns `None` if the result is
-undecidable.
+undecidable. Accepts unevaluated `MatrixExpr` arguments.
 
 <a id="incidence.conic_contains_line"></a>
 
@@ -2689,7 +2693,7 @@ def conic_contains_line(conic: Conic,
                                              Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L42))
+([source](../src/lib/incidence.py#L44))
 
 Checks if a line lies on a conic.
 
@@ -2712,7 +2716,7 @@ def polar_conic_contains_point(
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L61))
+([source](../src/lib/incidence.py#L63))
 
 Checks if a point lies on a conic that is specified in polar form.
 
@@ -2733,7 +2737,7 @@ def are_collinear(points: Sequence[Point],
                   simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L80))
+([source](../src/lib/incidence.py#L82))
 
 Tells whether n points are collinear.
 
@@ -2750,7 +2754,7 @@ def are_concurrent(lines: Sequence[Line],
                    simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L97))
+([source](../src/lib/incidence.py#L99))
 
 Tells whether n lines are concurrent, i.e. go through the same point.
 
@@ -2772,7 +2776,7 @@ def are_on_same_conic(
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L119))
+([source](../src/lib/incidence.py#L121))
 
 Tells whether up to 6 points lie on the same conic section.
 
@@ -2795,7 +2799,7 @@ def are_cocircular(points: Sequence[Point],
                    simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L148))
+([source](../src/lib/incidence.py#L150))
 
 Tells whether n points lie on the same circle.
 

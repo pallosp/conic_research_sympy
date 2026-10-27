@@ -43,9 +43,7 @@ class TestConicXLine:
     def test_general_case(self):
         conic = conic_matrix(1, 2, 3, 4, 5, 6)
         line = Matrix([1, 2, 3])
-        # conic_x_line() returns explicit points here, which pyright can't know (not
-        # an upstream issue).
-        p1, p2 = cast("tuple[PointVector, PointVector]", conic_x_line(conic, line))
+        p1, p2 = conic_x_line(conic, line)
         assert conic_contains_point(conic, p1)
         assert conic_contains_point(conic, p2)
 
@@ -134,10 +132,6 @@ class TestConicXLine:
     def test_partially_symbolic_conic(self):
         b, c, d, e, f = symbols("b c d e f")
         conic = conic_matrix(1, b, c, d, e, f)
-        # conic_x_line() returns explicit points here, which pyright can't know (not
-        # an upstream issue).
-        p1, p2 = cast(
-            "tuple[PointVector, PointVector]", conic_x_line(conic, IDEAL_LINE)
-        )
+        p1, p2 = conic_x_line(conic, IDEAL_LINE)
         assert conic_contains_point(conic, p1)
         assert conic_contains_point(conic, p2)

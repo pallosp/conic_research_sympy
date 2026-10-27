@@ -161,6 +161,16 @@ class TestQuadraticForm:
         # https://www.wolframalpha.com/input?i={{1,2}}*{{1,2},{3,4}}*{{1},{2}}
         assert quadratic_form(Matrix([[1, 2], [3, 4]]), Matrix([1, 2])) == 27
 
+    def test_matrix_expr_vector(self):
+        v = MatrixSymbol("v", 2, 1)
+        form = quadratic_form(Matrix([[1, 2], [3, 4]]), v)
+        assert form.expand() == v[0, 0] ** 2 + 5 * v[0, 0] * v[1, 0] + 4 * v[1, 0] ** 2
+
+    def test_matrix_expr_matrix(self):
+        m = MatrixSymbol("M", 2, 2)
+        form = quadratic_form(m, Matrix([1, 2]))
+        assert form.expand() == m[0, 0] + 2 * m[0, 1] + 2 * m[1, 0] + 4 * m[1, 1]
+
 
 class TestSkewMatrix:
     def test_cross_product(self):

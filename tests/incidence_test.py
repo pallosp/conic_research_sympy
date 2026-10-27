@@ -1,6 +1,6 @@
 import itertools
 
-from sympy import I, Matrix, cos, simplify, sin, sqrt, symbols
+from sympy import I, Matrix, MatrixSymbol, cos, simplify, sin, sqrt, symbols
 from sympy.abc import x, y
 
 from lib.circle import circle
@@ -40,6 +40,12 @@ class TestConicContainsPoint:
         assert conic_contains_point(conic, (x, y)) is None
         assert conic_contains_point(conic, (x, 0, 0)) is True
         assert conic_contains_point(conic, (x, -x)) is False
+
+    def test_matrix_expr(self):
+        conic = conic_from_poly(x * y - 6)
+        assert conic_contains_point(conic, MatrixSymbol("p", 3, 1)) is None
+        assert conic_contains_point(conic, MatrixSymbol("q", 2, 1)) is None
+        assert conic_contains_point(MatrixSymbol("C", 3, 3), (0, 0, 0)) is True
 
 
 class TestPolarConicContainsPoint:
@@ -102,6 +108,12 @@ class TestLineContainsPoint:
         assert line_contains_point(line, (x, 3 - x)) is True
         assert line_contains_point(line, (x, 2 - x)) is False
         assert line_contains_point(line, (x, 1)) is None
+
+    def test_matrix_expr(self):
+        line = MatrixSymbol("l", 3, 1)
+        assert line_contains_point(line, (1, 2)) is None
+        assert line_contains_point(line, (line[1, 0], -line[0, 0], 0)) is True
+        assert line_contains_point(Matrix([1, 1, -3]), MatrixSymbol("p", 3, 1)) is None
 
 
 class TestAreCollinear:

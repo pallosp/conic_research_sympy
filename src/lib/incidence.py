@@ -1,7 +1,7 @@
 from collections.abc import Callable, Sequence
 from itertools import product
 
-from sympy import Expr, Matrix, MatrixBase, expand
+from sympy import Expr, Matrix, MatrixBase, MatrixExpr, expand
 from sympy.core.logic import fuzzy_not
 
 from lib.matrix import is_full_rank, quadratic_form, skew_matrix
@@ -10,8 +10,8 @@ from lib.type_aliases import Conic, Line, Point, PolarConic
 
 
 def line_contains_point(
-    line: Line,
-    point: Point,
+    line: Line | MatrixExpr,
+    point: Point | MatrixExpr,
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
@@ -19,14 +19,16 @@ def line_contains_point(
 
     Takes an optional `simplifier` callback that simplifies the incidence
     polynomial before it gets compared to zero. Returns `None` if the result is
-    undecidable.
+    undecidable. Accepts unevaluated `MatrixExpr` arguments.
     """
-    return simplifier(line.dot(point_to_vec3(point))).is_zero
+    # SymPy's stubs type MatrixExpr products as Expr (fix upstream).
+    incidence = (line.T * point_to_vec3(point))[0, 0]  # pyright: ignore[reportIndexIssue]
+    return simplifier(incidence).is_zero
 
 
 def conic_contains_point(
-    conic: Conic,
-    point: Point,
+    conic: Conic | MatrixExpr,
+    point: Point | MatrixExpr,
     *,
     simplifier: Callable[[Expr], Expr] = expand,
 ) -> bool | None:
@@ -34,7 +36,7 @@ def conic_contains_point(
 
     Takes an optional `simplifier` callback that simplifies the incidence
     polynomial before it gets compared to zero. Returns `None` if the result is
-    undecidable.
+    undecidable. Accepts unevaluated `MatrixExpr` arguments.
     """
     return simplifier(quadratic_form(conic, point_to_vec3(point))).is_zero
 
