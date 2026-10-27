@@ -11,10 +11,10 @@ from lib.circle import (
     circle_radius,
     director_circle,
 )
-from lib.conic import conic_from_poly
-from lib.degenerate_conic import double_line_conic, point_conic
+from lib.conic import conic_from_focus_and_directrix, conic_from_poly
+from lib.degenerate_conic import double_line_conic, line_pair_conic, point_conic
 from lib.ellipse import ellipse
-from lib.line import IDEAL_LINE
+from lib.line import IDEAL_LINE, X_AXIS, Y_AXIS
 from lib.matrix import is_nonzero_multiple, quadratic_form
 
 
@@ -96,13 +96,69 @@ class TestCircleRadius:
 
 class TestDirectorCircle:
     def test_axis_aligned_ellipse(self):
-        assert director_circle(circle((1, 2), r=3)) == circle((1, 2), r=3 * sqrt(2))
-        assert director_circle(ellipse((1, 2), 3, 4)) == circle((1, 2), r=5)
+        result = director_circle(circle((1, 2), r=3))
+        assert is_nonzero_multiple(result, circle((1, 2), r=3 * sqrt(2)))
+        result = director_circle(ellipse((1, 2), 3, 4))
+        assert is_nonzero_multiple(result, circle((1, 2), r=5))
 
     def test_rotated_ellipse(self):
         rotated_ellipse = ellipse((1, 2), 3, 4, r1_angle=pi / 4)
-        assert director_circle(rotated_ellipse) == circle((1, 2), r=5)
+        result = director_circle(rotated_ellipse)
+        assert is_nonzero_multiple(result, circle((1, 2), r=5))
+
+    def test_acute_hyperbola(self):
+        hyperbola = conic_from_poly(x**2 / 25 - y**2 / 9 - 1)
+        assert is_nonzero_multiple(director_circle(hyperbola), circle((0, 0), r=4))
 
     def test_rectangular_hyperbola(self):
         hyperbola = conic_from_poly(x * y - 1)
-        assert director_circle(hyperbola) == circle((0, 0), r=0)
+        assert is_nonzero_multiple(director_circle(hyperbola), circle((0, 0), r=0))
+
+    def test_obtuse_hyperbola(self):
+        hyperbola = conic_from_poly(x**2 / 9 - y**2 / 25 - 1)
+        assert is_nonzero_multiple(director_circle(hyperbola), circle((0, 0), r=4 * I))
+
+    def test_imaginary_ellipse(self):
+        imaginary_ellipse = conic_from_poly(x**2 / 9 + y**2 / 16 + 1)
+        result = director_circle(imaginary_ellipse)
+        assert is_nonzero_multiple(result, circle((0, 0), r=5 * I))
+        imaginary_circle = circle((1, 2), r=3 * I)
+        result = director_circle(imaginary_circle)
+        assert is_nonzero_multiple(result, circle((1, 2), r=3 * sqrt(2) * I))
+
+    def test_parabola(self):
+        directrix = Matrix([1, 2, 3])
+        parabola = conic_from_focus_and_directrix((4, 5), directrix, 1)
+        expected = line_pair_conic(directrix, IDEAL_LINE)
+        assert is_nonzero_multiple(director_circle(parabola), expected)
+
+    def test_finite_point_conic(self):
+        result = director_circle(point_conic((1, 2)))
+        assert is_nonzero_multiple(result, circle((1, 2), r=0))
+
+    def test_ideal_point_conic(self):
+        result = director_circle(point_conic((1, 2, 0)))
+        assert is_nonzero_multiple(result, double_line_conic(IDEAL_LINE))
+
+    def test_intersecting_line_pair(self):
+        perpendicular = line_pair_conic(X_AXIS, Matrix([1, 0, -1]))
+        assert is_nonzero_multiple(director_circle(perpendicular), circle((1, 0), r=0))
+        oblique = conic_from_poly((y - 2 * x) * (y - x))
+        assert is_nonzero_multiple(director_circle(oblique), circle((0, 0), r=0))
+
+    def test_parallel_line_pair(self):
+        line_pair = line_pair_conic(Y_AXIS, Matrix([1, 0, -1]))
+        result = director_circle(line_pair)
+        assert is_nonzero_multiple(result, double_line_conic(IDEAL_LINE))
+
+    def test_line_pair_with_ideal_line(self):
+        line_pair = line_pair_conic(X_AXIS, IDEAL_LINE)
+        result = director_circle(line_pair)
+        assert is_nonzero_multiple(result, double_line_conic(IDEAL_LINE))
+
+    def test_double_line(self):
+        assert director_circle(double_line_conic(X_AXIS)).is_zero_matrix
+        assert director_circle(double_line_conic(IDEAL_LINE)).is_zero_matrix
+
+    def test_zero_matrix(self):
+        assert director_circle(Matrix.zeros(3, 3)).is_zero_matrix

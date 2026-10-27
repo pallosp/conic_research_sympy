@@ -61,7 +61,23 @@ def circle_radius(conic: Conic) -> Expr:
 def director_circle(conic: Conic) -> Conic:
     """Computes the director circle of a conic.
 
-    It's also called orthoptic circle or Fermat–Apollonius circle.
+    It's also called orthoptic circle or Fermat–Apollonius circle. It's the
+    locus of points from which the two tangents of the conic are
+    perpendicular.
+
+    Return value by conic type:
+
+    - *Ellipses*: a real circle.
+    - *Hyperbolas*: a real circle, zero-radius circle or imaginary circle for
+      acute, rectangular and obtuse hyperbolas, respectively.
+    - *Imaginary ellipses*: an imaginary circle.
+    - *Parabolas*: the line pair of the
+      [directrix](#parabola.parabola_directrix) and the ideal line.
+    - *Finite point conics and line pairs crossing at a finite point*: a
+      zero-radius circle at that point.
+    - *Ideal point conics and line pairs crossing at an ideal point*: the
+      double ideal line.
+    - *Double lines and the zero matrix*: the zero matrix.
 
     *Definition*: <https://en.wikipedia.org/wiki/Director_circle><br>
     *Formula*:
@@ -70,9 +86,9 @@ def director_circle(conic: Conic) -> Conic:
     a, _, c, d, e, f = conic_coefficients(conic.adjugate())
     return Matrix(
         [
-            [-1, 0, d / f],
-            [0, -1, e / f],
-            [d / f, e / f, -(a + c) / f],
+            [-f, 0, d],
+            [0, -f, e],
+            [d, e, -(a + c)],
         ],
     )
 

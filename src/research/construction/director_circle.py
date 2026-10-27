@@ -21,11 +21,13 @@ center = conic_center(conic)
 director_circle = circle(center, r=radius).applyfunc(simplify)
 println_indented(director_circle)
 
-print("\nDirector circle matrix in adjugate form:\n")
+print("\nDirector circle matrix in adjugate form, scaled by f_adj:\n")
 
 a_adj, b_adj, c_adj, d_adj, e_adj, f_adj = conic_coefficients(conic.adjugate())
 println_indented(
-    director_circle.subs(
+    (director_circle * f_adj)
+    .applyfunc(simplify)
+    .subs(
         zip(
             [a_adj, b_adj, c_adj, d_adj, e_adj, f_adj],
             symbols("a_adj b_adj c_adj d_adj e_adj f_adj"),
