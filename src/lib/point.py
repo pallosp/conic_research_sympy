@@ -1,6 +1,7 @@
 from collections.abc import Sequence
+from typing import overload
 
-from sympy import Expr, I, ImmutableMatrix, Matrix, MatrixBase, S, sympify
+from sympy import Expr, I, ImmutableMatrix, Matrix, MatrixBase, MatrixExpr, S, sympify
 
 from lib.type_aliases import FinitePoint, Line, Point, PointVector, Scalar
 
@@ -59,19 +60,28 @@ def direction_to_xy(direction: MatrixBase | Sequence[Scalar]) -> tuple[Expr, Exp
     return dx, dy
 
 
-def point_to_vec3(point: Point) -> PointVector:
+@overload
+def point_to_vec3(point: Point) -> PointVector: ...
+@overload
+def point_to_vec3(point: MatrixExpr) -> PointVector | MatrixExpr: ...
+def point_to_vec3(point: Point | MatrixExpr) -> PointVector | MatrixExpr:
     """Computes the homogeneous coordinates of a projective point.
 
-    Returns 3D column vectors as they are, without copying, and reshapes 3D row
-    vectors to columns.
+    Returns 3D column vectors as they are, without copying, and transposes 3D
+    row vectors to columns. Accepts unevaluated `MatrixExpr` vectors too.
     """
-    if len(point) not in (2, 3):
-        raise ValueError("The point must be a 2D or 3D vector, list or tuple.")
-    if len(point) == 2:
+    if isinstance(point, (tuple, list)):
+        if len(point) == 2:
+            return Matrix([point[0], point[1], 1])
+        if len(point) == 3:
+            return Matrix(point)
+    elif point.shape in ((2, 1), (1, 2)):
         return Matrix([point[0], point[1], 1])
-    if isinstance(point, MatrixBase):
-        return point if point.shape == (3, 1) else point.reshape(3, 1)
-    return Matrix(point)
+    elif point.shape == (3, 1):
+        return point
+    elif point.shape == (1, 3):
+        return point.T
+    raise ValueError("The point must be a 2D or 3D vector, list or tuple.")
 
 
 def centroid(*points: FinitePoint) -> Matrix:

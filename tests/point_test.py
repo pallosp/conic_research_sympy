@@ -1,12 +1,12 @@
 import pytest
-from sympy import I, Matrix, MatrixBase, Rational, nan, symbols, zoo
+from sympy import I, Matrix, MatrixBase, MatrixSymbol, Rational, nan, symbols, zoo
 
 from lib.circle import circle
 from lib.conic_classes import is_circular
 from lib.degenerate_conic import double_line_conic, point_conic
 from lib.incidence import conic_contains_point
 from lib.line import IDEAL_LINE, X_AXIS
-from lib.matrix import is_nonzero_multiple
+from lib.matrix import is_nonzero_multiple, pivot_column
 from lib.point import (
     CIRCULAR_POINT_I,
     CIRCULAR_POINT_J,
@@ -18,6 +18,7 @@ from lib.point import (
     point_to_vec3,
     point_to_xy,
 )
+from tests.utils import is_explicit_matrix
 
 
 class TestPointToVec3:
@@ -39,6 +40,23 @@ class TestPointToVec3:
     def test_invalid_length(self):
         with pytest.raises(ValueError, match="2D or 3D"):
             point_to_vec3([1, 2, 3, 4])
+
+    def test_invalid_shape(self):
+        with pytest.raises(ValueError, match="2D or 3D"):
+            point_to_vec3(Matrix([[1, 2], [3, 4]]))
+
+    def test_matrix_expr(self):
+        point = MatrixSymbol("p", 3, 1)
+        assert point_to_vec3(point) is point
+        row = MatrixSymbol("r", 1, 3)
+        assert point_to_vec3(row) == row.T
+        xy = MatrixSymbol("q", 2, 1)
+        assert point_to_vec3(xy) == Matrix([xy[0, 0], xy[1, 0], 1])
+
+    def test_pivot_column(self):
+        column = pivot_column(Matrix(3, 3, symbols("m:9")))
+        assert not is_explicit_matrix(column)
+        assert point_to_vec3(column) is column
 
 
 class TestPointToXy:

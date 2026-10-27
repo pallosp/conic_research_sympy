@@ -1860,7 +1860,7 @@ Every circle passes through it.
 def ideal_point(x: Scalar, y: Scalar) -> PointVector
 ```
 
-([source](../src/lib/point.py#L26))
+([source](../src/lib/point.py#L27))
 
 Creates an ideal point at the given direction.
 
@@ -1872,7 +1872,7 @@ Creates an ideal point at the given direction.
 def ideal_point_on_line(line: Line) -> PointVector
 ```
 
-([source](../src/lib/point.py#L31))
+([source](../src/lib/point.py#L32))
 
 Returns the coordinates of the ideal point on the line.
 
@@ -1889,7 +1889,7 @@ If the line is the ideal line, returns `[0, 0, 0]ᵀ`.
 def point_to_xy(point: FinitePoint) -> tuple[Expr, Expr]
 ```
 
-([source](../src/lib/point.py#L42))
+([source](../src/lib/point.py#L43))
 
 Computes the Euclidean coordinates of a projective point as an `(x, y)` tuple.
 
@@ -1902,7 +1902,7 @@ def direction_to_xy(
         direction: MatrixBase | Sequence[Scalar]) -> tuple[Expr, Expr]
 ```
 
-([source](../src/lib/point.py#L51))
+([source](../src/lib/point.py#L52))
 
 Returns the components of a 2D direction vector or an ideal point.
 
@@ -1911,15 +1911,15 @@ Returns the components of a 2D direction vector or an ideal point.
 #### point\_to\_vec3
 
 ```python
-def point_to_vec3(point: Point) -> PointVector
+def point_to_vec3(point: Point | MatrixExpr) -> PointVector | MatrixExpr
 ```
 
-([source](../src/lib/point.py#L62))
+([source](../src/lib/point.py#L67))
 
 Computes the homogeneous coordinates of a projective point.
 
-Returns 3D column vectors as they are, without copying, and reshapes 3D row
-vectors to columns.
+Returns 3D column vectors as they are, without copying, and transposes 3D
+row vectors to columns. Accepts unevaluated `MatrixExpr` vectors too.
 
 <a id="point.centroid"></a>
 
@@ -1929,7 +1929,7 @@ vectors to columns.
 def centroid(*points: FinitePoint) -> Matrix
 ```
 
-([source](../src/lib/point.py#L77))
+([source](../src/lib/point.py#L87))
 
 Computes the centroid of a set of points.
 
@@ -1943,7 +1943,7 @@ Returns the point's coordinates as a 2D column vector.
 def perpendicular_foot(point: FinitePoint, line: Line) -> Matrix
 ```
 
-([source](../src/lib/point.py#L93))
+([source](../src/lib/point.py#L103))
 
 Computes the foot of the perpendicular through a point to a line.
 
