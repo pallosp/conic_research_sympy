@@ -6,10 +6,15 @@
       "packageManager": "ms-python.python:pip"
     }
   ],
+  // Offer missing imports in completions and as Cmd+. quick fixes.
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.indexing": true,
+  "python.analysis.languageServerMode": "default",
   // Format with ruff, like pre-commit. Black can move `# pyright: ignore`
   // comments off their line.
   // Install: code --install-extension charliermarsh.ruff
   "[python]": {
-    "editor.defaultFormatter": "charliermarsh.ruff"
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true
   }
 }
