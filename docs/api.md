@@ -1501,7 +1501,18 @@ def line_pair_conic(line1: Line, line2: Line) -> Conic
 
 ([source](../src/lib/degenerate_conic.py#L17))
 
-Constructs a conic section from two projective lines.
+Constructs a degenerate conic consisting of two lines.
+
+Formula: `C = (l₁ l₂ᵀ + l₂ l₁ᵀ) / 2`
+
+Derivation: a point `p` lies on line `l` iff `pᵀ l = lᵀ p = 0`, so it
+lies on the line pair iff
+
+    (pᵀ l₁)(l₂ᵀ p) = pᵀ (l₁ l₂ᵀ) p = 0
+
+The matrix `M = l₁ l₂ᵀ` defines this quadratic form but is not symmetric.
+Replacing it with its symmetric part `(M + Mᵀ) / 2` leaves the quadratic
+form unchanged and yields the formula above.
 
 <a id="degenerate_conic.double_line_conic"></a>
 
@@ -1511,7 +1522,7 @@ Constructs a conic section from two projective lines.
 def double_line_conic(line: Line) -> Conic
 ```
 
-([source](../src/lib/degenerate_conic.py#L24))
+([source](../src/lib/degenerate_conic.py#L36))
 
 Constructs a degenerate conic consisting of two coincident lines.
 
@@ -1523,7 +1534,7 @@ Constructs a degenerate conic consisting of two coincident lines.
 def point_conic(point: Point) -> Conic
 ```
 
-([source](../src/lib/degenerate_conic.py#L31))
+([source](../src/lib/degenerate_conic.py#L43))
 
 Constructs a conic that degenerates to a single point.
 
@@ -1553,7 +1564,7 @@ def split_to_lines(
         conic: Conic) -> tuple[Line | MatrixExpr, Line | MatrixExpr]
 ```
 
-([source](../src/lib/degenerate_conic.py#L62))
+([source](../src/lib/degenerate_conic.py#L74))
 
 Splits a degenerate conic into two lines.
 
@@ -1577,7 +1588,7 @@ section 11.1
 def extract_point(degenerate_conic: Conic) -> PointVector | MatrixExpr
 ```
 
-([source](../src/lib/degenerate_conic.py#L109))
+([source](../src/lib/degenerate_conic.py#L121))
 
 Extracts the point from a point conic or the intersection of the
 lines from a line pair conic.

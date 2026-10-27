@@ -15,7 +15,19 @@ ZERO_CONIC: ImmutableMatrix = ImmutableMatrix.zeros(3, 3)
 
 
 def line_pair_conic(line1: Line, line2: Line) -> Conic:
-    """Constructs a conic section from two projective lines."""
+    """Constructs a degenerate conic consisting of two lines.
+
+    Formula: `C = (l₁ l₂ᵀ + l₂ l₁ᵀ) / 2`
+
+    Derivation: a point `p` lies on line `l` iff `pᵀ l = lᵀ p = 0`, so it
+    lies on the line pair iff
+
+        (pᵀ l₁)(l₂ᵀ p) = pᵀ (l₁ l₂ᵀ) p = 0
+
+    The matrix `M = l₁ l₂ᵀ` defines this quadratic form but is not symmetric.
+    Replacing it with its symmetric part `(M + Mᵀ) / 2` leaves the quadratic
+    form unchanged and yields the formula above.
+    """
     if line1.shape != (3, 1) or line2.shape != (3, 1):
         raise ValueError("The lines must be 3-dimensional column vectors.")
     return (line1 * line2.T + line2 * line1.T) / 2
