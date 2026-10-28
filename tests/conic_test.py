@@ -209,8 +209,9 @@ class TestFocalAxis:
         assert ellipse_axis == point_conic_axis
 
     def test_line_pair(self):
-        line1 = Matrix([1, 2, 3])
-        line2 = Matrix([4, 5, 6])
+        # Normal vectors of integer length keep the focal axis rational.
+        line1 = Matrix([3, 4, 5])
+        line2 = Matrix([5, 12, 6])
         assert is_nonzero_multiple(
             focal_axis(line_pair_conic(line1, line2)),
             angle_bisector(line1, line2),
