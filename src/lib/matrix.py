@@ -1,3 +1,4 @@
+import itertools
 from collections.abc import Callable, Sequence
 from typing import Self, cast, overload
 
@@ -39,22 +40,61 @@ def is_nonzero_multiple(
     if m1.shape != m2.shape:
         return False
 
-    m1_is_zero = m1.is_zero_matrix
-    m2_is_zero = m2.is_zero_matrix
-    if m1_is_zero and m2_is_zero:
+    return _is_nonzero_multiple(m1.flat(), m2.flat())
+
+
+def _is_nonzero_multiple(a: list[Expr], b: list[Expr]) -> bool | None:
+    """Tells whether two vectors of the same length are non-zero scalar multiples
+    of each other.
+    """
+    a_is_zero = fuzzy_and(e.is_zero for e in a)
+    b_is_zero = fuzzy_and(e.is_zero for e in b)
+    if a_is_zero and b_is_zero:
         return True
+    if a_is_zero or b_is_zero:
+        return False
 
-    # Linearize the matrices to be able to use dot product.
-    v1 = m1.reshape(len(m1), 1)
-    v2 = m2.reshape(len(m2), 1)
+    # The vectors are proportional iff all 2x2 minors of [a | b] vanish.
+    # Unlike the Lagrange identity |a|²|b|² - (a·b)² = Σ minor², this also
+    # works over complex numbers.
+    def is_zero_minor(i: int, j: int) -> bool | None:
+        return _is_zero(a[i] * b[j] - a[j] * b[i])
 
-    return fuzzy_and(
-        [
-            (v1.dot(v1) * v2.dot(v2) - v1.dot(v2) ** 2).simplify().is_zero,
-            fuzzy_not(m1_is_zero),
-            fuzzy_not(m2_is_zero),
-        ],
+    # If a[k] or b[k] ≠ 0, the minors containing index k imply proportionality.
+    pivot = next(
+        (k for k in range(len(a)) if a[k].is_zero is False or b[k].is_zero is False),
+        None,
     )
+    if pivot is not None:
+        # fuzzy_and stops at the first False.
+        pivot_minors_vanish = fuzzy_and(
+            is_zero_minor(pivot, j) for j in range(len(a)) if j != pivot
+        )
+        if pivot_minors_vanish is False:
+            return False
+        if pivot_minors_vanish:
+            # a and b are proportional, so each is zero iff its pivot element is.
+            return fuzzy_and(
+                [fuzzy_not(_is_zero(a[pivot])), fuzzy_not(_is_zero(b[pivot]))],
+            )
+
+    # The other minors can't prove proportionality, but may disprove it.
+    pairs = itertools.combinations(range(len(a)), 2)
+    if any(is_zero_minor(i, j) is False for i, j in pairs if pivot not in (i, j)):
+        return False
+    return None
+
+
+def _is_zero(expr: Expr) -> bool | None:
+    """Checks whether an expression is zero, trying the cheap `expand` first."""
+    is_zero = expr.expand().is_zero
+    return is_zero if is_zero is not None else expr.simplify().is_zero
+
+
+def _is_positive(expr: Expr) -> bool | None:
+    """Checks whether an expression is positive, factoring it if necessary."""
+    is_positive = expr.is_positive
+    return is_positive if is_positive is not None else expr.factor().is_positive
 
 
 def is_positive_multiple(
@@ -73,21 +113,28 @@ def is_positive_multiple(
     if m1.shape != m2.shape:
         return False
 
-    m1_is_zero = m1.is_zero_matrix
-    m2_is_zero = m2.is_zero_matrix
-    if m1_is_zero and m2_is_zero:
+    if m1.is_zero_matrix and m2.is_zero_matrix:
         return True
 
-    # Linearize the matrices to be able to use dot product.
-    v1 = m1.reshape(len(m1), 1)
-    v2 = m2.reshape(len(m2), 1)
+    a = m1.flat()
+    b = m2.flat()
 
-    return fuzzy_and(
-        [
-            v1.dot(v2).factor().is_positive,
-            (v1.dot(v1) * v2.dot(v2) - v1.dot(v2) ** 2).simplify().is_zero,
-        ],
-    )
+    # If b = λ·a, then λ = b[k] / a[k] for any a[k] ≠ 0, and 1/λ = a[k] / b[k]
+    # for any b[k] ≠ 0. Both have the same sign, and checking it is cheap, so do
+    # it before the proportionality check. The ratios are equal, but SymPy may
+    # only be able to decide the sign for some of them.
+    ratio_is_positive = None
+    for ak, bk in zip(a, b, strict=True):
+        if ak.is_zero is False:
+            ratio_is_positive = _is_positive(bk / ak)
+        elif bk.is_zero is False:
+            ratio_is_positive = _is_positive(ak / bk)
+        if ratio_is_positive is not None:
+            break
+    if ratio_is_positive is False:
+        return False
+
+    return fuzzy_and([ratio_is_positive, _is_nonzero_multiple(a, b)])
 
 
 def max_eigenvalue(symmetric_matrix_2x2: MatrixBase) -> Expr:

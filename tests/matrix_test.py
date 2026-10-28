@@ -8,6 +8,8 @@ from sympy import (
     ShapeError,
     Transpose,
     ZeroMatrix,
+    cos,
+    sin,
     sqrt,
     symbols,
 )
@@ -74,6 +76,22 @@ class TestIsNonZeroMultiple:
         nz = symbols("nz", nonzero=True)
         assert is_nonzero_multiple([1, 2], [nz, nz * 2]) is True
 
+    def test_complex(self):
+        assert is_nonzero_multiple([1, I], [I, -1]) is True
+        # Regression: |v1|²|v2|² - (v1·v2)² = 1·(1 + 1 + I²) - 1² = 0 falsely
+        # signaled proportionality.
+        assert is_nonzero_multiple([1, 0, 0], [1, 1, I]) is False
+
+    def test_undecidable_pivot_minors(self):
+        # The minors with the pivot 1 are 1 - x² and -x, the third one is -1.
+        x = symbols("x")
+        assert is_nonzero_multiple([1, x, 1], [x, 1, 0]) is False
+
+    def test_nonzero_only_after_expansion(self):
+        x = symbols("x", real=True)
+        one = (x + 1) ** 2 - x**2 - 2 * x
+        assert is_nonzero_multiple([1, 1], [one, one]) is True
+
     def test_undecidable(self):
         x = symbols("x")
         assert is_nonzero_multiple([1, 2], [x, x * 2]) is None
@@ -133,6 +151,41 @@ class TestIsPositiveMultiple:
         p = symbols("p", positive=True)
         assert is_positive_multiple([1, 2], [p, p * 2]) is True
         assert is_positive_multiple([1, 2], [p, p]) is False
+
+    def test_undecidable_first_ratio(self):
+        x = symbols("x", real=True)
+        one = sin(x) ** 2 + cos(x) ** 2  # Neither is_positive nor factor() decides
+        assert is_positive_multiple([1, 1], [one, 1]) is True
+        assert is_positive_multiple([1, 1], [-one, -1]) is False
+
+    def test_pivot_only_in_second_matrix(self):
+        x = symbols("x", real=True)
+        one = (x + 1) ** 2 - x**2 - 2 * x  # Not provably nonzero without expansion
+        assert is_positive_multiple([one, 0], [1, 0]) is True
+        assert is_positive_multiple([one, 0], [-1, 0]) is False
+
+    def test_sign_only_after_expansion(self):
+        x = symbols("x", real=True)
+        one = (x + 1) ** 2 - x**2 - 2 * x
+        assert is_positive_multiple([1, 1], [one, one]) is True
+        assert is_positive_multiple([1, 1], [-one, -one]) is False
+
+    def test_sign_only_after_factoring(self):
+        x = symbols("x", positive=True)
+        y = symbols("y", real=True, nonzero=True)
+        a = y * (x + 1)
+        # The ratios (±2xy ± 2y) / (y(x + 1)) only cancel to ±2 when factored.
+        assert is_positive_multiple([a], [2 * x * y + 2 * y]) is True
+        assert is_positive_multiple([a], [-2 * x * y - 2 * y]) is False
+
+    def test_complex(self):
+        assert is_positive_multiple([1, I], [2, 2 * I]) is True
+        assert is_positive_multiple([1, I], [-2, -2 * I]) is False
+        assert is_positive_multiple([1, I], [I, -1]) is False
+        # Regressions from the former dot product based implementation:
+        # [1, I]·[2, 2I] = 2 + 2I² = 0 isn't positive, and the Lagrange identity
+        # |v1|²|v2|² - (v1·v2)² = 1·(1 + 1 + I²) - 1² = 0 claimed proportionality.
+        assert is_positive_multiple([1, 0, 0], [1, 1, I]) is False
 
     def test_undecidable(self):
         x = symbols("x", real=True)
