@@ -20,6 +20,7 @@ pydoc-markdown = "^4.8.2"
 pyright = "^1.1.414"
 pytest = "^9.1.1"
 pytest-cov = "^7.1.0"
+pytest-xdist = "^3.8.0"
 ruff = "^0.16.1"
 
 [build-system]
@@ -28,6 +29,9 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
+# Gains flatten out beyond ~4 workers: each one pays SymPy's import time.
+# Run `pytest -n 0` for sequential execution.
+addopts = "-n 4"
 
 [tool.pyright]
 pythonVersion = "3.12"
