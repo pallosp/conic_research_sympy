@@ -269,6 +269,8 @@ def tangents_through_point(
     *Algorithm*: the dual of [conic_x_line](#intersection.conic_x_line).
     """
     point = point_to_vec3(point)
-    t = tangent_pair_conic(conic, point)
+    skew = skew_matrix(point)
+    # The tangent pair conic, inlined because alpha must match its exact scale.
+    t = skew.T * conic.adjugate() * skew
     alpha = sqrt(-conic.det() * quadratic_form(conic, point))
-    return pivot_column_and_row(t + alpha * skew_matrix(point))
+    return pivot_column_and_row(t + alpha * skew)

@@ -53,6 +53,7 @@ def conic_x_line(
     # unavoidable.
 
     skew_mat = skew_matrix(line)
+    # Line conic of the lines through either intersection point.
     m = skew_mat.T * conic * skew_mat
     alpha = sqrt(-quadratic_form(conic.adjugate(), line))
     intersections = m + alpha * skew_mat
