@@ -364,7 +364,9 @@ def skew_matrix(vector3: MatrixBase | MatrixExpr) -> MatrixBase | SkewMatrix
 
 Creates a skew-symmetric matrix from a 3D column vector.
 
-The matrix turns cross products into matrix products: `skew(v)·w = v⨯w`
+Properties:
+- The matrix turns cross products into matrix products: `skew(v)·w = v⨯w`
+- The skew matrix of a cross product `skew(v⨯w)` expands to `w·vᵀ - v·wᵀ`
 
 Returns an explicit matrix for an explicit vector, and an unevaluated
 `SkewMatrix` for a matrix expression.
@@ -377,7 +379,7 @@ Returns an explicit matrix for an explicit vector, and an unevaluated
 def pivot_column(matrix: MatrixBase | MatrixExpr) -> MatrixBase | PivotColumn
 ```
 
-([source](../src/lib/matrix.py#L348))
+([source](../src/lib/matrix.py#L350))
 
 Returns the column of a matrix for its first provably nonzero element.
 
@@ -399,7 +401,7 @@ def pivot_column_and_row(
 ) -> tuple[MatrixBase | PivotColumn, MatrixBase | TransposedPivotRow]
 ```
 
-([source](../src/lib/matrix.py#L362))
+([source](../src/lib/matrix.py#L364))
 
 Returns the column and the transposed row of a matrix for its first
 provably nonzero element, i.e. two column vectors.
@@ -418,7 +420,7 @@ def outer_product_root(
         matrix: MatrixBase | MatrixExpr) -> MatrixBase | OuterProductRoot
 ```
 
-([source](../src/lib/matrix.py#L408))
+([source](../src/lib/matrix.py#L410))
 
 Finds a vector `v` such that `v·vᵀ` equals the given symmetric matrix.
 
@@ -440,7 +442,7 @@ to be non-zero.
 def is_real_matrix(matrix: MatrixBase) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L426))
+([source](../src/lib/matrix.py#L428))
 
 Checks if all elements of a matrix are real.
 
@@ -454,7 +456,7 @@ Returns a bool or `None` if undecidable.
 def is_definite_matrix(matrix: MatrixBase) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L434))
+([source](../src/lib/matrix.py#L436))
 
 Checks if a real matrix is either positive or negative definite.
 
@@ -470,7 +472,7 @@ def is_full_rank(matrix: MatrixBase,
                  simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L465))
+([source](../src/lib/matrix.py#L467))
 
 Tells whether a matrix has full rank.
 

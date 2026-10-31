@@ -303,7 +303,9 @@ def skew_matrix(vector3: MatrixExpr) -> SkewMatrix: ...
 def skew_matrix(vector3: MatrixBase | MatrixExpr) -> MatrixBase | SkewMatrix:
     """Creates a skew-symmetric matrix from a 3D column vector.
 
-    The matrix turns cross products into matrix products: `skew(v)·w = v⨯w`
+    Properties:
+    - The matrix turns cross products into matrix products: `skew(v)·w = v⨯w`
+    - The skew matrix of a cross product `skew(v⨯w)` expands to `w·vᵀ - v·wᵀ`
 
     Returns an explicit matrix for an explicit vector, and an unevaluated
     `SkewMatrix` for a matrix expression.

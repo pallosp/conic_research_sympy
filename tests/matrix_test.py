@@ -230,6 +230,11 @@ class TestSkewMatrix:
         u, v = Matrix([1, 2, 3]), Matrix([4, 5, 6])
         assert skew_matrix(u) * v == u.cross(v)
 
+    def test_skew_of_cross_product(self):
+        a = Matrix(symbols("a:3"))
+        b = Matrix(symbols("b:3"))
+        assert skew_matrix(a.cross(b)) == b * a.T - a * b.T
+
     def test_matrix_expr(self):
         v = MatrixSymbol("v", 3, 1)
         skew = skew_matrix(v)
