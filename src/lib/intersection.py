@@ -52,9 +52,9 @@ def conic_x_line(
     # Only the branch in step 3 (pivot_column_and_row) remains, and it's
     # unavoidable.
 
-    skew_mat = skew_matrix(line)
+    skew = skew_matrix(line)
     # Line conic of the lines through either intersection point.
-    m = skew_mat.T * conic * skew_mat
+    lc = skew.T * conic * skew
     alpha = sqrt(-quadratic_form(conic.adjugate(), line))
-    intersections = m + alpha * skew_mat
+    intersections = lc + alpha * skew
     return pivot_column_and_row(intersections)
