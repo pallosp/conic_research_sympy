@@ -9,10 +9,12 @@ from sympy import (
     exp,
     factor,
     log,
+    nan,
     sin,
     sqrt,
     symbols,
     trigsimp,
+    zoo,
 )
 from sympy.abc import x, y
 
@@ -22,13 +24,14 @@ from lib.central_conic import (
     secondary_radius,
     shrink_conic_to_zero,
 )
-from lib.circle import UNIT_CIRCLE, circle
+from lib.circle import IMAGINARY_UNIT_CIRCLE, UNIT_CIRCLE, circle
 from lib.conic import (
     conic_from_focus_and_directrix,
     conic_from_poly,
     conic_through_points,
     eccentricity,
     focal_axis,
+    focal_parameter,
     ideal_points,
     polar_line,
     pole_point,
@@ -170,6 +173,45 @@ class TestEccentricity:
     def test_symbolic_zero_radius_circle(self):
         zero_circle = circle(symbols("x y"), r=0)
         assert eccentricity(zero_circle) == 0
+
+
+class TestFocalParameter:
+    # The focus-directrix distance is |3 + 8 + 5| / 5
+    focus = (1, 2)
+    directrix = Matrix([3, 4, 5])
+
+    def test_ellipse(self):
+        conic = conic_from_focus_and_directrix(
+            self.focus, self.directrix, Rational(1, 2)
+        )
+        assert focal_parameter(conic) == Rational(16, 5)
+        assert focal_parameter(conic * -2) == Rational(16, 5)
+
+    def test_parabola(self):
+        conic = conic_from_focus_and_directrix(self.focus, self.directrix, 1)
+        assert focal_parameter(conic) == Rational(16, 5)
+        assert focal_parameter(conic * -2) == Rational(16, 5)
+
+    def test_hyperbola(self):
+        conic = conic_from_focus_and_directrix(self.focus, self.directrix, 3)
+        assert focal_parameter(conic) == Rational(16, 5)
+        assert focal_parameter(conic * -2) == Rational(16, 5)
+
+    def test_imaginary_ellipse(self):
+        conic = conic_from_focus_and_directrix(self.focus, self.directrix, I / 2)
+        assert focal_parameter(conic) == -Rational(16, 5)
+        assert focal_parameter(conic * -2) == -Rational(16, 5)
+
+    def test_circle(self):
+        assert focal_parameter(circle((1, 2), r=3)) == zoo
+        assert focal_parameter(IMAGINARY_UNIT_CIRCLE) == zoo
+
+    def test_degenerate_conic(self):
+        assert focal_parameter(point_conic((1, 2))) == 0
+        assert focal_parameter(point_conic((2, 1, 0))) == 0
+        assert focal_parameter(line_pair_conic(X_AXIS, Y_AXIS)) == 0
+        assert focal_parameter(line_pair_conic(X_AXIS, IDEAL_LINE)) == nan
+        assert focal_parameter(circle((1, 2), r=0)) == nan
 
 
 class TestFocalAxis:

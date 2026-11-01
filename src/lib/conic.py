@@ -1,4 +1,4 @@
-from sympy import Expr, Matrix, MatrixExpr, Poly, Symbol, abc, sqrt
+from sympy import Abs, Expr, Matrix, MatrixExpr, Poly, Symbol, abc, sign, sqrt
 
 from lib.conic_direction import ConicNormFactor, focal_axis_direction
 from lib.matrix import (
@@ -118,6 +118,25 @@ def eccentricity(conic: Conic) -> Expr:
     s = sqrt(((a - c) ** 2 + 4 * b**2).factor())
     norm_sign = ConicNormFactor(conic)
     return sqrt(2 * s / (s - norm_sign * (a + c)))
+
+
+def focal_parameter(conic: Conic) -> Expr:
+    """Computes the distance between a conic's focus and the corresponding directrix.
+
+    Special cases:
+     - infinity for real and imaginary circles, as their directrix is the ideal
+       line;
+     - the negated focus-directrix distance for other imaginary ellipses;
+     - `nan` for zero-radius circles and conics containing the ideal line;
+     - 0 for all other degenerate conics.
+
+    *Formula*:
+    [research/conic_properties/focal_parameter.py](../src/research/conic_properties/focal_parameter.py)
+    """
+    a, b, c, *_ = conic_coefficients(conic)
+    det = conic.det()
+    s = sqrt((a - c) ** 2 + 4 * b**2)
+    return 2 * sqrt(Abs(det) / s) / (s - sign(det) * (a + c))
 
 
 def focal_axis(conic: Conic) -> Line:
