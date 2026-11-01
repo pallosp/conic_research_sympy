@@ -1,7 +1,6 @@
 from sympy import ImmutableMatrix, MatrixExpr
 
 from lib.matrix import (
-    conic_matrix,
     outer_product_root,
     pivot_column,
     pivot_column_and_row,
@@ -57,18 +56,15 @@ def point_conic(point: Point) -> Conic:
     This function returns the corresponding conic matrix for the choice
     `λ₁ = λ₂ = λ₃ = -1`.
 
+    An alternative way to construct the point conic is to take the tangent lines
+    through the point to an imaginary ellipse. The choice of the diag(-1, -1, -1)
+    imaginary unit circle yields the same conic matrix.
+
     Hint: Use [extract_point](#degenerate_conic.extract_point) to recover the
     point from the resulting conic.
     """
-    x, y, z = point_to_vec3(point).flat()
-    return conic_matrix(
-        -y * y - z * z,
-        x * y,
-        -z * z - x * x,
-        x * z,
-        y * z,
-        -x * x - y * y,
-    )
+    skew = skew_matrix(point_to_vec3(point))
+    return skew * skew  # = skew.T * Matrix.diag([-1, -1, -1]) * skew
 
 
 def split_to_lines(
@@ -88,8 +84,8 @@ def split_to_lines(
     *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
     section 11.1
     """
-    # The conic consisting of the lines l and m is represented by the
-    # symmetric matrix C = (l·mᵀ + m·lᵀ)/2, or a multiple of it.
+    # The conic consisting of the lines l and m is represented by the symmetric
+    # matrix C = (l·mᵀ + m·lᵀ)/2, or a multiple of it (see #line_pair_conic)
     #
     # Goal: find the rank-1 matrix l·mᵀ. All its columns are multiples of l
     # and all its rows are multiples of m, so any non-zero element yields

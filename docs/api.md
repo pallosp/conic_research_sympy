@@ -1551,7 +1551,7 @@ The zero matrix. Every point satisfies its equation.
 def line_pair_conic(line1: Line, line2: Line) -> Conic
 ```
 
-([source](../src/lib/degenerate_conic.py#L17))
+([source](../src/lib/degenerate_conic.py#L16))
 
 Constructs a degenerate conic consisting of two lines.
 
@@ -1574,7 +1574,7 @@ form unchanged and yields the formula above.
 def double_line_conic(line: Line) -> Conic
 ```
 
-([source](../src/lib/degenerate_conic.py#L36))
+([source](../src/lib/degenerate_conic.py#L35))
 
 Constructs a degenerate conic consisting of two coincident lines.
 
@@ -1586,7 +1586,7 @@ Constructs a degenerate conic consisting of two coincident lines.
 def point_conic(point: Point) -> Conic
 ```
 
-([source](../src/lib/degenerate_conic.py#L43))
+([source](../src/lib/degenerate_conic.py#L42))
 
 Constructs a conic that degenerates to a single point.
 
@@ -1604,6 +1604,10 @@ where `λ₁`, `λ₂` and `λ₃` are either all positive or all negative.
 This function returns the corresponding conic matrix for the choice
 `λ₁ = λ₂ = λ₃ = -1`.
 
+An alternative way to construct the point conic is to take the tangent lines
+through the point to an imaginary ellipse. The choice of the diag(-1, -1, -1)
+imaginary unit circle yields the same conic matrix.
+
 Hint: Use [extract_point](#degenerate_conic.extract_point) to recover the
 point from the resulting conic.
 
@@ -1616,7 +1620,7 @@ def split_to_lines(
         conic: Conic) -> tuple[Line | MatrixExpr, Line | MatrixExpr]
 ```
 
-([source](../src/lib/degenerate_conic.py#L74))
+([source](../src/lib/degenerate_conic.py#L70))
 
 Splits a degenerate conic into two lines.
 
@@ -1640,7 +1644,7 @@ section 11.1
 def extract_point(degenerate_conic: Conic) -> PointVector | MatrixExpr
 ```
 
-([source](../src/lib/degenerate_conic.py#L121))
+([source](../src/lib/degenerate_conic.py#L117))
 
 Extracts the point from a point conic or the intersection of the
 lines from a line pair conic.
