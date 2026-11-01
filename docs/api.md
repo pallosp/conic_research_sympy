@@ -1288,6 +1288,10 @@ def eccentricity(conic: Conic) -> Expr
 
 Computes the eccentricity of a conic section.
 
+The eccentricity is the constant ratio of a conic point's distance from a
+focus and from the corresponding directrix. See
+[conic_from_focus_and_directrix](#conic.conic_from_focus_and_directrix).
+
 The result is
  - 0 for circles and imaginary circles;
  - (0..1) for other real ellipses;
@@ -1323,7 +1327,7 @@ two different corresponding eccentricity values. Evaluate
 def focal_axis(conic: Conic) -> Line
 ```
 
-([source](../src/lib/conic.py#L119))
+([source](../src/lib/conic.py#L123))
 
 Returns the axis of symmetry going through conic's focus point(s).
 
@@ -1349,7 +1353,7 @@ def ideal_points(
 ) -> tuple[PointVector | MatrixExpr, PointVector | MatrixExpr]
 ```
 
-([source](../src/lib/conic.py#L138))
+([source](../src/lib/conic.py#L142))
 
 Computes the ideal points on a conic section.
 
@@ -1377,7 +1381,7 @@ radii. Note that `r₂` is imaginary in case of hyperbolas.
 def projective_conic_center(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic.py#L165))
+([source](../src/lib/conic.py#L169))
 
 Computes the generalized projective center of a conic.
 
@@ -1401,7 +1405,7 @@ For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
 def pole_point(conic: Conic, polar_line: Line) -> PointVector
 ```
 
-([source](../src/lib/conic.py#L183))
+([source](../src/lib/conic.py#L187))
 
 Computes the pole point of a conic with respect to the given polar line.
 
@@ -1421,7 +1425,7 @@ relationships.
 def polar_line(conic: Conic, pole_point: Point) -> Line
 ```
 
-([source](../src/lib/conic.py#L197))
+([source](../src/lib/conic.py#L201))
 
 Computes the polar line of a conic for a given pole point.
 
@@ -1452,7 +1456,7 @@ References:
 def tangent_pair_conic(conic: Conic, point: Point) -> Conic
 ```
 
-([source](../src/lib/conic.py#L223))
+([source](../src/lib/conic.py#L227))
 
 Computes the line pair conic consisting of the two tangent lines of a
 conic through a point.
@@ -1487,7 +1491,7 @@ def tangents_through_point(
         point: Point) -> tuple[Line | MatrixExpr, Line | MatrixExpr]
 ```
 
-([source](../src/lib/conic.py#L251))
+([source](../src/lib/conic.py#L255))
 
 Computes the two tangent lines of a conic through a point.
 

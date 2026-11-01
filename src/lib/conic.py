@@ -83,6 +83,10 @@ def conic_from_focus_and_directrix(
 def eccentricity(conic: Conic) -> Expr:
     """Computes the eccentricity of a conic section.
 
+    The eccentricity is the constant ratio of a conic point's distance from a
+    focus and from the corresponding directrix. See
+    [conic_from_focus_and_directrix](#conic.conic_from_focus_and_directrix).
+
     The result is
      - 0 for circles and imaginary circles;
      - (0..1) for other real ellipses;
