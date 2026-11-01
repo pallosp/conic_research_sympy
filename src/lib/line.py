@@ -26,10 +26,28 @@ def parallel_line(
     with_line: Line,
     through_point: FinitePoint,
 ) -> Line:
-    """Constructs a line through a point parallel to a line."""
+    """Constructs a line through a point parallel to a line.
+
+    To shift a line by a given distance instead, use
+    [offset_line](#line.offset_line).
+    """
     x, y = point_to_xy(through_point)
     a, b, _ = with_line.flat()
     return Matrix([a, b, -a * x - b * y])
+
+
+def offset_line(line: Line, distance: Scalar) -> Line:
+    """Shifts a line by the given distance in the direction of its normal vector.
+
+    The normal vector is the one returned by [line_normal](#line.line_normal)
+    by default. Negative distances shift the line in the opposite direction.
+    The ideal line is left unchanged.
+
+    To construct a parallel line through a given point instead, use
+    [parallel_line](#line.parallel_line).
+    """
+    a, b, c = line.flat()
+    return Matrix([a, b, c - distance * sqrt(a * a + b * b)])
 
 
 def perpendicular_line(

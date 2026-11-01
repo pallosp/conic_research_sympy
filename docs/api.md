@@ -52,6 +52,7 @@
   * [vertical\_line](#line.vertical_line)
   * [line\_between](#line.line_between)
   * [parallel\_line](#line.parallel_line)
+  * [offset\_line](#line.offset_line)
   * [perpendicular\_line](#line.perpendicular_line)
   * [line\_through\_point](#line.line_through_point)
   * [angle\_bisector](#line.angle_bisector)
@@ -1018,6 +1019,28 @@ def parallel_line(with_line: Line, through_point: FinitePoint) -> Line
 
 Constructs a line through a point parallel to a line.
 
+To shift a line by a given distance instead, use
+[offset_line](#line.offset_line).
+
+<a id="line.offset_line"></a>
+
+#### offset\_line
+
+```python
+def offset_line(line: Line, distance: Scalar) -> Line
+```
+
+([source](../src/lib/line.py#L39))
+
+Shifts a line by the given distance in the direction of its normal vector.
+
+The normal vector is the one returned by [line_normal](#line.line_normal)
+by default. Negative distances shift the line in the opposite direction.
+The ideal line is left unchanged.
+
+To construct a parallel line through a given point instead, use
+[parallel_line](#line.parallel_line).
+
 <a id="line.perpendicular_line"></a>
 
 #### perpendicular\_line
@@ -1026,7 +1049,7 @@ Constructs a line through a point parallel to a line.
 def perpendicular_line(to_line: Line, through_point: FinitePoint) -> Line
 ```
 
-([source](../src/lib/line.py#L35))
+([source](../src/lib/line.py#L53))
 
 Constructs a line through a point perpendicular to a line.
 
@@ -1041,7 +1064,7 @@ def line_through_point(point: FinitePoint,
                        normal: Direction | None = None) -> Line
 ```
 
-([source](../src/lib/line.py#L45))
+([source](../src/lib/line.py#L63))
 
 Constructs a line through a point with the given direction.
 
@@ -1059,7 +1082,7 @@ The direction can be specified as
 def angle_bisector(line1: Line, line2: Line) -> Line
 ```
 
-([source](../src/lib/line.py#L69))
+([source](../src/lib/line.py#L87))
 
 Constructs the angle bisector of two lines.
 
@@ -1084,7 +1107,7 @@ Special cases:
 def perpendicular_bisector(point1: FinitePoint, point2: FinitePoint) -> Line
 ```
 
-([source](../src/lib/line.py#L90))
+([source](../src/lib/line.py#L108))
 
 Constructs the perpendicular bisector of two points.
 
@@ -1096,7 +1119,7 @@ Constructs the perpendicular bisector of two points.
 def line_normal(line: Line, *, toward: Point | None = None) -> PointVector
 ```
 
-([source](../src/lib/line.py#L100))
+([source](../src/lib/line.py#L118))
 
 Returns the normal vector of a line, represented as an ideal point.
 
@@ -1117,7 +1140,7 @@ Returns `[0, 0, 0]ᵀ` if the `toward` point lies on the line.
 def are_parallel(line1: Line, line2: Line) -> bool | None
 ```
 
-([source](../src/lib/line.py#L122))
+([source](../src/lib/line.py#L140))
 
 Tells whether line1 and line2 are parallel.
 
@@ -1132,7 +1155,7 @@ Considers the ideal line parallel to everything.
 def are_perpendicular(line1: Line, line2: Line) -> bool | None
 ```
 
-([source](../src/lib/line.py#L133))
+([source](../src/lib/line.py#L151))
 
 Tells whether line1 and line2 are perpendicular.
 

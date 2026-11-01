@@ -1,5 +1,5 @@
 import pytest
-from sympy import Matrix, symbols
+from sympy import Matrix, Rational, symbols
 from sympy.abc import x, y
 
 from lib.incidence import line_contains_point
@@ -14,6 +14,7 @@ from lib.line import (
     line_between,
     line_normal,
     line_through_point,
+    offset_line,
     parallel_line,
     perpendicular_bisector,
     perpendicular_line,
@@ -21,6 +22,24 @@ from lib.line import (
 )
 from lib.matrix import is_nonzero_multiple
 from lib.point import ORIGIN, ZERO_POINT, centroid, ideal_point, ideal_point_on_line
+
+
+class TestOffsetLine:
+    def test_axis_parallel(self):
+        assert offset_line(horizontal_line(1), 2) == horizontal_line(3)
+        assert offset_line(horizontal_line(1) * 5, 2) == horizontal_line(3) * 5
+        assert offset_line(vertical_line(1), 2) == vertical_line(-1)
+
+    def test_negative_distance(self):
+        assert offset_line(horizontal_line(1), -2) == horizontal_line(-1)
+
+    def test_diagonal(self):
+        # (-3/5, -4/5) is on the line; the unit normal is (3/5, 4/5).
+        shifted = offset_line(Matrix([3, 4, 5]), 10)
+        assert line_contains_point(shifted, (6 - Rational(3, 5), 8 - Rational(4, 5)))
+
+    def test_ideal_line(self):
+        assert offset_line(IDEAL_LINE, 2) == IDEAL_LINE
 
 
 class TestPerpendicularLine:
