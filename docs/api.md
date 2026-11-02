@@ -1563,8 +1563,9 @@ lies on the line pair iff
     (pᵀ l₁)(l₂ᵀ p) = pᵀ (l₁ l₂ᵀ) p = 0
 
 The matrix `M = l₁ l₂ᵀ` defines this quadratic form but is not symmetric.
-Replacing it with its symmetric part `(M + Mᵀ) / 2` leaves the quadratic
-form unchanged and yields the formula above.
+Since `pᵀ M p` is a number, it equals its transpose `pᵀ Mᵀ p`. Averaging
+the two gives the same quadratic form with the symmetric matrix
+`(M + Mᵀ) / 2`.
 
 <a id="degenerate_conic.double_line_conic"></a>
 
@@ -1574,7 +1575,7 @@ form unchanged and yields the formula above.
 def double_line_conic(line: Line) -> Conic
 ```
 
-([source](../src/lib/degenerate_conic.py#L35))
+([source](../src/lib/degenerate_conic.py#L36))
 
 Constructs a degenerate conic consisting of two coincident lines.
 
@@ -1586,7 +1587,7 @@ Constructs a degenerate conic consisting of two coincident lines.
 def point_conic(point: Point) -> Conic
 ```
 
-([source](../src/lib/degenerate_conic.py#L42))
+([source](../src/lib/degenerate_conic.py#L43))
 
 Constructs a conic that degenerates to a single point.
 
@@ -1620,13 +1621,13 @@ def split_to_lines(
         conic: Conic) -> tuple[Line | MatrixExpr, Line | MatrixExpr]
 ```
 
-([source](../src/lib/degenerate_conic.py#L70))
+([source](../src/lib/degenerate_conic.py#L71))
 
 Splits a degenerate conic into two lines.
 
 Special cases:
  - For non-degenerate conics the result is unspecified.
- - For point conics the lines will be complex conjugates.
+ - For point conics the lines are complex conjugates.
  - Returns two `[0, 0, 0]ᵀ` vectors for the zero matrix.
  - For symbolic conics the lines may be unevaluated `MatrixExpr`s, or
    explicit matrices with unevaluated elements such as
@@ -1636,6 +1637,22 @@ Special cases:
 *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
 section 11.1
 
+The conic is `C = l₁·l₂ᵀ + l₂·l₁ᵀ` for some lines `l₁` and `l₂` (see
+[line_pair_conic](#degenerate_conic.line_pair_conic)). Let `q = l₁⨯l₂`
+be their intersection point.
+
+ 1. `C - skew(q) = 2·l₁·l₂ᵀ` and `C + skew(q) = 2·l₂·l₁ᵀ`, because
+    `skew(l₁⨯l₂) = l₂·l₁ᵀ - l₁·l₂ᵀ` (see [skew_matrix](#matrix.skew_matrix)).
+ 2. `adj(C) = -q·qᵀ`
+    ([proof](../src/research/matrices/line_pair_adjugate.py)), so
+    [outer_product_root](#matrix.outer_product_root) recovers `q` from
+    `C` up to sign. The sign only swaps the lines. For point conics `q`
+    is imaginary; for double lines it's zero.
+ 3. `l₁·l₂ᵀ` has rank 1: its columns are multiples of `l₁` and its rows
+    are multiples of `l₂`.
+    [pivot_column_and_row](#matrix.pivot_column_and_row) takes the column
+    and the row of a non-zero element.
+
 <a id="degenerate_conic.extract_point"></a>
 
 #### extract\_point
@@ -1644,7 +1661,7 @@ section 11.1
 def extract_point(degenerate_conic: Conic) -> PointVector | MatrixExpr
 ```
 
-([source](../src/lib/degenerate_conic.py#L117))
+([source](../src/lib/degenerate_conic.py#L109))
 
 Extracts the point from a point conic or the intersection of the
 lines from a line pair conic.
@@ -1890,7 +1907,7 @@ Returns `None` if undecidable.
 def is_double_line(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L176))
+([source](../src/lib/conic_classes.py#L177))
 
 Tells whether the conic consists of two coincident projective lines.
 
@@ -1904,7 +1921,7 @@ Returns `None` if undecidable.
 def is_point_conic(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L193))
+([source](../src/lib/conic_classes.py#L194))
 
 Tells whether the conic consists of a single projective point.
 
@@ -1921,7 +1938,7 @@ complex coordinates.
 def is_finite_point_conic(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L219))
+([source](../src/lib/conic_classes.py#L221))
 
 Tells whether the conic consists of a single finite (Euclidean) point.
 

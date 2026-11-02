@@ -24,8 +24,9 @@ def line_pair_conic(line1: Line, line2: Line) -> Conic:
         (pᵀ l₁)(l₂ᵀ p) = pᵀ (l₁ l₂ᵀ) p = 0
 
     The matrix `M = l₁ l₂ᵀ` defines this quadratic form but is not symmetric.
-    Replacing it with its symmetric part `(M + Mᵀ) / 2` leaves the quadratic
-    form unchanged and yields the formula above.
+    Since `pᵀ M p` is a number, it equals its transpose `pᵀ Mᵀ p`. Averaging
+    the two gives the same quadratic form with the symmetric matrix
+    `(M + Mᵀ) / 2`.
     """
     if line1.shape != (3, 1) or line2.shape != (3, 1):
         raise ValueError("The lines must be 3-dimensional column vectors.")
@@ -74,7 +75,7 @@ def split_to_lines(
 
     Special cases:
      - For non-degenerate conics the result is unspecified.
-     - For point conics the lines will be complex conjugates.
+     - For point conics the lines are complex conjugates.
      - Returns two `[0, 0, 0]ᵀ` vectors for the zero matrix.
      - For symbolic conics the lines may be unevaluated `MatrixExpr`s, or
        explicit matrices with unevaluated elements such as
@@ -83,32 +84,23 @@ def split_to_lines(
 
     *Algorithm*: Jürgen Richter-Gebert, Perspectives on Projective Geometry,
     section 11.1
+
+    The conic is `C = l₁·l₂ᵀ + l₂·l₁ᵀ` for some lines `l₁` and `l₂` (see
+    [line_pair_conic](#degenerate_conic.line_pair_conic)). Let `q = l₁⨯l₂`
+    be their intersection point.
+
+     1. `C - skew(q) = 2·l₁·l₂ᵀ` and `C + skew(q) = 2·l₂·l₁ᵀ`, because
+        `skew(l₁⨯l₂) = l₂·l₁ᵀ - l₁·l₂ᵀ` (see [skew_matrix](#matrix.skew_matrix)).
+     2. `adj(C) = -q·qᵀ`
+        ([proof](../src/research/matrices/line_pair_adjugate.py)), so
+        [outer_product_root](#matrix.outer_product_root) recovers `q` from
+        `C` up to sign. The sign only swaps the lines. For point conics `q`
+        is imaginary; for double lines it's zero.
+     3. `l₁·l₂ᵀ` has rank 1: its columns are multiples of `l₁` and its rows
+        are multiples of `l₂`.
+        [pivot_column_and_row](#matrix.pivot_column_and_row) takes the column
+        and the row of a non-zero element.
     """
-    # The conic consisting of the lines l and m is represented by the symmetric
-    # matrix C = (l·mᵀ + m·lᵀ)/2, or a multiple of it (see #line_pair_conic)
-    #
-    # Goal: find the rank-1 matrix l·mᵀ. All its columns are multiples of l
-    # and all its rows are multiples of m, so any non-zero element yields
-    # both lines. pivot_column_and_row does this final step.
-    #
-    # l·mᵀ differs from C by an antisymmetric matrix, which can be written
-    # as the skew matrix of a vector q:
-    #
-    #   l·mᵀ = C + (l·mᵀ - m·lᵀ)/2 = C + skew(q),   where q = (m⨯l)/2
-    #
-    # q is a multiple of the lines' intersection point. It's unknown, but
-    # it can be computed from C alone, because adj(C) = -q·qᵀ.
-    # outer_product_root recovers q from q·qᵀ up to sign. The sign doesn't
-    # matter: C - skew(q) = m·lᵀ, which yields the same lines in swapped
-    # order.
-    #
-    # Special cases:
-    #  - Point conics: l and m are complex conjugates, so q is imaginary.
-    #  - Double lines: l = m, so q = 0 and C = l·lᵀ is split directly.
-    #  - Symbolic conics: outer_product_root and pivot_column_and_row return
-    #    unevaluated matrix expressions when they can't decide which element
-    #    is non-zero. Each step accepts such expressions, so the lines
-    #    evaluate once substitutions make every step decidable.
     q = outer_product_root(-conic.adjugate())
     # SymPy's stubs reject Matrix + MatrixExpr (fix upstream).
     return pivot_column_and_row(conic + skew_matrix(q))  # pyright: ignore[reportOperatorIssue]

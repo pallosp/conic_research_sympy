@@ -163,8 +163,9 @@ def is_line_pair(conic: Conic) -> bool | None:
         [
             is_degenerate(conic),
             fuzzy_not(conic.is_zero_matrix),
-            # When C is degenerate, -adj(C) = q·qᵀ (see split_to_lines), where q
-            # is real for real lines and imaginary for complex ones.
+            # When C is degenerate, -adj(C) = q·qᵀ, where q is the lines'
+            # intersection point (research/matrices/line_pair_adjugate.py).
+            # q is real for real lines and imaginary for complex ones.
             # Its diagonal elements below are q₁², q₂², and q₃².
             (e * e - c * f).factor().is_nonnegative,
             (d * d - a * f).factor().is_nonnegative,
@@ -202,9 +203,10 @@ def is_point_conic(conic: Conic) -> bool | None:
     return fuzzy_and(
         [
             is_degenerate(conic),
-            # If any of the diagonal elements of -adj(conic), i.e. the values
-            # under the square root in split_to_lines, are negative, the conic
-            # splits to complex lines.
+            # When C is degenerate, -adj(C) = q·qᵀ, where q is the lines'
+            # intersection point (research/matrices/line_pair_adjugate.py).
+            # q is real for real lines and imaginary for complex ones.
+            # Its diagonal elements below are q₃², q₂², and q₁².
             fuzzy_or(
                 [
                     (b * b - a * c).factor().is_negative,
