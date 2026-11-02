@@ -1,4 +1,4 @@
-from sympy import Matrix, expand, pi, simplify, symbols
+from sympy import Matrix, Symbol, expand, pi, simplify, symbols
 
 from lib.circle import UNIT_CIRCLE
 from lib.hyperbola import UNIT_HYPERBOLA
@@ -14,7 +14,7 @@ from lib.transform_classes import (
 
 class TestIsHomography:
     def test_general_matrix(self):
-        t = Matrix(3, 3, symbols("a b c d e f g h i"))
+        t = Matrix(3, 3, symbols("a:i"))
         assert is_homography(t) is None
 
     def test_singular_matrix(self):
@@ -32,7 +32,7 @@ class TestIsHomography:
         assert is_homography(Matrix([1, 2])) is False
 
     def test_simplifier(self):
-        t = rotate(symbols("theta"))
+        t = rotate(Symbol("theta"))
         assert is_homography(t) is True
         assert is_homography(t, simplifier=expand) is None
         assert is_homography(t, simplifier=simplify) is True
@@ -40,11 +40,11 @@ class TestIsHomography:
 
 class TestIsAffineTransform:
     def test_general_matrix(self):
-        t = Matrix(3, 3, symbols("a b c d e f g h i"))
+        t = Matrix(3, 3, symbols("a:i"))
         assert is_affine_transform(t) is None
 
     def test_potentially_singular(self):
-        t = Matrix(3, 3, [*symbols("a b c d e f"), 0, 0, 1])
+        t = Matrix(3, 3, [*symbols("a:f"), 0, 0, 1])
         assert is_affine_transform(t) is None
 
     def test_translate(self):
@@ -56,7 +56,7 @@ class TestIsAffineTransform:
         assert is_affine_transform(t) is True
 
     def test_rotate(self):
-        t = rotate(symbols("theta"), symbols("x y"))
+        t = rotate(Symbol("theta"), symbols("x y"))
         assert is_affine_transform(t) is True
 
     def test_scalar_multiple_of_affinity_matrix(self):
@@ -64,7 +64,7 @@ class TestIsAffineTransform:
         assert is_affine_transform(t) is True
 
     def test_simplifier(self):
-        t = rotate(symbols("theta"))
+        t = rotate(Symbol("theta"))
         assert is_affine_transform(t) is True
         assert is_affine_transform(t, simplifier=expand) is None
         assert is_affine_transform(t, simplifier=simplify) is True
@@ -75,7 +75,7 @@ class TestIsAffineTransform:
 
 class TestIsSimilarity:
     def test_general_matrix(self):
-        t = Matrix(3, 3, symbols("a b c d e f g h i"))
+        t = Matrix(3, 3, symbols("a:i"))
         assert is_similarity(t) is None
 
     def test_non_3x3_matrix(self):
@@ -93,7 +93,7 @@ class TestIsSimilarity:
         assert is_similarity(t) is True
 
     def test_rotate(self):
-        t = rotate(symbols("theta"))
+        t = rotate(Symbol("theta"))
         assert is_similarity(t) is True
 
     def test_scale(self):
@@ -119,16 +119,16 @@ class TestIsSimilarity:
         assert is_similarity(t) is None
 
     def test_symbolic_rotation(self):
-        t = rotate(symbols("theta"), symbols("x y"))
+        t = rotate(Symbol("theta"), symbols("x y"))
         assert is_similarity(t) is True
 
     def test_reflection(self):
-        axis = Matrix(symbols("a b c", positive=True))
+        axis = Matrix(symbols("a:c", positive=True))
         t = reflect_to_line(axis)
         assert is_similarity(t) is True
 
     def test_simplifier(self):
-        t = rotate(symbols("theta"))
+        t = rotate(Symbol("theta"))
         assert is_similarity(t) is True
         assert is_similarity(t, simplifier=expand) is None
         assert is_similarity(t, simplifier=simplify) is True
@@ -136,7 +136,7 @@ class TestIsSimilarity:
 
 class TestIsCongruence:
     def test_general_matrix(self):
-        t = Matrix(3, 3, symbols("a b c d e f g h i"))
+        t = Matrix(3, 3, symbols("a:i"))
         assert is_congruence(t) is None
 
     def test_non_3x3_matrix(self):
@@ -154,11 +154,11 @@ class TestIsCongruence:
         assert is_congruence(t) is True
 
     def test_rotate(self):
-        t = rotate(symbols("theta"))
+        t = rotate(Symbol("theta"))
         assert is_congruence(t) is True
 
     def test_reflection(self):
-        axis = Matrix(symbols("a b c", positive=True))
+        axis = Matrix(symbols("a:c", positive=True))
         t = reflect_to_line(axis)
         assert is_congruence(t) is True
 
@@ -167,18 +167,18 @@ class TestIsCongruence:
         assert is_congruence(t) is True
 
     def test_symbolic_congruence(self):
-        t = rotate(symbols("theta"), symbols("x y"))
+        t = rotate(Symbol("theta"), symbols("x y"))
         assert is_congruence(t) is True
 
     def test_simplifier(self):
-        t = rotate(symbols("theta"))
+        t = rotate(Symbol("theta"))
         assert is_congruence(t) is True
         assert is_congruence(t, simplifier=expand) is None
         assert is_congruence(t, simplifier=simplify) is True
 
     def test_negative_determinant_congruence(self):
         # A reflection combined with a rotation, should still be a congruence
-        t = rotate(symbols("theta")) * Matrix([[-1, 0, 0], [0, 1, 0], [0, 0, 1]])
+        t = rotate(Symbol("theta")) * Matrix([[-1, 0, 0], [0, 1, 0], [0, 0, 1]])
         assert is_congruence(t) is True
 
 
@@ -190,7 +190,7 @@ class TestIsInvolution:
         assert is_involution(t) is True
 
     def test_reflection_to_line(self):
-        line = Matrix(symbols("a b c"))
+        line = Matrix(symbols("a:c"))
         t = reflect_to_line(line)
         assert is_involution(t) is True
 
@@ -205,7 +205,7 @@ class TestIsInvolution:
     def test_transformation_matrix_multiplied_by_scalar(self):
         t = rotate(pi)
         assert is_involution(t * -3) is True
-        assert is_involution(t * symbols("k", nonzero=True)) is True
+        assert is_involution(t * Symbol("k", nonzero=True)) is True
 
     def test_zero_matrix(self):
         t = Matrix.zeros(3, 3)

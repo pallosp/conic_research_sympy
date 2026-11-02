@@ -49,7 +49,7 @@ from research.sympy_utils import println_indented
 
 # Sanity check:
 
-x1, y1, x2, y2, x3, y3 = symbols("x1,y1,x2,y2,x3,y3")
+x1, y1, x2, y2, x3, y3 = symbols("x1 y1 x2 y2 x3 y3")
 
 m = Matrix(
     [
@@ -95,7 +95,7 @@ assert conic_contains_point(conic, (x3, y3))
 
 # Sanity check:
 
-xc, yc = symbols("xc,yc")
+xc, yc = symbols("xc yc")
 
 substitutions = {
     x1: x1 - xc,

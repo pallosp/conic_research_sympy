@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-from sympy import Matrix, cos, expand, gcd, sin, symbols
+from sympy import Matrix, Symbol, cos, expand, gcd, sin, symbols
 
 from lib.conic import polar_line
 from lib.polar_conic import conic_from_polar_matrix, point_at_angle
 from research.sympy_utils import println_indented
 
-polar_matrix = Matrix(3, 3, symbols("a,b,c,d,e,f,g,h,i"))
-angle = symbols("alpha")
+polar_matrix = Matrix(3, 3, symbols("a:i"))
+angle = Symbol("alpha")
 point = point_at_angle(polar_matrix, angle)
 conic = conic_from_polar_matrix(polar_matrix)
 

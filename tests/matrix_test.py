@@ -6,6 +6,7 @@ from sympy import (
     Matrix,
     MatrixSymbol,
     ShapeError,
+    Symbol,
     Transpose,
     ZeroMatrix,
     cos,
@@ -66,14 +67,14 @@ class TestIsNonZeroMultiple:
         assert is_nonzero_multiple([1, 2], Matrix([2, 3])) is False
 
     def test_symbolic(self):
-        x = symbols("x")
+        x = Symbol("x")
         assert is_nonzero_multiple([x, 1], [-x, -1]) is True
 
-        p = symbols("p", positive=True)
+        p = Symbol("p", positive=True)
         assert is_nonzero_multiple([1, 2], [p, p * 2]) is True
         assert is_nonzero_multiple([1, 2], [p, p]) is False
 
-        nz = symbols("nz", nonzero=True)
+        nz = Symbol("nz", nonzero=True)
         assert is_nonzero_multiple([1, 2], [nz, nz * 2]) is True
 
     def test_complex(self):
@@ -84,16 +85,16 @@ class TestIsNonZeroMultiple:
 
     def test_undecidable_pivot_minors(self):
         # The minors with the pivot 1 are 1 - x² and -x, the third one is -1.
-        x = symbols("x")
+        x = Symbol("x")
         assert is_nonzero_multiple([1, x, 1], [x, 1, 0]) is False
 
     def test_nonzero_only_after_expansion(self):
-        x = symbols("x", real=True)
+        x = Symbol("x", real=True)
         one = (x + 1) ** 2 - x**2 - 2 * x
         assert is_nonzero_multiple([1, 1], [one, one]) is True
 
     def test_undecidable(self):
-        x = symbols("x")
+        x = Symbol("x")
         assert is_nonzero_multiple([1, 2], [x, x * 2]) is None
 
     def test_matrix_expressions(self):
@@ -145,34 +146,34 @@ class TestIsPositiveMultiple:
         assert is_positive_multiple([1, 2], Matrix([2, 3])) is False
 
     def test_symbolic(self):
-        x = symbols("x", real=True)
+        x = Symbol("x", real=True)
         assert is_positive_multiple([x, 1], [-x, -1]) is False
 
-        p = symbols("p", positive=True)
+        p = Symbol("p", positive=True)
         assert is_positive_multiple([1, 2], [p, p * 2]) is True
         assert is_positive_multiple([1, 2], [p, p]) is False
 
     def test_undecidable_first_ratio(self):
-        x = symbols("x", real=True)
+        x = Symbol("x", real=True)
         one = sin(x) ** 2 + cos(x) ** 2  # Neither is_positive nor factor() decides
         assert is_positive_multiple([1, 1], [one, 1]) is True
         assert is_positive_multiple([1, 1], [-one, -1]) is False
 
     def test_pivot_only_in_second_matrix(self):
-        x = symbols("x", real=True)
+        x = Symbol("x", real=True)
         one = (x + 1) ** 2 - x**2 - 2 * x  # Not provably nonzero without expansion
         assert is_positive_multiple([one, 0], [1, 0]) is True
         assert is_positive_multiple([one, 0], [-1, 0]) is False
 
     def test_sign_only_after_expansion(self):
-        x = symbols("x", real=True)
+        x = Symbol("x", real=True)
         one = (x + 1) ** 2 - x**2 - 2 * x
         assert is_positive_multiple([1, 1], [one, one]) is True
         assert is_positive_multiple([1, 1], [-one, -one]) is False
 
     def test_sign_only_after_factoring(self):
-        x = symbols("x", positive=True)
-        y = symbols("y", real=True, nonzero=True)
+        x = Symbol("x", positive=True)
+        y = Symbol("y", real=True, nonzero=True)
         a = y * (x + 1)
         # The ratios (±2xy ± 2y) / (y(x + 1)) only cancel to ±2 when factored.
         assert is_positive_multiple([a], [2 * x * y + 2 * y]) is True
@@ -188,7 +189,7 @@ class TestIsPositiveMultiple:
         assert is_positive_multiple([1, 0, 0], [1, 1, I]) is False
 
     def test_undecidable(self):
-        x = symbols("x", real=True)
+        x = Symbol("x", real=True)
         assert is_positive_multiple([1, 2], [x, x * 2]) is None
 
 
@@ -262,21 +263,21 @@ class TestPivotColumn:
         assert pivot_column(Matrix.zeros(3, 2)) == Matrix.zeros(3, 1)
 
     def test_symbolic(self):
-        pos = symbols("p", positive=True)
+        pos = Symbol("p", positive=True)
         assert pivot_column(Matrix.diag([0, pos])) == Matrix([0, pos])
 
-        x = symbols("x")
+        x = Symbol("x")
         assert pivot_column(Matrix.diag([x, 1])) == Matrix([0, 1])
 
-        x = symbols("x", nonnegative=True)
+        x = Symbol("x", nonnegative=True)
         assert pivot_column(Matrix([[x - x, 0], [x + 1, 0]])) == Matrix([0, x + 1])
 
     def test_complex(self):
-        x = symbols("x")
+        x = Symbol("x")
         assert pivot_column(Matrix([[x, I], [1, 0]])) == Matrix([I, 0])
 
     def test_undecidable(self):
-        x = symbols("x")
+        x = Symbol("x")
         column = pivot_column(Matrix([[x, 0, 0], [0, x, 0]]))
         assert not is_explicit_matrix(column)
         assert column.shape == (2, 1)
@@ -298,23 +299,23 @@ class TestPivotColumnAndRow:
         assert row == Matrix.zeros(3, 1)
 
     def test_symbolic(self):
-        x = symbols("x", nonnegative=True)
+        x = Symbol("x", nonnegative=True)
         assert pivot_column_and_row(Matrix([[x - x, 0], [1, 0]]))[1] == Matrix([1, 0])
 
     def test_complex(self):
-        x = symbols("x")
+        x = Symbol("x")
         _, row = pivot_column_and_row(Matrix([[x, 0], [0, 1 + I]]))
         assert row == Matrix([0, 1 + I])
 
     def test_same_pivot_as_pivot_column(self):
-        x = symbols("x")
+        x = Symbol("x")
         matrix = Matrix([[x, 0, 1], [2, 3, 4]])
         column, row = pivot_column_and_row(matrix)
         assert column == pivot_column(matrix) == Matrix([1, 4])
         assert row == Matrix([x, 0, 1])
 
     def test_undecidable(self):
-        x = symbols("x")
+        x = Symbol("x")
         matrix = Matrix([[x, 0, 0], [0, x, 0]])
         column, row = pivot_column_and_row(matrix)
         assert column == pivot_column(matrix)
@@ -346,15 +347,14 @@ class TestOuterProductRoot:
         assert root.expand() == v
 
     def test_symbolic_vector(self):
-        x, y = symbols("x y", positive=True)
-        v = Matrix([x, y])
+        v = Matrix(symbols("x y", positive=True))
         assert outer_product_root(v * v.T) == v
 
     def test_zero_matrix(self):
         assert outer_product_root(Matrix.zeros(3, 3)) == Matrix.zeros(3, 1)
 
     def test_undecidable(self):
-        x = symbols("x")
+        x = Symbol("x")
         v = Matrix([x, 0])
         root = outer_product_root(v * v.T)
         assert not is_explicit_matrix(root)
@@ -369,9 +369,9 @@ class TestIsRealMatrix:
         assert is_real_matrix(Matrix([[1, 2], [3, I]])) is False
 
     def test_symbolic(self):
-        assert is_real_matrix(Matrix([symbols("x", real=True)])) is True
-        assert is_real_matrix(Matrix([symbols("x")])) is None
-        assert is_real_matrix(Matrix([symbols("x", nonzero=True) * I])) is False
+        assert is_real_matrix(Matrix([Symbol("x", real=True)])) is True
+        assert is_real_matrix(Matrix([Symbol("x")])) is None
+        assert is_real_matrix(Matrix([Symbol("x", nonzero=True) * I])) is False
 
 
 class TestIsDefinite:
@@ -387,8 +387,8 @@ class TestIsDefinite:
         assert is_definite_matrix(Matrix([0])) is False
 
     def test_1x1_symbolic(self):
-        assert is_definite_matrix(Matrix([symbols("x", positive=True)]))
-        assert is_definite_matrix(Matrix([symbols("x")])) is None
+        assert is_definite_matrix(Matrix([Symbol("x", positive=True)]))
+        assert is_definite_matrix(Matrix([Symbol("x")])) is None
 
     def test_2x2_numeric(self):
         assert is_definite_matrix(Matrix.eye(2))
@@ -399,28 +399,28 @@ class TestIsDefinite:
         assert is_definite_matrix(Matrix([[-2, 1], [1, -2]]))
 
     def test_2x2_symbolic(self):
-        x = symbols("x", positive=True)
+        x = Symbol("x", positive=True)
         assert is_definite_matrix(Matrix([[x, 0], [0, x]]))
         assert is_definite_matrix(Matrix([[x, 1], [1, x]])) is None
         assert is_definite_matrix(Matrix([[x, 1], [1, 0]])) is False
         assert is_definite_matrix(Matrix([[1, x], [x, -1]])) is False
 
     def test_3x3_diagonal_symbolic(self):
-        x, y, z = symbols("x y z", positive=True)
+        x, y, z = symbols("x:z", positive=True)
         assert is_definite_matrix(Matrix.diag([x, y, z]))
         assert is_definite_matrix(Matrix.diag([-x, -y, -z]))
         assert is_definite_matrix(Matrix.diag([x, y, -z])) is False
         assert is_definite_matrix(Matrix.diag([x, y, 0])) is False
 
-        r = symbols("r", real=True)
+        r = Symbol("r", real=True)
         assert is_definite_matrix(Matrix.diag([r, 1, -1])) is False
         assert is_definite_matrix(Matrix.diag([r, -1, -1])) is None  # definite iff r<0
 
-        n = symbols("n", negative=True)
+        n = Symbol("n", negative=True)
         assert is_definite_matrix(Matrix.diag([n, -1, -1])) is True
 
     def test_3x3_symbolic(self):
-        a, b, c, d, e, f = symbols("a b c d e f")
+        a, b, c, d, e, f = symbols("a:f")
         assert is_definite_matrix(Matrix([[a, b, d], [b, c, e], [d, e, f]])) is None
         assert is_definite_matrix(Matrix([[a, b, d], [b, c, e], [d, e, 0]])) is False
         assert is_definite_matrix(Matrix([[0, b, d], [b, c, e], [d, e, f]])) is False
@@ -438,12 +438,12 @@ class TestIsFullRank:
         assert is_full_rank(Matrix([[1, 2, 3], [2, 4, 6]]).T) is False
 
     def test_symbolic_square_matrix(self):
-        x = symbols("x")
+        x = Symbol("x")
         assert is_full_rank(Matrix([[x, x + 1], [x + 1, x + 2]])) is True
         assert is_full_rank(Matrix([[x, 2 * x], [3, 6]])) is False
 
     def test_symbolic_rect_matrix(self):
-        x = symbols("x")
+        x = Symbol("x")
 
         full_rank_matrix = Matrix([[x, x + 1, x + 2], [x + 1, x + 2, x + 3]])
         assert is_full_rank(full_rank_matrix) is True

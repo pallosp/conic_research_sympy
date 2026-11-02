@@ -8,10 +8,10 @@ The starting point is the formula in focus_directrix_eccentricity.py:
     θ = atan2(2 * b * sign(det), (a - c) * sign(det)) / 2
 """
 
-from sympy import Abs, Eq, atan2, cos, pprint, sign, simplify, sin, symbols
+from sympy import Abs, Eq, Symbol, atan2, cos, pprint, sign, simplify, sin, symbols
 
-a, b, c, theta = symbols("a,b,c,theta", real=True)
-det = symbols("det", real=True, nonzero=True)
+a, b, c, theta = symbols("a:c theta", real=True)
+det = Symbol("det", real=True, nonzero=True)
 
 print("\nFocal axis direction:\n")
 

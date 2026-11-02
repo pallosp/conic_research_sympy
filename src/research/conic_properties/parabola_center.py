@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sympy import MatMul, symbols
+from sympy import MatMul, Symbol, symbols
 
 from lib.conic import projective_conic_center
 from lib.matrix import conic_matrix, quadratic_form
@@ -8,14 +8,14 @@ from research.sympy_utils import eq_chain, println_indented
 
 print("\nLemma: parabola's projective center = parabola's ideal point\n")
 
-a, b, c, d, e, f = symbols("a b c d e f")
+a, b, c, d, e, f = symbols("a:f")
 parabola = conic_matrix(a, b, c, d, e, f)
 center = projective_conic_center(parabola)
 
 print("The center point is the conic matrix adjugate's last column:\n")
 
-println_indented(eq_chain(symbols("adj"), parabola.adjugate()))
-println_indented(eq_chain(symbols("center"), center))
+println_indented(eq_chain(Symbol("adj"), parabola.adjugate()))
+println_indented(eq_chain(Symbol("center"), center))
 
 print("It's not a zero vector, because then the adjugate matrix would be singular.")
 

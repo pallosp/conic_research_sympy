@@ -5,6 +5,7 @@ from sympy import (
     Matrix,
     Poly,
     Rational,
+    Symbol,
     cos,
     exp,
     factor,
@@ -108,23 +109,23 @@ class TestConicThroughPoints:
 class TestEccentricity:
     def test_symbolic_conic_from_focus_and_directrix(self):
         focus = ORIGIN
-        directrix = Matrix(symbols("a,b,c", positive=True))
-        ecc = symbols("e", positive=True)
+        directrix = Matrix(symbols("a:c", positive=True))
+        ecc = Symbol("e", positive=True)
         conic = conic_from_focus_and_directrix(focus, directrix, ecc)
         assert ecc == eccentricity(conic).simplify()
         assert ecc == eccentricity(conic * -2).simplify()
 
     def test_symbolic_imaginary_ellipse_from_focus_and_directrix(self):
         focus = ORIGIN
-        directrix = Matrix(symbols("a,b,c", positive=True))
-        ecc = symbols("e", positive=True) * I
+        directrix = Matrix(symbols("a:c", positive=True))
+        ecc = Symbol("e", positive=True) * I
         ellipse = conic_from_focus_and_directrix(focus, directrix, ecc)
         assert ecc == eccentricity(ellipse).simplify()
         assert ecc == eccentricity(ellipse * -2).simplify()
 
     def test_symbolic_circle(self):
         center = symbols("x y", real=True)
-        radius = symbols("r", real=True)
+        radius = Symbol("r", real=True)
         assert eccentricity(circle(center, r=radius)) == 0
         assert eccentricity(circle(center, r=radius) * -2) == 0
 
@@ -135,7 +136,7 @@ class TestEccentricity:
 
     def test_symbolic_parabola(self):
         focus = ORIGIN
-        directrix = Matrix(symbols("a,b,c", positive=True))
+        directrix = Matrix(symbols("a:c", positive=True))
         parabola = conic_from_focus_and_directrix(focus, directrix, 1)
         assert eccentricity(parabola) == 1
         assert eccentricity(parabola * -2) == 1
@@ -155,7 +156,7 @@ class TestEccentricity:
 
     def test_symbolic_ellipse(self):
         focus = ORIGIN
-        directrix = Matrix(symbols("a,b,c", positive=True))
+        directrix = Matrix(symbols("a:c", positive=True))
         ecc = Rational(1, 2)
         ellipse = conic_from_focus_and_directrix(focus, directrix, ecc)
         assert eccentricity(ellipse).factor() == ecc
@@ -163,7 +164,7 @@ class TestEccentricity:
 
     def test_symbolic_point_conic(self):
         focus = ORIGIN
-        directrix = Matrix(symbols("a,b,c", positive=True))
+        directrix = Matrix(symbols("a:c", positive=True))
         ecc = Rational(1, 2)
         ellipse = conic_from_focus_and_directrix(focus, directrix, ecc)
         point_conic = shrink_conic_to_zero(ellipse)
@@ -217,8 +218,8 @@ class TestFocalParameter:
 class TestFocalAxis:
     def test_conic_from_focus_and_directrix(self):
         focus = (0, 0)
-        directrix = Matrix(symbols("a,b,c", positive=True))
-        ecc = symbols("e", positive=True)
+        directrix = Matrix(symbols("a:c", positive=True))
+        ecc = Symbol("e", positive=True)
         conic = conic_from_focus_and_directrix(focus, directrix, ecc)
         expected = perpendicular_line(directrix, focus)
         axis = focal_axis(conic).applyfunc(
@@ -234,7 +235,7 @@ class TestFocalAxis:
         assert is_nonzero_multiple(axis, expected)
 
     def test_symbolic_circle(self):
-        symbolic_circle = circle(symbols("x y"), r=symbols("r"))
+        symbolic_circle = circle(symbols("x y"), r=Symbol("r"))
         assert focal_axis(symbolic_circle).is_zero_matrix
 
     def test_ellipse(self):
@@ -306,7 +307,7 @@ class TestIdealPoints:
 
     def test_hyperbola_radius_formula(self):
         # Workaround for no ideal point support in conic_from_center_and_points
-        z = symbols("z")
+        z = Symbol("z")
         hyperbola = (
             (conic_from_center_and_points((0, 0), (1, 1), (2, 1, z), (1, 3, z)) * z**4)
             .applyfunc(factor)
@@ -327,24 +328,24 @@ class TestIdealPoints:
 
 class TestProjectiveConicCenter:
     def test_circle(self):
-        center = symbols("x,y")
-        symbolic_circle = circle(center, r=symbols("r"))
+        center = symbols("x y")
+        symbolic_circle = circle(center, r=Symbol("r"))
         assert projective_conic_center(symbolic_circle) == Matrix([*center, 1])
 
     def test_ellipse(self):
-        center = symbols("x,y")
+        center = symbols("x y")
         symbolic_ellipse = ellipse(
             center,
-            symbols("r1", positive=True),
-            symbols("r2", positive=True),
-            r1_direction=symbols("dx,dy", positive=True),
+            Symbol("r1", positive=True),
+            Symbol("r2", positive=True),
+            r1_direction=symbols("dx dy", positive=True),
         )
         computed_center = projective_conic_center(symbolic_ellipse).expand()
         assert is_nonzero_multiple(computed_center, Matrix([*center, 1]))
 
     def test_parabola(self):
         focus = (0, 0)
-        directrix = Matrix(symbols("a,b,c", positive=True))
+        directrix = Matrix(symbols("a:c", positive=True))
         parabola = conic_from_focus_and_directrix(focus, directrix, 1)
         center = projective_conic_center(parabola)
         ideal_point = ideal_points(parabola)[0]
@@ -357,7 +358,7 @@ class TestProjectiveConicCenter:
         assert projective_conic_center(line_pair).is_zero_matrix
 
     def test_euclidean_and_ideal_line(self):
-        line = Matrix(symbols("a,b,c", positive=True))
+        line = Matrix(symbols("a:c", positive=True))
         line_pair = line_pair_conic(line, IDEAL_LINE)
         assert projective_conic_center(line_pair).is_zero_matrix
 
@@ -368,18 +369,18 @@ class TestProjectiveConicCenter:
 
 class TestPolePolar:
     def test_pole_polar_reciprocity(self):
-        conic = conic_matrix(*symbols("a b c d e f"))
-        pole = Matrix(symbols("x y z"))
+        conic = conic_matrix(*symbols("a:f"))
+        pole = Matrix(symbols("x:z"))
         polar = polar_line(conic, pole)
         # pole_point() returns a Matrix here. SymPy declares equals() on
         # RepMatrix, not MatrixBase (fix upstream).
         assert cast("Matrix", pole_point(conic, polar)).equals(pole * conic.det())
 
     def test_point_on_polar(self):
-        conic = conic_matrix(*symbols("a b c d e f"))
-        pole = symbols("x y z")
+        conic = conic_matrix(*symbols("a:f"))
+        pole = symbols("x:z")
         polar = polar_line(conic, pole)
-        point_on_polar = line_x_line(polar, Matrix(symbols("p q r")))
+        point_on_polar = line_x_line(polar, Matrix(symbols("p:r")))
         assert line_contains_point(polar_line(conic, point_on_polar), pole)
 
     def test_polar_of_circle_center(self):
@@ -420,7 +421,7 @@ class TestPolePolar:
         assert pole_point(conic, horizontal_line(2)).is_zero_matrix
 
     def test_polar_of_ideal_point(self):
-        conic = conic_matrix(*symbols("a b c d e f"))
+        conic = conic_matrix(*symbols("a:f"))
         center = projective_conic_center(conic)
         ideal_point = (*symbols("x y"), 0)
         assert line_contains_point(polar_line(conic, ideal_point), center)
@@ -474,11 +475,11 @@ class TestTangentPairConic:
         assert tangent_pair_conic(ZERO_CONIC, (1, 2)) == ZERO_CONIC
 
     def test_symbolic_conic(self):
-        conic = conic_matrix(*symbols("a b c d e f"))
+        conic = conic_matrix(*symbols("a:f"))
         assert is_explicit_matrix(tangent_pair_conic(conic, symbols("x y")))
 
     def test_symbolic_point_on_circle(self):
-        t = symbols("t", real=True)
+        t = Symbol("t", real=True)
         point = (cos(t), sin(t))
         tangent = Matrix([cos(t), sin(t), -1])
         assert is_nonzero_multiple(
@@ -540,7 +541,7 @@ class TestTangentsThroughPoint:
         assert tangents_through_point(ZERO_CONIC, (1, 2)) == (ZERO_POINT, ZERO_POINT)
 
     def test_symbolic_conic(self):
-        conic = conic_matrix(*symbols("a b c d e f"))
+        conic = conic_matrix(*symbols("a:f"))
         tangents = tangents_through_point(conic, (1, 1))
         assert not is_explicit_matrix(tangents[0])
         assert not is_explicit_matrix(tangents[1])

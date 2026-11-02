@@ -49,27 +49,27 @@ class TestPerpendicularLine:
 
 class TestLineThroughPoint:
     def test_missing_direction_and_normal(self):
-        point = symbols("x,y")
+        point = symbols("x y")
         with pytest.raises(ValueError, match="Specify exactly one"):
             line_through_point(point)
 
     def test_overspecified_direction_and_normal(self):
-        point = symbols("x,y")
-        direction = symbols("dx,dy")
-        normal = symbols("nx,ny")
+        point = symbols("x y")
+        direction = symbols("dx dy")
+        normal = symbols("nx ny")
         with pytest.raises(ValueError, match="Specify exactly one"):
             line_through_point(point, direction=direction, normal=normal)
 
     def test_direction_specified(self):
-        point = symbols("x,y")
-        direction = symbols("dx,dy")
+        point = symbols("x y")
+        direction = symbols("dx dy")
         line = line_through_point(point, direction=direction)
         assert line_contains_point(line, point)
         assert ideal_point_on_line(line) == Matrix((*direction, 0))
 
     def test_normal_vector_specified(self):
-        point = symbols("x,y")
-        normal = symbols("nx,ny")
+        point = symbols("x y")
+        normal = symbols("nx ny")
         line = line_through_point(point, normal=normal)
         assert line_contains_point(line, point)
         assert line[0:2] == list(normal)
@@ -119,9 +119,8 @@ class TestAngleBisector:
 
 class TestPerpendicularBisector:
     def test_symbolic(self):
-        x1, y1, x2, y2 = symbols("x1,y1,x2,y2")
-        point1 = (x1, y1)
-        point2 = (x2, y2)
+        point1 = symbols("x1 y1")
+        point2 = symbols("x2 y2")
         bisector = perpendicular_bisector(point1, point2)
         center = centroid(point1, point2)
         assert line_contains_point(bisector, center)

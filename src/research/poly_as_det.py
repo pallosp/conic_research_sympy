@@ -2,7 +2,7 @@
 
 The rows of the matrix are cyclic shifts of each other: the next row is the
 previous one with the variable indices shifted by i → j → k → i, e.g.
-1 → 2 → 3 → 1. The indices are detected from the polynomial. The entries of a
+0 → 1 → 2 → 0. The indices are detected from the polynomial. The entries of a
 column have the same degree, non-increasing from left to right.
 
 Search: start from a monomial matrix whose determinant is the closest to the
@@ -14,12 +14,12 @@ are broken randomly, and failed runs are retried.
 Example:
     >>> from sympy import symbols
     >>> from research.poly_as_det import poly_as_det3
-    >>> x1, x2, x3, y1, y2, y3 = symbols("x1 x2 x3 y1 y2 y3")
-    >>> poly_as_det3(2 * (x1*y2 - x2*y1 + x2*y3 - x3*y2 + x3*y1 - x1*y3))
+    >>> x0, x1, x2, y0, y1, y2 = symbols("x:3 y:3")
+    >>> poly_as_det3(2 * (x0*y1 - x1*y0 + x1*y2 - x2*y1 + x2*y0 - x0*y2))
     2*Determinant(Matrix([
+    [x0, y0, 1],
     [x1, y1, 1],
-    [x2, y2, 1],
-    [x3, y3, 1]]))
+    [x2, y2, 1]]))
 
 """
 

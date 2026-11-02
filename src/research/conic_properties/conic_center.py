@@ -6,8 +6,8 @@ from lib.matrix import conic_matrix, quadratic_form
 
 x, y, cx, cy = symbols("x y cx cy", real=True)
 
-matrix = conic_matrix(*symbols("a b c d e f"))
-conic = Poly(quadratic_form(matrix, Matrix([x, y, 1])), [x, y])
+matrix = conic_matrix(*symbols("a:f"))
+conic_poly = Poly(quadratic_form(matrix, Matrix([x, y, 1])), [x, y])
 
 # Reflect conic to point (cx, cy)
 reflected = Poly(
@@ -17,20 +17,20 @@ reflected = Poly(
 
 # Quadratic part must be invariant under reflection
 for mon in (x**2, x * y, y**2):
-    lhs, rhs = conic.coeff_monomial(mon), reflected.coeff_monomial(mon)
+    lhs, rhs = conic_poly.coeff_monomial(mon), reflected.coeff_monomial(mon)
     assert lhs == rhs, f"Quadratic mismatch for {mon}: {lhs} != {rhs}"
 
 # Solve for (cx, cy) by matching linear terms
 solution = solve(
     [
-        Eq(conic.coeff_monomial(x), reflected.coeff_monomial(x)),
-        Eq(conic.coeff_monomial(y), reflected.coeff_monomial(y)),
+        Eq(conic_poly.coeff_monomial(x), reflected.coeff_monomial(x)),
+        Eq(conic_poly.coeff_monomial(y), reflected.coeff_monomial(y)),
     ],
     (cx, cy),
 )
 
 # Verify constant term consistency
-orig_const = conic.coeff_monomial(1)
+orig_const = conic_poly.coeff_monomial(1)
 refl_const = reflected.coeff_monomial(1).subs(solution).simplify()
 assert orig_const == refl_const
 

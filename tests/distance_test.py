@@ -68,14 +68,14 @@ class TestParallelLineDistance:
         assert parallel_line_distance(IDEAL_LINE, IDEAL_LINE) == nan
 
     def test_symbolic_one_ideal_line(self):
-        finite_line = Matrix(symbols("a b c", positive=True))
+        finite_line = Matrix(symbols("a:c", positive=True))
         assert parallel_line_distance(finite_line, IDEAL_LINE).is_infinite
 
     def test_symbolic_crossing_lines(self):
-        non_horizontal_line = Matrix(symbols("a b c", positive=True))
+        non_horizontal_line = Matrix(symbols("a:c", positive=True))
         with pytest.raises(ValueError, match="The lines must be parallel"):
             parallel_line_distance(X_AXIS, non_horizontal_line)
 
     def test_symbolic_undecidable_parallelness(self):
-        line = Matrix(symbols("a b c"))
+        line = Matrix(symbols("a:c"))
         parallel_line_distance(line, X_AXIS)  # shouldn't raise a ValueError

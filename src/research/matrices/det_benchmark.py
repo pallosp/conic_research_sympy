@@ -3,7 +3,7 @@
 import time
 from collections.abc import Callable, Sequence
 
-from sympy import Matrix, S, sqrt, symbols
+from sympy import Matrix, S, Symbol, sqrt
 
 from lib.type_aliases import Scalar
 
@@ -87,7 +87,7 @@ print()
 # The default bareiss algorithm is ruled out for general slowness,
 # and lu is ruled out for expansion slowness.
 for method in ["berkowitz", "bird", "domain-ge", "laplace"]:
-    benchmark_group([5], lambda i: symbols(f"x{i}"), "xᵢ", "expanded_det", method)
-    benchmark_group([5], lambda i: symbols(f"x{i}") + 1, "xᵢ+1", "det", method)
-    benchmark_group([5], lambda i: symbols(f"x{i}") + 1, "xᵢ+1", "expanded_det", method)
+    benchmark_group([5], lambda i: Symbol(f"x{i}"), "xᵢ", "expanded_det", method)
+    benchmark_group([5], lambda i: Symbol(f"x{i}") + 1, "xᵢ+1", "det", method)
+    benchmark_group([5], lambda i: Symbol(f"x{i}") + 1, "xᵢ+1", "expanded_det", method)
     print()

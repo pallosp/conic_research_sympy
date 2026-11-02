@@ -5,8 +5,8 @@ from sympy import Matrix, pprint, simplify, symbols
 from lib.line import line_through_point
 from lib.point import ideal_point_on_line
 
-line1 = Matrix(symbols("a1,b1,c1"))
-line2 = Matrix(symbols("a2,b2,c2"))
+line1 = Matrix(symbols("a1 b1 c1"))
+line2 = Matrix(symbols("a2 b2 c2"))
 
 vertex = line1.cross(line2)
 

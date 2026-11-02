@@ -2,7 +2,7 @@
 
 from typing import cast
 
-from sympy import Abs, Eq, Expr, symbols
+from sympy import Abs, Eq, Expr, Symbol, symbols
 
 from lib.conic import conic_from_poly
 from lib.distance import point_point_distance
@@ -14,7 +14,7 @@ focus = symbols("fx fy")
 dx, dy = symbols("dx dy", real=True)  # center -> focus vector
 focus1 = (cx + dx, cy + dy)
 focus2 = (cx - dx, cy - dy)
-radius = symbols("r", real=True)  # center-vertex distance
+radius = Symbol("r", real=True)  # center-vertex distance
 
 
 def compute_conic_from_foci_and_radius(
@@ -74,7 +74,7 @@ print("They are the same:\n")
 
 println_indented(
     Eq(
-        symbols("ellipse-matrix") - symbols("hyperbola-matrix"),
+        Symbol("ellipse-matrix") - Symbol("hyperbola-matrix"),
         ellipse - hyperbola,
         evaluate=False,
     ),

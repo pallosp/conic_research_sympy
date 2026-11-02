@@ -97,7 +97,7 @@ class TestDirectionToXy:
 
 class TestIdealPointOnLine:
     def test_symbolic(self):
-        line = Matrix(symbols("a b c"))
+        line = Matrix(symbols("a:c"))
         point = ideal_point_on_line(line)
         assert point[2] == 0  # point should be an ideal point
         assert line.dot(point) == 0  # point should be on the line

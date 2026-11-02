@@ -6,7 +6,7 @@ from lib.conic import projective_conic_center
 from lib.polar_conic import conic_from_polar_matrix
 from research.sympy_utils import println_indented
 
-polar_matrix = Matrix(3, 3, symbols("a,b,c,d,e,f,g,h,i"))
+polar_matrix = Matrix(3, 3, symbols("a:i"))
 
 conic = conic_from_polar_matrix(polar_matrix)
 center = projective_conic_center(conic)

@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, cast
 
 import pytest
-from sympy import I, Matrix, MatrixBase, symbols
+from sympy import I, Matrix, MatrixBase, Symbol, symbols
 
 from lib.circle import circle
 from lib.conic import conic_from_poly, ideal_points
@@ -53,7 +53,7 @@ class TestDoubleLine:
             double_line_conic(Matrix([1, 2, 3]).T)
 
     def test_numeric_line_pair(self):
-        assert double_line_conic(X_AXIS) == conic_from_poly(symbols("y") ** 2)
+        assert double_line_conic(X_AXIS) == conic_from_poly(Symbol("y") ** 2)
 
 
 class TestPointConic:
@@ -100,7 +100,7 @@ class TestSplitToLines:
         assert split_to_lines(ZERO_CONIC) == (ZERO_LINE, ZERO_LINE)
 
     def test_symbolic_conic(self):
-        symbolic_conic = conic_matrix(*symbols("a b c d e f"))
+        symbolic_conic = conic_matrix(*symbols("a:f"))
         lines = split_to_lines(symbolic_conic)
         assert not is_explicit_matrix(lines[0])
         assert not is_explicit_matrix(lines[1])
@@ -117,7 +117,7 @@ class TestSplitToLines:
         assert are_projective_sets_equal(concrete_lines, line_pair)
 
     def test_partially_symbolic_conic(self):
-        symbolic_conic = conic_matrix(1, *symbols("b c d e f"))
+        symbolic_conic = conic_matrix(1, *symbols("b:f"))
         lines = split_to_lines(symbolic_conic)
         # The intersection point is undecidable, but the pivot isn't: the lines
         # are explicit matrices with unevaluated elements.
@@ -139,7 +139,7 @@ class TestSplitToLines:
 
 class TestExtractPoint:
     def test_symbolic_real_point_conic(self):
-        point = symbols("x,y", real=True)
+        point = symbols("x y", real=True)
         zero_circle = circle(point, r=0)
         assert is_nonzero_multiple(extract_point(zero_circle), point_to_vec3(point))
 
@@ -150,7 +150,7 @@ class TestExtractPoint:
         )
 
     def test_symbolic_ideal_point_conic(self):
-        point = [*symbols("x,y", positive=True), 0]
+        point = [*symbols("x y", positive=True), 0]
         conic = point_conic(point)
         assert is_nonzero_multiple(extract_point(conic), point_to_vec3(point))
 
@@ -165,6 +165,6 @@ class TestExtractPoint:
         assert is_nonzero_multiple(extract_point(conic), intersection)
 
     def test_symbolic_double_line(self):
-        line = Matrix(symbols("a b c"))
+        line = Matrix(symbols("a:c"))
         conic = line_pair_conic(line, line)
         assert extract_point(conic) == ZERO_POINT

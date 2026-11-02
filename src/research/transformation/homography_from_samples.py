@@ -15,8 +15,8 @@ from research.sympy_utils import print_indented
 Source: https://franklinta.com/2014/09/08/computing-css-matrix3d-transforms/
 """
 
-x0, y0, x1, y1, x2, y2, x3, y3 = symbols("x0,y0,x1,y1,x2,y2,x3,y3")
-u0, v0, u1, v1, u2, v2, u3, v3 = symbols("u0,v0,u1,v1,u2,v2,u3,v3")
+x0, y0, x1, y1, x2, y2, x3, y3 = symbols("x0 y0 x1 y1 x2 y2 x3 y3")
+u0, v0, u1, v1, u2, v2, u3, v3 = symbols("u0 v0 u1 v1 u2 v2 u3 v3")
 
 # According to
 # https://franklinta.com/2014/09/08/computing-css-matrix3d-transforms/
@@ -105,7 +105,7 @@ print(
     "mapping the (±1, ±1) square to (uᵢ,vᵢ,wᵢ):\n",
 )
 
-w0, w1, w2, w3 = symbols("w0 w1 w2 w3")
+w0, w1, w2, w3 = symbols("w:4")
 homogeneous_target = [
     (u0 / w0, v0 / w0),
     (u1 / w1, v1 / w1),

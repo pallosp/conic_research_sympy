@@ -1,5 +1,5 @@
 import pytest
-from sympy import Matrix, S, pi, simplify, symbols
+from sympy import Matrix, S, Symbol, pi, simplify
 
 from lib.central_conic import (
     center_to_covertex_vector,
@@ -100,7 +100,7 @@ class TestEllipseToPolarMatrix:
             ]
         )
         # z-coordinate is 1
-        assert point_at_angle(p, symbols("a"))[2] == 1
+        assert point_at_angle(p, Symbol("a"))[2] == 1
         # counterclockwise
         assert curvature_sign_at_angle(p, 0) == 1
 

@@ -6,7 +6,7 @@ from research.poly_as_det import poly_as_det3, poly_as_det3_matrix
 
 x0, x1, x2, x3, x5 = symbols("x0 x1 x2 x3 x5")
 y0, y1, y2, y3, y5 = symbols("y0 y1 y2 y3 y5")
-u0, u1, u2, u3 = symbols("u0 u1 u2 u3")
+u0, u1, u2, u3 = symbols("u:4")
 v1, v2, v3 = symbols("v1 v2 v3")
 w1, w2, w3 = symbols("w1 w2 w3")
 c1, c4, c5, c6 = symbols("c1 c4 c5 c6")

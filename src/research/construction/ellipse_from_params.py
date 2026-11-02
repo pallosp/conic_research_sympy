@@ -5,7 +5,7 @@ from sympy import Matrix, expand, factor, pprint, simplify, symbols
 from lib.circle import UNIT_CIRCLE
 from lib.transform import rotate, scale_xy, transform_conic, translate
 
-center = symbols("cx,cy")
+center = symbols("cx cy")
 r1, r2, angle = symbols("r1 r2 theta")
 scaling = scale_xy(r1, r2)
 rotation = rotate(angle)
@@ -13,7 +13,7 @@ translation = translate(center)
 transformation = translation * rotation * scaling
 ellipse = Matrix(transform_conic(UNIT_CIRCLE, transformation))
 
-a, b, c = symbols("a,b,c")
+a, b, c = symbols("a:c")
 for i in (2, 5, 6, 7, 8):
     ellipse[i] = factor(ellipse[i], *center)
     ellipse[i] = ellipse[i].subs(

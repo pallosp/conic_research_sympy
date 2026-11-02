@@ -50,7 +50,7 @@ print()
 print("Ideal points on a conic:")
 print()
 
-println_indented(conic_x_line(conic_matrix(*symbols("a,b,c,d,e,f")), IDEAL_LINE))
+println_indented(conic_x_line(conic_matrix(*symbols("a:f")), IDEAL_LINE))
 
 print("Potential pivot_column_and_row expansions based on the coefficients' signs:")
 print()
@@ -66,7 +66,7 @@ for a_hint, b_hint, c_hint in product(
     c = Symbol("c", **c_hint)
     if a.equals(0) and b.equals(0) and c.equals(0):
         continue
-    points = conic_x_line(conic_matrix(a, b, c, *symbols("d,e,f")), IDEAL_LINE)
+    points = conic_x_line(conic_matrix(a, b, c, *symbols("d:f")), IDEAL_LINE)
     if str(points) not in shown:
         shown.add(str(points))
         println_indented(points)
@@ -106,10 +106,7 @@ print()
 print("Branch-free, asymptote direction based formula with complex coordinates:")
 print()
 
-# symbols() is typed as returning Any (sympy#27354).
-a, c, d, e, f = cast("tuple[Symbol, ...]", symbols("a c d e f", real=True))
-b = Symbol("b", real=True)
-conic = conic_matrix(a, b, c, d, e, f)
+conic = conic_matrix(*symbols("a:f", real=True))
 
 # symbols() is typed as returning Any (sympy#27354).
 eigen_minus, eigen_plus = cast(

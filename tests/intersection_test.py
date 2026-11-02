@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 
 class TestLineXLine:
     def test_horizonal_x_vertical(self):
-        x, y = symbols("x,y")
+        x, y = symbols("x y")
         line1 = vertical_line(x)
         line2 = horizontal_line(y)
         assert is_nonzero_multiple(line_x_line(line1, line2), [x, y, 1])
@@ -102,19 +102,19 @@ class TestConicXLine:
         )
 
     def test_symbolic_conic(self):
-        conic = conic_matrix(*symbols("a b c d e f"))
+        conic = conic_matrix(*symbols("a:f"))
         intersections = conic_x_line(conic, IDEAL_LINE)
         assert not is_explicit_matrix(intersections[0])
         assert not is_explicit_matrix(intersections[1])
 
     def test_symbolic_line(self):
-        line = Matrix(symbols("l1 l2 l3"))
+        line = Matrix(symbols("l:3"))
         intersections = conic_x_line(UNIT_CIRCLE, line)
         assert not is_explicit_matrix(intersections[0])
         assert not is_explicit_matrix(intersections[1])
 
     def test_symbolic_line_substitution(self):
-        line = Matrix(symbols("l1 l2 l3"))
+        line = Matrix(symbols("l:3"))
         intersections = conic_x_line(UNIT_CIRCLE, line)
         assert not is_explicit_matrix(intersections[0])
         assert not is_explicit_matrix(intersections[1])
@@ -130,8 +130,7 @@ class TestConicXLine:
         )
 
     def test_partially_symbolic_conic(self):
-        b, c, d, e, f = symbols("b c d e f")
-        conic = conic_matrix(1, b, c, d, e, f)
+        conic = conic_matrix(1, *symbols("b:f"))
         p1, p2 = conic_x_line(conic, IDEAL_LINE)
         assert conic_contains_point(conic, p1)
         assert conic_contains_point(conic, p2)

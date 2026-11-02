@@ -6,7 +6,7 @@ from lib.matrix import conic_matrix
 
 print("\nParabola vertex:\n")
 
-a, b, c, d, e, f = symbols("a b c d e f", real=True)
+a, b, c, d, e, f = symbols("a:f", real=True)
 parabola = conic_matrix(a, b, c, d, e, f)
 
 focus = Matrix(symbols("focus.x focus.y"))

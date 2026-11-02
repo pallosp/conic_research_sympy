@@ -14,8 +14,8 @@ from research.sympy_utils import eq_chain, println_indented
 # When P⁻¹ [x, y, z]ᵀ = [lc, ls, l1]ᵀ, there must be a solution for α, which exists
 # iff lc² + ls² = l1².
 
-polar_conic = Matrix(3, 3, symbols("a b c d e f g h i"))
-point = Matrix(symbols("x y z"))
+polar_conic = Matrix(3, 3, symbols("a:i"))
+point = Matrix(symbols("x:z"))
 l_times_cos_a, l_times_sin_a, l_times_1 = (polar_conic.adjugate() * point).flat()
 incidence_poly_1 = l_times_1**2 - (l_times_cos_a**2 + l_times_sin_a**2)
 

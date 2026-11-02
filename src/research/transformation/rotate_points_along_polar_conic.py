@@ -14,8 +14,7 @@ from lib.polar_conic import point_at_angle
 from lib.transform import rotate
 from research.sympy_utils import println_indented
 
-a, b, c, d, e, f, g, h, i = symbols("a b c d e f g h i")
-polar_conic = Matrix([[a, b, c], [d, e, f], [g, h, i]])
+polar_conic = Matrix(3, 3, symbols("a:i"))
 
 alpha, beta = symbols("alpha beta")
 p0 = point_at_angle(polar_conic, alpha)

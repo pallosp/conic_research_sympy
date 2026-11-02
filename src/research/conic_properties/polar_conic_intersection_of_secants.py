@@ -7,12 +7,11 @@ from sympy import Expr, Matrix, factor, gcd, pi, symbols
 from lib.polar_conic import point_at_angle
 from research.sympy_utils import println_indented
 
-a, b, c, d, e, f, g, h, i, alpha, beta = symbols("a,b,c,d,e,f,g,h,i,alpha,beta")
-polar_matrix = Matrix([[a, b, c], [d, e, f], [g, h, i]])
+polar_matrix = Matrix(3, 3, symbols("a:i"))
 
 
 def get_intersection_of_secants(end_point_func: Callable[[Expr], Expr]) -> Matrix:
-    alpha, beta = symbols("alpha,beta")
+    alpha, beta = symbols("alpha beta")
 
     p1 = point_at_angle(polar_matrix, alpha)
     p2 = point_at_angle(polar_matrix, end_point_func(alpha))

@@ -12,7 +12,7 @@ def reflect(point: tuple[Scalar, Scalar], axis: Matrix) -> tuple[Expr, Expr]:
     return (2 * foot[0] - point[0], 2 * foot[1] - point[1])
 
 
-axis = Matrix(symbols("a b c"))
+axis = Matrix(symbols("a:c"))
 samples = [(1, 0), (0, 1), (-1, 0), (0, -1)]
 transform = homography_from_samples(samples, [reflect(s, axis) for s in samples])
 

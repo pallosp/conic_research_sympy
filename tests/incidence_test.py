@@ -1,6 +1,6 @@
 import itertools
 
-from sympy import I, Matrix, MatrixSymbol, cos, simplify, sin, sqrt, symbols
+from sympy import I, Matrix, MatrixSymbol, Symbol, cos, simplify, sin, sqrt, symbols
 from sympy.abc import x, y
 
 from lib.circle import circle
@@ -65,18 +65,18 @@ class TestPolarConicContainsPoint:
 class TestConicContainsLine:
     def test_circle_symbolic(self):
         a_circle = circle((1, 2), r=3)
-        line = Matrix(symbols("a b c", positive=True))
+        line = Matrix(symbols("a:c", positive=True))
         assert conic_contains_line(a_circle, line) is False
 
     def test_parabola_symbolic(self):
         focus = (0, 0)
-        directrix = Matrix(symbols("d1,d2,d3", positive=True))
+        directrix = Matrix(symbols("d:3", positive=True))
         conic = conic_from_focus_and_directrix(focus, directrix, 1)
-        line = Matrix(symbols("a,b,c", positive=True))
+        line = Matrix(symbols("a:c", positive=True))
         assert conic_contains_line(conic, line) is False
 
     def test_line_pair_symbolic(self):
-        line1 = Matrix(symbols("a b c"))
+        line1 = Matrix(symbols("a:c"))
         line2 = X_AXIS
         conic = line_pair_conic(line1, line2)
         assert conic_contains_line(conic, line1) is True
@@ -130,11 +130,11 @@ class TestIsTangent:
         assert is_tangent(conic, Matrix([1, 2, 3])) is True
 
     def test_symbolic(self):
-        r = symbols("r", positive=True)
+        r = Symbol("r", positive=True)
         conic = circle((0, 0), r=r)
         assert is_tangent(conic, horizontal_line(r)) is True
         assert is_tangent(conic, horizontal_line(2 * r)) is False
-        assert is_tangent(conic, Matrix(symbols("a b c"))) is None
+        assert is_tangent(conic, Matrix(symbols("a:c"))) is None
 
     def test_matrix_expr(self):
         assert is_tangent(circle((0, 0), r=1), MatrixSymbol("l", 3, 1)) is None
@@ -148,7 +148,7 @@ class TestLineContainsPoint:
 
     def test_symbolic(self):
         line = Matrix([1, 1, -3])  # x+y=3
-        x = symbols("x")
+        x = Symbol("x")
         assert line_contains_point(line, (x, 3 - x)) is True
         assert line_contains_point(line, (x, 2 - x)) is False
         assert line_contains_point(line, (x, 1)) is None
@@ -173,7 +173,7 @@ class TestAreCollinear:
         assert are_collinear([(1, 2), (3, 4), (1, 2, 0)]) is False
 
     def test_three_points_symbolic(self):
-        x = symbols("x")
+        x = Symbol("x")
         assert are_collinear([(1, 2), (3, 4), (x, x + 1)]) is True
         assert are_collinear([(1, 2), (3, 4), (x, x)]) is False
         assert are_collinear([(1, 2), (3, 4), symbols("x y")]) is None
@@ -188,23 +188,22 @@ class TestAreCollinear:
 class TestAreConcurrent:
     def test_symbolic_lines(self):
         p = symbols("x y")
-        x1, y1, x2, y2, x3, y3, x4, y4 = symbols("x1 y1 x2 y2 x3 y3 x4 y4")
-        line1 = line_through_point(p, direction=(x1, y1))
-        line2 = line_through_point(p, direction=(x2, y2))
-        line3 = line_through_point(p, direction=(x3, y3))
-        line4 = line_through_point(p, direction=(x4, y4))
+        line1 = line_through_point(p, direction=symbols("x1 y1"))
+        line2 = line_through_point(p, direction=symbols("x2 y2"))
+        line3 = line_through_point(p, direction=symbols("x3 y3"))
+        line4 = line_through_point(p, direction=symbols("x4 y4"))
         assert are_concurrent([line1, line2, line3]) is True
         assert are_concurrent([line1, line2, line3, line4]) is True
         assert are_concurrent([line1, line2, X_AXIS]) is None
 
     def test_symbolic_triangle(self):
-        line = Matrix(symbols("a b c", positive=True))
+        line = Matrix(symbols("a:c", positive=True))
         assert are_concurrent([X_AXIS, Y_AXIS, line]) is False
 
     def test_symbolic_parallels(self):
-        horiz1 = horizontal_line(symbols("y1", positive=True))
-        horiz2 = horizontal_line(symbols("y2", negative=True))
-        horiz3 = horizontal_line(symbols("y3"))
+        horiz1 = horizontal_line(Symbol("y1", positive=True))
+        horiz2 = horizontal_line(Symbol("y2", negative=True))
+        horiz3 = horizontal_line(Symbol("y3"))
         assert are_concurrent([X_AXIS, horiz1, horiz2]) is True
         assert are_concurrent([X_AXIS, horiz1, horiz2, horiz3]) is True
         assert are_concurrent([horiz1, horiz2, Y_AXIS]) is False
@@ -226,8 +225,8 @@ class TestAreOnSameConic:
         assert are_on_same_conic([*points[:5], (1, 0, 0)]) is False
 
     def test_symbolic_line_pair(self):
-        x1, x2, x3, y1, y2, y3 = symbols("x1 x2 x3 y1 y2 y3")
-        points = [(x1, 0), (x2, 0), (x3, 0), (0, y1), (0, y2), (0, y3)]
+        x0, x1, x2, y0, y1, y2 = symbols("x:3 y:3")
+        points = [(x0, 0), (x1, 0), (x2, 0), (0, y0), (0, y1), (0, y2)]
         assert are_on_same_conic(points) is True
 
     def test_custom_simplifier(self):
@@ -249,7 +248,7 @@ class TestAreCocircular:
     def test_four_different_points(self):
         assert are_cocircular([(1, 0), (0, 1), (-1, 0), (0, -1)]) is True
         assert are_cocircular([(1, 0), (0, 1), (-1, 0), (0, -2)]) is False
-        x = symbols("x")
+        x = Symbol("x")
         assert are_cocircular([(1, 0), (0, 1), (-1, 0), (0, x)]) is None
 
     def test_five_cocircular_points(self):

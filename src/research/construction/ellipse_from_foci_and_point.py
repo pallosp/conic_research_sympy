@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sympy import cancel, expand, gcd, sqrt, symbols
+from sympy import Symbol, cancel, expand, gcd, sqrt, symbols
 
 from lib.central_conic import conic_from_foci_and_radius
 from lib.distance import point_point_distance
@@ -23,7 +23,7 @@ major_axis_dir = (focus2[0] - focus1[0], focus2[1] - focus1[1])
 print("  Semi-major axis length:")
 print("  r₁ = (dist(f₁, p) + dist(f₂, point)) / 2\n")
 
-r1 = symbols("r1")
+r1 = Symbol("r1")
 r2 = sqrt(r1**2 - linear_ecc**2)
 
 ellipse_matrix = ellipse(center, r1, r2, r1_direction=major_axis_dir)

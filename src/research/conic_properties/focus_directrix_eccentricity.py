@@ -39,13 +39,13 @@ from research.sympy_utils import (
 
 HORIZONTAL_LINE = "-" * 88
 
-fx, fy, a, b, c, ecc, L = symbols("x,y,a,b,c,e,lambda", real=True)
+fx, fy, a, b, c, ecc, L = symbols("x y a b c e lambda", real=True)
 
 focus = (fx, fy)
 directrix = Matrix([a, b, c])
 conic_fde = conic_from_focus_and_directrix(focus, directrix, ecc) * L
 
-A, B, C, D, E, F = symbols("A,B,C,D,E,F", real=True)
+A, B, C, D, E, F = symbols("A:F", real=True)
 conic_abc = conic_matrix(A, B, C, D, E, F)
 
 print(f"\n{HORIZONTAL_LINE}\n")
@@ -71,7 +71,7 @@ for i in range(len(coeff_eq)):
 
 print("\nDeterminant of the conic matrix:\n")
 
-det = symbols("det", nonzero=True)
+det = Symbol("det", nonzero=True)
 det_eq = Eq(det, conic_fde.det().factor().subs(a * a + b * b, 1))
 print_indented(det_eq)
 
@@ -92,7 +92,7 @@ min_eigen_fde, max_eigen_fde = (
 
 # symbols() is typed as returning Any (sympy#27354).
 min_eigen, max_eigen = cast(
-    "tuple[Symbol, ...]", symbols("min_eigen,max_eigen", real=True, nonzero=True)
+    "tuple[Symbol, ...]", symbols("min_eigen max_eigen", real=True, nonzero=True)
 )
 eigenvalue_min_eq_abc = eq(min_eigen, min_eigen_abc)
 eigenvalue_max_eq_abc = eq(max_eigen, max_eigen_abc)
@@ -161,7 +161,7 @@ println_indented(ab_eq)
 
 print("As a² + b² = 1, substitute a = cos(θ), b = sin(θ)\n")
 
-theta = symbols("theta")
+theta = Symbol("theta")
 println_indented(sub_eq(aa_eq, bb_eq))
 println_indented(sub_eq(aa_eq, bb_eq).subs({a: cos(theta), b: sin(theta)}))
 cos2_eq = cast(
@@ -304,9 +304,9 @@ directrix_a = (a_value * multiplier).factor()
 directrix_b = (b_value * multiplier).factor()
 directrix_c = (c_solution * multiplier).factor()
 
-println_indented(Eq(symbols("a'"), directrix_a))
-println_indented(Eq(symbols("b'"), directrix_b))
-println_indented(Eq(symbols("c'"), directrix_c))
+println_indented(Eq(Symbol("a'"), directrix_a))
+println_indented(Eq(Symbol("b'"), directrix_b))
+println_indented(Eq(Symbol("c'"), directrix_c))
 
 print(HORIZONTAL_LINE)
 
@@ -336,7 +336,7 @@ aa, ba, ca, da, ea, fa = symbols("A_a B_a C_a D_a E_a F_a")
 adj_symbols = Matrix([[aa, ba, da], [ba, ca, ea], [da, ea, fa]])
 adj_values = conic_abc.adjugate()
 
-println_indented(eq_chain(symbols("adj"), adj_symbols, adj_values))
+println_indented(eq_chain(Symbol("adj"), adj_symbols, adj_values))
 fx_value = fx_value.subs(zip(adj_values.flat(), adj_symbols.flat(), strict=True))
 println_indented(eq_chain(fx, fx_value, fx_value.factor()))
 

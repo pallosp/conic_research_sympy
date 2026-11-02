@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sympy import expand, factor, symbols
+from sympy import Symbol, expand, factor, symbols
 
 from lib.matrix import conic_matrix
 from research.sympy_utils import println_indented
@@ -19,7 +19,7 @@ println_indented(circle.applyfunc(expand))
 # Extend the formula to projective points p=(px, py, pz) by substituting
 # px/pz and py/pz. Multiplying the matrix by pz² clears the denominators.
 
-pz = symbols("pz")
+pz = Symbol("pz")
 circle = (circle.subs({px: px / pz, py: py / pz}) * pz**2).applyfunc(
     lambda e: factor(expand(e))
 )

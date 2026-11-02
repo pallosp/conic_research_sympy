@@ -58,9 +58,8 @@ class TestParabolaFocusAndDirectrix:
         assert is_nonzero_multiple(parabola_directrix(conic), IDEAL_LINE)
 
     def test_symbolic_parabola_focus_at_origin(self):
-        a, b, c = symbols("a b c", positive=True)
         focus = (0, 0)
-        directrix = Matrix([a, b, c])
+        directrix = Matrix(symbols("a:c", positive=True))
         parabola = conic_from_focus_and_directrix(focus, directrix, 1)
         assert is_nonzero_multiple(parabola_focus(parabola), ORIGIN)
         assert is_nonzero_multiple(parabola_directrix(parabola), directrix)
@@ -76,7 +75,7 @@ class TestParabolaFocusAndDirectrix:
             parabola_directrix(hyperbola)
 
     def test_pole_polar_relationship(self):
-        conic = conic_matrix(*symbols("a b c d e f"))
+        conic = conic_matrix(*symbols("a:f"))
         focus = parabola_focus(conic)
         directrix = parabola_directrix(conic)
         polar = polar_line(conic, focus).applyfunc(factor)
@@ -128,7 +127,7 @@ class TestParabolaAxis:
             parabola_axis(UNIT_CIRCLE)
 
     def test_double_finite_line(self):
-        line = Matrix(symbols("a b c"))
+        line = Matrix(symbols("a:c"))
         line_pair = line_pair_conic(line, line)
         assert parabola_axis(line_pair).is_zero_matrix
 
@@ -139,7 +138,7 @@ class TestParabolaAxis:
         assert parabola_axis(line_pair).is_zero_matrix
 
     def test_finite_plus_ideal_line(self):
-        finite_line = Matrix(symbols("a b c"))
+        finite_line = Matrix(symbols("a:c"))
         line_pair = line_pair_conic(finite_line, IDEAL_LINE)
         assert parabola_axis(line_pair).is_zero_matrix
 

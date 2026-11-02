@@ -1,5 +1,5 @@
 import pytest
-from sympy import Matrix, factor, nan, pi, simplify, symbols
+from sympy import Matrix, Symbol, factor, nan, pi, simplify, symbols
 
 from lib.central_conic import conic_center, semi_axis_lengths
 from lib.circle import UNIT_CIRCLE, circle
@@ -28,22 +28,22 @@ class TestEllipseFromParams:
             ellipse(ORIGIN, 1, 1, r1_direction=(1, 1, 1))
 
     def test_center(self):
-        center = Matrix(symbols("x,y"))
-        r1, r2 = symbols("r1,r2")
-        r1_direction = symbols("r1_x,r1_y")
+        center = Matrix(symbols("x y"))
+        r1, r2 = symbols("r1 r2")
+        r1_direction = symbols("r1_x r1_y")
         symbolic_ellipse = ellipse(center, r1, r2, r1_direction=r1_direction)
         assert center == conic_center(symbolic_ellipse).applyfunc(factor)
 
     def test_axis_direction_vector_length_invariance(self):
-        center = symbols("x,y")
-        r1, r2, r1_dir_x, r1_dir_y = symbols("r1,r2,dx,dy", positive=True)
+        center = symbols("x y")
+        r1, r2, r1_dir_x, r1_dir_y = symbols("r1 r2 dx dy", positive=True)
         conic1 = ellipse(center, r1, r2, r1_direction=(r1_dir_x, r1_dir_y))
         conic2 = ellipse(center, r1, r2, r1_direction=(r1_dir_x * -2, r1_dir_y * -2))
         assert is_nonzero_multiple(conic1, conic2)
 
     def test_axis_lengths_circle(self):
-        center = symbols("x,y")
-        r = symbols("r", nonnegative=True)
+        center = symbols("x y")
+        r = Symbol("r", nonnegative=True)
         circle = ellipse(center, r, r)
         assert semi_axis_lengths(circle) == (r, r)
 
@@ -54,8 +54,8 @@ class TestEllipseFromParams:
         assert semi_axis_lengths(ellipse2) == (3, 4)
 
     def test_axis_lengths_general_case(self):
-        center = symbols("x,y")
-        r_min, r_diff = symbols("r_min,r_diff", positive=True)
+        center = symbols("x y")
+        r_min, r_diff = symbols("r_min r_diff", positive=True)
         r_max = r_min + r_diff
         symbolic_ellipse = ellipse(center, r_min, r_max, r1_direction=(73, -25))
         axes = [factor(simplify(leng)) for leng in semi_axis_lengths(symbolic_ellipse)]

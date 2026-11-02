@@ -6,12 +6,12 @@ from lib.central_conic import linear_eccentricity, primary_radius, secondary_rad
 from lib.conic_direction import ConicNormFactor
 from lib.matrix import conic_matrix
 
-conic = conic_matrix(*symbols("a b c d e f", real=True))
+conic = conic_matrix(*symbols("a:f", real=True))
 det = Symbol("det", real=True)
 
 le_square = (linear_eccentricity(conic) ** 2).subs(conic.det(), det).factor()
 
-pprint(Eq(symbols("linear_eccentricity") ** 2, le_square))
+pprint(Eq(Symbol("linear_eccentricity") ** 2, le_square))
 print()
 
 r1 = primary_radius(conic)
@@ -25,5 +25,5 @@ radius_square_diff = (
     .subs(ConicNormFactor(conic) * det, Abs(det))
 )
 
-pprint(Eq(symbols("r1") ** 2 - symbols("r2") ** 2, radius_square_diff))
+pprint(Eq(Symbol("r1") ** 2 - Symbol("r2") ** 2, radius_square_diff))
 print()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sympy import I, Matrix, factor, gcd, pi, sqrt, symbols
+from sympy import I, Matrix, Symbol, factor, gcd, pi, sqrt, symbols
 
 from lib.central_conic import (
     center_to_covertex_vector,
@@ -26,7 +26,7 @@ print(
 
 vertex_1 = Matrix(symbols("x1 y1", real=True))
 vertex_2 = Matrix(symbols("x2 y2", real=True))
-r2 = symbols("r2", positive=True)
+r2 = Symbol("r2", positive=True)
 
 r1 = point_point_distance(vertex_1, vertex_2) / 2
 center = centroid(vertex_1, vertex_2)

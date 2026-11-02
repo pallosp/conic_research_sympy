@@ -1,4 +1,4 @@
-from sympy import Matrix, expand, nan, pi, simplify, symbols
+from sympy import Matrix, Symbol, expand, nan, pi, simplify, symbols
 
 from lib.central_conic import conic_center
 from lib.circle import circle
@@ -19,13 +19,13 @@ from lib.transform import (
     translate,
 )
 
-conic = conic_matrix(*symbols("a,b,c,d,e,f"))
+conic = conic_matrix(*symbols("a:f"))
 
 
 class TestTranslate:
     def test_translate_circle(self):
-        x, y, r = symbols("x,y,r")
-        dx, dy = symbols("dx,dy")
+        x, y, r = symbols("x y r")
+        dx, dy = symbols("dx dy")
         transformation = translate((dx, dy))
         orig_circle = circle((x, y), r=r)
         translated_circle = transform_conic(orig_circle, transformation)
@@ -35,7 +35,7 @@ class TestTranslate:
 
     def test_translate_conic(self):
         center_x, center_y = conic_center(conic).flat()
-        dx, dy = symbols("dx,dy")
+        dx, dy = symbols("dx dy")
         transformation = translate((dx, dy))
         new_conic = transform_conic(conic, transformation)
         new_center_x, new_center_y = conic_center(new_conic).flat()
@@ -53,7 +53,7 @@ class TestRotate:
         assert orig_circle == rotated_circle.applyfunc(simplify)
 
     def test_rotation_around_point(self):
-        angle = symbols("theta")
+        angle = Symbol("theta")
         center = Matrix(symbols("x y"))
         rotation = rotate(angle, center)
         rotation_sequence = translate(center) * rotate(angle) * translate(-center)
@@ -73,7 +73,7 @@ class TestReflection:
 
 class TestScale:
     def test_scaling_around_point(self):
-        x0, y0, s = symbols("x0,y0,s")
+        x0, y0, s = symbols("x0 y0 s")
         scaling = scale(s, center=(x0, y0))
         scaling_sequence = translate((x0, y0)) * scale(s) * translate((-x0, -y0))
         assert scaling.applyfunc(simplify) == scaling_sequence.applyfunc(simplify)
@@ -104,11 +104,11 @@ class TestTransformLine:
 
 class TestTransformPolarConic:
     def test_symbolic_transformation(self):
-        conic = Matrix(3, 3, symbols("a b c d e f g h i"))
-        transformation = Matrix(3, 3, symbols("A B C D E F G H I"))
+        conic = Matrix(3, 3, symbols("a:i"))
+        transformation = Matrix(3, 3, symbols("A:I"))
         transformed_conic = transform_polar_conic(conic, transformation)
 
-        phi = symbols("phi")
+        phi = Symbol("phi")
         point = point_at_angle(conic, phi)
         transformed_point = transform_point(point, transformation)
         point_on_transformed_conic = point_at_angle(transformed_conic, phi)
@@ -116,7 +116,7 @@ class TestTransformPolarConic:
         assert expand(transformed_point) == expand(point_on_transformed_conic)
 
     def test_scaled_polar_conic_shape(self):
-        polar_conic = Matrix(3, 3, symbols("a b c d e f g h i"))
+        polar_conic = Matrix(3, 3, symbols("a:i"))
         cartesian = conic_from_polar_matrix(polar_conic)
 
         scaling = scale_xy(2, 3, center=(4, 5))

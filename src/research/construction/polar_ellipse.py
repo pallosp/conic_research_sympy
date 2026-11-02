@@ -5,6 +5,7 @@ from sympy import (
     Eq,
     MatMul,
     Matrix,
+    Symbol,
     cos,
     factor,
     pi,
@@ -29,15 +30,15 @@ from research.sympy_utils import eq_chain, println_indented
 # First approach: start from the endpoint of the horizontal diameter
 # ---------------------------------------------------------------------------
 
-a, b, c, d, e, f = symbols("a b c d e f", real=True)
+a, b, c, d, e, f = symbols("a:f", real=True)
 cx, cy = symbols("cx cy", real=True)
-r_horizontal = symbols("rh", real=True)
+r_horizontal = Symbol("rh", real=True)
 
 print("Ellipse in polar form:")
 print()
 
-polar_ellipse = Matrix(3, 3, symbols("A B C D E F G H I", real=True))
-println_indented(eq_chain(symbols("P"), polar_ellipse))
+polar_ellipse = Matrix(3, 3, symbols("A:I", real=True))
+println_indented(eq_chain(Symbol("P"), polar_ellipse))
 
 print(
     "The secants between α and π+α intersect at the point [C, F, I]ᵀ.\n"
@@ -49,7 +50,7 @@ print()
 polar_ellipse = polar_ellipse.subs(
     zip(polar_ellipse.col(2).flat(), (cx, cy, 1), strict=True)
 )
-println_indented(eq_chain(symbols("P"), polar_ellipse))
+println_indented(eq_chain(Symbol("P"), polar_ellipse))
 
 print(
     "The horizontal line through the center intersects the ellipse in two points.\n"
@@ -65,7 +66,7 @@ print()
 
 A, B, _, D, E, _, G, H, _ = polar_ellipse.flat()
 polar_ellipse = polar_ellipse.subs(H, 0)
-println_indented(eq_chain(symbols("P"), polar_ellipse))
+println_indented(eq_chain(Symbol("P"), polar_ellipse))
 
 print(
     "The secants between α and π−α intersect at [A, D, G]ᵀ.\n"
@@ -75,7 +76,7 @@ print(
 print()
 
 polar_ellipse_h = polar_ellipse.subs(D, 0).subs(G, 0)
-println_indented(eq_chain(symbols("P"), polar_ellipse_h))
+println_indented(eq_chain(Symbol("P"), polar_ellipse_h))
 
 print(
     "Let the horizontal radius be rh.\n"
@@ -87,13 +88,13 @@ print(
 print()
 
 polar_ellipse_h = polar_ellipse_h.subs(A, r_horizontal)
-println_indented(eq_chain(symbols("P"), polar_ellipse_h))
+println_indented(eq_chain(Symbol("P"), polar_ellipse_h))
 
 print("The ellipse in Cartesian form:")
 print()
 
 cartesian_ellipse = conic_from_polar_matrix(polar_ellipse_h)
-mu = symbols("mu", nonzero=True)
+mu = Symbol("mu", nonzero=True)
 
 println_indented(
     eq_chain(
@@ -121,22 +122,22 @@ print("Final polar matrix (using the first solution):")
 print()
 
 polar_ellipse_h = polar_ellipse_h.subs(B, solutions[0][1]).subs(E, solutions[0][2])
-println_indented(eq_chain(symbols("P"), polar_ellipse_h))
+println_indented(eq_chain(Symbol("P"), polar_ellipse_h))
 
 cartesian_conic = conic_matrix(a, b, c, d, e, f)
 center = conic_center(cartesian_conic)
 r_horizontal_value = radius_in_direction(cartesian_conic, angle=0)
-discriminant = symbols("disc", positive=True)
+discriminant = Symbol("disc", positive=True)
 
 polar_ellipse_h = (
     polar_ellipse_h.subs(zip((cx, cy), center.flat(), strict=True))
     .subs(r_horizontal, r_horizontal_value)
-    .subs(cartesian_conic.det(), symbols("det"))
+    .subs(cartesian_conic.det(), Symbol("det"))
     .subs(a * c - b * b, discriminant)
     .subs(discriminant, a * c - b * b)
 )
 
-println_indented(eq_chain(symbols("P"), polar_ellipse_h))
+println_indented(eq_chain(Symbol("P"), polar_ellipse_h))
 
 print("Orientation (1 is counterclockwise, -1 is clockwise):")
 print()
@@ -153,7 +154,7 @@ print("Polar ellipse representation starting at the endpoint of the vertical dia
 print()
 
 polar_ellipse_v = polar_ellipse.subs(A, 0).subs(G, 0)
-r_vertical = symbols("rv", positive=True)
+r_vertical = Symbol("rv", positive=True)
 
 # P(0) = P·[cos 0, sin 0, 1]ᵀ = [cx, D + cy, 1]ᵀ = λ·[cx, cy + rv, 1]ᵀ\n"
 # Solution: λ=1, D=rv
@@ -170,23 +171,23 @@ solutions = solve(
 )
 polar_ellipse_v = polar_ellipse_v.subs(B, solutions[0][1]).subs(E, solutions[0][2])
 
-println_indented(eq_chain(symbols("P"), polar_ellipse_v))
+println_indented(eq_chain(Symbol("P"), polar_ellipse_v))
 
 cartesian_conic = conic_matrix(a, b, c, d, e, f)
 center = conic_center(cartesian_conic)
 r_vertical_value = radius_in_direction(cartesian_conic, angle=pi / 2)
-discriminant = symbols("disc", positive=True)
+discriminant = Symbol("disc", positive=True)
 
 polar_ellipse_v = (
     polar_ellipse_v.subs(zip((cx, cy), center.flat(), strict=True))
     .subs(r_vertical, r_vertical_value)
-    .subs(cartesian_conic.det(), symbols("det"))
+    .subs(cartesian_conic.det(), Symbol("det"))
     .subs(a * c - b * b, discriminant)
     .subs(discriminant, a * c - b * b)
     .subs(Abs(b), b * sign(b))
 )
 
-println_indented(eq_chain(symbols("P"), polar_ellipse_v))
+println_indented(eq_chain(Symbol("P"), polar_ellipse_v))
 
 # ---------------------------------------------------------------------------
 # Third approach: start from a vertex
@@ -221,7 +222,7 @@ c2 = ellipse((cx, cy), r1, r2, r1_angle=alpha).applyfunc(factor).applyfunc(simpl
 
 assert c1 == c2
 
-println_indented(eq_chain(symbols("P"), simplify(t)))
+println_indented(eq_chain(Symbol("P"), simplify(t)))
 
 print(
     "Although the resulting matrix appears simple,\n"

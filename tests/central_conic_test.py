@@ -7,6 +7,7 @@ from sympy import (
     MatrixBase,
     Q,
     Rational,
+    Symbol,
     nan,
     pi,
     symbols,
@@ -97,15 +98,15 @@ class TestConicFromCenterAndPoints:
 
 class TestConicCenter:
     def test_circle(self):
-        x, y, r = symbols("x,y,r")
+        x, y, r = symbols("x y r")
         symbolic_circle = circle((x, y), r=r)
         assert conic_center(symbolic_circle) == Matrix([x, y])
 
 
 class TestSemiAxisLengths:
     def test_circle_radius(self):
-        center = symbols("x,y")
-        r = symbols("r", nonnegative=True)
+        center = symbols("x y")
+        r = Symbol("r", nonnegative=True)
         symbolic_circle = circle(center, r=r)
         assert r == primary_radius(symbolic_circle)
         assert r == secondary_radius(symbolic_circle)
@@ -130,7 +131,7 @@ class TestSemiAxisLengths:
         assert secondary_radius(ellipse) == 5 * I
 
     def test_symbolic_hyperbola(self):
-        directrix = Matrix(symbols("a,b,c", positive=True))
+        directrix = Matrix(symbols("a:c", positive=True))
         hyperbola = conic_from_focus_and_directrix((0, 0), directrix, 2)
         assert primary_radius(hyperbola).factor(deep=True).is_real is True
         assert primary_radius(-hyperbola).factor(deep=True).is_real is True
@@ -145,8 +146,8 @@ class TestSemiAxisLengths:
         assert secondary_radius(-parabola).is_infinite
 
     def test_line_pair(self):
-        line1 = Matrix(symbols("a b c", real=True))
-        line2 = Matrix(symbols("d e f", real=True))
+        line1 = Matrix(symbols("a:c", real=True))
+        line2 = Matrix(symbols("d:f", real=True))
         line_pair = line_pair_conic(line1, line2)
         assert primary_radius(line_pair) == 0
         assert primary_radius(line_pair) == 0
@@ -156,12 +157,12 @@ class TestSemiAxisLengths:
         assert primary_radius(zero_circle) == 0
         assert secondary_radius(zero_circle) == 0
 
-        finite_point_conic = point_conic(symbols("x,y", real=True))
+        finite_point_conic = point_conic(symbols("x y", real=True))
         assert primary_radius(finite_point_conic) == 0
         assert secondary_radius(finite_point_conic) == 0
 
     def test_ideal_point_conic(self):
-        ideal_point_conic = point_conic([*symbols("x,y"), 0])
+        ideal_point_conic = point_conic([*symbols("x y"), 0])
         assert primary_radius(ideal_point_conic) == nan
         assert secondary_radius(ideal_point_conic) == nan
 
@@ -176,8 +177,8 @@ class TestRadiusInDirection:
             radius_in_direction(UNIT_CIRCLE, direction=(1, 2, 3))
 
     def test_symbolic_circle(self):
-        r = symbols("r", positive=True)
-        symbolic_circle = circle(symbols("x,y", real=True), r=r)
+        r = Symbol("r", positive=True)
+        symbolic_circle = circle(symbols("x y", real=True), r=r)
         direction = symbols("dx dy", real=True)
         computed_radius = radius_in_direction(symbolic_circle, direction=direction)
         assert r == computed_radius.simplify()
@@ -200,12 +201,12 @@ class TestRadiusInDirection:
 
 class TestLinearEccentricity:
     def test_symbolic_circle(self):
-        symbolic_circle = circle(symbols("x,y", real=True), r=symbols("r", real=True))
+        symbolic_circle = circle(symbols("x y", real=True), r=Symbol("r", real=True))
         assert linear_eccentricity(symbolic_circle) == 0
 
     def test_symbolic_imaginary_circle(self):
-        center = symbols("x,y", real=True)
-        imaginary_radius = symbols("r", real=True) * I
+        center = symbols("x y", real=True)
+        imaginary_radius = Symbol("r", real=True) * I
         imaginary_circle = circle(center, r=imaginary_radius)
         assert linear_eccentricity(imaginary_circle) == 0
 
@@ -245,7 +246,7 @@ class TestLinearEccentricity:
 
     def test_symbolic_parabola(self):
         focus = (0, 0)
-        directrix = Matrix(symbols("a b c", positive=True))
+        directrix = Matrix(symbols("a:c", positive=True))
         parabola = conic_from_focus_and_directrix(focus, directrix, 1)
         assert linear_eccentricity(parabola).is_infinite
 
@@ -431,7 +432,7 @@ class TestShrinkToZero:
         assert are_projective_sets_equal(ideal_points(hyperbola), ideal_points(shrunk))
 
     def test_circle(self):
-        symbolic_circle = circle(symbols("x y"), r=symbols("r"))
+        symbolic_circle = circle(symbols("x y"), r=Symbol("r"))
         shrunk_circle = shrink_conic_to_zero(symbolic_circle)
         assert is_point_conic(shrunk_circle)
         assert conic_center(shrunk_circle) == Matrix([x, y])

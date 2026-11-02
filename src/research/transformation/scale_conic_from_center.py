@@ -11,13 +11,13 @@ print("\nScaling a conic from its center by a factor of λ\n")
 
 print("Original conic:\n")
 
-a, b, c, d, e, f = symbols("a,b,c,d,e,f")
+a, b, c, d, e, f = symbols("a:f")
 conic = conic_matrix(a, b, c, d, e, f)
 println_indented(conic)
 
 print("\nScaled conic - only the f coefficient differs:\n")
 
-factor = symbols("lambda")
+factor = Symbol("lambda")
 x, y = conic_center(conic).flat()
 scaled_conic = transform_conic(conic, scale(factor, center=(x, y))).applyfunc(simplify)
 scaled_conic = Matrix(scaled_conic / gcd(scaled_conic.flat()))

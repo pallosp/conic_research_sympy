@@ -13,7 +13,7 @@ from lib.matrix import conic_matrix
 if TYPE_CHECKING:
     from lib.type_aliases import PointVector
 
-conic = conic_matrix(*symbols("a,b,c,d,e,f", positive=True))
+conic = conic_matrix(*symbols("a:f", positive=True))
 # ideal_points() returns explicit vectors for this conic, which pyright can't
 # know.
 ideal_pt_1, ideal_pt_2 = cast("tuple[PointVector, PointVector]", ideal_points(conic))

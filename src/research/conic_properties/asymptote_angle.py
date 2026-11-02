@@ -1,6 +1,20 @@
 #!/usr/bin/env python
 
-from sympy import Abs, Eq, I, Limit, cos, oo, sign, sin, solve, sqrt, symbols, tan
+from sympy import (
+    Abs,
+    Eq,
+    I,
+    Limit,
+    Symbol,
+    cos,
+    oo,
+    sign,
+    sin,
+    solve,
+    sqrt,
+    symbols,
+    tan,
+)
 
 from lib.central_conic import primary_radius, secondary_radius
 from lib.conic_direction import ConicNormFactor
@@ -35,20 +49,20 @@ print("Angle between the focal axis and an asymptote:\n")
 # cos
 
 cos_f1_limit = Limit(cos_f1, x, oo)
-aa_angle = symbols("axis_asymptote_angle")
+aa_angle = Symbol("axis_asymptote_angle")
 println_indented(
     eq_chain(
         cos(aa_angle),
         -cos_f1_limit,
         -cos_f1_limit.subs(cos_f1, solution),
         -cos_f1_limit.subs(cos_f1, solution).doit(),
-        1 / symbols("eccentricity"),
+        1 / Symbol("eccentricity"),
     ),
 )
 
 # sin
 
-sec_radius = symbols("r_2")
+sec_radius = Symbol("r_2")
 println_indented(
     eq_chain(
         sin(aa_angle),
@@ -60,9 +74,8 @@ println_indented(
 
 # tan
 
-a, b, c, d, e, f = symbols("a b c d e f", real=True)
-conic = conic_matrix(a, b, c, d, e, f)
-det = symbols("det", nonzero=True)
+conic = conic_matrix(*symbols("a:f", real=True))
+det = Symbol("det", nonzero=True)
 tan_aa = I * secondary_radius(conic) / primary_radius(conic)
 tan_aa = sqrt(tan_aa**2).simplify().subs(ConicNormFactor(conic), sign(det))
 num, denom = (tan_aa**2).as_numer_denom()

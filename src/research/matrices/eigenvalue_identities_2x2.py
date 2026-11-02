@@ -4,8 +4,8 @@ from sympy import Eq, Matrix, simplify, symbols
 
 from research.sympy_utils import println_indented
 
-a, b, c = symbols("a,b,c", real=True)
-min_eigen, max_eigen = symbols("min_eigen,max_eigen", real=True)
+a, b, c = symbols("a:c", real=True)
+min_eigen, max_eigen = symbols("min_eigen max_eigen", real=True)
 
 min_eigen_abc, max_eigen_abc = Matrix([[a, b], [b, c]]).eigenvals()
 

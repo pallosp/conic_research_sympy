@@ -5,6 +5,7 @@ from typing import cast
 from sympy import (
     Determinant,
     Eq,
+    Symbol,
     cos,
     oo,
     sin,
@@ -27,10 +28,10 @@ HORIZONTAL_LINE = "=" * 80
 
 print("\nLength of the conic radius at an angle of θ with horizontal:\n")
 
-a, b, c, d, e, f = symbols("a b c d e f", real=True)
+a, b, c, d, e, f = symbols("a:f", real=True)
 conic = conic_matrix(a, b, c, d, e, f)
 center = conic_center(conic)
-radius_angle = symbols("theta", real=True)
+radius_angle = Symbol("theta", real=True)
 radius_dir = (cos(radius_angle), sin(radius_angle))
 line_through_center = line_through_point(center, direction=radius_dir)
 intersections = conic_x_line(conic, line_through_center)
@@ -47,7 +48,7 @@ radius = (
 # Normalize the radius to be positive or a positive multiple of 𝑖
 radius = sqrt(radius**2)
 
-symbolic_radius_function = symbols("r(θ)")
+symbolic_radius_function = Symbol("r(θ)")
 
 println_indented(Eq(symbolic_radius_function, radius))
 
@@ -91,7 +92,7 @@ factor_with_angle = (
 println_indented(Eq(factor_with_angle, 0))
 
 solutions = solve(factor_with_angle, radius_angle)
-println_indented(Eq(symbols("theta_1"), solutions[0]))
-println_indented(Eq(symbols("theta_2"), solutions[1]))
+println_indented(Eq(Symbol("theta_1"), solutions[0]))
+println_indented(Eq(Symbol("theta_2"), solutions[1]))
 
 ################################################################################

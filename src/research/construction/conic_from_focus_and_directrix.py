@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sympy import Eq, MatAdd, MatMul, Matrix, gcd, symbols
+from sympy import Eq, MatAdd, MatMul, Matrix, Symbol, gcd, symbols
 
 from lib.distance import point_line_distance, point_point_distance
 from research.sympy_utils import println_indented
@@ -9,11 +9,11 @@ print("\nConic equation from focus, directrix and eccentricity:\n")
 
 # eccentricity = |distance(p, focus) / distance(p, directrix)|
 
-directrix = Matrix(symbols("a,b,c"))
+directrix = Matrix(symbols("a:c"))
 a, b, _ = directrix.flat()
-focus = symbols("fx,fy")
-eccentricity = symbols("e")
-point_on_conic = symbols("x,y")
+focus = symbols("fx fy")
+eccentricity = Symbol("e")
+point_on_conic = symbols("x y")
 
 distance_from_focus = point_point_distance(point_on_conic, focus)
 distance_from_directrix = point_line_distance(point_on_conic, directrix)
@@ -47,12 +47,12 @@ ecc_matrix = conic_matrix.applyfunc(
 
 remainder = conic_matrix - ecc_square * ecc_matrix
 remainder_gcd = gcd(remainder.flat())
-remainder = MatMul(
+factored_remainder = MatMul(
     remainder.applyfunc(lambda el: (el / remainder_gcd).factor()),
     remainder_gcd,
 )
 
-conic_eq = MatAdd(MatMul(ecc_matrix, ecc_square), remainder)
+conic_eq = MatAdd(MatMul(ecc_matrix, ecc_square), factored_remainder)
 println_indented(conic_eq)
 
 

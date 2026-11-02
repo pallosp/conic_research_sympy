@@ -1,5 +1,5 @@
 import pytest
-from sympy import Abs, I, Matrix, MatrixBase, pi, sign, symbols
+from sympy import Abs, I, Matrix, MatrixBase, Symbol, pi, sign, symbols
 from sympy.abc import x, y
 
 from lib.central_conic import conic_from_foci_and_radius, shrink_conic_to_zero
@@ -27,14 +27,14 @@ from tests.utils import are_projective_sets_equal
 class TestConicNormFactor:
     def test_parabola_with_focus_at_origin(self):
         focus = ORIGIN
-        directrix = Matrix(symbols("a b c", positive=True))
+        directrix = Matrix(symbols("a:c", positive=True))
         parabola = conic_from_focus_and_directrix(focus, directrix, 1)
         assert ConicNormFactor(parabola) == 1
         assert ConicNormFactor(-parabola) == -1
 
     def test_general_parabola(self):
         focus = ORIGIN
-        directrix = Matrix(symbols("a b c", positive=True))
+        directrix = Matrix(symbols("a:c", positive=True))
         parabola = conic_from_focus_and_directrix(focus, directrix, 1)
         translation = translate(symbols("dx dy", real=True))
         parabola = transform_conic(parabola, translation)
@@ -42,7 +42,7 @@ class TestConicNormFactor:
 
     def test_symbolic_circle(self):
         center = [*symbols("x y"), 1]
-        symbolic_circle = circle(center, r=symbols("r", positive=True))
+        symbolic_circle = circle(center, r=Symbol("r", positive=True))
         assert quadratic_form(symbolic_circle, Matrix(center)).factor().is_positive
         assert ConicNormFactor(symbolic_circle) == 1
         assert ConicNormFactor(-symbolic_circle) == -1
@@ -55,15 +55,15 @@ class TestConicNormFactor:
         assert ConicNormFactor(-zero_circle) == -1
 
     def test_point_conic(self):
-        point = symbols("x y z", positive=True)
+        point = symbols("x:z", positive=True)
         conic = point_conic(point)
         assert quadratic_form(conic, ORIGIN).is_nonpositive
         assert ConicNormFactor(conic) == 1
         assert ConicNormFactor(-conic) == -1
 
     def test_line_pair(self):
-        line1 = Matrix(symbols("a b c", real=True))
-        line2 = Matrix(symbols("d e f", real=True))
+        line1 = Matrix(symbols("a:c", real=True))
+        line2 = Matrix(symbols("d:f", real=True))
         line_pair = line_pair_conic(line1, line2)
         assert ConicNormFactor(line_pair) == 1
         assert ConicNormFactor(-line_pair) == 1
@@ -73,22 +73,22 @@ class TestConicNormFactor:
         assert ConicNormFactor(conic) == 1
 
     def test_undecidable(self):
-        conic = conic_matrix(*symbols("a b c d e f", real=True))
+        conic = conic_matrix(*symbols("a:f", real=True))
         assert isinstance(ConicNormFactor(conic), ConicNormFactor)
 
     def test_function_properties(self):
-        conic = conic_matrix(*symbols("a b c d e f", real=True))
+        conic = conic_matrix(*symbols("a:f", real=True))
         factor = ConicNormFactor(conic)
         assert factor.is_nonzero is True
         assert factor.is_integer is True
         assert factor.is_positive is None
 
     def test_simplify_abs(self):
-        conic = conic_matrix(*symbols("a b c d e f", real=True))
+        conic = conic_matrix(*symbols("a:f", real=True))
         assert Abs(ConicNormFactor(conic)) == 1
 
     def test_simplify_pow(self):
-        conic = conic_matrix(*symbols("a b c d e f", real=True))
+        conic = conic_matrix(*symbols("a:f", real=True))
         f = ConicNormFactor(conic)
         assert f * f == 1
         assert f**3 == f
@@ -96,9 +96,9 @@ class TestConicNormFactor:
 
     def test_simplify_nondegenerate_conic(self):
         focus = ORIGIN
-        directrix = Matrix(symbols("a,b,c", positive=True))
-        eccentricity = symbols("e", positive=True)
-        plus_minus_one = (-1) ** symbols("n", integer=True)
+        directrix = Matrix(symbols("a:c", positive=True))
+        eccentricity = Symbol("e", positive=True)
+        plus_minus_one = (-1) ** Symbol("n", integer=True)
         conic = conic_from_focus_and_directrix(focus, directrix, eccentricity)
         conic *= plus_minus_one
         # Ideally, ConicNormFactor(conic) should simplify to (-1)ⁿ,
@@ -115,7 +115,7 @@ class TestAxisDirection:
 
     def test_symbolic_circle(self):
         assert focal_axis_direction(
-            circle(symbols("x y"), r=symbols("r"))
+            circle(symbols("x y"), r=Symbol("r"))
         ).is_zero_matrix
 
     def test_ellipse(self):
@@ -154,7 +154,7 @@ class TestAxisDirection:
         assert conjugate_axis_direction(point) == ZERO_POINT
 
     def test_lazy_zero_radius_circle(self):
-        conic = conic_matrix(*symbols("a b c d e f"))
+        conic = conic_matrix(*symbols("a:f"))
         point = circle((1, 2), r=0)
         direction = focal_axis_direction(conic)
         direction = direction.subs(zip(conic.flat(), point.flat(), strict=True))

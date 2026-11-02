@@ -9,7 +9,7 @@ from sympy import Determinant, Expr, Matrix, diff, sign, symbols
 from lib.polar_conic import point_at_angle
 from research.sympy_utils import println_indented
 
-a, b, c, d, e, f, g, h, i, theta = symbols("a,b,c,d,e,f,g,h,i,theta")
+a, b, c, d, e, f, g, h, i, theta = symbols("a:i theta")
 polar_matrix = Matrix([[a, b, c], [d, e, f], [g, h, i]])
 x, y, z = point_at_angle(polar_matrix, theta).flat()
 

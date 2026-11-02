@@ -17,7 +17,7 @@ HORIZONTAL_LINE = "-" * 80
 
 print("\nParabola focal parameter (focus-directrix distance):\n")
 
-a, b, c, d, e, f = symbols("a b c d e f", real=True)
+a, b, c, d, e, f = symbols("a:f", real=True)
 det = Symbol("det", nonzero=True)
 parabola = conic_matrix(a, b, c, d, e, f)
 parabola_det = parabola.det().subs(b * b, a * c)

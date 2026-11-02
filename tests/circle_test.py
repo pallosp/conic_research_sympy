@@ -1,7 +1,7 @@
 from typing import Any
 
 import pytest
-from sympy import I, Matrix, nan, pi, sqrt, symbols, zoo
+from sympy import I, Matrix, Symbol, nan, pi, sqrt, symbols, zoo
 from sympy.abc import x, y
 
 from lib.circle import (
@@ -85,7 +85,7 @@ class TestCircleRadius:
 
     def test_symbolic_circular_conic(self):
         center = symbols("x y")
-        r = symbols("r", complex=True)
+        r = Symbol("r", complex=True)
         # √(r²) = { r if 0 ≤ arg(r) < π, -r otherwise }
         assert circle_radius(circle(center, r=r)) == sqrt(r**2)
 
