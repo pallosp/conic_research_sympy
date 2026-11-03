@@ -2,7 +2,7 @@ from collections.abc import Callable, Sequence
 from itertools import product
 
 from sympy import Expr, Matrix, MatrixBase, MatrixExpr, expand
-from sympy.core.logic import fuzzy_not
+from sympy.core.logic import fuzzy_and, fuzzy_not
 
 from lib.matrix import is_full_rank, quadratic_form, skew_matrix
 from lib.point import point_to_vec3
@@ -104,7 +104,7 @@ def is_inside(
     callback that simplifies the sign polynomial before its sign is determined.
     Returns `None` if undecidable.
 
-    *Formula*: `det(C)·pᵀ·C·p > 0`<br>
+    *Formula*: `det(conic)·pointᵀ·conic·point > 0`<br>
     *Proof*:
     [research/incidence/point_inside_conic.py](../src/research/incidence/point_inside_conic.py)
     """
@@ -132,7 +132,7 @@ def is_outside(
     callback that simplifies the sign polynomial before its sign is determined.
     Returns `None` if undecidable.
 
-    *Formula*: `det(C)·pᵀ·C·p < 0`<br>
+    *Formula*: `det(conic)·pointᵀ·conic·point < 0`<br>
     *Proof*:
     [research/incidence/point_inside_conic.py](../src/research/incidence/point_inside_conic.py)
     """
@@ -158,8 +158,77 @@ def polar_conic_contains_point(
     *Formula*:
     [research/incidence/polar_conic_point_incidence.py](../src/research/incidence/polar_conic_point_incidence.py)
     """
-    c, s, i = (polar_conic.adjugate() * point_to_vec3(point)).flat()
-    return simplifier(c * c + s * s - i * i).is_zero
+    return simplifier(_polar_quadratic_form(polar_conic, point)).is_zero
+
+
+def is_inside_polar_conic(
+    polar_conic: PolarConic,
+    point: Point,
+    *,
+    simplifier: Callable[[Expr], Expr] = expand,
+) -> bool | None:
+    """Tells whether a point is [inside](#incidence.is_inside) a conic that is
+    specified in polar form.
+
+    The point is inside iff its preimage under the polar matrix is inside the
+    unit circle. Degenerate polar conics, i.e. ones with a singular matrix,
+    have no inside points.
+
+    Assumes a real polar matrix and a real point. Takes an optional
+    `simplifier` callback that simplifies the sign polynomial before its sign
+    is determined. Returns `None` if undecidable.
+
+    *Formula*: `det(polar_conic) ≠ 0` and `w² > u² + v²`, where
+    `[u, v, w]ᵀ = adj(polar_conic)·point` is the point's preimage under the
+    polar matrix, up to scale.<br>
+    *Proof*:
+    [research/incidence/point_inside_polar_conic.py](../src/research/incidence/point_inside_polar_conic.py)
+    """
+    return fuzzy_and(
+        [
+            simplifier(polar_conic.det()).is_nonzero,
+            simplifier(_polar_quadratic_form(polar_conic, point)).is_positive,
+        ],
+    )
+
+
+def is_outside_polar_conic(
+    polar_conic: PolarConic,
+    point: Point,
+    *,
+    simplifier: Callable[[Expr], Expr] = expand,
+) -> bool | None:
+    """Tells whether a point is [outside](#incidence.is_outside) a conic that
+    is specified in polar form.
+
+    The point is outside iff its preimage under the polar matrix is outside the
+    unit circle. Degenerate polar conics, i.e. ones with a singular matrix,
+    have no outside points.
+
+    Assumes a real polar matrix and a real point. Takes an optional
+    `simplifier` callback that simplifies the sign polynomial before its sign
+    is determined. Returns `None` if undecidable.
+
+    *Formula*: `det(polar_conic) ≠ 0` and `w² < u² + v²`, where
+    `[u, v, w]ᵀ = adj(polar_conic)·point` is the point's preimage under the
+    polar matrix, up to scale.<br>
+    *Proof*:
+    [research/incidence/point_inside_polar_conic.py](../src/research/incidence/point_inside_polar_conic.py)
+    """
+    return fuzzy_and(
+        [
+            simplifier(polar_conic.det()).is_nonzero,
+            simplifier(_polar_quadratic_form(polar_conic, point)).is_negative,
+        ],
+    )
+
+
+def _polar_quadratic_form(polar_conic: PolarConic, point: Point) -> Expr:
+    """The unit circle's quadratic form at the point's preimage under the polar
+    matrix, i.e. the point's quadratic form for the conic in quadratic form.
+    """
+    u, v, w = (polar_conic.adjugate() * point_to_vec3(point)).flat()
+    return w * w - u * u - v * v
 
 
 def are_collinear(

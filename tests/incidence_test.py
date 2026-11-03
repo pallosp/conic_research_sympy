@@ -26,7 +26,9 @@ from lib.incidence import (
     conic_contains_line,
     conic_contains_point,
     is_inside,
+    is_inside_polar_conic,
     is_outside,
+    is_outside_polar_conic,
     is_tangent,
     line_contains_point,
     polar_conic_contains_point,
@@ -39,7 +41,11 @@ from lib.line import (
     line_through_point,
 )
 from lib.point import ORIGIN
-from lib.polar_conic import POLAR_UNIT_CIRCLE
+from lib.polar_conic import (
+    POLAR_UNIT_CIRCLE,
+    conic_from_polar_matrix,
+    hyperbola_to_polar_matrix,
+)
 from lib.transform import scale, transform_polar_conic, translate
 
 
@@ -75,6 +81,71 @@ class TestPolarConicContainsPoint:
         x, y = symbols("x y", positive=True)
         assert polar_conic_contains_point(circle, (x, y, 0)) is False
         assert polar_conic_contains_point(circle, (x, y, 1)) is None
+
+
+class TestIsInsideIsOutsidePolarConic:
+    def test_circle(self):
+        circle = transform_polar_conic(POLAR_UNIT_CIRCLE, translate((1, 2)) * scale(3))
+        assert is_inside_polar_conic(circle, (1, 2)) is True
+        assert is_outside_polar_conic(circle, (1, 2)) is False
+
+        assert is_inside_polar_conic(circle, (10, 0)) is False
+        assert is_outside_polar_conic(circle, (10, 0)) is True
+
+    def test_point_on_conic(self):
+        assert is_inside_polar_conic(POLAR_UNIT_CIRCLE, (1, 0)) is False
+        assert is_outside_polar_conic(POLAR_UNIT_CIRCLE, (1, 0)) is False
+
+    def test_hyperbola(self):
+        hyperbola = hyperbola_to_polar_matrix(conic_from_poly(x * x - y * y - 1))
+        # Within a branch
+        assert is_inside_polar_conic(hyperbola, (3, 0)) is True
+        # Between the branches
+        assert is_outside_polar_conic(hyperbola, (0, 0)) is True
+
+    def test_ideal_point(self):
+        assert is_outside_polar_conic(POLAR_UNIT_CIRCLE, (1, 0, 0)) is True
+
+    def test_scale_invariance(self):
+        assert is_inside_polar_conic(-2 * POLAR_UNIT_CIRCLE, (0, 0, -3)) is True
+        assert is_outside_polar_conic(-2 * POLAR_UNIT_CIRCLE, (-4, 0, -2)) is True
+
+    def test_singular_matrix(self):
+        # Without the det(P) ≠ 0 check, the origin would count as inside.
+        polar_conic = Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 0]])
+        assert is_inside_polar_conic(polar_conic, (0, 0)) is False
+        assert is_outside_polar_conic(polar_conic, (0, 0)) is False
+
+    def test_agrees_with_quadratic_form(self):
+        polar_conic = Matrix([[1, 2, -1], [0, 3, 2], [1, -1, 4]])
+        conic = conic_from_polar_matrix(polar_conic)
+
+        # Images of points inside the unit circle
+        for point in [(-1, 2, 4), (-1, 4, 9)]:
+            assert is_inside_polar_conic(polar_conic, point) is True
+            assert is_inside(conic, point) is True
+
+        for point in [(0, 0), (5, -5), (1, 1, 0), (2, -1, 0)]:
+            assert is_outside_polar_conic(polar_conic, point) is True
+            assert is_outside(conic, point) is True
+
+    def test_determinant_needs_simplification(self):
+        # det = sin²t + cos²t, which is non-zero only after simplification
+        t = Symbol("t", real=True)
+        rotation = Matrix([[cos(t), -sin(t), 0], [sin(t), cos(t), 0], [0, 0, 1]])
+        assert is_inside_polar_conic(rotation, (0, 0)) is None
+        assert is_inside_polar_conic(rotation, (0, 0), simplifier=simplify) is True
+        assert is_outside_polar_conic(rotation, (2, 0), simplifier=simplify) is True
+
+    def test_symbolic(self):
+        center = symbols("cx cy", real=True)
+        r = Symbol("r", positive=True)
+        circle = transform_polar_conic(POLAR_UNIT_CIRCLE, translate(center) * scale(r))
+        assert is_inside_polar_conic(circle, center) is True
+
+        px, py = symbols("px py", real=True)
+        assert is_inside_polar_conic(circle, (px, py)) is None
+        assert is_outside_polar_conic(circle, (px, py)) is None
 
 
 class TestConicContainsLine:
