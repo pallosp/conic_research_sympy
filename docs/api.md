@@ -1930,7 +1930,14 @@ def is_line_pair(conic: Conic) -> bool | None
 
 ([source](../src/lib/conic_classes.py#L156))
 
-Tells whether the conic is the union of two projective lines.
+Tells whether the conic is the union of two real projective lines.
+
+A conic is a line pair, such as `x² - y² = 0`, iff it
+ - is degenerate,
+ - is not the zero matrix, and
+ - splits to two real lines.
+
+The lines may coincide, be parallel, or include the ideal line.
 
 Returns `None` if undecidable.
 
@@ -1942,7 +1949,7 @@ Returns `None` if undecidable.
 def is_double_line(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L177))
+([source](../src/lib/conic_classes.py#L184))
 
 Tells whether the conic consists of two coincident projective lines.
 
@@ -1956,14 +1963,19 @@ Returns `None` if undecidable.
 def is_point_conic(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L194))
+([source](../src/lib/conic_classes.py#L201))
 
-Tells whether the conic consists of a single projective point.
+Tells whether the conic consists of a single real projective point.
+
+A conic is a point conic, such as `x² + y² = 0` or `y² + 1 = 0`, iff it
+ - is degenerate, and
+ - splits to two non-real complex conjugate lines.
+
+The point is the lines' only real point, their intersection. It may be
+[finite](#conic_classes.is_finite_point_conic) or
+[ideal](#conic_classes.is_ideal_point_conic).
 
 Returns `None` if undecidable.
-
-A conic is a point conic iff it's degenerate and splits to two lines with
-complex coordinates.
 
 <a id="conic_classes.is_finite_point_conic"></a>
 
@@ -1973,7 +1985,7 @@ complex coordinates.
 def is_finite_point_conic(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L221))
+([source](../src/lib/conic_classes.py#L233))
 
 Tells whether the conic consists of a single finite (Euclidean) point.
 
@@ -1987,7 +1999,7 @@ Returns `None` if undecidable.
 def is_ideal_point_conic(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L229))
+([source](../src/lib/conic_classes.py#L241))
 
 Tells whether the conic consists of a single ideal point.
 

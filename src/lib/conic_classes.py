@@ -154,7 +154,14 @@ def is_circular(conic: Conic) -> bool | None:
 
 
 def is_line_pair(conic: Conic) -> bool | None:
-    """Tells whether the conic is the union of two projective lines.
+    """Tells whether the conic is the union of two real projective lines.
+
+    A conic is a line pair, such as `x² - y² = 0`, iff it
+     - is degenerate,
+     - is not the zero matrix, and
+     - splits to two real lines.
+
+    The lines may coincide, be parallel, or include the ideal line.
 
     Returns `None` if undecidable.
     """
@@ -163,10 +170,10 @@ def is_line_pair(conic: Conic) -> bool | None:
         [
             is_degenerate(conic),
             fuzzy_not(conic.is_zero_matrix),
-            # When C is degenerate, -adj(C) = q·qᵀ, where q is the lines'
+            # A degenerate conic has -adj(C) = q·qᵀ, where q is the lines'
             # intersection point (research/matrices/line_pair_adjugate.py).
-            # q is real for real lines and imaginary for complex ones.
-            # Its diagonal elements below are q₁², q₂², and q₃².
+            # The lines are real iff q is real, i.e. q₁² = e² - c·f,
+            # q₂² = d² - a·f and q₃² = b² - a·c are all non-negative.
             (e * e - c * f).factor().is_nonnegative,
             (d * d - a * f).factor().is_nonnegative,
             (b * b - a * c).factor().is_nonnegative,
@@ -192,21 +199,26 @@ def is_double_line(conic: Conic) -> bool | None:
 
 
 def is_point_conic(conic: Conic) -> bool | None:
-    """Tells whether the conic consists of a single projective point.
+    """Tells whether the conic consists of a single real projective point.
+
+    A conic is a point conic, such as `x² + y² = 0` or `y² + 1 = 0`, iff it
+     - is degenerate, and
+     - splits to two non-real complex conjugate lines.
+
+    The point is the lines' only real point, their intersection. It may be
+    [finite](#conic_classes.is_finite_point_conic) or
+    [ideal](#conic_classes.is_ideal_point_conic).
 
     Returns `None` if undecidable.
-
-    A conic is a point conic iff it's degenerate and splits to two lines with
-    complex coordinates.
     """
     a, b, c, d, e, f = conic_coefficients(conic)
     return fuzzy_and(
         [
             is_degenerate(conic),
-            # When C is degenerate, -adj(C) = q·qᵀ, where q is the lines'
+            # A degenerate conic has -adj(C) = q·qᵀ, where q is the lines'
             # intersection point (research/matrices/line_pair_adjugate.py).
-            # q is real for real lines and imaginary for complex ones.
-            # Its diagonal elements below are q₃², q₂², and q₁².
+            # The lines are complex iff q is imaginary, i.e. any of
+            # q₃² = b² - a·c, q₂² = d² - a·f and q₁² = e² - c·f is negative.
             fuzzy_or(
                 [
                     (b * b - a * c).factor().is_negative,
