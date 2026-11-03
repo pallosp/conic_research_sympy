@@ -102,6 +102,7 @@
   * [is\_double\_line](#conic_classes.is_double_line)
   * [is\_point\_conic](#conic_classes.is_point_conic)
   * [is\_finite\_point\_conic](#conic_classes.is_finite_point_conic)
+  * [is\_ideal\_point\_conic](#conic_classes.is_ideal_point_conic)
 * [distance](#distance)
   * [point\_point\_distance](#distance.point_point_distance)
   * [point\_line\_distance](#distance.point_line_distance)
@@ -1386,7 +1387,10 @@ Returns two points. Special cases:
  - Returns two `[0, 0, 0]ᵀ` vectors if the conic contains the ideal line.
  - May return unevaluated `MatrixExpr`s for symbolic conics.
 
-The computation is based on intersecting the conic with the ideal line.
+The computation is based on intersecting the conic with the ideal line, i.e.
+solving the homogeneous quadratic equation `[x, y, 0]·C·[x, y, 0]ᵀ = 0`.
+The sign of `b² - a·c`, a quarter of its discriminant, tells whether the
+points are real or complex, and whether they coincide.
 
 An alternative formula for non-degenerate central conics is
 `[r₁·cos(α) ∓ 𝑖·r₂·sin(α), r₁·sin(α) ± 𝑖·r₂·cos(α), 0]ᵀ`, where `α` is the
@@ -1404,7 +1408,7 @@ radii. Note that `r₂` is imaginary in case of hyperbolas.
 def projective_conic_center(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic.py#L188))
+([source](../src/lib/conic.py#L191))
 
 Computes the generalized projective center of a conic.
 
@@ -1428,7 +1432,7 @@ For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
 def pole_point(conic: Conic, polar_line: Line) -> PointVector
 ```
 
-([source](../src/lib/conic.py#L206))
+([source](../src/lib/conic.py#L209))
 
 Computes the pole point of a conic with respect to the given polar line.
 
@@ -1448,7 +1452,7 @@ relationships.
 def polar_line(conic: Conic, pole_point: Point) -> Line
 ```
 
-([source](../src/lib/conic.py#L220))
+([source](../src/lib/conic.py#L223))
 
 Computes the polar line of a conic for a given pole point.
 
@@ -1479,7 +1483,7 @@ References:
 def tangent_pair_conic(conic: Conic, point: Point) -> Conic
 ```
 
-([source](../src/lib/conic.py#L246))
+([source](../src/lib/conic.py#L249))
 
 Computes the line pair conic consisting of the two tangent lines of a
 conic through a point.
@@ -1514,7 +1518,7 @@ def tangents_through_point(
         point: Point) -> tuple[Line | MatrixExpr, Line | MatrixExpr]
 ```
 
-([source](../src/lib/conic.py#L274))
+([source](../src/lib/conic.py#L277))
 
 Computes the two tangent lines of a conic through a point.
 
@@ -1941,6 +1945,25 @@ def is_finite_point_conic(conic: Conic) -> bool | None
 ([source](../src/lib/conic_classes.py#L221))
 
 Tells whether the conic consists of a single finite (Euclidean) point.
+
+Returns `None` if undecidable.
+
+<a id="conic_classes.is_ideal_point_conic"></a>
+
+#### is\_ideal\_point\_conic
+
+```python
+def is_ideal_point_conic(conic: Conic) -> bool | None
+```
+
+([source](../src/lib/conic_classes.py#L229))
+
+Tells whether the conic consists of a single ideal point.
+
+A conic is an ideal point conic, such as `y² + 1 = 0`, iff it
+ - is degenerate,
+ - has coinciding ideal points, and
+ - splits to two non-real complex conjugate lines.
 
 Returns `None` if undecidable.
 

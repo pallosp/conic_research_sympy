@@ -13,6 +13,7 @@ from lib.conic_classes import (
     is_finite_conic,
     is_finite_point_conic,
     is_hyperbola,
+    is_ideal_point_conic,
     is_imaginary_ellipse,
     is_line_pair,
     is_nondegenerate,
@@ -519,6 +520,41 @@ class TestIsFinitePointConic:
 
     def test_undecidable(self):
         assert is_finite_point_conic(point_conic(symbols("x:z"))) is None
+
+
+class TestIsIdealPointConic:
+    def test_numeric(self):
+        assert is_ideal_point_conic(conic_from_poly(y * y + 1)) is True
+        assert is_ideal_point_conic(conic_from_poly(y * y - 1)) is False
+        assert is_ideal_point_conic(conic_from_poly(y * y)) is False
+        assert is_ideal_point_conic(UNIT_CIRCLE) is False
+        assert is_ideal_point_conic(ZERO_CONIC) is False
+
+    def test_zero_radius_circle(self):
+        assert is_ideal_point_conic(circle(symbols("x y"), r=0)) is False
+
+    def test_ideal_point_conic(self):
+        x = Symbol("x", real=True)
+        y = Symbol("y", real=True, nonzero=True)
+        assert is_ideal_point_conic(point_conic((x, y, 0))) is True
+        assert is_ideal_point_conic(point_conic((y, x, 0))) is True
+
+    def test_complex_parallel_lines(self):
+        a, b, c = symbols("a:c", positive=True)
+        assert is_ideal_point_conic(conic_from_poly((a * x + b * y) ** 2 + c)) is True
+
+    def test_finite_point_conic(self):
+        assert is_ideal_point_conic(point_conic((1, 2, 3))) is False
+
+    def test_line_pair_symbolic(self):
+        line1 = Matrix(symbols("a:c", real=True))
+        line2 = Matrix(symbols("d:f", real=True))
+        line_pair = line_pair_conic(line1, line2)
+        assert is_ideal_point_conic(line_pair) is False
+
+    def test_undecidable(self):
+        assert is_ideal_point_conic(point_conic(symbols("x:z"))) is None
+        assert is_ideal_point_conic(point_conic((*symbols("x y"), 0))) is None
 
 
 class TestIsRectangularHyperbola:

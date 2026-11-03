@@ -224,3 +224,36 @@ def is_finite_point_conic(conic: Conic) -> bool | None:
     Returns `None` if undecidable.
     """
     return fuzzy_and([is_degenerate(conic), is_finite_conic(conic)])
+
+
+def is_ideal_point_conic(conic: Conic) -> bool | None:
+    """Tells whether the conic consists of a single ideal point.
+
+    A conic is an ideal point conic, such as `y² + 1 = 0`, iff it
+     - is degenerate,
+     - has coinciding ideal points, and
+     - splits to two non-real complex conjugate lines.
+
+    Returns `None` if undecidable.
+    """
+    a, b, c, d, e, f = conic_coefficients(conic)
+    return fuzzy_and(
+        [
+            # The conic has a single ideal point iff a·x² + 2b·xy + c·y² = 0,
+            # its intersection with the ideal line, has a double root.
+            (a * c - b * b).expand().is_zero,
+            # det(C) = (a·c - b²)·f - (a·e² - 2b·d·e + c·d²), so given the
+            # above, the conic is degenerate iff the second term is zero.
+            (a * e * e - 2 * b * d * e + c * d * d).is_zero,
+            # A degenerate conic has -adj(C) = q·qᵀ, where q is the lines'
+            # intersection point (research/matrices/line_pair_adjugate.py).
+            # The lines are complex iff q is imaginary. q₃² = b² - a·c = 0,
+            # so it's enough to check q₁² = e² - c·f and q₂² = d² - a·f.
+            fuzzy_or(
+                [
+                    (d * d - a * f).factor().is_negative,
+                    (e * e - c * f).factor().is_negative,
+                ],
+            ),
+        ],
+    )

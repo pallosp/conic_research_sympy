@@ -169,7 +169,10 @@ def ideal_points(
      - Returns two `[0, 0, 0]ᵀ` vectors if the conic contains the ideal line.
      - May return unevaluated `MatrixExpr`s for symbolic conics.
 
-    The computation is based on intersecting the conic with the ideal line.
+    The computation is based on intersecting the conic with the ideal line, i.e.
+    solving the homogeneous quadratic equation `[x, y, 0]·C·[x, y, 0]ᵀ = 0`.
+    The sign of `b² - a·c`, a quarter of its discriminant, tells whether the
+    points are real or complex, and whether they coincide.
 
     An alternative formula for non-degenerate central conics is
     `[r₁·cos(α) ∓ 𝑖·r₂·sin(α), r₁·sin(α) ± 𝑖·r₂·cos(α), 0]ᵀ`, where `α` is the
