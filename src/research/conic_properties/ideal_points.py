@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from itertools import product
-from typing import cast
 
 from sympy import (
     Abs,
@@ -108,10 +107,8 @@ print()
 
 conic = conic_matrix(*symbols("a:f", real=True))
 
-# symbols() is typed as returning Any (sympy#27354).
-eigen_minus, eigen_plus = cast(
-    "tuple[Symbol, ...]", symbols("lambda^- lambda^+", real=True)
-)
+eigen_minus = Symbol("lambda^-", real=True)
+eigen_plus = Symbol("lambda^+", real=True)
 
 
 def ideal_points_from_asymptotes(conic: Conic) -> tuple[Matrix, Matrix]:
