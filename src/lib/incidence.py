@@ -83,6 +83,66 @@ def is_tangent(
     return simplifier(quadratic_form(conic.adjugate(), line)).is_zero
 
 
+def is_inside(
+    conic: Conic,
+    point: Point,
+    *,
+    simplifier: Callable[[Expr], Expr] = expand,
+) -> bool | None:
+    """Tells whether a point is inside a conic, i.e. no real tangent of the
+    conic passes through it.
+
+    Inside points are
+     - the points within an ellipse, a parabola or a hyperbola branch;
+     - all points for imaginary ellipses.
+
+    Points on the conic are neither inside nor
+    [outside](#incidence.is_outside). Neither are any points for
+    [degenerate conics](#conic_classes.is_degenerate).
+
+    Assumes a real conic and a real point. Takes an optional `simplifier`
+    callback that simplifies the sign polynomial before its sign is determined.
+    Returns `None` if undecidable.
+
+    *Formula*: `det(C)·pᵀ·C·p > 0`<br>
+    *Proof*:
+    [research/incidence/point_inside_conic.py](../src/research/incidence/point_inside_conic.py)
+    """
+    return simplifier(_inside_sign_poly(conic, point)).is_positive
+
+
+def is_outside(
+    conic: Conic,
+    point: Point,
+    *,
+    simplifier: Callable[[Expr], Expr] = expand,
+) -> bool | None:
+    """Tells whether a point is outside a conic, i.e. two real tangents of the
+    conic pass through it.
+
+    Outside points are
+     - the points outside an ellipse or a parabola;
+     - the points between the branches of a hyperbola, including its center.
+
+    Points on the conic are neither [inside](#incidence.is_inside) nor
+    outside. Neither are any points for
+    [degenerate conics](#conic_classes.is_degenerate).
+
+    Assumes a real conic and a real point. Takes an optional `simplifier`
+    callback that simplifies the sign polynomial before its sign is determined.
+    Returns `None` if undecidable.
+
+    *Formula*: `det(C)·pᵀ·C·p < 0`<br>
+    *Proof*:
+    [research/incidence/point_inside_conic.py](../src/research/incidence/point_inside_conic.py)
+    """
+    return simplifier(_inside_sign_poly(conic, point)).is_negative
+
+
+def _inside_sign_poly(conic: Conic, point: Point) -> Expr:
+    return conic.det() * quadratic_form(conic, point_to_vec3(point))
+
+
 def polar_conic_contains_point(
     polar_conic: PolarConic,
     point: Point,

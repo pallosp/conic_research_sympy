@@ -1,11 +1,23 @@
 import itertools
 
-from sympy import I, Matrix, MatrixSymbol, Symbol, cos, simplify, sin, sqrt, symbols
+from sympy import (
+    I,
+    Matrix,
+    MatrixSymbol,
+    Symbol,
+    cos,
+    simplify,
+    sin,
+    sqrt,
+    symbols,
+    trigsimp,
+)
 from sympy.abc import x, y
 
-from lib.circle import circle
+from lib.circle import IMAGINARY_UNIT_CIRCLE, UNIT_CIRCLE, circle
 from lib.conic import conic_from_focus_and_directrix, conic_from_poly
-from lib.degenerate_conic import line_pair_conic
+from lib.degenerate_conic import double_line_conic, line_pair_conic, point_conic
+from lib.ellipse import ellipse
 from lib.incidence import (
     are_cocircular,
     are_collinear,
@@ -13,6 +25,8 @@ from lib.incidence import (
     are_on_same_conic,
     conic_contains_line,
     conic_contains_point,
+    is_inside,
+    is_outside,
     is_tangent,
     line_contains_point,
     polar_conic_contains_point,
@@ -24,6 +38,7 @@ from lib.line import (
     horizontal_line,
     line_through_point,
 )
+from lib.point import ORIGIN
 from lib.polar_conic import POLAR_UNIT_CIRCLE
 from lib.transform import scale, transform_polar_conic, translate
 
@@ -138,6 +153,103 @@ class TestIsTangent:
 
     def test_matrix_expr(self):
         assert is_tangent(circle((0, 0), r=1), MatrixSymbol("l", 3, 1)) is None
+
+
+class TestIsInsideIsOutside:
+    def test_circle(self):
+        assert is_inside(UNIT_CIRCLE, (0, 0)) is True
+        assert is_outside(UNIT_CIRCLE, (0, 0)) is False
+
+        assert is_inside(UNIT_CIRCLE, (2, 0)) is False
+        assert is_outside(UNIT_CIRCLE, (2, 0)) is True
+
+    def test_point_on_conic(self):
+        assert is_inside(UNIT_CIRCLE, (1, 0)) is False
+        assert is_outside(UNIT_CIRCLE, (1, 0)) is False
+
+    def test_parabola(self):
+        parabola = conic_from_poly(y - x * x)
+        assert is_inside(parabola, (0, 5)) is True
+        assert is_outside(parabola, (1, 0)) is True
+
+    def test_hyperbola(self):
+        hyperbola = conic_from_poly(x * y - 1)
+        # Within a branch
+        assert is_inside(hyperbola, (3, 2)) is True
+        assert is_inside(hyperbola, (-3, -2)) is True
+        # Between the branches
+        assert is_outside(hyperbola, (0, 0)) is True
+        assert is_outside(hyperbola, (1, -1)) is True
+
+    def test_ideal_point(self):
+        hyperbola = conic_from_poly(x * y - 1)
+        # No tangent has direction (1, 1)
+        assert is_inside(hyperbola, (1, 1, 0)) is True
+        # Two tangents have direction (1, -1)
+        assert is_outside(hyperbola, (1, -1, 0)) is True
+
+    def test_imaginary_ellipse(self):
+        assert is_inside(IMAGINARY_UNIT_CIRCLE, (0, 0)) is True
+        assert is_inside(IMAGINARY_UNIT_CIRCLE, (5, 7)) is True
+
+    def test_scale_invariance(self):
+        assert is_inside(-2 * UNIT_CIRCLE, (0, 0, -3)) is True
+        assert is_outside(-2 * UNIT_CIRCLE, (-4, 0, -2)) is True
+
+    def test_degenerate_conics(self):
+        conics = [
+            line_pair_conic(X_AXIS, Y_AXIS),
+            point_conic((0, 0)),
+            double_line_conic(X_AXIS),
+        ]
+        for conic in conics:
+            assert is_inside(conic, (3, 2)) is False
+            assert is_outside(conic, (3, 2)) is False
+
+    def test_symbolic(self):
+        r = Symbol("r", positive=True)
+        assert is_inside(circle((0, 0), r=r), (0, 0)) is True
+
+        px, py = symbols("px py", real=True)
+        assert is_inside(UNIT_CIRCLE, (px, py)) is None
+        assert is_outside(UNIT_CIRCLE, (px, py)) is None
+
+    def test_symbolic_point_conic(self):
+        conic = point_conic(symbols("cx cy cz", real=True))
+        point = symbols("px py pz", real=True)
+        assert is_inside(conic, point) is False
+        assert is_outside(conic, point) is False
+
+    def test_symbolic_line_pair_conic(self):
+        line1 = Matrix(symbols("a b c", real=True))
+        line2 = Matrix(symbols("d e f", real=True))
+        conic = line_pair_conic(line1, line2)
+        point = symbols("px py pz", real=True)
+        assert is_inside(conic, point) is False
+        assert is_outside(conic, point) is False
+
+    def test_symbolic_ellipse(self):
+        center = symbols("cx cy", real=True)
+        r1, r2 = symbols("r1 r2", positive=True)
+        conic = ellipse(center, r1, r2, r1_angle=Symbol("theta", real=True))
+        # Needs sin²θ + cos²θ = 1
+        assert is_inside(conic, center) is None
+        assert is_inside(conic, center, simplifier=trigsimp) is True
+        assert is_outside(conic, center) is False
+
+    def test_symbolic_parabola(self):
+        a = Symbol("a", positive=True)
+        b = Symbol("b", real=True)
+        c = Symbol("c", real=True, nonzero=True)
+        parabola = conic_from_focus_and_directrix(ORIGIN, Matrix([a, b, c]), 1)
+        assert is_inside(parabola, ORIGIN) is True
+
+        # a = b = 0 would make the directrix the ideal line, and the conic
+        # degenerate.
+        a = Symbol("a", real=True)
+        parabola = conic_from_focus_and_directrix(ORIGIN, Matrix([a, b, c]), 1)
+        assert is_inside(parabola, ORIGIN) is None
+        assert is_outside(parabola, ORIGIN) is False
 
 
 class TestLineContainsPoint:

@@ -162,6 +162,8 @@
   * [conic\_contains\_point](#incidence.conic_contains_point)
   * [conic\_contains\_line](#incidence.conic_contains_line)
   * [is\_tangent](#incidence.is_tangent)
+  * [is\_inside](#incidence.is_inside)
+  * [is\_outside](#incidence.is_outside)
   * [polar\_conic\_contains\_point](#incidence.polar_conic_contains_point)
   * [are\_collinear](#incidence.are_collinear)
   * [are\_concurrent](#incidence.are_concurrent)
@@ -2976,6 +2978,70 @@ undecidable. Accepts unevaluated `MatrixExpr` lines.
 
 *Formula*: `lᵀ·adj(C)·l = 0`, i.e. the line is on the dual conic.
 
+<a id="incidence.is_inside"></a>
+
+#### is\_inside
+
+```python
+def is_inside(conic: Conic,
+              point: Point,
+              *,
+              simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+```
+
+([source](../src/lib/incidence.py#L86))
+
+Tells whether a point is inside a conic, i.e. no real tangent of the
+conic passes through it.
+
+Inside points are
+ - the points within an ellipse, a parabola or a hyperbola branch;
+ - all points for imaginary ellipses.
+
+Points on the conic are neither inside nor
+[outside](#incidence.is_outside). Neither are any points for
+[degenerate conics](#conic_classes.is_degenerate).
+
+Assumes a real conic and a real point. Takes an optional `simplifier`
+callback that simplifies the sign polynomial before its sign is determined.
+Returns `None` if undecidable.
+
+*Formula*: `det(C)·pᵀ·C·p > 0`<br>
+*Proof*:
+[research/incidence/point_inside_conic.py](../src/research/incidence/point_inside_conic.py)
+
+<a id="incidence.is_outside"></a>
+
+#### is\_outside
+
+```python
+def is_outside(conic: Conic,
+               point: Point,
+               *,
+               simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+```
+
+([source](../src/lib/incidence.py#L114))
+
+Tells whether a point is outside a conic, i.e. two real tangents of the
+conic pass through it.
+
+Outside points are
+ - the points outside an ellipse or a parabola;
+ - the points between the branches of a hyperbola, including its center.
+
+Points on the conic are neither [inside](#incidence.is_inside) nor
+outside. Neither are any points for
+[degenerate conics](#conic_classes.is_degenerate).
+
+Assumes a real conic and a real point. Takes an optional `simplifier`
+callback that simplifies the sign polynomial before its sign is determined.
+Returns `None` if undecidable.
+
+*Formula*: `det(C)·pᵀ·C·p < 0`<br>
+*Proof*:
+[research/incidence/point_inside_conic.py](../src/research/incidence/point_inside_conic.py)
+
 <a id="incidence.polar_conic_contains_point"></a>
 
 #### polar\_conic\_contains\_point
@@ -2988,7 +3054,7 @@ def polar_conic_contains_point(
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L86))
+([source](../src/lib/incidence.py#L146))
 
 Checks if a point lies on a conic that is specified in polar form.
 
@@ -3009,7 +3075,7 @@ def are_collinear(points: Sequence[Point],
                   simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L105))
+([source](../src/lib/incidence.py#L165))
 
 Tells whether n points are collinear.
 
@@ -3026,7 +3092,7 @@ def are_concurrent(lines: Sequence[Line],
                    simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L122))
+([source](../src/lib/incidence.py#L182))
 
 Tells whether n lines are concurrent, i.e. go through the same point.
 
@@ -3048,7 +3114,7 @@ def are_on_same_conic(
         simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L144))
+([source](../src/lib/incidence.py#L204))
 
 Tells whether up to 6 points lie on the same conic section.
 
@@ -3071,7 +3137,7 @@ def are_cocircular(points: Sequence[Point],
                    simplifier: Callable[[Expr], Expr] = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L173))
+([source](../src/lib/incidence.py#L233))
 
 Tells whether n points lie on the same circle.
 
