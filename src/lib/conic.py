@@ -71,6 +71,37 @@ def conic_from_focus_and_directrix(
 ) -> Conic:
     """Constructs a conic from its focus, directrix and eccentricity.
 
+    The result is never a circle, because the parameters can't determine its
+    radius: all concentric circles share the same focus (their center),
+    directrix (the ideal line) and eccentricity (0).
+
+    Negating `e` gives the same conic, so the table lists only non-negative
+    real, imaginary and infinite eccentricities. Other complex eccentricities
+    yield complex conic matrices.
+
+    | directrix | focus       | ecc.      | constructed conic                |
+    |-----------|-------------|-----------|----------------------------------|
+    | ideal     | any         | 0         | zero matrix                      |
+    | ideal     | any         | (0..∞)    | double ideal line                |
+    | ideal     | any         | imaginary | double ideal line                |
+    | finite    | ∈ directrix | [0..1)    | point conic at the focus         |
+    | finite    | ∈ directrix | imaginary | point conic at the focus         |
+    | finite    | ∈ directrix | 1         | double line ⟂ directrix at focus |
+    | finite    | ∈ directrix | (1..∞)    | crossing lines through focus ¹   |
+    | finite    | ∉ directrix | 0         | point conic at the focus         |
+    | finite    | ∉ directrix | (0..1)    | ellipse (not a circle)           |
+    | finite    | ∉ directrix | imaginary | imaginary ellipse (not a circle) |
+    | finite    | ∉ directrix | 1         | parabola                         |
+    | finite    | ∉ directrix | (1..∞)    | hyperbola ²                      |
+    | any       | any         | ∞         | invalid (`zoo` / `nan` elements) |
+
+    ¹ Symmetric to the directrix, at angle `atan(√(e²-1))` from its normal;
+    perpendicular to each other if `e = √2`.<br>
+    ² Rectangular if `e = √2`.
+
+    The focus must be a finite point. An ideal focus yields a matrix with `zoo`
+    or `nan` elements.
+
     *Formula*:
     [research/construction/conic_from_focus_and_directrix.py](../src/research/construction/conic_from_focus_and_directrix.py)
     """

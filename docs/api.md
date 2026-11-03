@@ -1275,6 +1275,37 @@ def conic_from_focus_and_directrix(focus: FinitePoint, directrix: Line,
 
 Constructs a conic from its focus, directrix and eccentricity.
 
+The result is never a circle, because the parameters can't determine its
+radius: all concentric circles share the same focus (their center),
+directrix (the ideal line) and eccentricity (0).
+
+Negating `e` gives the same conic, so the table lists only non-negative
+real, imaginary and infinite eccentricities. Other complex eccentricities
+yield complex conic matrices.
+
+| directrix | focus       | ecc.      | constructed conic                |
+|-----------|-------------|-----------|----------------------------------|
+| ideal     | any         | 0         | zero matrix                      |
+| ideal     | any         | (0..∞)    | double ideal line                |
+| ideal     | any         | imaginary | double ideal line                |
+| finite    | ∈ directrix | [0..1)    | point conic at the focus         |
+| finite    | ∈ directrix | imaginary | point conic at the focus         |
+| finite    | ∈ directrix | 1         | double line ⟂ directrix at focus |
+| finite    | ∈ directrix | (1..∞)    | crossing lines through focus ¹   |
+| finite    | ∉ directrix | 0         | point conic at the focus         |
+| finite    | ∉ directrix | (0..1)    | ellipse (not a circle)           |
+| finite    | ∉ directrix | imaginary | imaginary ellipse (not a circle) |
+| finite    | ∉ directrix | 1         | parabola                         |
+| finite    | ∉ directrix | (1..∞)    | hyperbola ²                      |
+| any       | any         | ∞         | invalid (`zoo` / `nan` elements) |
+
+¹ Symmetric to the directrix, at angle `atan(√(e²-1))` from its normal;
+perpendicular to each other if `e = √2`.<br>
+² Rectangular if `e = √2`.
+
+The focus must be a finite point. An ideal focus yields a matrix with `zoo`
+or `nan` elements.
+
 *Formula*:
 [research/construction/conic_from_focus_and_directrix.py](../src/research/construction/conic_from_focus_and_directrix.py)
 
@@ -1286,7 +1317,7 @@ Constructs a conic from its focus, directrix and eccentricity.
 def eccentricity(conic: Conic) -> Expr
 ```
 
-([source](../src/lib/conic.py#L83))
+([source](../src/lib/conic.py#L114))
 
 Computes the eccentricity of a conic section.
 
@@ -1329,7 +1360,7 @@ two different corresponding eccentricity values. Evaluate
 def focal_parameter(conic: Conic) -> Expr
 ```
 
-([source](../src/lib/conic.py#L123))
+([source](../src/lib/conic.py#L154))
 
 Computes the distance between a conic's focus and the corresponding directrix.
 
@@ -1351,7 +1382,7 @@ Special cases:
 def focal_axis(conic: Conic) -> Line
 ```
 
-([source](../src/lib/conic.py#L142))
+([source](../src/lib/conic.py#L173))
 
 Returns the axis of symmetry going through conic's focus point(s).
 
@@ -1377,7 +1408,7 @@ def ideal_points(
 ) -> tuple[PointVector | MatrixExpr, PointVector | MatrixExpr]
 ```
 
-([source](../src/lib/conic.py#L161))
+([source](../src/lib/conic.py#L192))
 
 Computes the ideal points on a conic section.
 
@@ -1408,7 +1439,7 @@ radii. Note that `r₂` is imaginary in case of hyperbolas.
 def projective_conic_center(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic.py#L191))
+([source](../src/lib/conic.py#L222))
 
 Computes the generalized projective center of a conic.
 
@@ -1432,7 +1463,7 @@ For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
 def pole_point(conic: Conic, polar_line: Line) -> PointVector
 ```
 
-([source](../src/lib/conic.py#L209))
+([source](../src/lib/conic.py#L240))
 
 Computes the pole point of a conic with respect to the given polar line.
 
@@ -1452,7 +1483,7 @@ relationships.
 def polar_line(conic: Conic, pole_point: Point) -> Line
 ```
 
-([source](../src/lib/conic.py#L223))
+([source](../src/lib/conic.py#L254))
 
 Computes the polar line of a conic for a given pole point.
 
@@ -1483,7 +1514,7 @@ References:
 def tangent_pair_conic(conic: Conic, point: Point) -> Conic
 ```
 
-([source](../src/lib/conic.py#L249))
+([source](../src/lib/conic.py#L280))
 
 Computes the line pair conic consisting of the two tangent lines of a
 conic through a point.
@@ -1518,7 +1549,7 @@ def tangents_through_point(
         point: Point) -> tuple[Line | MatrixExpr, Line | MatrixExpr]
 ```
 
-([source](../src/lib/conic.py#L277))
+([source](../src/lib/conic.py#L308))
 
 Computes the two tangent lines of a conic through a point.
 

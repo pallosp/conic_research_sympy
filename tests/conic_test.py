@@ -11,6 +11,7 @@ from sympy import (
     factor,
     log,
     nan,
+    oo,
     sin,
     sqrt,
     symbols,
@@ -39,6 +40,14 @@ from lib.conic import (
     projective_conic_center,
     tangent_pair_conic,
     tangents_through_point,
+)
+from lib.conic_classes import (
+    is_ellipse,
+    is_finite_point_conic,
+    is_hyperbola,
+    is_imaginary_ellipse,
+    is_parabola,
+    is_rectangular_hyperbola,
 )
 from lib.conic_direction import focal_axis_direction
 from lib.degenerate_conic import (
@@ -104,6 +113,102 @@ class TestConicThroughPoints:
         p1, p2, p3, p4, p5 = (0, 0), (0, 0), (1, 0), (0, 1), (1, 1)
         conic = conic_through_points(p1, p2, p3, p4, p5)
         assert conic.is_zero_matrix
+
+
+class TestConicFromFocusAndDirectrix:
+    def test_focus_off_directrix(self):
+        focus = Matrix([2, 5, 1])
+        directrix = Matrix([1, -1, 0])  # y = x
+
+        conic = conic_from_focus_and_directrix(focus, directrix, 0)
+        assert is_finite_point_conic(conic)
+        assert conic_contains_point(conic, focus)
+
+        conic = conic_from_focus_and_directrix(focus, directrix, Rational(1, 2))
+        assert is_ellipse(conic)
+
+        conic = conic_from_focus_and_directrix(focus, directrix, 2 * I)
+        assert is_imaginary_ellipse(conic)
+
+        conic = conic_from_focus_and_directrix(focus, directrix, 1)
+        assert is_parabola(conic)
+
+        conic = conic_from_focus_and_directrix(focus, directrix, 2)
+        assert is_hyperbola(conic)
+        assert is_rectangular_hyperbola(conic) is False
+
+        conic = conic_from_focus_and_directrix(focus, directrix, sqrt(2))
+        assert is_rectangular_hyperbola(conic)
+
+    def test_negative_eccentricity(self):
+        focus = Matrix([2, 5, 1])
+        directrix = Matrix([1, -1, 0])
+        conic1 = conic_from_focus_and_directrix(focus, directrix, 2)
+        conic2 = conic_from_focus_and_directrix(focus, directrix, -2)
+        assert conic1 == conic2
+
+    def test_focus_on_directrix_point_conic(self):
+        focus = Matrix([3, 3, 1])
+        directrix = Matrix([1, -1, 0])  # y = x
+
+        conic = conic_from_focus_and_directrix(focus, directrix, 0)
+        assert is_finite_point_conic(conic)
+        assert conic_contains_point(conic, focus)
+
+        conic = conic_from_focus_and_directrix(focus, directrix, Rational(1, 2))
+        assert is_finite_point_conic(conic)
+        assert conic_contains_point(conic, focus)
+
+        conic = conic_from_focus_and_directrix(focus, directrix, 2 * I)
+        assert is_finite_point_conic(conic)
+        assert conic_contains_point(conic, focus)
+
+    def test_focus_on_directrix_double_line(self):
+        focus = Matrix([3, 3, 1])
+        directrix = Matrix([1, -1, 0])  # y = x
+        conic = conic_from_focus_and_directrix(focus, directrix, 1)
+        line = perpendicular_line(directrix, focus)
+        assert is_nonzero_multiple(conic, double_line_conic(line))
+
+    def test_focus_on_directrix_crossing_lines(self):
+        focus = (3, 0)
+        conic = conic_from_focus_and_directrix(focus, X_AXIS, sqrt(5))
+        # 5·y² = (x-3)² + y²  ⇔  y = ±(x-3)/2
+        line1 = line_through_point(focus, direction=(2, 1))
+        line2 = line_through_point(focus, direction=(2, -1))
+        assert is_nonzero_multiple(conic, line_pair_conic(line1, line2))
+
+    def test_focus_on_directrix_perpendicular_lines(self):
+        focus = Matrix([3, 3, 1])
+        directrix = Matrix([1, -1, 0])  # y = x
+        conic = conic_from_focus_and_directrix(focus, directrix, sqrt(2))
+        line1 = line_through_point(focus, direction=(1, 0))
+        line2 = line_through_point(focus, direction=(0, 1))
+        assert is_nonzero_multiple(conic, line_pair_conic(line1, line2))
+
+    def test_ideal_directrix(self):
+        focus = Matrix([2, 5, 1])
+
+        conic = conic_from_focus_and_directrix(focus, IDEAL_LINE, 0)
+        assert conic == ZERO_CONIC
+
+        conic = conic_from_focus_and_directrix(focus, IDEAL_LINE, 2)
+        assert is_nonzero_multiple(conic, double_line_conic(IDEAL_LINE))
+
+        conic = conic_from_focus_and_directrix(focus, IDEAL_LINE, 2 * I)
+        assert is_nonzero_multiple(conic, double_line_conic(IDEAL_LINE))
+
+    def test_ideal_focus(self):
+        focus = ideal_point(1, 1)
+        directrix = Matrix([1, -1, 0])
+        conic = conic_from_focus_and_directrix(focus, directrix, 2)
+        assert conic.has(nan)
+
+    def test_infinite_eccentricity(self):
+        focus = Matrix([2, 5, 1])
+        directrix = Matrix([1, -1, 0])
+        conic = conic_from_focus_and_directrix(focus, directrix, oo)
+        assert conic.has(nan)
 
 
 class TestEccentricity:
