@@ -46,6 +46,13 @@ class TestPerpendicularLine:
     def test_numeric(self):
         assert perpendicular_line(X_AXIS, (0, 1)) == Y_AXIS
 
+    def test_symbolic(self):
+        to_line = Matrix(symbols("a b c"))
+        point = symbols("x y")
+        line = perpendicular_line(to_line, point)
+        assert line_contains_point(line, point)
+        assert are_perpendicular(line, to_line)
+
 
 class TestLineThroughPoint:
     def test_missing_direction_and_normal(self):

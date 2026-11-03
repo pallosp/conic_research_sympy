@@ -57,7 +57,7 @@ def perpendicular_line(
     """Constructs a line through a point perpendicular to a line."""
     x, y = point_to_xy(through_point)
     a, b, _ = to_line.flat()
-    return Matrix([-b, a, -b * x + a * y])
+    return Matrix([-b, a, b * x - a * y])
 
 
 def line_through_point(
