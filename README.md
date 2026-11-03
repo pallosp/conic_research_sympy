@@ -14,8 +14,10 @@ The API supports:
 - Constructing conics from five points, focus/directrix, center/radii, and more
 - Line and point operations including bisectors, parallels, perpendiculars, etc.
 - Geometric transformations like translation, scaling, and rotation in
-  projective space
+  projective space, and their classification (similarity, congruence, etc.)
 - Conic classification (e.g., ellipse, parabola, hyperbola, degenerate cases)
+- Splitting degenerate conics into lines
+- Tangents through a point, poles and polars
 - Computation of conic properties (e.g. focus, eccentricity, asymptotes,
   vertices, ideal points)
 - Incidence and distance calculations
