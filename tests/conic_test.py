@@ -561,6 +561,24 @@ class TestTangentPairConic:
         asymptotes = line_pair_conic(Matrix([1, 2, 0]), Matrix([1, -2, 0]))
         assert is_nonzero_multiple(tangent_pair_conic(hyperbola, ORIGIN), asymptotes)
 
+    def test_point_inside_hyperbola_branch(self):
+        hyperbola = conic_from_poly(x * x - y * y - 1)
+        tangent_pair = tangent_pair_conic(hyperbola, (3, 0))
+        assert is_finite_point_conic(tangent_pair)
+        assert conic_contains_point(tangent_pair, (3, 0))
+
+    def test_imaginary_ellipse(self):
+        tangent_pair = tangent_pair_conic(IMAGINARY_UNIT_CIRCLE, (2, 0))
+        assert is_finite_point_conic(tangent_pair)
+        assert conic_contains_point(tangent_pair, (2, 0))
+
+    def test_point_conic(self):
+        conic = point_conic((1, 2))
+        assert is_nonzero_multiple(
+            tangent_pair_conic(conic, (4, 6)),
+            double_line_conic(line_between((1, 2), (4, 6))),
+        )
+
     def test_line_pair_conic(self):
         conic = line_pair_conic(X_AXIS, Y_AXIS)
         assert is_nonzero_multiple(
@@ -618,6 +636,19 @@ class TestTangentsThroughPoint:
         assert are_projective_sets_equal(
             tangents_through_point(UNIT_CIRCLE, ideal_point(1, 0)),
             [horizontal_line(1), horizontal_line(-1)],
+        )
+
+    def test_point_inside_hyperbola_branch(self):
+        hyperbola = conic_from_poly(x * x - y * y - 1)
+        assert are_projective_sets_equal(
+            tangents_through_point(hyperbola, (3, 0)),
+            [Matrix([1, 2 * sqrt(2) * I, -3]), Matrix([1, -2 * sqrt(2) * I, -3])],
+        )
+
+    def test_imaginary_ellipse(self):
+        assert are_projective_sets_equal(
+            tangents_through_point(IMAGINARY_UNIT_CIRCLE, (2, 0)),
+            [Matrix([1, sqrt(5) * I, -2]), Matrix([1, -sqrt(5) * I, -2])],
         )
 
     def test_line_pair_conic(self):

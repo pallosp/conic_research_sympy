@@ -81,6 +81,12 @@ class TestEllipseFromFociAndPoint:
         conic = ellipse_from_foci_and_point(f1, f2, (1, 2))
         assert is_nonzero_multiple(conic, double_line_conic(line_between(f1, f2)))
 
+    def test_collinear_point_outside_foci(self):
+        f1 = (1, 2)
+        f2 = (3, 4)
+        conic = ellipse_from_foci_and_point(f1, f2, (4, 5))
+        assert is_ellipse(conic)
+
     def test_coincident_foci(self):
         f = (2, 3)
         p = (5, 7)

@@ -52,13 +52,17 @@ def ellipse_from_foci_and_point(
 ) -> Conic:
     """Constructs an ellipse from its focus points and an incident point.
 
-    Special cases:
-     - If all three points conicide, returns a zero matrix.
-     - If the foci coincide but the point doesn't the result is a circle.
-     - If the points are collinear but the foci don't coincide, returns a
-       coincident line conic.
-     - If any of the points are ideal points, returns a matrix that contains
-       `nan` elements.
+    Result by the points' positions:
+
+    | foci       | point                       | result                       |
+    |------------|-----------------------------|------------------------------|
+    | coincident | at the foci                 | zero matrix                  |
+    | coincident | elsewhere                   | circle                       |
+    | distinct   | between the foci, inclusive | double line through the foci |
+    | distinct   | elsewhere                   | ellipse                      |
+
+    The points must be finite. If any of them is ideal, the result contains
+    `nan` elements.
 
     *Formula*:
     [research/construction/ellipse_from_foci_and_point.py](../src/research/construction/ellipse_from_foci_and_point.py)

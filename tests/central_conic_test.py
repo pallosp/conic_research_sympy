@@ -33,10 +33,15 @@ from lib.central_conic import (
 from lib.circle import IMAGINARY_UNIT_CIRCLE, UNIT_CIRCLE, circle
 from lib.conic import conic_from_focus_and_directrix, conic_from_poly, ideal_points
 from lib.conic_classes import is_point_conic
-from lib.degenerate_conic import ZERO_CONIC, line_pair_conic, point_conic
+from lib.degenerate_conic import (
+    ZERO_CONIC,
+    double_line_conic,
+    line_pair_conic,
+    point_conic,
+)
 from lib.ellipse import ellipse, ellipse_from_foci_and_point
 from lib.hyperbola import UNIT_HYPERBOLA, hyperbola_from_foci_and_point
-from lib.line import X_AXIS, horizontal_line
+from lib.line import IDEAL_LINE, X_AXIS, horizontal_line
 from lib.matrix import is_nonzero_multiple
 from lib.point import ORIGIN, ideal_point
 from lib.transform import scale_xy, transform_conic
@@ -351,6 +356,11 @@ class TestVertices:
         assert center_to_vertex_vector(im_ellipse) == Matrix([6 * I, 8 * I])
         assert center_to_vertex_vector(-im_ellipse) == Matrix([6 * I, 8 * I])
 
+        assert central_conic_vertices(im_ellipse) == (
+            Matrix([Rational(3, 2) + 6 * I, 2 + 8 * I]),
+            Matrix([Rational(3, 2) - 6 * I, 2 - 8 * I]),
+        )
+
     def test_hyperbola(self):
         hyperbola = conic_from_foci_and_radius((0, 0), (9, 12), 5)
         expected_vec = Matrix([3, 4])
@@ -361,6 +371,9 @@ class TestVertices:
         parabola = conic_from_poly(x * x - y)
         assert center_to_vertex_vector(parabola) == Matrix([nan, zoo])
         assert center_to_vertex_vector(-parabola) == Matrix([nan, zoo])
+
+        nan_vector = Matrix([nan, nan])
+        assert central_conic_vertices(parabola) == (nan_vector, nan_vector)
 
     def test_circle(self):
         assert center_to_vertex_vector(circle((1, 2), r=3)) == Matrix([nan, nan])
@@ -385,13 +398,32 @@ class TestVertices:
         assert central_conic_vertices(zero_circle) == (nan_vector, nan_vector)
 
     def test_ideal_point_conic(self):
-        assert center_to_vertex_vector(point_conic([2, 1, 0])) == Matrix([nan, nan])
+        conic = point_conic([2, 1, 0])
+        nan_vector = Matrix([nan, nan])
+        assert center_to_vertex_vector(conic) == nan_vector
+        assert central_conic_vertices(conic) == (nan_vector, nan_vector)
 
     def test_crossing_lines(self):
         line1 = Matrix([1, 2, 3])
         line2 = Matrix([4, 5, 6])
         line_pair = line_pair_conic(line1, line2)
         assert center_to_vertex_vector(line_pair) == Matrix([0, 0])
+
+        center = Matrix([1, -2])
+        assert central_conic_vertices(line_pair) == (center, center)
+
+    def test_other_degenerate_conics(self):
+        nan_vector = Matrix([nan, nan])
+        conics = [
+            conic_from_poly(y * y - 1),
+            conic_from_poly(y * y + 1),
+            double_line_conic(X_AXIS),
+            line_pair_conic(X_AXIS, IDEAL_LINE),
+            ZERO_CONIC,
+        ]
+        for conic in conics:
+            assert center_to_vertex_vector(conic) == nan_vector
+            assert central_conic_vertices(conic) == (nan_vector, nan_vector)
 
 
 class TestCenterToCovertexVector:
@@ -419,8 +451,27 @@ class TestCenterToCovertexVector:
     def test_finite_point_conic(self):
         assert center_to_covertex_vector(point_conic([1, 2])) == Matrix([0, 0])
 
+    def test_zero_radius_circle(self):
+        zero_circle = circle((1, 2), r=0)
+        assert center_to_covertex_vector(zero_circle) == Matrix([nan, nan])
+
+    def test_parabola(self):
+        parabola = conic_from_poly(x * x - y)
+        assert center_to_covertex_vector(parabola) == Matrix([zoo, nan])
+
     def test_ideal_point_conic(self):
         assert center_to_covertex_vector(point_conic([2, 1, 0])) == Matrix([nan, nan])
+
+    def test_other_degenerate_conics(self):
+        conics = [
+            conic_from_poly(y * y - 1),
+            conic_from_poly(y * y + 1),
+            double_line_conic(X_AXIS),
+            line_pair_conic(X_AXIS, IDEAL_LINE),
+            ZERO_CONIC,
+        ]
+        for conic in conics:
+            assert center_to_covertex_vector(conic) == Matrix([nan, nan])
 
 
 class TestShrinkToZero:

@@ -264,17 +264,21 @@ def center_to_vertex_vector(conic: Conic) -> Matrix:
 
     The negated vector points to the opposite vertex.
 
-    Returns a 2D column vector with the following properties:
-     - *Non-circular ellipses and hyperbolas*:
-       real-valued coordinates; direction angle to the x-axis ∈ `(−π/2, π/2]`.
-     - *Non-circular imaginary ellipses*:
-       purely imaginary coordinates.
-     - *Circles and imaginary circles, including zero-radius circles*:
-       `[nan, nan]ᵀ`.
-     - *Other finite point conics and intersecting line pairs*:
-       `[0, 0]ᵀ`.
-     - *Parabolas and degenerate conics without a finite center*:
-       one or more components are infinite or `nan`.
+    Returns a 2D column vector.
+
+    Result by conic type:
+
+    | conic                                | vector                                |
+    |--------------------------------------|---------------------------------------|
+    | non-circular ellipse                 | real; angle to x-axis ∈ `(−π/2, π/2]` |
+    | non-circular imaginary ellipse       | purely imaginary                      |
+    | real or imaginary circle             | `[nan, nan]ᵀ`                         |
+    | hyperbola                            | real; angle to x-axis ∈ `(−π/2, π/2]` |
+    | parabola                             | infinite or `nan` components          |
+    | zero-radius circle                   | `[nan, nan]ᵀ`                         |
+    | other finite point conic             | `[0, 0]ᵀ`                             |
+    | line pair crossing at a finite point | `[0, 0]ᵀ`                             |
+    | other degenerate conic               | `[nan, nan]ᵀ`                         |
     """
     x, y = direction_to_xy(focal_axis_direction(conic))
     return Matrix([x, y]) * primary_radius(conic) / sqrt(x**2 + y**2)
@@ -285,12 +289,19 @@ def central_conic_vertices(conic: Conic) -> tuple[Matrix, Matrix]:
 
     Returns a pair of 2D column vectors.
 
-    Special cases:
-     - *Real-valued and imaginary circles*: a pair of `[nan, nan]ᵀ` vectors.
-     - *Other imaginary ellipses*: purely imaginary coordinates.
-     - *Finite point conics and intersecting line pairs*: 2x the center point.
-     - *Parabolas and degenerate conics without a finite center*: vectors with
-       at least one infinite or `nan` component.
+    Result by conic type:
+
+    | conic                                | vertices                           |
+    |--------------------------------------|------------------------------------|
+    | non-circular ellipse                 | real                               |
+    | non-circular imaginary ellipse       | complex: center ± imaginary vector |
+    | real or imaginary circle             | `[nan, nan]ᵀ`, twice               |
+    | hyperbola                            | real                               |
+    | parabola                             | `[nan, nan]ᵀ`, twice               |
+    | zero-radius circle                   | `[nan, nan]ᵀ`, twice               |
+    | other finite point conic             | the center, twice                  |
+    | line pair crossing at a finite point | the center, twice                  |
+    | other degenerate conic               | `[nan, nan]ᵀ`, twice               |
     """
     center = conic_center(conic)
     cvv = center_to_vertex_vector(conic)
@@ -302,17 +313,21 @@ def center_to_covertex_vector(conic: Conic) -> Matrix:
 
     The negated vector points to the opposite covertex.
 
-    Returns a 2D column vector with the following properties:
-     - *Non-circular ellipses*:
-       real-valued coordinates; direction angle to the x-axis ∈ `(0, π]`.
-     - *Hyperbolas and non-circular imaginary ellipses*:
-       purely imaginary coordinates.
-     - *Circles and imaginary circles*:
-       `[nan, nan]ᵀ`.
-     - *Finite point conics and intersecting line pairs*:
-       `[0, 0]ᵀ`.
-     - *Parabolas and degenerate conics without a finite center*:
-       one or more components are infinite or `nan`
+    Returns a 2D column vector.
+
+    Result by conic type:
+
+    | conic                                | vector                           |
+    |--------------------------------------|----------------------------------|
+    | non-circular ellipse                 | real; angle to x-axis ∈ `(0, π]` |
+    | non-circular imaginary ellipse       | purely imaginary                 |
+    | real or imaginary circle             | `[nan, nan]ᵀ`                    |
+    | hyperbola                            | purely imaginary                 |
+    | parabola                             | infinite or `nan` components     |
+    | zero-radius circle                   | `[nan, nan]ᵀ`                    |
+    | other finite point conic             | `[0, 0]ᵀ`                        |
+    | line pair crossing at a finite point | `[0, 0]ᵀ`                        |
+    | other degenerate conic               | `[nan, nan]ᵀ`                    |
     """
     x, y = direction_to_xy(conjugate_axis_direction(conic))
     return Matrix([x, y]) * secondary_radius(conic) / sqrt(x**2 + y**2)

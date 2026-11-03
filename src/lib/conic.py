@@ -79,7 +79,9 @@ def conic_from_focus_and_directrix(
     real, imaginary and infinite eccentricities. Other complex eccentricities
     yield complex conic matrices.
 
-    | directrix | focus       | ecc.      | constructed conic                |
+    Result by directrix, focus and eccentricity:
+
+    | directrix | focus       | ecc.      | result                           |
     |-----------|-------------|-----------|----------------------------------|
     | ideal     | any         | 0         | zero matrix                      |
     | ideal     | any         | (0..∞)    | double ideal line                |
@@ -284,14 +286,20 @@ def tangent_pair_conic(conic: Conic, point: Point) -> Conic:
     Unlike [tangents_through_point](#conic.tangents_through_point), it doesn't
     split the line pair, so the result is always an explicit matrix.
 
-    Special cases:
-     - Double line conic if the point is on the conic.
-     - Point conic if no real tangent passes through the point, e.g. for
-       points inside an ellipse.
-     - For line pair and point conics, the double line between the point and
-       the [singular point](#degenerate_conic.extract_point).
-     - The zero matrix for double lines, the zero conic, or if the point is
-       [singular](#degenerate_conic.extract_point).
+    Result by conic type and point position:
+
+    | conic                    | point        | result                         |
+    |--------------------------|--------------|--------------------------------|
+    | non-degenerate           | on the conic | double line: the tangent       |
+    | non-degenerate           | outside ¹    | line pair: the tangents        |
+    | non-degenerate           | inside ¹     | point conic at the point       |
+    | line pair, point conic   | singular ²   | zero matrix                    |
+    | line pair, point conic   | other        | double line via singular point |
+    | double line, zero matrix | any          | zero matrix                    |
+
+    ¹ See [is_outside](#incidence.is_outside) and
+    [is_inside](#incidence.is_inside).<br>
+    ² See [extract_point](#degenerate_conic.extract_point).
 
     *Formula*: `skew(p)ᵀ·adj(C)·skew(p)`
 
@@ -313,15 +321,23 @@ def tangents_through_point(
     They touch the conic where the point's [polar line](#conic.polar_line)
     intersects it.
 
-    Special cases:
-     - The lines coincide if the point is on the conic.
-     - For real inputs, they are complex conjugates if no real tangent passes
-       through the point, e.g. for points inside an ellipse.
-     - For line pair and point conics, both are the line between the point
-       and the [singular point](#degenerate_conic.extract_point).
-     - Both are `[0, 0, 0]ᵀ` for double lines, the zero conic, or if the
-       point is [singular](#degenerate_conic.extract_point).
-     - May be unevaluated `MatrixExpr`s for symbolic inputs.
+    Result by conic type and point position:
+
+    | conic                    | point        | result                         |
+    |--------------------------|--------------|--------------------------------|
+    | non-degenerate           | on the conic | the tangent, twice             |
+    | non-degenerate           | outside ¹    | the two tangents               |
+    | non-degenerate           | inside ¹     | complex conjugate lines ²      |
+    | line pair, point conic   | singular ³   | `[0, 0, 0]ᵀ`, twice            |
+    | line pair, point conic   | other        | line via singular point, twice |
+    | double line, zero matrix | any          | `[0, 0, 0]ᵀ`, twice            |
+
+    ¹ See [is_outside](#incidence.is_outside) and
+    [is_inside](#incidence.is_inside).<br>
+    ² For real inputs.<br>
+    ³ See [extract_point](#degenerate_conic.extract_point).
+
+    The lines may be unevaluated `MatrixExpr`s for symbolic inputs.
 
     *Algorithm*: the dual of [conic_x_line](#intersection.conic_x_line).
     """

@@ -721,17 +721,21 @@ Vector from the center of a conic to one of its vertices.
 
 The negated vector points to the opposite vertex.
 
-Returns a 2D column vector with the following properties:
- - *Non-circular ellipses and hyperbolas*:
-   real-valued coordinates; direction angle to the x-axis ∈ `(−π/2, π/2]`.
- - *Non-circular imaginary ellipses*:
-   purely imaginary coordinates.
- - *Circles and imaginary circles, including zero-radius circles*:
-   `[nan, nan]ᵀ`.
- - *Other finite point conics and intersecting line pairs*:
-   `[0, 0]ᵀ`.
- - *Parabolas and degenerate conics without a finite center*:
-   one or more components are infinite or `nan`.
+Returns a 2D column vector.
+
+Result by conic type:
+
+| conic                                | vector                                |
+|--------------------------------------|---------------------------------------|
+| non-circular ellipse                 | real; angle to x-axis ∈ `(−π/2, π/2]` |
+| non-circular imaginary ellipse       | purely imaginary                      |
+| real or imaginary circle             | `[nan, nan]ᵀ`                         |
+| hyperbola                            | real; angle to x-axis ∈ `(−π/2, π/2]` |
+| parabola                             | infinite or `nan` components          |
+| zero-radius circle                   | `[nan, nan]ᵀ`                         |
+| other finite point conic             | `[0, 0]ᵀ`                             |
+| line pair crossing at a finite point | `[0, 0]ᵀ`                             |
+| other degenerate conic               | `[nan, nan]ᵀ`                         |
 
 <a id="central_conic.central_conic_vertices"></a>
 
@@ -741,18 +745,25 @@ Returns a 2D column vector with the following properties:
 def central_conic_vertices(conic: Conic) -> tuple[Matrix, Matrix]
 ```
 
-([source](../src/lib/central_conic.py#L283))
+([source](../src/lib/central_conic.py#L287))
 
 Computes the vertices of a central conic.
 
 Returns a pair of 2D column vectors.
 
-Special cases:
- - *Real-valued and imaginary circles*: a pair of `[nan, nan]ᵀ` vectors.
- - *Other imaginary ellipses*: purely imaginary coordinates.
- - *Finite point conics and intersecting line pairs*: 2x the center point.
- - *Parabolas and degenerate conics without a finite center*: vectors with
-   at least one infinite or `nan` component.
+Result by conic type:
+
+| conic                                | vertices                           |
+|--------------------------------------|------------------------------------|
+| non-circular ellipse                 | real                               |
+| non-circular imaginary ellipse       | complex: center ± imaginary vector |
+| real or imaginary circle             | `[nan, nan]ᵀ`, twice               |
+| hyperbola                            | real                               |
+| parabola                             | `[nan, nan]ᵀ`, twice               |
+| zero-radius circle                   | `[nan, nan]ᵀ`, twice               |
+| other finite point conic             | the center, twice                  |
+| line pair crossing at a finite point | the center, twice                  |
+| other degenerate conic               | `[nan, nan]ᵀ`, twice               |
 
 <a id="central_conic.center_to_covertex_vector"></a>
 
@@ -762,23 +773,27 @@ Special cases:
 def center_to_covertex_vector(conic: Conic) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L300))
+([source](../src/lib/central_conic.py#L311))
 
 Vector from the center of a conic to one of its covertices.
 
 The negated vector points to the opposite covertex.
 
-Returns a 2D column vector with the following properties:
- - *Non-circular ellipses*:
-   real-valued coordinates; direction angle to the x-axis ∈ `(0, π]`.
- - *Hyperbolas and non-circular imaginary ellipses*:
-   purely imaginary coordinates.
- - *Circles and imaginary circles*:
-   `[nan, nan]ᵀ`.
- - *Finite point conics and intersecting line pairs*:
-   `[0, 0]ᵀ`.
- - *Parabolas and degenerate conics without a finite center*:
-   one or more components are infinite or `nan`
+Returns a 2D column vector.
+
+Result by conic type:
+
+| conic                                | vector                           |
+|--------------------------------------|----------------------------------|
+| non-circular ellipse                 | real; angle to x-axis ∈ `(0, π]` |
+| non-circular imaginary ellipse       | purely imaginary                 |
+| real or imaginary circle             | `[nan, nan]ᵀ`                    |
+| hyperbola                            | purely imaginary                 |
+| parabola                             | infinite or `nan` components     |
+| zero-radius circle                   | `[nan, nan]ᵀ`                    |
+| other finite point conic             | `[0, 0]ᵀ`                        |
+| line pair crossing at a finite point | `[0, 0]ᵀ`                        |
+| other degenerate conic               | `[nan, nan]ᵀ`                    |
 
 <a id="central_conic.shrink_conic_to_zero"></a>
 
@@ -788,7 +803,7 @@ Returns a 2D column vector with the following properties:
 def shrink_conic_to_zero(conic: Conic) -> Conic
 ```
 
-([source](../src/lib/central_conic.py#L321))
+([source](../src/lib/central_conic.py#L336))
 
 Scales a conic section from its center with a factor of zero.
 
@@ -1285,7 +1300,9 @@ Negating `e` gives the same conic, so the table lists only non-negative
 real, imaginary and infinite eccentricities. Other complex eccentricities
 yield complex conic matrices.
 
-| directrix | focus       | ecc.      | constructed conic                |
+Result by directrix, focus and eccentricity:
+
+| directrix | focus       | ecc.      | result                           |
 |-----------|-------------|-----------|----------------------------------|
 | ideal     | any         | 0         | zero matrix                      |
 | ideal     | any         | (0..∞)    | double ideal line                |
@@ -1319,7 +1336,7 @@ or `nan` elements.
 def eccentricity(conic: Conic) -> Expr
 ```
 
-([source](../src/lib/conic.py#L114))
+([source](../src/lib/conic.py#L116))
 
 Computes the eccentricity of a conic section.
 
@@ -1362,7 +1379,7 @@ two different corresponding eccentricity values. Evaluate
 def focal_parameter(conic: Conic) -> Expr
 ```
 
-([source](../src/lib/conic.py#L154))
+([source](../src/lib/conic.py#L156))
 
 Computes the distance between a conic's focus and the corresponding directrix.
 
@@ -1384,7 +1401,7 @@ Special cases:
 def focal_axis(conic: Conic) -> Line
 ```
 
-([source](../src/lib/conic.py#L173))
+([source](../src/lib/conic.py#L175))
 
 Returns the axis of symmetry going through conic's focus point(s).
 
@@ -1410,7 +1427,7 @@ def ideal_points(
 ) -> tuple[PointVector | MatrixExpr, PointVector | MatrixExpr]
 ```
 
-([source](../src/lib/conic.py#L192))
+([source](../src/lib/conic.py#L194))
 
 Computes the ideal points on a conic section.
 
@@ -1441,7 +1458,7 @@ radii. Note that `r₂` is imaginary in case of hyperbolas.
 def projective_conic_center(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic.py#L222))
+([source](../src/lib/conic.py#L224))
 
 Computes the generalized projective center of a conic.
 
@@ -1465,7 +1482,7 @@ For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
 def pole_point(conic: Conic, polar_line: Line) -> PointVector
 ```
 
-([source](../src/lib/conic.py#L240))
+([source](../src/lib/conic.py#L242))
 
 Computes the pole point of a conic with respect to the given polar line.
 
@@ -1485,7 +1502,7 @@ relationships.
 def polar_line(conic: Conic, pole_point: Point) -> Line
 ```
 
-([source](../src/lib/conic.py#L254))
+([source](../src/lib/conic.py#L256))
 
 Computes the polar line of a conic for a given pole point.
 
@@ -1516,7 +1533,7 @@ References:
 def tangent_pair_conic(conic: Conic, point: Point) -> Conic
 ```
 
-([source](../src/lib/conic.py#L280))
+([source](../src/lib/conic.py#L282))
 
 Computes the line pair conic consisting of the two tangent lines of a
 conic through a point.
@@ -1524,14 +1541,20 @@ conic through a point.
 Unlike [tangents_through_point](#conic.tangents_through_point), it doesn't
 split the line pair, so the result is always an explicit matrix.
 
-Special cases:
- - Double line conic if the point is on the conic.
- - Point conic if no real tangent passes through the point, e.g. for
-   points inside an ellipse.
- - For line pair and point conics, the double line between the point and
-   the [singular point](#degenerate_conic.extract_point).
- - The zero matrix for double lines, the zero conic, or if the point is
-   [singular](#degenerate_conic.extract_point).
+Result by conic type and point position:
+
+| conic                    | point        | result                         |
+|--------------------------|--------------|--------------------------------|
+| non-degenerate           | on the conic | double line: the tangent       |
+| non-degenerate           | outside ¹    | line pair: the tangents        |
+| non-degenerate           | inside ¹     | point conic at the point       |
+| line pair, point conic   | singular ²   | zero matrix                    |
+| line pair, point conic   | other        | double line via singular point |
+| double line, zero matrix | any          | zero matrix                    |
+
+¹ See [is_outside](#incidence.is_outside) and
+[is_inside](#incidence.is_inside).<br>
+² See [extract_point](#degenerate_conic.extract_point).
 
 *Formula*: `skew(p)ᵀ·adj(C)·skew(p)`
 
@@ -1551,22 +1574,30 @@ def tangents_through_point(
         point: Point) -> tuple[Line | MatrixExpr, Line | MatrixExpr]
 ```
 
-([source](../src/lib/conic.py#L308))
+([source](../src/lib/conic.py#L316))
 
 Computes the two tangent lines of a conic through a point.
 
 They touch the conic where the point's [polar line](#conic.polar_line)
 intersects it.
 
-Special cases:
- - The lines coincide if the point is on the conic.
- - For real inputs, they are complex conjugates if no real tangent passes
-   through the point, e.g. for points inside an ellipse.
- - For line pair and point conics, both are the line between the point
-   and the [singular point](#degenerate_conic.extract_point).
- - Both are `[0, 0, 0]ᵀ` for double lines, the zero conic, or if the
-   point is [singular](#degenerate_conic.extract_point).
- - May be unevaluated `MatrixExpr`s for symbolic inputs.
+Result by conic type and point position:
+
+| conic                    | point        | result                         |
+|--------------------------|--------------|--------------------------------|
+| non-degenerate           | on the conic | the tangent, twice             |
+| non-degenerate           | outside ¹    | the two tangents               |
+| non-degenerate           | inside ¹     | complex conjugate lines ²      |
+| line pair, point conic   | singular ³   | `[0, 0, 0]ᵀ`, twice            |
+| line pair, point conic   | other        | line via singular point, twice |
+| double line, zero matrix | any          | `[0, 0, 0]ᵀ`, twice            |
+
+¹ See [is_outside](#incidence.is_outside) and
+[is_inside](#incidence.is_inside).<br>
+² For real inputs.<br>
+³ See [extract_point](#degenerate_conic.extract_point).
+
+The lines may be unevaluated `MatrixExpr`s for symbolic inputs.
 
 *Algorithm*: the dual of [conic_x_line](#intersection.conic_x_line).
 
@@ -3273,13 +3304,17 @@ def ellipse_from_foci_and_point(focus1: FinitePoint, focus2: FinitePoint,
 
 Constructs an ellipse from its focus points and an incident point.
 
-Special cases:
- - If all three points conicide, returns a zero matrix.
- - If the foci coincide but the point doesn't the result is a circle.
- - If the points are collinear but the foci don't coincide, returns a
-   coincident line conic.
- - If any of the points are ideal points, returns a matrix that contains
-   `nan` elements.
+Result by the points' positions:
+
+| foci       | point                       | result                       |
+|------------|-----------------------------|------------------------------|
+| coincident | at the foci                 | zero matrix                  |
+| coincident | elsewhere                   | circle                       |
+| distinct   | between the foci, inclusive | double line through the foci |
+| distinct   | elsewhere                   | ellipse                      |
+
+The points must be finite. If any of them is ideal, the result contains
+`nan` elements.
 
 *Formula*:
 [research/construction/ellipse_from_foci_and_point.py](../src/research/construction/ellipse_from_foci_and_point.py)
