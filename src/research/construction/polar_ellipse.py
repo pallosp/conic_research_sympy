@@ -6,14 +6,15 @@ from sympy import (
     MatMul,
     Matrix,
     Symbol,
+    cancel,
     cos,
     factor,
     pi,
     sign,
-    simplify,
     sin,
     solve,
     symbols,
+    trigsimp,
 )
 
 from lib.central_conic import (
@@ -122,22 +123,21 @@ print("Final polar matrix (using the first solution):")
 print()
 
 polar_ellipse_h = polar_ellipse_h.subs(B, solutions[0][1]).subs(E, solutions[0][2])
-println_indented(eq_chain(Symbol("P"), polar_ellipse_h))
 
 cartesian_conic = conic_matrix(a, b, c, d, e, f)
 center = conic_center(cartesian_conic)
 r_horizontal_value = radius_in_direction(cartesian_conic, angle=0)
-discriminant = Symbol("disc", positive=True)
+block_det = Symbol("block_det", positive=True)
 
-polar_ellipse_h = (
+polar_ellipse_h_simple = (
     polar_ellipse_h.subs(zip((cx, cy), center.flat(), strict=True))
     .subs(r_horizontal, r_horizontal_value)
     .subs(cartesian_conic.det(), Symbol("det"))
-    .subs(a * c - b * b, discriminant)
-    .subs(discriminant, a * c - b * b)
+    .subs(a * c - b * b, block_det)
+    .subs(block_det, a * c - b * b)
 )
 
-println_indented(eq_chain(Symbol("P"), polar_ellipse_h))
+println_indented(eq_chain(Symbol("P"), polar_ellipse_h, polar_ellipse_h_simple))
 
 print("Orientation (1 is counterclockwise, -1 is clockwise):")
 print()
@@ -171,23 +171,20 @@ solutions = solve(
 )
 polar_ellipse_v = polar_ellipse_v.subs(B, solutions[0][1]).subs(E, solutions[0][2])
 
-println_indented(eq_chain(Symbol("P"), polar_ellipse_v))
-
 cartesian_conic = conic_matrix(a, b, c, d, e, f)
 center = conic_center(cartesian_conic)
 r_vertical_value = radius_in_direction(cartesian_conic, angle=pi / 2)
-discriminant = Symbol("disc", positive=True)
 
-polar_ellipse_v = (
+polar_ellipse_v_simple = (
     polar_ellipse_v.subs(zip((cx, cy), center.flat(), strict=True))
     .subs(r_vertical, r_vertical_value)
     .subs(cartesian_conic.det(), Symbol("det"))
-    .subs(a * c - b * b, discriminant)
-    .subs(discriminant, a * c - b * b)
+    .subs(a * c - b * b, block_det)
+    .subs(block_det, a * c - b * b)
     .subs(Abs(b), b * sign(b))
 )
 
-println_indented(eq_chain(Symbol("P"), polar_ellipse_v))
+println_indented(eq_chain(Symbol("P"), polar_ellipse_v, polar_ellipse_v_simple))
 
 # ---------------------------------------------------------------------------
 # Third approach: start from a vertex
@@ -214,15 +211,14 @@ t = homography_from_samples(
     ],
 )
 
-t /= t[8]
-t = simplify(t)
+t = cancel(t / t[8])
 
-c1 = conic_from_polar_matrix(t).applyfunc(factor).applyfunc(simplify)
-c2 = ellipse((cx, cy), r1, r2, r1_angle=alpha).applyfunc(factor).applyfunc(simplify)
+c1 = conic_from_polar_matrix(t).applyfunc(factor).applyfunc(trigsimp)
+c2 = ellipse((cx, cy), r1, r2, r1_angle=alpha).applyfunc(factor).applyfunc(trigsimp)
 
 assert c1 == c2
 
-println_indented(eq_chain(Symbol("P"), simplify(t)))
+println_indented(eq_chain(Symbol("P"), t))
 
 print(
     "Although the resulting matrix appears simple,\n"

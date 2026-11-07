@@ -49,20 +49,20 @@ def _simplify_focal_param(conic: Conic, focal_param: Expr, abs_disc: Expr) -> Ex
     """Simplifies a central conic's focal parameter formula.
 
     `conic` must be built from the module-level `a`, ..., `f` symbols.
-    `abs_disc` is the value of `|ac - b²|`.
+    `abs_disc` is the value of `|b² - ac|`.
     """
     disc_factorized = (
-        (a + c + sign(det) * sqrt((a - c) ** 2 + 4 * b**2))
-        * (a + c - sign(det) * sqrt((a - c) ** 2 + 4 * b**2))
+        (sign(det) * sqrt((a - c) ** 2 + 4 * b**2) + a + c)
+        * (sign(det) * sqrt((a - c) ** 2 + 4 * b**2) - a - c)
         / 4
     )
-    assert disc_factorized.expand() == a * c - b * b
+    assert disc_factorized.expand() == b * b - a * c
 
     focal_param = (
         focal_param.subs(conic.det(), det)
         .subs(ConicNormFactor(conic), sign(det))
-        .subs(Abs(a * c - b * b), abs_disc)
-        .subs(a * c - b * b, disc_factorized)
+        .subs(Abs(b * b - a * c), abs_disc)
+        .subs(b * b - a * c, disc_factorized)
         .subs(Abs(det), det * sign(det))
         .simplify()
     )

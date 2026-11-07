@@ -126,17 +126,17 @@ def ellipse_to_polar_matrix(
     [research/construction/polar_ellipse.py](../src/research/construction/polar_ellipse.py)
     """
     a, b, c, d, e, _ = conic_coefficients(ellipse)
-    disc = a * c - b * b
-    cx = (b * e - c * d) / disc
-    cy = (b * d - a * e) / disc
+    disc = b * b - a * c
+    cx = (c * d - b * e) / disc
+    cy = (a * e - b * d) / disc
 
     if start == PolarOrigin.HORIZONTAL:
         det = ellipse.det()
         t = sqrt(-det / a)
         return Matrix(
             [
-                [t / sqrt(disc), b * t * sign(det) / disc, cx],
-                [0, -a * t * sign(det) / disc, cy],
+                [t / sqrt(-disc), -b * t * sign(det) / disc, cx],
+                [0, a * t * sign(det) / disc, cy],
                 [0, 0, 1],
             ]
         )
@@ -146,8 +146,8 @@ def ellipse_to_polar_matrix(
         t = sqrt(-det / c)
         return Matrix(
             [
-                [0, c * t * sign(det) / disc, cx],
-                [t / sqrt(disc), -b * t * sign(det) / disc, cy],
+                [0, -c * t * sign(det) / disc, cx],
+                [t / sqrt(-disc), b * t * sign(det) / disc, cy],
                 [0, 0, 1],
             ]
         )

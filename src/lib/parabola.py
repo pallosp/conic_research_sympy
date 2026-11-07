@@ -105,8 +105,8 @@ def parabola_axis(parabola: Conic) -> Line:
     - Raises `ValueError` if the conic provably has 0 or 2 ideal points.
     - Returns an unspecified 3D column vector in all other cases.
     """
-    x, y, discriminant = parabola.row(0).cross(parabola.row(1)).flat()
-    if discriminant.is_zero is False:
+    x, y, block_det = parabola.row(0).cross(parabola.row(1)).flat()
+    if block_det.is_zero is False:
         raise ValueError("Not a parabola (or a degenerate conic with one ideal point)")
     return parabola * Matrix([-y, x, 0])
 

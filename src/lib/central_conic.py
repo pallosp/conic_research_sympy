@@ -200,9 +200,9 @@ def radius_in_direction(
 
     a, b, c, *_ = conic_coefficients(conic)
     det = conic.det()
-    disc = a * c - b * b
+    disc = b * b - a * c
 
-    return sqrt(-det / (disc * (a * cos_x**2 + 2 * b * cos_x * sin_x + c * sin_x**2)))
+    return sqrt(det / (disc * (a * cos_x**2 + 2 * b * cos_x * sin_x + c * sin_x**2)))
 
 
 def linear_eccentricity(conic: Conic) -> Expr:
