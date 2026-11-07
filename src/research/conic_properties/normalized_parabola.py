@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 
-"""Proves that a normalized parabola's upper left 2×2 block is negative semidefinite."""
+"""Proves two lemmas about conic normalization.
+
+- The upper left 2×2 block of a normalized parabola is negative semidefinite.
+- In order to make the upper left 2×2 block of a conic with exactly one ideal
+  point negative semidefinite, the normalization factor must be -sign(a + c).
+"""
 
 from typing import cast
 
@@ -9,6 +14,8 @@ from sympy import Abs, Le, MatMul, Matrix, MatrixSymbol, Symbol, sign, symbols
 from lib.conic import conic_from_focus_and_directrix
 from lib.matrix import quadratic_form
 from research.sympy_utils import eq_chain, println_indented
+
+HORIZONTAL_LINE = "-" * 80
 
 print(
     "\nLemma: the upper left 2×2 block of a normalized parabola's matrix is\n"
@@ -70,3 +77,32 @@ println_indented(
 )
 
 assert block_form.is_nonpositive
+
+print(HORIZONTAL_LINE + "\n")
+
+print("Lemma: the normalization factor for conics with exactly one ideal point")
+print("(parabolas, ideal point conics, parallel lines and double lines) is")
+print("-sign(a + c), where M is the upper left 2×2 block of the conic matrix:\n")
+
+block = Matrix([[a, b], [b, c]])
+M = MatrixSymbol("M", 2, 2)
+println_indented(eq_chain(M, block))
+
+print("One ideal point: b² = a·c and M ≠ 0, hence a + c ≠ 0.")
+print("Normalization makes M negative semidefinite: for parabolas by the lemma")
+print("above, for the degenerate conics by definition. So does -sign(a + c):\n")
+
+q = quadratic_form(block, direction)
+# -(a+c)·q as sum of squares:
+q_as_sum_squares = (
+    -(a * q).expand().subs(a * c, b * b).factor()
+    - (c * q).expand().subs(a * c, b * b).factor()
+)
+
+println_indented(
+    eq_chain(
+        MatMul(direction.T, -(a + c), M, direction, evaluate=False),
+        Le(q_as_sum_squares, 0, evaluate=False),
+    )
+)
+assert q_as_sum_squares.is_nonpositive

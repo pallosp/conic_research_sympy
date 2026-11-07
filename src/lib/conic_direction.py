@@ -17,28 +17,56 @@ from lib.type_aliases import Conic, PointVector
 class ConicNormFactor(DefinedFunction):
     """Computes a normalization factor (±1) for a conic matrix `C`.
 
-    When `C` is multiplied by this factor, the resulting conic has the
-    following properties:
+    Multiplying `C` by this factor gives the normalized matrix. The normalized
+    matrix has the following properties:
 
-    - *Non-degenerate conics*: the conic equation evaluates to a positive
-      value at the focus point(s), i.e. `[fx fy 1]ᵀ C [fx fy 1] > 0`. For
-      parabolas, this makes the upper left 2×2 block negative semidefinite
-      ([proof](../src/research/conic_properties/normalized_parabola.py)).
-    - *Point conics*: the matrix is negative semidefinite, i.e. the conic
-      equation evaluates to ≤0 at all points.
-    - *Parallel line pairs and double lines*: like parabolas, these conics
-      have a zero discriminant. Therefore the upper left 2×2 block of their
-      matrix is singular, hence semidefinite. The factor makes it negative
-      semidefinite, as it is for normalized parabolas.
+    - *Non-degenerate conics*: The conic equation is positive at the focus
+      point(s), i.e. `[fx fy 1]·C·[fx fy 1]ᵀ > 0`.
+    - *Finite point conics*: The normalized matrix is negative semidefinite,
+      i.e. the conic equation is ≤0 at every point. The upper left 2×2
+      block is a principal submatrix, so it's negative semidefinite too. Its
+      discriminant is negative, so it's even negative definite. A negative
+      definite matrix has a negative trace, which is `factor·(a+c)` here.
+      Hence the factor is `-sign(a+c)`.
+    - *Ideal point conics, parallel lines and double lines*: These conics have
+      a zero discriminant, like parabolas. So their upper left 2×2 block is
+      singular. A singular symmetric 2×2 matrix is semidefinite. The factor
+      `-sign(a+c)` makes the block negative semidefinite, as it is for
+      parabolas
+      ([proof](../src/research/conic_properties/normalized_parabola.py)).<br>
+      The choice of factor keeps the normalization continuous. As `ε → 0`, the
+      normalized parabolas `y² = εx + k` converge to the normalized parallel
+      lines (`k > 0`), double line (`k = 0`) or ideal point conic (`k < 0`).
+      For ideal point conics, the whole normalized matrix becomes negative
+      semidefinite too, as for finite point conics.
+    - *Crossing lines, conics containing the ideal line*: No preferred
+      normalization exists. The factor is 1.
 
-      This keeps the normalization continuous: as `ε → 0`, the normalized
-      matrices of the parabolas `y² = εx + k` converge to those of parallel
-      lines if `k > 0`, and to that of a double line if `k = 0`.
-    - *Crossing line pairs, conics containing the ideal line*: the factor
-      is 1, since no preferred normalization exists.
-    - *Symbolic conics*: may remain unevaluated if undecidable.
+    The table lists the resulting definiteness of the normalized matrix and of
+    its upper left 2×2 block. It also lists the formulas that give the factor.
+    In the formulas, `det` is the determinant of `C`. `a` and `c` are the first
+    two diagonal elements of `C`. Circles count as ellipses.
+
+    | conic              | matrix        | 2×2 block       | factor                   |
+    |--------------------|---------------|-----------------|--------------------------|
+    | ellipse            | indefinite    | neg. definite   | `sign(det) = -sign(a+c)` |
+    | imaginary ellipse  | pos. definite | pos. definite   | `sign(det) = sign(a+c)`  |
+    | parabola           | indefinite    | neg. semidef. ¹ | `sign(det) = -sign(a+c)` |
+    | hyperbola          | indefinite    | indefinite      | `sign(det)`              |
+    | finite point conic | neg. semidef. | neg. definite   | `-sign(a+c)`             |
+    | ideal point conic  | neg. semidef. | neg. semidef.   | `-sign(a+c)`             |
+    | parallel lines     | indefinite    | neg. semidef.   | `-sign(a+c)`             |
+    | double line        | neg. semidef. | neg. semidef.   | `-sign(a+c)`             |
+    | crossing lines     | indefinite    | indefinite      | 1                        |
+    | other degenerate ² | —             | zero            | 1                        |
+
+    ¹ Follows from being positive at the focus
+    ([proof](../src/research/conic_properties/normalized_parabola.py)).<br>
+    ² Conics containing the ideal line, including the zero matrix.
 
     `C.det() * ConicNormFactor(C) == Abs(C.det())` holds for all conic types.
+
+    Symbolic conics may remain unevaluated if undecidable.
     """
 
     # Implies is_real = True, is_integer = True, and is_nonzero = True.
