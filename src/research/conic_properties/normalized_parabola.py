@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""Proves that a normalized parabola's top left 2×2 block is negative semidefinite."""
+"""Proves that a normalized parabola's upper left 2×2 block is negative semidefinite."""
 
 from typing import cast
 
@@ -51,7 +51,7 @@ println_indented(eq_chain(sign(Symbol("det")), det_sign, det_sign_simple))
 
 print(
     "Normalization multiplies a non-degenerate conic by its determinant sign.\n"
-    "The top left 2×2 block after normalization:\n"
+    "The upper left 2×2 block after normalization:\n"
 )
 
 # SymPy types Expr * Matrix as Expr (fix upstream).

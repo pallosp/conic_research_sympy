@@ -280,6 +280,15 @@ class TestEccentricity:
         zero_circle = circle(symbols("x y"), r=0)
         assert eccentricity(zero_circle) == 0
 
+    def test_parallel_lines(self):
+        lines = line_pair_conic(Matrix([1, 2, 3]), Matrix([1, 2, 4]))
+        assert eccentricity(lines) == 1
+        assert eccentricity(-lines) == 1
+
+    def test_double_line(self):
+        assert eccentricity(double_line_conic(X_AXIS)) == 1
+        assert eccentricity(-double_line_conic(X_AXIS)) == 1
+
 
 class TestFocalParameter:
     # The focus-directrix distance is |3 + 8 + 5| / 5
@@ -368,6 +377,19 @@ class TestFocalAxis:
             focal_axis(line_pair_conic(line1, -line2)),
             angle_bisector(line1, -line2),
         )
+
+    def test_parallel_lines(self):
+        line1 = Matrix([3, 4, 5])
+        line2 = Matrix([3, 4, 6])
+        center_line = Matrix([6, 8, 11])
+        line_pair = line_pair_conic(line1, line2)
+        assert is_nonzero_multiple(focal_axis(line_pair), center_line)
+        assert is_nonzero_multiple(focal_axis(-line_pair), center_line)
+
+    def test_double_line(self):
+        line = Matrix([3, 4, 5])
+        assert is_nonzero_multiple(focal_axis(double_line_conic(line)), line)
+        assert is_nonzero_multiple(focal_axis(-double_line_conic(line)), line)
 
     def test_point_conic(self):
         r1_direction = (2, 1, 0)

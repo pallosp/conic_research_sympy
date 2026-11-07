@@ -75,9 +75,9 @@ def conic_from_focus_and_directrix(
     radius: all concentric circles share the same focus (their center),
     directrix (the ideal line) and eccentricity (0).
 
-    Negating `e` gives the same conic, so the table lists only non-negative
-    real, imaginary and infinite eccentricities. Other complex eccentricities
-    yield complex conic matrices.
+    Negating `eccentricity` gives the same conic, so the table lists only
+    non-negative real, imaginary and infinite eccentricities. Other complex
+    eccentricities yield complex conic matrices.
 
     Result by directrix, focus and eccentricity:
 
@@ -120,27 +120,40 @@ def eccentricity(conic: Conic) -> Expr:
     focus and from the corresponding directrix. See
     [conic_from_focus_and_directrix](#conic.conic_from_focus_and_directrix).
 
-    The result is
-     - 0 for circles and imaginary circles;
-     - (0..1) for other real ellipses;
-     - imaginary for other imaginary ellipses;
-     - 1 for parabolas;
-     - &gt;1 for hyperbolas, in particular √2 for rectangular hyperbolas.
-
-    In case of [non-degenerate](#conic_classes.is_nondegenerate)
-    [central conics](#conic_classes.is_central_conic), the eccentricity
-    equals to the ratio of the center-focus distance
+    For [non-degenerate](#conic_classes.is_nondegenerate)
+    [central conics](#conic_classes.is_central_conic), it also equals the
+    ratio of the center-focus distance
     ([linear_eccentricity](#central_conic.linear_eccentricity))
     and the center-vertex distance
     ([primary_radius](#central_conic.primary_radius)).
 
-    The eccentricity of finite point conics constructed by
-    [shrinking an ellipse to zero size](#central_conic.shrink_conic_to_zero)
-    equals to that of the original ellipse.
+    Return value by conic type:
 
-    Crossing line pair conics have two different (generalized) focal axes, with
-    two different corresponding eccentricity values. Evaluate
-    `(eccentricity(conic), eccentricity(-conic))` to get both.
+    | conic                           | eccentricity              |
+    |---------------------------------|---------------------------|
+    | circle, imaginary circle        | 0                         |
+    | other real ellipse              | (0..1)                    |
+    | other imaginary ellipse         | imaginary                 |
+    | parabola                        | 1                         |
+    | hyperbola                       | (1..∞), √2 if rectangular |
+    | finite point conic              | [0..1) ¹                  |
+    | ideal point conic               | 1 ²                       |
+    | parallel line pair, double line | 1 ²                       |
+    | crossing line pair              | (1..∞), two values ³      |
+    | conic containing the ideal line | `nan`                     |
+    | zero matrix                     | `nan`                     |
+
+    ¹ A point conic created by
+    [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(ellipse)
+    has the same eccentricity as the ellipse. It's 0 for zero-radius
+    circles.<br>
+    ² Like parabolas, these conics have a zero discriminant. As `ε → 0`, the
+    parabolas `y² = εx + k` approach parallel
+    lines if `k > 0`, a double line if `k = 0`, and an ideal point conic if
+    `k < 0`. See [ConicNormFactor](#conic_direction.ConicNormFactor).<br>
+    ³ One for each angle bisector, i.e. (generalized) focal axis. Evaluate
+    `(eccentricity(conic), eccentricity(-conic))` to get both. Both are `√2`
+    for perpendicular lines.
 
     *Formula*:
     <https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients><br>
@@ -157,8 +170,7 @@ def focal_parameter(conic: Conic) -> Expr:
     """Computes the distance between a conic's focus and the corresponding directrix.
 
     Special cases:
-     - infinity for real and imaginary circles, as their directrix is the ideal
-       line;
+     - `zoo` for real and imaginary circles, as their directrix is the ideal line;
      - the negated focus-directrix distance for other imaginary ellipses;
      - `nan` for zero-radius circles and conics containing the ideal line;
      - 0 for all other degenerate conics.
@@ -184,8 +196,11 @@ def focal_axis(conic: Conic) -> Line:
     - Line pair conics constructed by
       [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(hyperbola)
       have no such property.
-    - The focal axis of `line_pair(l1, l2)`, and `angle_bisector(l1, l2)`
-      coincide.
+    - For crossing lines `l₁` and `l₂`, the focal axis of
+      [line_pair_conic](#degenerate_conic.line_pair_conic)(l₁, l₂) and
+      [angle_bisector](#line.angle_bisector)(l₁, l₂) coincide.
+    - The focal axis of parallel line pairs is their center line; that of
+      double lines is the line itself.
     """
     x, y = direction_to_xy(focal_axis_direction(conic))
     return polar_line(conic, (-y, x, 0))

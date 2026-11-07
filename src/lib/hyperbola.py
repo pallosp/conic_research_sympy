@@ -41,8 +41,7 @@ def asymptote_focal_axis_angle(hyperbola: Conic) -> Expr:
     - *line pairs*
        - crossing lines: positive angle; α or π/2-α depending on the lines'
          directions
-       - parallel lines in the same direction: π/2
-       - parallel lines in the opposite direction: 0
+       - parallel lines, double lines: 0
        - conics containing the ideal line: `nan`
 
     *Research*:

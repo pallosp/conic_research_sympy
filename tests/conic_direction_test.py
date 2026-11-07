@@ -61,12 +61,41 @@ class TestConicNormFactor:
         assert ConicNormFactor(conic) == 1
         assert ConicNormFactor(-conic) == -1
 
-    def test_line_pair(self):
-        line1 = Matrix(symbols("a:c", real=True))
-        line2 = Matrix(symbols("d:f", real=True))
-        line_pair = line_pair_conic(line1, line2)
+    def test_crossing_lines(self):
+        b, d = symbols("b d", positive=True)
+        c, e, f = symbols("c e f", real=True)
+        horizontal = Matrix([0, b, c])
+        non_horizontal = Matrix([d, e, f])
+        line_pair = line_pair_conic(horizontal, non_horizontal)
         assert ConicNormFactor(line_pair) == 1
         assert ConicNormFactor(-line_pair) == 1
+
+    def test_parallel_lines(self):
+        a = Symbol("a", nonzero=True)
+        b, c, f = symbols("b c f", real=True)
+        line_pair = line_pair_conic(Matrix([a, b, c]), Matrix([a, b, f]))
+        assert ConicNormFactor(line_pair) == -1
+        assert ConicNormFactor(-line_pair) == 1
+
+    def test_double_line(self):
+        line = Matrix([Symbol("a", positive=True), *symbols("b c", real=True)])
+        double_line = line_pair_conic(line, line)
+        assert ConicNormFactor(double_line) == -1
+        assert ConicNormFactor(-double_line) == 1
+
+    def test_point_conic_with_possibly_zero_coordinates(self):
+        conic = point_conic(symbols("x:z", real=True))
+        assert ConicNormFactor(conic) == 1
+
+    def test_circle_with_possibly_zero_radius(self):
+        center = symbols("x y", real=True)
+        conic = circle(center, r=Symbol("r", real=True))
+        assert ConicNormFactor(conic) == 1
+        assert ConicNormFactor(-conic) == -1
+
+    def test_conic_containing_ideal_line(self):
+        line = Matrix(symbols("a:c", real=True))
+        assert ConicNormFactor(line_pair_conic(line, IDEAL_LINE)) == 1
 
     def test_zero_conic_matrix(self):
         conic = ZERO_CONIC
@@ -191,9 +220,13 @@ class TestAxisDirection:
 
     def test_double_line(self):
         line_pair = line_pair_conic(X_AXIS, X_AXIS)
-        assert is_positive_multiple(focal_axis_direction(line_pair), (0, 1, 0))
-        line_pair = line_pair_conic(X_AXIS, -X_AXIS)
         assert is_positive_multiple(focal_axis_direction(line_pair), (1, 0, 0))
+        assert is_positive_multiple(focal_axis_direction(-line_pair), (1, 0, 0))
+
+    def test_parallel_lines(self):
+        line_pair = line_pair_conic(Matrix([1, 2, 3]), Matrix([1, 2, 4]))
+        assert is_positive_multiple(focal_axis_direction(line_pair), (2, -1, 0))
+        assert is_positive_multiple(focal_axis_direction(-line_pair), (2, -1, 0))
 
     @pytest.mark.parametrize(
         ("line1", "line2"),

@@ -9,7 +9,6 @@ from sympy import (
 )
 from sympy.core.function import DefinedFunction
 
-from lib.conic_classes import is_point_conic
 from lib.matrix import conic_coefficients
 from lib.point import ideal_point
 from lib.type_aliases import Conic, PointVector
@@ -22,48 +21,46 @@ class ConicNormFactor(DefinedFunction):
     following properties:
 
     - *Non-degenerate conics*: the conic equation evaluates to a positive
-      value at the focus point(s), i.e. `[fx fy 1]ᵀ C [fx fy 1] > 0`.
-    - *Point conics*: The conic equation evaluates to ≤0 for all finite
-      points `[x, y, 1]ᵀ`.
-    - *Line-pair conics*: no preferred normalization exists; the factor is
-      always 1.
-    - *Symbolic conics*: may return an unevaluated `sympy.Function` if the
-      conic type or determinant sign cannot be determined.
-    - `conic.det() * ConicNormFactor(conic) == Abs(conic.det())` holds for
-      all conic types.
+      value at the focus point(s), i.e. `[fx fy 1]ᵀ C [fx fy 1] > 0`. For
+      parabolas, this makes the upper left 2×2 block negative semidefinite
+      ([proof](../src/research/conic_properties/normalized_parabola.py)).
+    - *Point conics*: the matrix is negative semidefinite, i.e. the conic
+      equation evaluates to ≤0 at all points.
+    - *Parallel line pairs and double lines*: like parabolas, these conics
+      have a zero discriminant. Therefore the upper left 2×2 block of their
+      matrix is singular, hence semidefinite. The factor makes it negative
+      semidefinite, as it is for normalized parabolas.
+
+      This keeps the normalization continuous: as `ε → 0`, the normalized
+      matrices of the parabolas `y² = εx + k` converge to those of parallel
+      lines if `k > 0`, and to that of a double line if `k = 0`.
+    - *Crossing line pairs, conics containing the ideal line*: the factor
+      is 1, since no preferred normalization exists.
+    - *Symbolic conics*: may remain unevaluated if undecidable.
+
+    `C.det() * ConicNormFactor(C) == Abs(C.det())` holds for all conic types.
     """
 
     # Implies is_real = True, is_integer = True, and is_nonzero = True.
     is_odd = True
 
     @classmethod
-    def eval(  # noqa: PLR0911 (too-many-return-statements)
-        cls, conic: Conic
-    ) -> Expr | None:
+    def eval(cls, conic: Conic) -> Expr | None:
         """Internal implementation. Call `ConicNormFactor(conic)` directly."""
         det = conic.det().factor()
-        if det.is_positive:
-            return S.One
-        if det.is_negative:
-            return S.NegativeOne
-        if det.is_real and det.is_nonzero:
-            return sign(det)
+        if det.is_nonzero:  # implies det.is_real
+            return sign(det)  # ±1 if det's sign is known
 
-        # degenerate conic
         if det.is_zero:
-            is_point = is_point_conic(conic)
+            return _degenerate_conic_norm_factor(conic)
 
-            # line pair
-            if is_point is False:
-                return S.One
+        # It's undecidable whether the conic is degenerate. The result is
+        # valid if sign(det) and the degenerate conic's factor agree.
+        if det.is_nonnegative and _degenerate_conic_norm_factor(conic) == 1:
+            return S.One
 
-            # point conic
-            if is_point is True:
-                diag = conic.diagonal().flat()
-                if any(e.is_positive for e in diag):
-                    return S.NegativeOne
-                if any(e.is_negative for e in diag):
-                    return S.One
+        if det.is_nonpositive and _degenerate_conic_norm_factor(conic) == -1:
+            return S.NegativeOne
 
         return None
 
@@ -76,6 +73,30 @@ class ConicNormFactor(DefinedFunction):
         if exponent.is_odd:
             return self
         return None
+
+
+def _degenerate_conic_norm_factor(conic: Conic) -> Expr | None:
+    """Computes `ConicNormFactor` for degenerate conics.
+
+    If the discriminant `b² - a·c` is ≤ 0, the upper left 2×2 block is
+    semidefinite, and the factor makes it negative semidefinite. This covers
+    point conics (making the whole matrix negative semidefinite), parallel
+    line pairs and double lines. A semidefinite block has the sign of its
+    trace.
+
+    The factor is 1 for crossing line pairs (positive discriminant) and for
+    conics containing the ideal line (zero block, zero trace).
+    """
+    a, b, c, *_ = conic_coefficients(conic)
+    trace = a + c
+    if trace.is_nonpositive:
+        return S.One
+    disc = (b * b - a * c).factor()
+    if disc.is_positive:
+        return S.One
+    if disc.is_nonpositive and trace.is_positive:
+        return S.NegativeOne
+    return None
 
 
 def _sqrt_complex(z: Expr) -> tuple[Expr, Expr]:
@@ -108,8 +129,12 @@ def focal_axis_direction(conic: Conic) -> PointVector:
     - Line pair conics constructed by
       [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(hyperbola)
       have no such property.
-    - The focal axis of `line_pair(l1, l2)`, and `angle_bisector(l1, l2)` point
-      to the same direction.
+    - For crossing lines `l₁` and `l₂`, the focal axis of
+      [line_pair_conic](#degenerate_conic.line_pair_conic)(l₁, l₂) and
+      [angle_bisector](#line.angle_bisector)(l₁, l₂) point in the same
+      direction.
+    - The focal axis of parallel line pairs and double lines is parallel to
+      the lines.
 
     *Formula*:
     [research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)

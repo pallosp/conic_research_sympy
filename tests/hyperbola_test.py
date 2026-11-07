@@ -68,7 +68,7 @@ class TestFocalAxisAsymptoteAngle:
 
     def test_parallel_lines(self):
         line_pair = line_pair_conic(horizontal_line(1), horizontal_line(2))
-        assert asymptote_focal_axis_angle(line_pair) == pi / 2
+        assert asymptote_focal_axis_angle(line_pair) == 0
         assert asymptote_focal_axis_angle(-line_pair) == 0
 
     def test_conics_containing_the_ideal_line(self):

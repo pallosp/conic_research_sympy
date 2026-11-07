@@ -1298,9 +1298,9 @@ The result is never a circle, because the parameters can't determine its
 radius: all concentric circles share the same focus (their center),
 directrix (the ideal line) and eccentricity (0).
 
-Negating `e` gives the same conic, so the table lists only non-negative
-real, imaginary and infinite eccentricities. Other complex eccentricities
-yield complex conic matrices.
+Negating `eccentricity` gives the same conic, so the table lists only
+non-negative real, imaginary and infinite eccentricities. Other complex
+eccentricities yield complex conic matrices.
 
 Result by directrix, focus and eccentricity:
 
@@ -1346,27 +1346,40 @@ The eccentricity is the constant ratio of a conic point's distance from a
 focus and from the corresponding directrix. See
 [conic_from_focus_and_directrix](#conic.conic_from_focus_and_directrix).
 
-The result is
- - 0 for circles and imaginary circles;
- - (0..1) for other real ellipses;
- - imaginary for other imaginary ellipses;
- - 1 for parabolas;
- - &gt;1 for hyperbolas, in particular √2 for rectangular hyperbolas.
-
-In case of [non-degenerate](#conic_classes.is_nondegenerate)
-[central conics](#conic_classes.is_central_conic), the eccentricity
-equals to the ratio of the center-focus distance
+For [non-degenerate](#conic_classes.is_nondegenerate)
+[central conics](#conic_classes.is_central_conic), it also equals the
+ratio of the center-focus distance
 ([linear_eccentricity](#central_conic.linear_eccentricity))
 and the center-vertex distance
 ([primary_radius](#central_conic.primary_radius)).
 
-The eccentricity of finite point conics constructed by
-[shrinking an ellipse to zero size](#central_conic.shrink_conic_to_zero)
-equals to that of the original ellipse.
+Return value by conic type:
 
-Crossing line pair conics have two different (generalized) focal axes, with
-two different corresponding eccentricity values. Evaluate
-`(eccentricity(conic), eccentricity(-conic))` to get both.
+| conic                           | eccentricity              |
+|---------------------------------|---------------------------|
+| circle, imaginary circle        | 0                         |
+| other real ellipse              | (0..1)                    |
+| other imaginary ellipse         | imaginary                 |
+| parabola                        | 1                         |
+| hyperbola                       | (1..∞), √2 if rectangular |
+| finite point conic              | [0..1) ¹                  |
+| ideal point conic               | 1 ²                       |
+| parallel line pair, double line | 1 ²                       |
+| crossing line pair              | (1..∞), two values ³      |
+| conic containing the ideal line | `nan`                     |
+| zero matrix                     | `nan`                     |
+
+¹ A point conic created by
+[shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(ellipse)
+has the same eccentricity as the ellipse. It's 0 for zero-radius
+circles.<br>
+² Like parabolas, these conics have a zero discriminant. As `ε → 0`, the
+parabolas `y² = εx + k` approach parallel
+lines if `k > 0`, a double line if `k = 0`, and an ideal point conic if
+`k < 0`. See [ConicNormFactor](#conic_direction.ConicNormFactor).<br>
+³ One for each angle bisector, i.e. (generalized) focal axis. Evaluate
+`(eccentricity(conic), eccentricity(-conic))` to get both. Both are `√2`
+for perpendicular lines.
 
 *Formula*:
 <https://en.wikipedia.org/wiki/Conic_section#Eccentricity_in_terms_of_coefficients><br>
@@ -1381,13 +1394,12 @@ two different corresponding eccentricity values. Evaluate
 def focal_parameter(conic: Conic) -> Expr
 ```
 
-([source](../src/lib/conic.py#L156))
+([source](../src/lib/conic.py#L169))
 
 Computes the distance between a conic's focus and the corresponding directrix.
 
 Special cases:
- - infinity for real and imaginary circles, as their directrix is the ideal
-   line;
+ - `zoo` for real and imaginary circles, as their directrix is the ideal line;
  - the negated focus-directrix distance for other imaginary ellipses;
  - `nan` for zero-radius circles and conics containing the ideal line;
  - 0 for all other degenerate conics.
@@ -1403,7 +1415,7 @@ Special cases:
 def focal_axis(conic: Conic) -> Line
 ```
 
-([source](../src/lib/conic.py#L175))
+([source](../src/lib/conic.py#L187))
 
 Returns the axis of symmetry going through conic's focus point(s).
 
@@ -1416,8 +1428,11 @@ Properties:
 - Line pair conics constructed by
   [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(hyperbola)
   have no such property.
-- The focal axis of `line_pair(l1, l2)`, and `angle_bisector(l1, l2)`
-  coincide.
+- For crossing lines `l₁` and `l₂`, the focal axis of
+  [line_pair_conic](#degenerate_conic.line_pair_conic)(l₁, l₂) and
+  [angle_bisector](#line.angle_bisector)(l₁, l₂) coincide.
+- The focal axis of parallel line pairs is their center line; that of
+  double lines is the line itself.
 
 <a id="conic.ideal_points"></a>
 
@@ -1429,7 +1444,7 @@ def ideal_points(
 ) -> tuple[PointVector | MatrixExpr, PointVector | MatrixExpr]
 ```
 
-([source](../src/lib/conic.py#L194))
+([source](../src/lib/conic.py#L209))
 
 Computes the ideal points on a conic section.
 
@@ -1460,7 +1475,7 @@ radii. Note that `r₂` is imaginary in case of hyperbolas.
 def projective_conic_center(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic.py#L224))
+([source](../src/lib/conic.py#L239))
 
 Computes the generalized projective center of a conic.
 
@@ -1484,7 +1499,7 @@ For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
 def pole_point(conic: Conic, polar_line: Line) -> PointVector
 ```
 
-([source](../src/lib/conic.py#L242))
+([source](../src/lib/conic.py#L257))
 
 Computes the pole point of a conic with respect to the given polar line.
 
@@ -1504,7 +1519,7 @@ relationships.
 def polar_line(conic: Conic, pole_point: Point) -> Line
 ```
 
-([source](../src/lib/conic.py#L256))
+([source](../src/lib/conic.py#L271))
 
 Computes the polar line of a conic for a given pole point.
 
@@ -1535,7 +1550,7 @@ References:
 def tangent_pair_conic(conic: Conic, point: Point) -> Conic
 ```
 
-([source](../src/lib/conic.py#L282))
+([source](../src/lib/conic.py#L297))
 
 Computes the line pair conic consisting of the two tangent lines of a
 conic through a point.
@@ -1576,7 +1591,7 @@ def tangents_through_point(
         point: Point) -> tuple[Line | MatrixExpr, Line | MatrixExpr]
 ```
 
-([source](../src/lib/conic.py#L316))
+([source](../src/lib/conic.py#L331))
 
 Computes the two tangent lines of a conic through a point.
 
@@ -2248,7 +2263,7 @@ Degenerates to `[nan, nan]ᵀ` when `point`, `line` or both are infinite.
 class ConicNormFactor(DefinedFunction)
 ```
 
-([source](../src/lib/conic_direction.py#L18))
+([source](../src/lib/conic_direction.py#L17))
 
 Computes a normalization factor (±1) for a conic matrix `C`.
 
@@ -2256,15 +2271,24 @@ When `C` is multiplied by this factor, the resulting conic has the
 following properties:
 
 - *Non-degenerate conics*: the conic equation evaluates to a positive
-  value at the focus point(s), i.e. `[fx fy 1]ᵀ C [fx fy 1] > 0`.
-- *Point conics*: The conic equation evaluates to ≤0 for all finite
-  points `[x, y, 1]ᵀ`.
-- *Line-pair conics*: no preferred normalization exists; the factor is
-  always 1.
-- *Symbolic conics*: may return an unevaluated `sympy.Function` if the
-  conic type or determinant sign cannot be determined.
-- `conic.det() * ConicNormFactor(conic) == Abs(conic.det())` holds for
-  all conic types.
+  value at the focus point(s), i.e. `[fx fy 1]ᵀ C [fx fy 1] > 0`. For
+  parabolas, this makes the upper left 2×2 block negative semidefinite
+  ([proof](../src/research/conic_properties/normalized_parabola.py)).
+- *Point conics*: the matrix is negative semidefinite, i.e. the conic
+  equation evaluates to ≤0 at all points.
+- *Parallel line pairs and double lines*: like parabolas, these conics
+  have a zero discriminant. Therefore the upper left 2×2 block of their
+  matrix is singular, hence semidefinite. The factor makes it negative
+  semidefinite, as it is for normalized parabolas.
+
+  This keeps the normalization continuous: as `ε → 0`, the normalized
+  matrices of the parabolas `y² = εx + k` converge to those of parallel
+  lines if `k > 0`, and to that of a double line if `k = 0`.
+- *Crossing line pairs, conics containing the ideal line*: the factor
+  is 1, since no preferred normalization exists.
+- *Symbolic conics*: may remain unevaluated if undecidable.
+
+`C.det() * ConicNormFactor(C) == Abs(C.det())` holds for all conic types.
 
 <a id="conic_direction.ConicNormFactor.eval"></a>
 
@@ -2275,7 +2299,7 @@ following properties:
 def eval(cls, conic: Conic) -> Expr | None
 ```
 
-([source](../src/lib/conic_direction.py#L40))
+([source](../src/lib/conic_direction.py#L48))
 
 Internal implementation. Call `ConicNormFactor(conic)` directly.
 
@@ -2287,7 +2311,7 @@ Internal implementation. Call `ConicNormFactor(conic)` directly.
 def focal_axis_direction(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic_direction.py#L93))
+([source](../src/lib/conic_direction.py#L114))
 
 Returns the ideal point representing the direction of a conic's focal axis.
 
@@ -2306,8 +2330,12 @@ Properties:
 - Line pair conics constructed by
   [shrink_conic_to_zero](#central_conic.shrink_conic_to_zero)(hyperbola)
   have no such property.
-- The focal axis of `line_pair(l1, l2)`, and `angle_bisector(l1, l2)` point
-  to the same direction.
+- For crossing lines `l₁` and `l₂`, the focal axis of
+  [line_pair_conic](#degenerate_conic.line_pair_conic)(l₁, l₂) and
+  [angle_bisector](#line.angle_bisector)(l₁, l₂) point in the same
+  direction.
+- The focal axis of parallel line pairs and double lines is parallel to
+  the lines.
 
 *Formula*:
 [research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)
@@ -2323,7 +2351,7 @@ Properties:
 def conjugate_axis_direction(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic_direction.py#L126))
+([source](../src/lib/conic_direction.py#L151))
 
 Returns the ideal point representing the direction of a conic's conjugate axis.
 
@@ -3299,8 +3327,7 @@ Return values for other conics:
 - *line pairs*
    - crossing lines: positive angle; α or π/2-α depending on the lines'
      directions
-   - parallel lines in the same direction: π/2
-   - parallel lines in the opposite direction: 0
+   - parallel lines, double lines: 0
    - conics containing the ideal line: `nan`
 
 *Research*:
@@ -3315,7 +3342,7 @@ Return values for other conics:
 def asymptote_conic(hyperbola: Conic) -> Conic
 ```
 
-([source](../src/lib/hyperbola.py#L58))
+([source](../src/lib/hyperbola.py#L57))
 
 Computes the line pair conic representing the hyperbola's asymptotes.
 
