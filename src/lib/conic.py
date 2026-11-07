@@ -1,4 +1,4 @@
-from sympy import Abs, Expr, Matrix, MatrixExpr, Poly, Symbol, abc, sign, sqrt
+from sympy import Abs, Expr, Matrix, MatrixExpr, Poly, Symbol, abc, sqrt
 
 from lib.conic_direction import ConicNormFactor, focal_axis_direction
 from lib.matrix import (
@@ -180,8 +180,9 @@ def focal_parameter(conic: Conic) -> Expr:
     """
     a, b, c, *_ = conic_coefficients(conic)
     det = conic.det()
+    norm_sign = ConicNormFactor(conic)
     s = sqrt((a - c) ** 2 + 4 * b**2)
-    return 2 * sqrt(Abs(det) / s) / (s - sign(det) * (a + c))
+    return 2 * sqrt(Abs(det) / s) / (s - norm_sign * (a + c))
 
 
 def focal_axis(conic: Conic) -> Line:
