@@ -1,16 +1,14 @@
-from collections.abc import Callable
-
-from sympy import Expr, factor
+from sympy import factor
 from sympy.core.logic import fuzzy_and, fuzzy_not, fuzzy_or
 
 from lib.matrix import conic_coefficients, is_definite_matrix
-from lib.type_aliases import Conic
+from lib.type_aliases import Conic, Simplifier
 
 
 def is_degenerate(
     conic: Conic,
     *,
-    simplifier: Callable[[Expr], Expr] = lambda expr: expr,
+    simplifier: Simplifier = lambda expr: expr,
 ) -> bool | None:
     """Tells whether the conic is degenerate.
 
@@ -27,7 +25,7 @@ def is_degenerate(
 def is_nondegenerate(
     conic: Conic,
     *,
-    simplifier: Callable[[Expr], Expr] = lambda expr: expr,
+    simplifier: Simplifier = lambda expr: expr,
 ) -> bool | None:
     """Tells whether the conic is non-degenerate.
 
@@ -44,7 +42,7 @@ def is_nondegenerate(
 def is_central_conic(
     conic: Conic,
     *,
-    simplifier: Callable[[Expr], Expr] = lambda expr: expr,
+    simplifier: Simplifier = lambda expr: expr,
 ) -> bool | None:
     """Tells whether a conic has a finite center of symmetry.
 
@@ -58,7 +56,7 @@ def is_central_conic(
 def is_finite_conic(
     conic: Conic,
     *,
-    simplifier: Callable[[Expr], Expr] = factor,
+    simplifier: Simplifier = factor,
 ) -> bool | None:
     """Tells whether all points on the conic are finite.
 

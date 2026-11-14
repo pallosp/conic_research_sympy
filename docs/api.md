@@ -47,6 +47,7 @@
   * [Conic](#type_aliases.Conic)
   * [PolarConic](#type_aliases.PolarConic)
   * [Transformation](#type_aliases.Transformation)
+  * [Simplifier](#type_aliases.Simplifier)
 * [line](#line)
   * [horizontal\_line](#line.horizontal_line)
   * [vertical\_line](#line.vertical_line)
@@ -476,7 +477,7 @@ Returns a bool or `None` if the definitess can't be decided.
 ```python
 def is_full_rank(matrix: MatrixBase,
                  *,
-                 simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+                 simplifier: Simplifier = expand) -> bool | None
 ```
 
 ([source](../src/lib/matrix.py#L467))
@@ -987,6 +988,14 @@ A conic in polar parametric form, represented as a 3x3 matrix `M` such that
 
 A projective transformation of the plane, represented as a 3x3 matrix that
 maps the homogeneous coordinates of points.
+
+<a id="type_aliases.Simplifier"></a>
+
+#### Simplifier
+
+A function that simplifies a SymPy expression, such as `expand`, `factor`
+or `simplify`. Predicates apply it to polynomials before checking their
+signs, which may turn an undecidable result into a decidable one.
 
 <a id="line"></a>
 
@@ -1782,13 +1791,12 @@ Since `C` is symmetric, these cross products are the columns of `adj(C)`.
 #### is\_degenerate
 
 ```python
-def is_degenerate(
-        conic: Conic,
-        *,
-        simplifier: Callable[[Expr], Expr] = lambda expr: expr) -> bool | None
+def is_degenerate(conic: Conic,
+                  *,
+                  simplifier: Simplifier = lambda expr: expr) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L10))
+([source](../src/lib/conic_classes.py#L8))
 
 Tells whether the conic is degenerate.
 
@@ -1807,10 +1815,10 @@ is undecidable.
 def is_nondegenerate(
         conic: Conic,
         *,
-        simplifier: Callable[[Expr], Expr] = lambda expr: expr) -> bool | None
+        simplifier: Simplifier = lambda expr: expr) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L27))
+([source](../src/lib/conic_classes.py#L25))
 
 Tells whether the conic is non-degenerate.
 
@@ -1829,10 +1837,10 @@ is undecidable.
 def is_central_conic(
         conic: Conic,
         *,
-        simplifier: Callable[[Expr], Expr] = lambda expr: expr) -> bool | None
+        simplifier: Simplifier = lambda expr: expr) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L44))
+([source](../src/lib/conic_classes.py#L42))
 
 Tells whether a conic has a finite center of symmetry.
 
@@ -1845,13 +1853,12 @@ the result is undecidable.
 #### is\_finite\_conic
 
 ```python
-def is_finite_conic(
-        conic: Conic,
-        *,
-        simplifier: Callable[[Expr], Expr] = factor) -> bool | None
+def is_finite_conic(conic: Conic,
+                    *,
+                    simplifier: Simplifier = factor) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L58))
+([source](../src/lib/conic_classes.py#L56))
 
 Tells whether all points on the conic are finite.
 
@@ -1867,7 +1874,7 @@ is undecidable.
 def is_imaginary_ellipse(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L72))
+([source](../src/lib/conic_classes.py#L70))
 
 Tells whether the conic is an imaginary ellipse.
 
@@ -1885,7 +1892,7 @@ Returns `None` if undecidable.
 def is_ellipse(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L84))
+([source](../src/lib/conic_classes.py#L82))
 
 Tells whether the conic is an ellipse.
 
@@ -1901,7 +1908,7 @@ or `None` if the conic's type is undecidable.
 def is_circle(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L100))
+([source](../src/lib/conic_classes.py#L98))
 
 Tells whether the conic is a circle.
 
@@ -1915,7 +1922,7 @@ Returns `None` if undecidable.
 def is_parabola(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L115))
+([source](../src/lib/conic_classes.py#L113))
 
 Tells whether the conic is a parabola.
 
@@ -1929,7 +1936,7 @@ Returns `None` if undecidable.
 def is_hyperbola(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L123))
+([source](../src/lib/conic_classes.py#L121))
 
 Tells whether the conic is a hyperbola.
 
@@ -1943,7 +1950,7 @@ Returns `None` if undecidable.
 def is_rectangular_hyperbola(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L131))
+([source](../src/lib/conic_classes.py#L129))
 
 Tells whether the conic is a rectangular hyperbola.
 
@@ -1962,7 +1969,7 @@ Returns `None` if undecidable.
 def is_circular(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L145))
+([source](../src/lib/conic_classes.py#L143))
 
 Tells whether there is a single center point around which the conic is
 invariant under all rotations.
@@ -1978,7 +1985,7 @@ Double ideal lines are not considered circular. Returns `None` if undecidable.
 def is_line_pair(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L156))
+([source](../src/lib/conic_classes.py#L154))
 
 Tells whether the conic is the union of two real projective lines.
 
@@ -1999,7 +2006,7 @@ Returns `None` if undecidable.
 def is_double_line(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L184))
+([source](../src/lib/conic_classes.py#L182))
 
 Tells whether the conic consists of two coincident projective lines.
 
@@ -2013,7 +2020,7 @@ Returns `None` if undecidable.
 def is_point_conic(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L201))
+([source](../src/lib/conic_classes.py#L199))
 
 Tells whether the conic consists of a single real projective point.
 
@@ -2035,7 +2042,7 @@ Returns `None` if undecidable.
 def is_finite_point_conic(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L233))
+([source](../src/lib/conic_classes.py#L231))
 
 Tells whether the conic consists of a single finite (Euclidean) point.
 
@@ -2049,7 +2056,7 @@ Returns `None` if undecidable.
 def is_ideal_point_conic(conic: Conic) -> bool | None
 ```
 
-([source](../src/lib/conic_classes.py#L241))
+([source](../src/lib/conic_classes.py#L239))
 
 Tells whether the conic consists of a single ideal point.
 
@@ -2985,11 +2992,10 @@ Shifts the angle origin of a polar conic's parametrization.
 #### line\_contains\_point
 
 ```python
-def line_contains_point(
-        line: Line | MatrixExpr,
-        point: Point | MatrixExpr,
-        *,
-        simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+def line_contains_point(line: Line | MatrixExpr,
+                        point: Point | MatrixExpr,
+                        *,
+                        simplifier: Simplifier = expand) -> bool | None
 ```
 
 ([source](../src/lib/incidence.py#L12))
@@ -3005,11 +3011,10 @@ undecidable. Accepts unevaluated `MatrixExpr` arguments.
 #### conic\_contains\_point
 
 ```python
-def conic_contains_point(
-        conic: Conic | MatrixExpr,
-        point: Point | MatrixExpr,
-        *,
-        simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+def conic_contains_point(conic: Conic | MatrixExpr,
+                         point: Point | MatrixExpr,
+                         *,
+                         simplifier: Simplifier = expand) -> bool | None
 ```
 
 ([source](../src/lib/incidence.py#L29))
@@ -3028,8 +3033,7 @@ undecidable. Accepts unevaluated `MatrixExpr` arguments.
 def conic_contains_line(conic: Conic,
                         line: Line,
                         *,
-                        simplifier: Callable[[Expr],
-                                             Expr] = expand) -> bool | None
+                        simplifier: Simplifier = expand) -> bool | None
 ```
 
 ([source](../src/lib/incidence.py#L44))
@@ -3051,7 +3055,7 @@ result is undecidable.
 def is_tangent(conic: Conic,
                line: Line | MatrixExpr,
                *,
-               simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+               simplifier: Simplifier = expand) -> bool | None
 ```
 
 ([source](../src/lib/incidence.py#L63))
@@ -3078,7 +3082,7 @@ undecidable. Accepts unevaluated `MatrixExpr` lines.
 def is_inside(conic: Conic,
               point: Point,
               *,
-              simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+              simplifier: Simplifier = expand) -> bool | None
 ```
 
 ([source](../src/lib/incidence.py#L86))
@@ -3110,7 +3114,7 @@ Returns `None` if undecidable.
 def is_outside(conic: Conic,
                point: Point,
                *,
-               simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+               simplifier: Simplifier = expand) -> bool | None
 ```
 
 ([source](../src/lib/incidence.py#L114))
@@ -3139,11 +3143,10 @@ Returns `None` if undecidable.
 #### polar\_conic\_contains\_point
 
 ```python
-def polar_conic_contains_point(
-        polar_conic: PolarConic,
-        point: Point,
-        *,
-        simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+def polar_conic_contains_point(polar_conic: PolarConic,
+                               point: Point,
+                               *,
+                               simplifier: Simplifier = expand) -> bool | None
 ```
 
 ([source](../src/lib/incidence.py#L146))
@@ -3162,11 +3165,10 @@ undecidable.
 #### is\_inside\_polar\_conic
 
 ```python
-def is_inside_polar_conic(
-        polar_conic: PolarConic,
-        point: Point,
-        *,
-        simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+def is_inside_polar_conic(polar_conic: PolarConic,
+                          point: Point,
+                          *,
+                          simplifier: Simplifier = expand) -> bool | None
 ```
 
 ([source](../src/lib/incidence.py#L164))
@@ -3193,11 +3195,10 @@ polar matrix, up to scale.<br>
 #### is\_outside\_polar\_conic
 
 ```python
-def is_outside_polar_conic(
-        polar_conic: PolarConic,
-        point: Point,
-        *,
-        simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+def is_outside_polar_conic(polar_conic: PolarConic,
+                           point: Point,
+                           *,
+                           simplifier: Simplifier = expand) -> bool | None
 ```
 
 ([source](../src/lib/incidence.py#L195))
@@ -3226,7 +3227,7 @@ polar matrix, up to scale.<br>
 ```python
 def are_collinear(points: Sequence[Point],
                   *,
-                  simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+                  simplifier: Simplifier = expand) -> bool | None
 ```
 
 ([source](../src/lib/incidence.py#L234))
@@ -3243,7 +3244,7 @@ polynomial before it gets compared to zero. Returns `None` if undecidable.
 ```python
 def are_concurrent(lines: Sequence[Line],
                    *,
-                   simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+                   simplifier: Simplifier = expand) -> bool | None
 ```
 
 ([source](../src/lib/incidence.py#L251))
@@ -3262,10 +3263,9 @@ formula described at
 #### are\_on\_same\_conic
 
 ```python
-def are_on_same_conic(
-        points: Sequence[Point],
-        *,
-        simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+def are_on_same_conic(points: Sequence[Point],
+                      *,
+                      simplifier: Simplifier = expand) -> bool | None
 ```
 
 ([source](../src/lib/incidence.py#L273))
@@ -3288,7 +3288,7 @@ section 10.2 (Conics and Cross-Ratios)
 ```python
 def are_cocircular(points: Sequence[Point],
                    *,
-                   simplifier: Callable[[Expr], Expr] = expand) -> bool | None
+                   simplifier: Simplifier = expand) -> bool | None
 ```
 
 ([source](../src/lib/incidence.py#L302))
@@ -3494,13 +3494,12 @@ section 11.3
 #### is\_homography
 
 ```python
-def is_homography(
-        transformation: Transformation,
-        *,
-        simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
+def is_homography(transformation: Transformation,
+                  *,
+                  simplifier: Simplifier = simplify) -> bool | None
 ```
 
-([source](../src/lib/transform_classes.py#L9))
+([source](../src/lib/transform_classes.py#L7))
 
 Checks whether a transformation matrix represents a homography.
 
@@ -3516,13 +3515,12 @@ simplification, the function returns `None`.
 #### is\_affine\_transform
 
 ```python
-def is_affine_transform(
-        transformation: Transformation,
-        *,
-        simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
+def is_affine_transform(transformation: Transformation,
+                        *,
+                        simplifier: Simplifier = simplify) -> bool | None
 ```
 
-([source](../src/lib/transform_classes.py#L29))
+([source](../src/lib/transform_classes.py#L27))
 
 Checks whether a matrix represents an affine transformation.
 
@@ -3540,13 +3538,12 @@ zero or non-zero after simplification, the function returns `None`.
 #### is\_similarity
 
 ```python
-def is_similarity(
-        transformation: Transformation,
-        *,
-        simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
+def is_similarity(transformation: Transformation,
+                  *,
+                  simplifier: Simplifier = simplify) -> bool | None
 ```
 
-([source](../src/lib/transform_classes.py#L59))
+([source](../src/lib/transform_classes.py#L57))
 
 Checks whether a matrix represents a similarity transformation.
 
@@ -3559,13 +3556,12 @@ zero or non-zero after simplification, the function returns `None`.
 #### is\_congruence
 
 ```python
-def is_congruence(
-        transformation: Transformation,
-        *,
-        simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
+def is_congruence(transformation: Transformation,
+                  *,
+                  simplifier: Simplifier = simplify) -> bool | None
 ```
 
-([source](../src/lib/transform_classes.py#L85))
+([source](../src/lib/transform_classes.py#L83))
 
 Checks whether a matrix represents a congruence transformation.
 
@@ -3578,13 +3574,12 @@ zero or non-zero after simplification, the function returns `None`.
 #### is\_involution
 
 ```python
-def is_involution(
-        transformation: Transformation,
-        *,
-        simplifier: Callable[[Expr], Expr] = simplify) -> bool | None
+def is_involution(transformation: Transformation,
+                  *,
+                  simplifier: Simplifier = simplify) -> bool | None
 ```
 
-([source](../src/lib/transform_classes.py#L109))
+([source](../src/lib/transform_classes.py#L107))
 
 Checks whether applying the transformation twice is the identity.
 

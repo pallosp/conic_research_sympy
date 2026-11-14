@@ -1,15 +1,13 @@
-from collections.abc import Callable
-
-from sympy import Expr, Matrix, simplify
+from sympy import Matrix, simplify
 from sympy.core.logic import fuzzy_and
 
-from lib.type_aliases import Transformation
+from lib.type_aliases import Simplifier, Transformation
 
 
 def is_homography(
     transformation: Transformation,
     *,
-    simplifier: Callable[[Expr], Expr] = simplify,
+    simplifier: Simplifier = simplify,
 ) -> bool | None:
     """Checks whether a transformation matrix represents a homography.
 
@@ -29,7 +27,7 @@ def is_homography(
 def is_affine_transform(
     transformation: Transformation,
     *,
-    simplifier: Callable[[Expr], Expr] = simplify,
+    simplifier: Simplifier = simplify,
 ) -> bool | None:
     """Checks whether a matrix represents an affine transformation.
 
@@ -59,7 +57,7 @@ def is_affine_transform(
 def is_similarity(
     transformation: Transformation,
     *,
-    simplifier: Callable[[Expr], Expr] = simplify,
+    simplifier: Simplifier = simplify,
 ) -> bool | None:
     """Checks whether a matrix represents a similarity transformation.
 
@@ -85,7 +83,7 @@ def is_similarity(
 def is_congruence(
     transformation: Transformation,
     *,
-    simplifier: Callable[[Expr], Expr] = simplify,
+    simplifier: Simplifier = simplify,
 ) -> bool | None:
     """Checks whether a matrix represents a congruence transformation.
 
@@ -109,7 +107,7 @@ def is_congruence(
 def is_involution(
     transformation: Transformation,
     *,
-    simplifier: Callable[[Expr], Expr] = simplify,
+    simplifier: Simplifier = simplify,
 ) -> bool | None:
     """Checks whether applying the transformation twice is the identity.
 

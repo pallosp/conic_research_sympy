@@ -20,7 +20,7 @@ from sympy.matrices.expressions.matexpr import MatrixElement
 from sympy.printing.pretty.pretty import PrettyPrinter
 from sympy.printing.pretty.stringpict import prettyForm
 
-from lib.type_aliases import Conic, Scalar
+from lib.type_aliases import Conic, Scalar, Simplifier
 
 
 def is_nonzero_multiple(
@@ -467,7 +467,7 @@ def is_definite_matrix(matrix: MatrixBase) -> bool | None:
 def is_full_rank(
     matrix: MatrixBase,
     *,
-    simplifier: Callable[[Expr], Expr] = expand,
+    simplifier: Simplifier = expand,
 ) -> bool | None:
     """Tells whether a matrix has full rank.
 

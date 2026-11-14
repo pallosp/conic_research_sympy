@@ -1,4 +1,4 @@
-from collections.abc import Callable, Sequence
+from collections.abc import Sequence
 from itertools import product
 
 from sympy import Expr, Matrix, MatrixBase, MatrixExpr, expand
@@ -6,14 +6,14 @@ from sympy.core.logic import fuzzy_and, fuzzy_not
 
 from lib.matrix import is_full_rank, quadratic_form, skew_matrix
 from lib.point import point_to_vec3
-from lib.type_aliases import Conic, Line, Point, PolarConic
+from lib.type_aliases import Conic, Line, Point, PolarConic, Simplifier
 
 
 def line_contains_point(
     line: Line | MatrixExpr,
     point: Point | MatrixExpr,
     *,
-    simplifier: Callable[[Expr], Expr] = expand,
+    simplifier: Simplifier = expand,
 ) -> bool | None:
     """Tells whether `point` is on `line`.
 
@@ -30,7 +30,7 @@ def conic_contains_point(
     conic: Conic | MatrixExpr,
     point: Point | MatrixExpr,
     *,
-    simplifier: Callable[[Expr], Expr] = expand,
+    simplifier: Simplifier = expand,
 ) -> bool | None:
     """Checks if a point lies on a conic.
 
@@ -45,7 +45,7 @@ def conic_contains_line(
     conic: Conic,
     line: Line,
     *,
-    simplifier: Callable[[Expr], Expr] = expand,
+    simplifier: Simplifier = expand,
 ) -> bool | None:
     """Checks if a line lies on a conic.
 
@@ -64,7 +64,7 @@ def is_tangent(
     conic: Conic,
     line: Line | MatrixExpr,
     *,
-    simplifier: Callable[[Expr], Expr] = expand,
+    simplifier: Simplifier = expand,
 ) -> bool | None:
     """Tells whether a line is tangent to a conic, i.e. it intersects the conic
     at two coinciding points.
@@ -87,7 +87,7 @@ def is_inside(
     conic: Conic,
     point: Point,
     *,
-    simplifier: Callable[[Expr], Expr] = expand,
+    simplifier: Simplifier = expand,
 ) -> bool | None:
     """Tells whether a point is inside a conic, i.e. no real tangent of the
     conic passes through it.
@@ -115,7 +115,7 @@ def is_outside(
     conic: Conic,
     point: Point,
     *,
-    simplifier: Callable[[Expr], Expr] = expand,
+    simplifier: Simplifier = expand,
 ) -> bool | None:
     """Tells whether a point is outside a conic, i.e. two real tangents of the
     conic pass through it.
@@ -147,7 +147,7 @@ def polar_conic_contains_point(
     polar_conic: PolarConic,
     point: Point,
     *,
-    simplifier: Callable[[Expr], Expr] = expand,
+    simplifier: Simplifier = expand,
 ) -> bool | None:
     """Checks if a point lies on a conic that is specified in polar form.
 
@@ -165,7 +165,7 @@ def is_inside_polar_conic(
     polar_conic: PolarConic,
     point: Point,
     *,
-    simplifier: Callable[[Expr], Expr] = expand,
+    simplifier: Simplifier = expand,
 ) -> bool | None:
     """Tells whether a point is [inside](#incidence.is_inside) a conic that is
     specified in polar form.
@@ -196,7 +196,7 @@ def is_outside_polar_conic(
     polar_conic: PolarConic,
     point: Point,
     *,
-    simplifier: Callable[[Expr], Expr] = expand,
+    simplifier: Simplifier = expand,
 ) -> bool | None:
     """Tells whether a point is [outside](#incidence.is_outside) a conic that
     is specified in polar form.
@@ -234,7 +234,7 @@ def _polar_quadratic_form(polar_conic: PolarConic, point: Point) -> Expr:
 def are_collinear(
     points: Sequence[Point],
     *,
-    simplifier: Callable[[Expr], Expr] = expand,
+    simplifier: Simplifier = expand,
 ) -> bool | None:
     """Tells whether n points are collinear.
 
@@ -251,7 +251,7 @@ def are_collinear(
 def are_concurrent(
     lines: Sequence[Line],
     *,
-    simplifier: Callable[[Expr], Expr] = expand,
+    simplifier: Simplifier = expand,
 ) -> bool | None:
     """Tells whether n lines are concurrent, i.e. go through the same point.
 
@@ -273,7 +273,7 @@ def are_concurrent(
 def are_on_same_conic(
     points: Sequence[Point],
     *,
-    simplifier: Callable[[Expr], Expr] = expand,
+    simplifier: Simplifier = expand,
 ) -> bool | None:
     """Tells whether up to 6 points lie on the same conic section.
 
@@ -302,7 +302,7 @@ def are_on_same_conic(
 def are_cocircular(
     points: Sequence[Point],
     *,
-    simplifier: Callable[[Expr], Expr] = expand,
+    simplifier: Simplifier = expand,
 ) -> bool | None:
     """Tells whether n points lie on the same circle.
 

@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from typing import TypeAlias
 
 from sympy import Expr, MatrixBase
@@ -58,3 +59,8 @@ PolarConic: TypeAlias = MatrixBase
 #: A projective transformation of the plane, represented as a 3x3 matrix that
 #: maps the homogeneous coordinates of points.
 Transformation: TypeAlias = MatrixBase
+
+#: A function that simplifies a SymPy expression, such as `expand`, `factor`
+#: or `simplify`. Predicates apply it to polynomials before checking their
+#: signs, which may turn an undecidable result into a decidable one.
+Simplifier: TypeAlias = Callable[[Expr], Expr]
