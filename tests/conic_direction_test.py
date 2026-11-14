@@ -94,8 +94,20 @@ class TestConicNormFactor:
         assert ConicNormFactor(-conic) == -1
 
     def test_conic_containing_ideal_line(self):
-        line = Matrix(symbols("a:c", real=True))
+        line = Matrix([Symbol("a", nonzero=True), *symbols("b c", real=True)])
         assert ConicNormFactor(line_pair_conic(line, IDEAL_LINE)) == 1
+        assert ConicNormFactor(-line_pair_conic(line, IDEAL_LINE)) == 1
+
+    def test_possibly_double_ideal_line(self):
+        line = Matrix(symbols("a:c", real=True))
+        conic = line_pair_conic(line, IDEAL_LINE)
+        assert isinstance(ConicNormFactor(conic), ConicNormFactor)
+
+    def test_double_ideal_line(self):
+        f = Symbol("f", positive=True)
+        conic = Matrix.diag(0, 0, f)
+        assert ConicNormFactor(conic) == -1
+        assert ConicNormFactor(-conic) == 1
 
     def test_zero_conic_matrix(self):
         conic = ZERO_CONIC

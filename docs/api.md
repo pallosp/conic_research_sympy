@@ -2263,7 +2263,7 @@ Degenerates to `[nan, nan]ᵀ` when `point`, `line` or both are infinite.
 class ConicNormFactor(DefinedFunction)
 ```
 
-([source](../src/lib/conic_direction.py#L17))
+([source](../src/lib/conic_direction.py#L18))
 
 Computes a normalization factor (±1) for a conic matrix `C`.
 
@@ -2289,30 +2289,33 @@ matrix has the following properties:
   lines (`k > 0`), double line (`k = 0`) or ideal point conic (`k < 0`).
   For ideal point conics, the whole normalized matrix becomes negative
   semidefinite too, as for finite point conics.
-- *Crossing lines, conics containing the ideal line*: No preferred
+- *Double ideal line*: The factor `-sign(f)` makes the conic equation
+  `f·w²` negative at every finite point, like for finite double lines.
+- *Crossing lines, other conics containing the ideal line*: No preferred
   normalization exists. The factor is 1.
 
 The table lists the resulting definiteness of the normalized matrix and of
 its upper left 2×2 block. It also lists the formulas that give the factor.
-In the formulas, `det` is the determinant of `C`. `a` and `c` are the first
-two diagonal elements of `C`. Circles count as ellipses.
+In the formulas, `det` is the determinant of `C`. `a`, `c` and `f` are the
+diagonal elements of `C`. Circles count as ellipses.
 
-| conic              | matrix        | 2×2 block       | factor                   |
-|--------------------|---------------|-----------------|--------------------------|
-| ellipse            | indefinite    | neg. definite   | `sign(det) = -sign(a+c)` |
-| imaginary ellipse  | pos. definite | pos. definite   | `sign(det) = sign(a+c)`  |
-| parabola           | indefinite    | neg. semidef. ¹ | `sign(det) = -sign(a+c)` |
-| hyperbola          | indefinite    | indefinite      | `sign(det)`              |
-| finite point conic | neg. semidef. | neg. definite   | `-sign(a+c)`             |
-| ideal point conic  | neg. semidef. | neg. semidef.   | `-sign(a+c)`             |
-| parallel lines     | indefinite    | neg. semidef.   | `-sign(a+c)`             |
-| double line        | neg. semidef. | neg. semidef.   | `-sign(a+c)`             |
-| crossing lines     | indefinite    | indefinite      | 1                        |
-| other degenerate ² | —             | zero            | 1                        |
+| conic               | matrix        | 2×2 block       | factor                   |
+|---------------------|---------------|-----------------|--------------------------|
+| ellipse             | indefinite    | neg. definite   | `sign(det) = -sign(a+c)` |
+| imaginary ellipse   | pos. definite | pos. definite   | `sign(det) = sign(a+c)`  |
+| parabola            | indefinite    | neg. semidef. ¹ | `sign(det) = -sign(a+c)` |
+| hyperbola           | indefinite    | indefinite      | `sign(det)`              |
+| finite point conic  | neg. semidef. | neg. definite   | `-sign(a+c)`             |
+| ideal point conic   | neg. semidef. | neg. semidef.   | `-sign(a+c)`             |
+| parallel lines      | indefinite    | neg. semidef.   | `-sign(a+c)`             |
+| finite double line  | neg. semidef. | neg. semidef.   | `-sign(a+c)`             |
+| double ideal line   | neg. semidef. | zero            | `-sign(f)`               |
+| crossing lines      | indefinite    | indefinite      | 1                        |
+| finite ∪ ideal line | indefinite    | zero            | 1                        |
+| zero matrix         | zero          | zero            | 1                        |
 
 ¹ Follows from being positive at the focus
-([proof](../src/research/conic_properties/normalized_parabola.py)).<br>
-² Conics containing the ideal line, including the zero matrix.
+([proof](../src/research/conic_properties/normalized_parabola.py)).
 
 `C.det() * ConicNormFactor(C) == Abs(C.det())` holds for all conic types.
 
@@ -2327,7 +2330,7 @@ Symbolic conics may remain unevaluated if undecidable.
 def eval(cls, conic: Conic) -> Expr | None
 ```
 
-([source](../src/lib/conic_direction.py#L76))
+([source](../src/lib/conic_direction.py#L80))
 
 Internal implementation. Call `ConicNormFactor(conic)` directly.
 
@@ -2339,7 +2342,7 @@ Internal implementation. Call `ConicNormFactor(conic)` directly.
 def focal_axis_direction(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic_direction.py#L142))
+([source](../src/lib/conic_direction.py#L146))
 
 Returns the ideal point representing the direction of a conic's focal axis.
 
@@ -2379,7 +2382,7 @@ Properties:
 def conjugate_axis_direction(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic_direction.py#L179))
+([source](../src/lib/conic_direction.py#L183))
 
 Returns the ideal point representing the direction of a conic's conjugate axis.
 

@@ -8,6 +8,7 @@ from sympy import (
     sqrt,
 )
 from sympy.core.function import DefinedFunction
+from sympy.core.logic import fuzzy_and, fuzzy_or
 
 from lib.matrix import conic_coefficients
 from lib.point import ideal_point
@@ -39,30 +40,33 @@ class ConicNormFactor(DefinedFunction):
       lines (`k > 0`), double line (`k = 0`) or ideal point conic (`k < 0`).
       For ideal point conics, the whole normalized matrix becomes negative
       semidefinite too, as for finite point conics.
-    - *Crossing lines, conics containing the ideal line*: No preferred
+    - *Double ideal line*: The factor `-sign(f)` makes the conic equation
+      `f·w²` negative at every finite point, like for finite double lines.
+    - *Crossing lines, other conics containing the ideal line*: No preferred
       normalization exists. The factor is 1.
 
     The table lists the resulting definiteness of the normalized matrix and of
     its upper left 2×2 block. It also lists the formulas that give the factor.
-    In the formulas, `det` is the determinant of `C`. `a` and `c` are the first
-    two diagonal elements of `C`. Circles count as ellipses.
+    In the formulas, `det` is the determinant of `C`. `a`, `c` and `f` are the
+    diagonal elements of `C`. Circles count as ellipses.
 
-    | conic              | matrix        | 2×2 block       | factor                   |
-    |--------------------|---------------|-----------------|--------------------------|
-    | ellipse            | indefinite    | neg. definite   | `sign(det) = -sign(a+c)` |
-    | imaginary ellipse  | pos. definite | pos. definite   | `sign(det) = sign(a+c)`  |
-    | parabola           | indefinite    | neg. semidef. ¹ | `sign(det) = -sign(a+c)` |
-    | hyperbola          | indefinite    | indefinite      | `sign(det)`              |
-    | finite point conic | neg. semidef. | neg. definite   | `-sign(a+c)`             |
-    | ideal point conic  | neg. semidef. | neg. semidef.   | `-sign(a+c)`             |
-    | parallel lines     | indefinite    | neg. semidef.   | `-sign(a+c)`             |
-    | double line        | neg. semidef. | neg. semidef.   | `-sign(a+c)`             |
-    | crossing lines     | indefinite    | indefinite      | 1                        |
-    | other degenerate ² | —             | zero            | 1                        |
+    | conic               | matrix        | 2×2 block       | factor                   |
+    |---------------------|---------------|-----------------|--------------------------|
+    | ellipse             | indefinite    | neg. definite   | `sign(det) = -sign(a+c)` |
+    | imaginary ellipse   | pos. definite | pos. definite   | `sign(det) = sign(a+c)`  |
+    | parabola            | indefinite    | neg. semidef. ¹ | `sign(det) = -sign(a+c)` |
+    | hyperbola           | indefinite    | indefinite      | `sign(det)`              |
+    | finite point conic  | neg. semidef. | neg. definite   | `-sign(a+c)`             |
+    | ideal point conic   | neg. semidef. | neg. semidef.   | `-sign(a+c)`             |
+    | parallel lines      | indefinite    | neg. semidef.   | `-sign(a+c)`             |
+    | finite double line  | neg. semidef. | neg. semidef.   | `-sign(a+c)`             |
+    | double ideal line   | neg. semidef. | zero            | `-sign(f)`               |
+    | crossing lines      | indefinite    | indefinite      | 1                        |
+    | finite ∪ ideal line | indefinite    | zero            | 1                        |
+    | zero matrix         | zero          | zero            | 1                        |
 
     ¹ Follows from being positive at the focus
-    ([proof](../src/research/conic_properties/normalized_parabola.py)).<br>
-    ² Conics containing the ideal line, including the zero matrix.
+    ([proof](../src/research/conic_properties/normalized_parabola.py)).
 
     `C.det() * ConicNormFactor(C) == Abs(C.det())` holds for all conic types.
 
@@ -106,25 +110,25 @@ class ConicNormFactor(DefinedFunction):
 def _degenerate_conic_norm_factor(conic: Conic) -> Expr | None:
     """Computes `ConicNormFactor` for degenerate conics.
 
-    If the discriminant `b² - a·c` is ≤ 0, the upper left 2×2 block is
-    semidefinite, and the factor makes it negative semidefinite. This covers
-    point conics (making the whole matrix negative semidefinite), parallel
-    line pairs and double lines. A semidefinite block has the sign of its
-    trace.
-
-    The factor is 1 for crossing line pairs (positive discriminant) and for
-    conics containing the ideal line (zero block, zero trace).
+    The factor is -1 in two cases, and 1 otherwise:
+    - The discriminant `b² - a·c` is ≤ 0 and the trace `a+c` is positive. This
+      covers point conics, parallel lines and finite double lines. A nonzero
+      semidefinite 2×2 block has the sign of its trace, so the factor makes
+      the block negative semidefinite.
+    - The conic is a double ideal line with `f > 0`.
     """
-    a, b, c, *_ = conic_coefficients(conic)
+    a, b, c, d, e, f = conic_coefficients(conic)
     trace = a + c
-    if trace.is_nonpositive:
-        return S.One
     disc = (b * b - a * c).factor()
-    if disc.is_positive:
-        return S.One
-    if disc.is_nonpositive and trace.is_positive:
-        return S.NegativeOne
-    return None
+    flip = fuzzy_or(
+        [
+            fuzzy_and([trace.is_positive, disc.is_nonpositive]),
+            fuzzy_and([f.is_positive, *(x.is_zero for x in (a, b, c, d, e))]),
+        ],
+    )
+    if flip is None:
+        return None
+    return S.NegativeOne if flip else S.One
 
 
 def _sqrt_complex(z: Expr) -> tuple[Expr, Expr]:
