@@ -4,6 +4,7 @@ from itertools import product
 from sympy import Expr, Matrix, MatrixBase, MatrixExpr, expand
 from sympy.core.logic import fuzzy_and, fuzzy_not
 
+from lib.conic_direction import ConicNormFactor
 from lib.matrix import is_full_rank, quadratic_form, skew_matrix
 from lib.point import point_to_vec3
 from lib.type_aliases import Conic, Line, Point, PolarConic, Simplifier
@@ -89,26 +90,32 @@ def is_inside(
     *,
     simplifier: Simplifier = expand,
 ) -> bool | None:
-    """Tells whether a point is inside a conic, i.e. no real tangent of the
+    """Tells whether a point is inside a conic.
+
+    For non-degenerate conics, a point is inside iff no real tangent of the
     conic passes through it.
 
-    Inside points are
-     - the points within an ellipse, a parabola or a hyperbola branch;
-     - all points for imaginary ellipses.
+    | conic                                 | inside points                       |
+    |---------------------------------------|-------------------------------------|
+    | ellipse, parabola, hyperbola          | points within the curve             |
+    | imaginary ellipse                     | all points                          |
+    | parallel lines                        | points between the lines            |
+    | crossing lines, finite ∪ ideal line   | points where the conic equation > 0 |
+    | point conic, double line, zero matrix | none                                |
 
     Points on the conic are neither inside nor
-    [outside](#incidence.is_outside). Neither are any points for
-    [degenerate conics](#conic_classes.is_degenerate).
+    [outside](#incidence.is_outside).
 
     Assumes a real conic and a real point. Takes an optional `simplifier`
     callback that simplifies the sign polynomial before its sign is determined.
     Returns `None` if undecidable.
 
-    *Formula*: `det(conic)·pointᵀ·conic·point > 0`<br>
-    *Proof*:
+    *Formula*: `pointᵀ·(ConicNormFactor(conic)·conic)·point > 0`<br>
+    *Proof for non-degenerate conics*:
     [research/incidence/point_inside_conic.py](../src/research/incidence/point_inside_conic.py)
     """
-    return simplifier(_inside_sign_poly(conic, point)).is_positive
+    sign = ConicNormFactor(conic, simplifier=simplifier)
+    return (sign * simplifier(quadratic_form(conic, point_to_vec3(point)))).is_positive
 
 
 def is_outside(
@@ -117,30 +124,35 @@ def is_outside(
     *,
     simplifier: Simplifier = expand,
 ) -> bool | None:
-    """Tells whether a point is outside a conic, i.e. two real tangents of the
-    conic pass through it.
+    """Tells whether a point is outside a conic.
 
-    Outside points are
-     - the points outside an ellipse or a parabola;
-     - the points between the branches of a hyperbola, including its center.
+    For non-degenerate conics, a point is outside iff two different real
+    tangents of the conic pass through it.
+
+    | conic                               | outside points                      |
+    |-------------------------------------|-------------------------------------|
+    | ellipse, parabola, hyperbola        | points outside the curve ¹          |
+    | imaginary ellipse                   | none                                |
+    | parallel lines                      | points outside the strip            |
+    | crossing lines, finite ∪ ideal line | points where the conic equation < 0 |
+    | point conic, double line            | all points except the conic itself  |
+    | zero matrix                         | none                                |
+
+    ¹ For hyperbolas: the points between the branches, including the center.
 
     Points on the conic are neither [inside](#incidence.is_inside) nor
-    outside. Neither are any points for
-    [degenerate conics](#conic_classes.is_degenerate).
+    outside.
 
     Assumes a real conic and a real point. Takes an optional `simplifier`
     callback that simplifies the sign polynomial before its sign is determined.
     Returns `None` if undecidable.
 
-    *Formula*: `det(conic)·pointᵀ·conic·point < 0`<br>
-    *Proof*:
+    *Formula*: `pointᵀ·(ConicNormFactor(conic)·conic)·point < 0`<br>
+    *Proof for non-degenerate conics*:
     [research/incidence/point_inside_conic.py](../src/research/incidence/point_inside_conic.py)
     """
-    return simplifier(_inside_sign_poly(conic, point)).is_negative
-
-
-def _inside_sign_poly(conic: Conic, point: Point) -> Expr:
-    return conic.det() * quadratic_form(conic, point_to_vec3(point))
+    sign = ConicNormFactor(conic, simplifier=simplifier)
+    return (sign * simplifier(quadratic_form(conic, point_to_vec3(point)))).is_negative
 
 
 def polar_conic_contains_point(
