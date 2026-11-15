@@ -21,39 +21,28 @@ from lib.type_aliases import Conic, PointVector, Simplifier
 class ConicNormFactor(DefinedFunction):
     """Computes a normalization factor (±1) for a conic matrix `C`.
 
-    Multiplying `C` by this factor gives the normalized matrix. The normalized
-    matrix has the following properties:
+    *Geometric meaning*: The equation of the normalized conic `N = ConicNormFactor(C)·C`
+    is positive at the points [inside](#incidence.is_inside) the conic and negative at
+    the points [outside](#incidence.is_outside). For real non-degenerate conics, the
+    inside points are the ones on the focus side(s), through which no real tangent
+    passes.
 
-    - *Non-degenerate conics*: The conic equation is positive at the focus
-      point(s), i.e. `[fx fy 1]·C·[fx fy 1]ᵀ > 0`.
-    - *Finite point conics*: The normalized matrix is negative semidefinite,
-      i.e. the conic equation is ≤0 at every point. The upper left 2×2
-      block is a principal submatrix, so it's negative semidefinite too. Its
-      discriminant is negative, so it's even negative definite. A negative
-      definite matrix has a negative trace, which is `factor·(a+c)` here.
-      Hence the factor is `-sign(a+c)`.
-    - *Ideal point conics, parallel lines and double lines*: These conics have
-      a zero discriminant, like parabolas. So their upper left 2×2 block is
-      singular. A singular symmetric 2×2 matrix is semidefinite. The factor
-      `-sign(a+c)` makes the block negative semidefinite, as it is for
-      parabolas
-      ([proof](../src/research/conic_properties/normalized_parabola.py)).<br>
-      The choice of factor keeps the normalization continuous. As `ε → 0`, the
-      normalized parabolas `y² = εx + k` converge to the normalized parallel
-      lines (`k > 0`), double line (`k = 0`) or ideal point conic (`k < 0`).
-      For ideal point conics, the whole normalized matrix becomes negative
-      semidefinite too, as for finite point conics.
-    - *Double ideal line*: The factor `-sign(f)` makes the conic equation
-      `f·w²` negative at every finite point, like for finite double lines.
-    - *Crossing lines, other conics containing the ideal line*: No preferred
-      normalization exists. The factor is 1.
+    *Linear algebra meaning*: The first applicable rule determines the factor.
 
-    The table lists the resulting definiteness of the normalized matrix and of
-    its upper left 2×2 block. It also lists the formulas that give the factor.
-    In the formulas, `det` is the determinant of `C`. `a`, `c` and `f` are the
-    diagonal elements of `C`. Circles count as ellipses.
+    1. If `det(C) ≠ 0`, the factor `sign(det(C))` makes `det(N)` positive.
+    2. If the upper left 2×2 block `[[a, b], [b, c]]` is semidefinite and nonzero
+       (`b² ≤ a·c` and `a+c ≠ 0`), the factor `-sign(a+c)` makes it negative
+       semidefinite in `N`. If `C` is semidefinite, `N` becomes negative
+       semidefinite too.
+    3. If `C` is semidefinite and nonzero, the factor `-sign(f)` where `f = C[2, 2]`
+       makes `N` negative semidefinite. After rule 2, this only applies when `f` is the
+       only nonzero element of `C`.
+    4. Otherwise, the factor is 1.
 
-    | conic               | matrix        | 2×2 block       | factor                   |
+    The table lists the definiteness of `N` and of its upper left 2×2 block.
+    Circles count as ellipses.
+
+    | conic               | N             | N[:2, :2]       | factor                   |
     |---------------------|---------------|-----------------|--------------------------|
     | ellipse             | indefinite    | neg. definite   | `sign(det) = -sign(a+c)` |
     | imaginary ellipse   | pos. definite | pos. definite   | `sign(det) = sign(a+c)`  |
@@ -68,15 +57,25 @@ class ConicNormFactor(DefinedFunction):
     | finite ∪ ideal line | indefinite    | zero            | 1                        |
     | zero matrix         | zero          | zero            | 1                        |
 
-    ¹ Follows from being positive at the focus
+    ¹ Follows from the normalized conic equation being positive at the focus
     ([proof](../src/research/conic_properties/normalized_parabola.py)).
 
-    `C.det() * ConicNormFactor(C) == Abs(C.det())` holds for all conic types.
+    Consequences of the rules above:
 
-    Takes an optional `simplifier` callback that simplifies the polynomials
-    before their signs get determined. Symbolic conics may remain unevaluated
-    if undecidable. Since the result doesn't remember the simplifier, use
-    `expr.doit(simplifier=...)` to retry the evaluation later.
+    1. Makes the inside points of non-degenerate conics evaluate to positive.<br>
+       `det(C)·ConicNormFactor(C) = |det(C)|` holds for all conic types.
+    2. Keeps the normalization continuous: as `ε → 0`, the normalized parabolas
+       `y² = εx + k` converge to the normalized parallel lines (`k > 0`), double line
+       (`k = 0`) or ideal point conic (`k < 0`).
+    3. Normalizes the double ideal line the same way as the finite double lines
+       (negative semidefinite).
+    4. Crossing lines, finite ∪ ideal line and the zero matrix have no preferred
+       normalization: `ConicNormFactor(C) = ConicNormFactor(-C) = 1`.
+
+    `ConicNormFactor` takes an optional `simplifier` callback that simplifies the
+    polynomials before their signs get determined. Symbolic conics may remain
+    unevaluated if undecidable. Since the unevaluated function doesn't remember the
+    simplifier, use `expr.doit(simplifier=...)` to retry the evaluation later.
     """
 
     # Implies is_real = True, is_integer = True, and is_nonzero = True.
