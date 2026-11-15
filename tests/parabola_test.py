@@ -4,7 +4,7 @@ from sympy import Matrix, factor, gcd, symbols
 from lib.circle import UNIT_CIRCLE
 from lib.conic import conic_from_focus_and_directrix, polar_line
 from lib.degenerate_conic import line_pair_conic, point_conic
-from lib.distance import point_line_distance
+from lib.distance import point_line_distance, point_point_distance
 from lib.incidence import line_contains_point
 from lib.line import IDEAL_LINE, are_perpendicular, line_normal
 from lib.matrix import conic_matrix, is_nonzero_multiple, is_positive_multiple
@@ -12,6 +12,7 @@ from lib.parabola import (
     parabola_axis,
     parabola_direction,
     parabola_directrix,
+    parabola_focal_length,
     parabola_focal_parameter,
     parabola_focus,
     parabola_vertex,
@@ -150,3 +151,13 @@ class TestParabolaFocalParameter:
         parabola = conic_from_focus_and_directrix(focus, directrix, 1)
         fp = parabola_focal_parameter(parabola)
         assert fp == point_line_distance(focus, directrix)
+
+
+class TestParabolaFocalLength:
+    def test_focal_length(self):
+        focus = (6, 5)
+        directrix = Matrix([4, 3, 2])
+        parabola = conic_from_focus_and_directrix(focus, directrix, 1)
+        vertex = parabola_vertex(parabola)
+        fl = parabola_focal_length(parabola)
+        assert fl == point_point_distance(focus, vertex)

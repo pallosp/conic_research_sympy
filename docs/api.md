@@ -142,6 +142,7 @@
   * [parabola\_direction](#parabola.parabola_direction)
   * [parabola\_axis](#parabola.parabola_axis)
   * [parabola\_focal\_parameter](#parabola.parabola_focal_parameter)
+  * [parabola\_focal\_length](#parabola.parabola_focal_length)
 * [triangle](#triangle)
   * [circumcircle](#triangle.circumcircle)
   * [circumcenter](#triangle.circumcenter)
@@ -2694,6 +2695,24 @@ Computes the parabola's focus-directrix distance.
 
 *Formula*:
 [research/conic_properties/focal_parameter.py](../src/research/conic_properties/focal_parameter.py)
+
+<a id="parabola.parabola_focal_length"></a>
+
+#### parabola\_focal\_length
+
+```python
+def parabola_focal_length(parabola: Conic) -> Expr
+```
+
+([source](../src/lib/parabola.py#L124))
+
+Computes the parabola's focal length, i.e. the distance between its focus
+and vertex. Also known as the periapsis distance.
+
+It equals half of the [focal parameter](#parabola.parabola_focal_parameter)
+(focus-directrix distance). Like every point of the parabola, the vertex is
+equidistant from the focus and the directrix. It also lies on the focal axis
+between them, hence it bisects the focus-directrix segment.
 
 <a id="triangle"></a>
 

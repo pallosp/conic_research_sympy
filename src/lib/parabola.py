@@ -119,3 +119,16 @@ def parabola_focal_parameter(parabola: Conic) -> Expr:
     """
     a, c, _ = parabola.diagonal().flat()
     return sqrt(-parabola.det() / (a + c) ** 3)
+
+
+def parabola_focal_length(parabola: Conic) -> Expr:
+    """Computes the parabola's focal length, i.e. the distance between its focus
+    and vertex. Also known as the periapsis distance.
+
+    It equals half of the [focal parameter](#parabola.parabola_focal_parameter)
+    (focus-directrix distance). Like every point of the parabola, the vertex is
+    equidistant from the focus and the directrix. It also lies on the focal axis
+    between them, hence it bisects the focus-directrix segment.
+    """
+    a, c, _ = parabola.diagonal().flat()
+    return sqrt(-parabola.det() / (a + c) ** 3) / 2
