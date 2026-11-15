@@ -236,10 +236,18 @@ def center_to_focus_vector(conic: Conic) -> Matrix:
 
     The opposite vector points to the other focus.
 
-    The function is only meaningful for
-    [central conics](#conic_classes.is_central_conic). The result vector
-    will contain infinite or `nan` elements when the conic lacks a finite
-    center.
+    Result by conic type:
+
+    - Ellipses and hyperbolas: a real vector along the focal axis.
+      Circles yield `[0, 0]ᵀ`.
+    - [Imaginary ellipses](#conic_classes.is_imaginary_ellipse): a real vector,
+      since their center and foci are real. It is parallel to the
+      [primary radius](#central_conic.primary_radius), which for imaginary
+      ellipses is the semi-axis with the smaller absolute value. Imaginary
+      circles yield `[0, 0]ᵀ`.
+    - Degenerate [central conics](#conic_classes.is_central_conic), i.e.
+      finite point conics and line pairs crossing at a finite point: `[0, 0]ᵀ`.
+    - Conics without a finite center: the vector has infinite or `nan` elements.
     """
     x, y = direction_to_xy(focal_axis_direction(conic))
 

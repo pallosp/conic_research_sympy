@@ -692,10 +692,18 @@ Returns the 2D vector from a conic's center to one of its foci.
 
 The opposite vector points to the other focus.
 
-The function is only meaningful for
-[central conics](#conic_classes.is_central_conic). The result vector
-will contain infinite or `nan` elements when the conic lacks a finite
-center.
+Result by conic type:
+
+- Ellipses and hyperbolas: a real vector along the focal axis.
+  Circles yield `[0, 0]ᵀ`.
+- [Imaginary ellipses](#conic_classes.is_imaginary_ellipse): a real vector,
+  since their center and foci are real. It is parallel to the
+  [primary radius](#central_conic.primary_radius), which for imaginary
+  ellipses is the semi-axis with the smaller absolute value. Imaginary
+  circles yield `[0, 0]ᵀ`.
+- Degenerate [central conics](#conic_classes.is_central_conic), i.e.
+  finite point conics and line pairs crossing at a finite point: `[0, 0]ᵀ`.
+- Conics without a finite center: the vector has infinite or `nan` elements.
 
 <a id="central_conic.central_conic_foci"></a>
 
@@ -705,7 +713,7 @@ center.
 def central_conic_foci(conic: Conic) -> tuple[Matrix, Matrix]
 ```
 
-([source](../src/lib/central_conic.py#L252))
+([source](../src/lib/central_conic.py#L260))
 
 Computes the focus points of a central conic.
 
@@ -719,7 +727,7 @@ Returns a pair of 2D vectors.
 def center_to_vertex_vector(conic: Conic) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L262))
+([source](../src/lib/central_conic.py#L270))
 
 Vector from the center of a conic to one of its vertices.
 
@@ -749,7 +757,7 @@ Result by conic type:
 def central_conic_vertices(conic: Conic) -> tuple[Matrix, Matrix]
 ```
 
-([source](../src/lib/central_conic.py#L287))
+([source](../src/lib/central_conic.py#L295))
 
 Computes the vertices of a central conic.
 
@@ -777,7 +785,7 @@ Result by conic type:
 def center_to_covertex_vector(conic: Conic) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L311))
+([source](../src/lib/central_conic.py#L319))
 
 Vector from the center of a conic to one of its covertices.
 
@@ -807,7 +815,7 @@ Result by conic type:
 def shrink_conic_to_zero(conic: Conic) -> Conic
 ```
 
-([source](../src/lib/central_conic.py#L336))
+([source](../src/lib/central_conic.py#L344))
 
 Scales a conic section from its center with a factor of zero.
 

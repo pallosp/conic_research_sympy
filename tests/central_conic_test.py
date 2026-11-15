@@ -286,6 +286,14 @@ class TestCenterToFocusVector:
         assert center_to_focus_vector(hyperbola) == expected_vec
         assert center_to_focus_vector(-hyperbola) == expected_vec
 
+    def test_imaginary_ellipse(self):
+        im_ellipse = conic_from_foci_and_radius((2, 3), (5, 8), 13 * I)
+        expected_vec = Matrix([Rational(3, 2), Rational(5, 2)])
+        assert center_to_focus_vector(im_ellipse) == expected_vec
+
+    def test_imaginary_circle(self):
+        assert center_to_focus_vector(IMAGINARY_UNIT_CIRCLE) == Matrix([0, 0])
+
     def test_parabola(self):
         parabola = conic_from_poly(x * x - y)
         assert center_to_focus_vector(parabola) == Matrix([nan, zoo])
