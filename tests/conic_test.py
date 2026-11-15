@@ -273,8 +273,9 @@ class TestEccentricity:
         ecc = Rational(1, 2)
         ellipse = conic_from_focus_and_directrix(focus, directrix, ecc)
         point_conic = shrink_conic_to_zero(ellipse)
-        assert eccentricity(point_conic).factor() == ecc
-        assert eccentricity(-point_conic).factor() == ecc
+        ecc1 = eccentricity(point_conic).doit(simplifier=factor)
+        ecc2 = eccentricity(-point_conic).doit(simplifier=factor)
+        assert ecc1.cancel() == ecc2.cancel() == ecc
 
     def test_symbolic_zero_radius_circle(self):
         zero_circle = circle(symbols("x y"), r=0)

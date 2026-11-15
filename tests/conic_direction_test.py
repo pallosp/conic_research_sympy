@@ -1,5 +1,19 @@
 import pytest
-from sympy import Abs, I, Matrix, MatrixBase, Symbol, pi, sign, symbols
+from sympy import (
+    Abs,
+    Function,
+    I,
+    Integral,
+    Matrix,
+    MatrixBase,
+    S,
+    Symbol,
+    factor,
+    pi,
+    sign,
+    sqrt,
+    symbols,
+)
 from sympy.abc import x, y
 
 from lib.central_conic import conic_from_foci_and_radius, shrink_conic_to_zero
@@ -59,7 +73,7 @@ class TestConicNormFactor:
         conic = point_conic(point)
         assert quadratic_form(conic, ORIGIN).is_nonpositive
         assert ConicNormFactor(conic) == 1
-        assert ConicNormFactor(-conic) == -1
+        assert ConicNormFactor(-conic, simplifier=factor) == -1
 
     def test_crossing_lines(self):
         b, d = symbols("b d", positive=True)
@@ -144,9 +158,43 @@ class TestConicNormFactor:
         conic *= plus_minus_one
         # Ideally, ConicNormFactor(conic) should simplify to (-1)ⁿ,
         # but Sympy 1.14.0 doesn’t recognize that sign((-1)ⁿ) == (-1)ⁿ.
-        f = ConicNormFactor(conic)
+        assert isinstance(ConicNormFactor(conic), Function)
+
+        f = ConicNormFactor(conic, simplifier=factor)
         assert f == sign(plus_minus_one)
         assert Abs(f) == 1
+
+    def test_doit(self):
+        f = ConicNormFactor(UNIT_CIRCLE, evaluate=False)
+        assert isinstance(f, Function)
+        assert f.doit() == 1
+
+    def test_doit_deep(self):
+        # The conic's elements are only evaluated by a deep doit()
+        conic = Matrix.diag(1, 1, Integral(1, (Symbol("t"), 0, 1)))
+        f = ConicNormFactor(conic)
+        assert isinstance(f, Function)
+        assert isinstance(f.doit(deep=False), Function)
+        assert f.doit(deep=True) == 1
+        assert f.doit() == 1
+
+    def test_simplifier(self):
+        point_conic = -shrink_conic_to_zero(
+            conic_from_focus_and_directrix(
+                ORIGIN,
+                Matrix(symbols("a:c", positive=True)),
+                S.Half,
+            ),
+        )
+        f = ConicNormFactor(point_conic)
+
+        # ConicNormFactor can only evaluate point_conic with a simplifier
+        assert isinstance(f, Function)
+        assert ConicNormFactor(point_conic, simplifier=factor) == -1
+
+        # The simplifier can be applied later in doit()
+        assert f.doit(simplifier=factor) == -1
+        assert sqrt(2 * f + 3).doit(simplifier=factor) == 1
 
 
 class TestAxisDirection:

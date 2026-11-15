@@ -2270,7 +2270,7 @@ Degenerates to `[nan, nan]ᵀ` when `point`, `line` or both are infinite.
 class ConicNormFactor(DefinedFunction)
 ```
 
-([source](../src/lib/conic_direction.py#L18))
+([source](../src/lib/conic_direction.py#L21))
 
 Computes a normalization factor (±1) for a conic matrix `C`.
 
@@ -2326,20 +2326,38 @@ diagonal elements of `C`. Circles count as ellipses.
 
 `C.det() * ConicNormFactor(C) == Abs(C.det())` holds for all conic types.
 
-Symbolic conics may remain unevaluated if undecidable.
+Takes an optional `simplifier` callback that simplifies the polynomials
+before their signs get determined. Symbolic conics may remain unevaluated
+if undecidable. Since the result doesn't remember the simplifier, use
+`expr.doit(simplifier=...)` to retry the evaluation later.
 
-<a id="conic_direction.ConicNormFactor.eval"></a>
+<a id="conic_direction.ConicNormFactor.__new__"></a>
 
-#### ConicNormFactor.eval
+#### ConicNormFactor.\_\_new\_\_
 
 ```python
-@classmethod
-def eval(cls, conic: Conic) -> Expr | None
+def __new__(cls,
+            conic: Conic,
+            *,
+            simplifier: Simplifier = lambda expr: expr,
+            evaluate: bool | None = None) -> Expr
 ```
 
-([source](../src/lib/conic_direction.py#L80))
+([source](../src/lib/conic_direction.py#L86))
 
-Internal implementation. Call `ConicNormFactor(conic)` directly.
+Creates the factor, simplifying the polynomials with `simplifier`.
+
+<a id="conic_direction.ConicNormFactor.doit"></a>
+
+#### ConicNormFactor.doit
+
+```python
+def doit(**hints: object) -> Expr
+```
+
+([source](../src/lib/conic_direction.py#L123))
+
+Retries the evaluation, simplifying with the `simplifier` hint.
 
 <a id="conic_direction.focal_axis_direction"></a>
 
@@ -2349,7 +2367,7 @@ Internal implementation. Call `ConicNormFactor(conic)` directly.
 def focal_axis_direction(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic_direction.py#L146))
+([source](../src/lib/conic_direction.py#L181))
 
 Returns the ideal point representing the direction of a conic's focal axis.
 
@@ -2389,7 +2407,7 @@ Properties:
 def conjugate_axis_direction(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic_direction.py#L183))
+([source](../src/lib/conic_direction.py#L218))
 
 Returns the ideal point representing the direction of a conic's conjugate axis.
 

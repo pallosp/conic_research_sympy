@@ -1,3 +1,5 @@
+from typing import cast
+
 from sympy import (
     Expr,
     I,
@@ -9,10 +11,11 @@ from sympy import (
 )
 from sympy.core.function import DefinedFunction
 from sympy.core.logic import fuzzy_and, fuzzy_or
+from sympy.core.parameters import global_parameters
 
 from lib.matrix import conic_coefficients
 from lib.point import ideal_point
-from lib.type_aliases import Conic, PointVector
+from lib.type_aliases import Conic, PointVector, Simplifier
 
 
 class ConicNormFactor(DefinedFunction):
@@ -70,31 +73,60 @@ class ConicNormFactor(DefinedFunction):
 
     `C.det() * ConicNormFactor(C) == Abs(C.det())` holds for all conic types.
 
-    Symbolic conics may remain unevaluated if undecidable.
+    Takes an optional `simplifier` callback that simplifies the polynomials
+    before their signs get determined. Symbolic conics may remain unevaluated
+    if undecidable. Since the result doesn't remember the simplifier, use
+    `expr.doit(simplifier=...)` to retry the evaluation later.
     """
 
     # Implies is_real = True, is_integer = True, and is_nonzero = True.
     is_odd = True
 
-    @classmethod
-    def eval(cls, conic: Conic) -> Expr | None:
-        """Internal implementation. Call `ConicNormFactor(conic)` directly."""
-        det = conic.det().factor()
+    # mypy expects the return type to be ConicNormFactor
+    def __new__(  # type: ignore[misc]
+        cls,
+        conic: Conic,
+        *,
+        simplifier: Simplifier = lambda expr: expr,
+        evaluate: bool | None = None,
+    ) -> Expr:
+        """Creates the factor, simplifying the polynomials with `simplifier`."""
+        # SymPy's `eval` hook would only receive the Basic args, not
+        # `simplifier`, so the evaluation happens here.
+        if evaluate is None:
+            evaluate = global_parameters.evaluate
+        if not evaluate:
+            return super().__new__(cls, conic, evaluate=False)
+
+        det = simplifier(conic.det())
         if det.is_nonzero:  # implies det.is_real
             return sign(det)  # ±1 if det's sign is known
 
         if det.is_zero:
-            return _degenerate_conic_norm_factor(conic)
+            factor = _degenerate_conic_norm_factor(conic, simplifier)
+            if factor is not None:
+                return factor
 
         # It's undecidable whether the conic is degenerate. The result is
         # valid if sign(det) and the degenerate conic's factor agree.
-        if det.is_nonnegative and _degenerate_conic_norm_factor(conic) == 1:
+        if det.is_nonnegative and _degenerate_conic_norm_factor(conic, simplifier) == 1:
             return S.One
 
-        if det.is_nonpositive and _degenerate_conic_norm_factor(conic) == -1:
+        if (
+            det.is_nonpositive
+            and _degenerate_conic_norm_factor(conic, simplifier) == -1
+        ):
             return S.NegativeOne
 
-        return None
+        return super().__new__(cls, conic, evaluate=False)
+
+    def doit(self, **hints: object) -> Expr:
+        """Retries the evaluation, simplifying with the `simplifier` hint."""
+        conic = cast("Conic", self.args[0])
+        if hints.get("deep", True):
+            conic = conic.doit(**hints)
+        simplifier = cast("Simplifier", hints.get("simplifier", lambda expr: expr))
+        return ConicNormFactor(conic, simplifier=simplifier)
 
     def _eval_Abs(self) -> Integer:  # noqa: N802 (hook name looked up by Abs)
         return S.One
@@ -107,7 +139,10 @@ class ConicNormFactor(DefinedFunction):
         return None
 
 
-def _degenerate_conic_norm_factor(conic: Conic) -> Expr | None:
+def _degenerate_conic_norm_factor(
+    conic: Conic,
+    simplifier: Simplifier,
+) -> Expr | None:
     """Computes `ConicNormFactor` for degenerate conics.
 
     The factor is -1 in two cases, and 1 otherwise:
@@ -119,7 +154,7 @@ def _degenerate_conic_norm_factor(conic: Conic) -> Expr | None:
     """
     a, b, c, d, e, f = conic_coefficients(conic)
     trace = a + c
-    disc = (b * b - a * c).factor()
+    disc = simplifier(b * b - a * c)
     flip = fuzzy_or(
         [
             fuzzy_and([trace.is_positive, disc.is_nonpositive]),
