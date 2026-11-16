@@ -302,20 +302,20 @@ def tangent_pair_conic(conic: Conic, point: Point) -> Conic:
     Unlike [tangents_through_point](#conic.tangents_through_point), it doesn't
     split the line pair, so the result is always an explicit matrix.
 
-    Result by conic type and point position:
+    Result by conic type and point position, for real inputs:
 
     | conic                    | point        | result                         |
     |--------------------------|--------------|--------------------------------|
     | non-degenerate           | on the conic | double line: the tangent       |
     | non-degenerate           | outside ¹    | line pair: the tangents        |
-    | non-degenerate           | inside ¹     | point conic at the point       |
+    | non-degenerate           | inside ¹     | complex conjugate lines        |
     | line pair, point conic   | singular ²   | zero matrix                    |
     | line pair, point conic   | other        | double line via singular point |
     | double line, zero matrix | any          | zero matrix                    |
 
-    ¹ See [is_outside](#incidence.is_outside) and
-    [is_inside](#incidence.is_inside).<br>
-    ² See [extract_point](#degenerate_conic.extract_point).
+    ¹ See [is_outside](#incidence.is_outside) and [is_inside](#incidence.is_inside).
+      Every real point is inside an imaginary ellipse.<br>
+    ² Points `p` with `C·p = 0`. See [extract_point](#degenerate_conic.extract_point).
 
     *Formula*: `skew(p)ᵀ·adj(C)·skew(p)`
 
@@ -337,21 +337,20 @@ def tangents_through_point(
     They touch the conic where the point's [polar line](#conic.polar_line)
     intersects it.
 
-    Result by conic type and point position:
+    Result by conic type and point position, for real inputs:
 
     | conic                    | point        | result                         |
     |--------------------------|--------------|--------------------------------|
     | non-degenerate           | on the conic | the tangent, twice             |
     | non-degenerate           | outside ¹    | the two tangents               |
-    | non-degenerate           | inside ¹     | complex conjugate lines ²      |
-    | line pair, point conic   | singular ³   | `[0, 0, 0]ᵀ`, twice            |
+    | non-degenerate           | inside ¹     | complex conjugate lines        |
+    | line pair, point conic   | singular ²   | `[0, 0, 0]ᵀ`, twice            |
     | line pair, point conic   | other        | line via singular point, twice |
     | double line, zero matrix | any          | `[0, 0, 0]ᵀ`, twice            |
 
-    ¹ See [is_outside](#incidence.is_outside) and
-    [is_inside](#incidence.is_inside).<br>
-    ² For real inputs.<br>
-    ³ See [extract_point](#degenerate_conic.extract_point).
+    ¹ See [is_outside](#incidence.is_outside) and [is_inside](#incidence.is_inside).
+      Every real point is inside an imaginary ellipse.<br>
+    ² Points `p` with `C·p = 0`. See [extract_point](#degenerate_conic.extract_point).
 
     The lines may be unevaluated `MatrixExpr`s for symbolic inputs.
 

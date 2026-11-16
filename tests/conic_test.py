@@ -47,12 +47,14 @@ from lib.conic_classes import (
     is_hyperbola,
     is_imaginary_ellipse,
     is_parabola,
+    is_point_conic,
     is_rectangular_hyperbola,
 )
 from lib.conic_direction import focal_axis_direction
 from lib.degenerate_conic import (
     ZERO_CONIC,
     double_line_conic,
+    extract_point,
     line_pair_conic,
     point_conic,
 )
@@ -591,9 +593,10 @@ class TestTangentPairConic:
         assert conic_contains_point(tangent_pair, (3, 0))
 
     def test_imaginary_ellipse(self):
-        tangent_pair = tangent_pair_conic(IMAGINARY_UNIT_CIRCLE, (2, 0))
-        assert is_finite_point_conic(tangent_pair)
-        assert conic_contains_point(tangent_pair, (2, 0))
+        point = [*symbols("x y", nonzero=True), Symbol("z", real=True)]
+        tangent_pair = tangent_pair_conic(IMAGINARY_UNIT_CIRCLE, point)
+        assert is_point_conic(tangent_pair)
+        assert is_nonzero_multiple(point, extract_point(tangent_pair))
 
     def test_point_conic(self):
         conic = point_conic((1, 2))
