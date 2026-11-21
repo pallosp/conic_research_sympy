@@ -5,6 +5,7 @@ from sympy import (
     Matrix,
     Poly,
     Rational,
+    S,
     Symbol,
     cos,
     exp,
@@ -33,6 +34,7 @@ from lib.conic import (
     conic_through_points,
     eccentricity,
     focal_axis,
+    focal_length,
     focal_parameter,
     ideal_points,
     polar_line,
@@ -317,8 +319,8 @@ class TestFocalParameter:
 
     def test_imaginary_ellipse(self):
         conic = conic_from_focus_and_directrix(self.focus, self.directrix, I / 2)
-        assert focal_parameter(conic) == -Rational(16, 5)
-        assert focal_parameter(conic * -2) == -Rational(16, 5)
+        assert focal_parameter(conic) == Rational(16, 5)
+        assert focal_parameter(conic * -2) == Rational(16, 5)
 
     def test_circle(self):
         assert focal_parameter(circle((1, 2), r=3)) == zoo
@@ -330,6 +332,51 @@ class TestFocalParameter:
         assert focal_parameter(line_pair_conic(X_AXIS, Y_AXIS)) == 0
         assert focal_parameter(line_pair_conic(X_AXIS, IDEAL_LINE)) == nan
         assert focal_parameter(circle((1, 2), r=0)) == nan
+
+
+class TestFocalLength:
+    # The focus-directrix distance is (1·3 + 2·4 + 5) / √(3² + 4²) = 16 / 5
+    focus = (1, 2)
+    directrix = Matrix([3, 4, 5])
+
+    def test_ellipse(self):
+        conic = conic_from_focus_and_directrix(self.focus, self.directrix, S.Half)
+        assert focal_length(conic) == Rational(16, 15)
+        assert focal_length(conic * -2) == Rational(16, 15)
+
+    def test_parabola(self):
+        conic = conic_from_focus_and_directrix(self.focus, self.directrix, 1)
+        assert focal_length(conic) == Rational(8, 5)
+
+    def test_hyperbola(self):
+        conic = conic_from_focus_and_directrix(self.focus, self.directrix, 3)
+        assert focal_length(conic) == Rational(12, 5)
+
+    def test_imaginary_ellipse(self):
+        ecc = I / 2
+        conic = conic_from_focus_and_directrix(self.focus, self.directrix, ecc)
+        fp = focal_parameter(conic)
+        assert focal_length(conic).equals(fp * ecc / (ecc + 1))
+        assert focal_length(-2 * conic).equals(fp * ecc / (ecc + 1))
+
+    def test_rotated_ellipse(self):
+        # Primary radius 5, linear eccentricity 4
+        conic = ellipse((6, 5), 5, 3, r1_direction=(2, 1))
+        assert focal_length(conic) == 1
+
+    def test_circle(self):
+        assert focal_length(circle((1, 2), r=3)) == 3
+        assert focal_length(IMAGINARY_UNIT_CIRCLE) == I
+
+    def test_point_conic(self):
+        assert focal_length(point_conic((1, 2))) == 0
+        assert focal_length(point_conic((2, 1, 0))) == 0
+        assert focal_length(circle((1, 2), r=0)) == 0
+
+    def test_line_pair_conic(self):
+        assert focal_length(line_pair_conic(X_AXIS, Y_AXIS)) == 0
+        assert focal_length(line_pair_conic(X_AXIS, IDEAL_LINE)) == nan
+        assert focal_length(double_line_conic(IDEAL_LINE)) == nan
 
 
 class TestFocalAxis:

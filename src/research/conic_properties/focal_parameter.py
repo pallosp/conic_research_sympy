@@ -122,6 +122,9 @@ def ellipse_focal_param(conic: Conic) -> Expr:
       = (r - linecc) * (1 + 1 / ecc)
       = (r - linecc) * (1 + r / linecc)
       = (r² - linecc²) / linecc
+
+    For imaginary ellipses r is imaginary, making D - F negative: the center
+    lies between the focus and the directrix. Take the absolute value then.
     """
     linecc = linear_eccentricity(conic)
     r = primary_radius(conic)
@@ -144,7 +147,12 @@ println_indented(ellipse_formula)
 assert ellipse_formula == hyperbola_formula
 print("The two formulas are identical.\n")
 
-print("They even work for parabolas:\n")
+print(
+    "They are positive for real conics, "
+    "but for imaginary ellipses we have to take the absolute value.\n"
+)
+
+print("They even work for parabolas, where the zero factors cancel out:\n")
 
 parabola_formula = (
     hyperbola_formula.subs(b * b, a * c)

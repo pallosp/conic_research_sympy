@@ -73,6 +73,7 @@
   * [conic\_from\_focus\_and\_directrix](#conic.conic_from_focus_and_directrix)
   * [eccentricity](#conic.eccentricity)
   * [focal\_parameter](#conic.focal_parameter)
+  * [focal\_length](#conic.focal_length)
   * [focal\_axis](#conic.focal_axis)
   * [ideal\_points](#conic.ideal_points)
   * [projective\_conic\_center](#conic.projective_conic_center)
@@ -1418,12 +1419,42 @@ Computes the distance between a conic's focus and the corresponding directrix.
 
 Special cases:
  - `zoo` for real and imaginary circles, as their directrix is the ideal line;
- - the negated focus-directrix distance for other imaginary ellipses;
+ - a positive real number for other imaginary ellipses too, as their focus
+   and directrix are real;
  - `nan` for zero-radius circles and conics containing the ideal line;
  - 0 for all other degenerate conics.
 
 *Formula*:
 [research/conic_properties/focal_parameter.py](../src/research/conic_properties/focal_parameter.py)
+
+<a id="conic.focal_length"></a>
+
+#### focal\_length
+
+```python
+def focal_length(conic: Conic) -> Expr
+```
+
+([source](../src/lib/conic.py#L189))
+
+Computes the distance between a conic's focus and the nearest vertex.
+Also known as the periapsis distance.
+
+It equals `focal_parameter * e / (e + 1)`, where `e` is the
+[eccentricity](#conic.eccentricity) and `focal_parameter` is the
+[focus-directrix distance](#conic.focal_parameter).
+
+Special cases:
+ - the radius for circles;
+ - the imaginary [primary radius](#central_conic.primary_radius) for
+   imaginary circles;
+ - complex for other imaginary ellipses: the offset of one of the two
+   complex conjugate vertices from the focus, along the focal axis;
+ - `nan` for conics containing the ideal line;
+ - 0 for all other degenerate conics.
+
+*Formula*:
+[research/conic_properties/focal_length.py](../src/research/conic_properties/focal_length.py)
 
 <a id="conic.focal_axis"></a>
 
@@ -1433,7 +1464,7 @@ Special cases:
 def focal_axis(conic: Conic) -> Line
 ```
 
-([source](../src/lib/conic.py#L188))
+([source](../src/lib/conic.py#L217))
 
 Returns the axis of symmetry going through conic's focus point(s).
 
@@ -1462,7 +1493,7 @@ def ideal_points(
 ) -> tuple[PointVector | MatrixExpr, PointVector | MatrixExpr]
 ```
 
-([source](../src/lib/conic.py#L210))
+([source](../src/lib/conic.py#L239))
 
 Computes the ideal points on a conic section.
 
@@ -1493,7 +1524,7 @@ radii. Note that `r₂` is imaginary in case of hyperbolas.
 def projective_conic_center(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic.py#L240))
+([source](../src/lib/conic.py#L269))
 
 Computes the generalized projective center of a conic.
 
@@ -1517,7 +1548,7 @@ For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
 def pole_point(conic: Conic, polar_line: Line) -> PointVector
 ```
 
-([source](../src/lib/conic.py#L258))
+([source](../src/lib/conic.py#L287))
 
 Computes the pole point of a conic with respect to the given polar line.
 
@@ -1537,7 +1568,7 @@ relationships.
 def polar_line(conic: Conic, pole_point: Point) -> Line
 ```
 
-([source](../src/lib/conic.py#L272))
+([source](../src/lib/conic.py#L301))
 
 Computes the polar line of a conic for a given pole point.
 
@@ -1568,7 +1599,7 @@ References:
 def tangent_pair_conic(conic: Conic, point: Point) -> Conic
 ```
 
-([source](../src/lib/conic.py#L298))
+([source](../src/lib/conic.py#L327))
 
 Computes the line pair conic consisting of the two tangent lines of a
 conic through a point.
@@ -1609,7 +1640,7 @@ def tangents_through_point(
         point: Point) -> tuple[Line | MatrixExpr, Line | MatrixExpr]
 ```
 
-([source](../src/lib/conic.py#L332))
+([source](../src/lib/conic.py#L361))
 
 Computes the two tangent lines of a conic through a point.
 

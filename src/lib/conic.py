@@ -1,4 +1,4 @@
-from sympy import Abs, Expr, Matrix, MatrixExpr, Poly, Symbol, abc, sqrt
+from sympy import Abs, Expr, Matrix, MatrixExpr, Poly, Rational, Symbol, abc, sqrt
 
 from lib.conic_direction import ConicNormFactor, focal_axis_direction
 from lib.matrix import (
@@ -171,7 +171,8 @@ def focal_parameter(conic: Conic) -> Expr:
 
     Special cases:
      - `zoo` for real and imaginary circles, as their directrix is the ideal line;
-     - the negated focus-directrix distance for other imaginary ellipses;
+     - a positive real number for other imaginary ellipses too, as their focus
+       and directrix are real;
      - `nan` for zero-radius circles and conics containing the ideal line;
      - 0 for all other degenerate conics.
 
@@ -182,7 +183,35 @@ def focal_parameter(conic: Conic) -> Expr:
     det = conic.det()
     norm_sign = ConicNormFactor(conic)
     s = sqrt((a - c) ** 2 + 4 * b**2)
-    return 2 * sqrt(Abs(det) / s) / (s - norm_sign * (a + c))
+    return 2 * sqrt(Abs(det) / s) / Abs(s - norm_sign * (a + c))
+
+
+def focal_length(conic: Conic) -> Expr:
+    """Computes the distance between a conic's focus and the nearest vertex.
+    Also known as the periapsis distance.
+
+    It equals `focal_parameter * e / (e + 1)`, where `e` is the
+    [eccentricity](#conic.eccentricity) and `focal_parameter` is the
+    [focus-directrix distance](#conic.focal_parameter).
+
+    Special cases:
+     - the radius for circles;
+     - the imaginary [primary radius](#central_conic.primary_radius) for
+       imaginary circles;
+     - complex for other imaginary ellipses: the offset of one of the two
+       complex conjugate vertices from the focus, along the focal axis;
+     - `nan` for conics containing the ideal line;
+     - 0 for all other degenerate conics.
+
+    *Formula*:
+    [research/conic_properties/focal_length.py](../src/research/conic_properties/focal_length.py)
+    """
+    a, b, c, *_ = conic_coefficients(conic)
+    det = conic.det()
+    norm_sign = ConicNormFactor(conic)
+    s = sqrt((a - c) ** 2 + 4 * b**2)
+    q = s - norm_sign * (a + c)
+    return 2 * sqrt(2 * Abs(det)) / (q ** Rational(3, 2) + Abs(q) * sqrt(2 * s))
 
 
 def focal_axis(conic: Conic) -> Line:
