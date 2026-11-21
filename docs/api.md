@@ -3206,8 +3206,8 @@ def is_inside(conic: Conic,
 
 Tells whether a point is inside a conic.
 
-For non-degenerate conics, a point is inside iff no real tangent of the
-conic passes through it.
+For non-degenerate conics, a point is inside iff no real tangent of the conic
+passes through it.
 
 | conic                                 | inside points                       |
 |---------------------------------------|-------------------------------------|
@@ -3217,12 +3217,11 @@ conic passes through it.
 | crossing lines, finite ∪ ideal line   | points where the conic equation > 0 |
 | point conic, double line, zero matrix | none                                |
 
-Points on the conic are neither inside nor
-[outside](#incidence.is_outside).
+Points on the conic are neither inside nor [outside](#incidence.is_outside).
 
-Assumes a real conic and a real point. Takes an optional `simplifier`
-callback that simplifies the sign polynomial before its sign is determined.
-Returns `None` if undecidable.
+Assumes a real conic matrix and real point coordinates. Takes an optional
+`simplifier` callback that simplifies the sign polynomial before its sign is
+determined. Returns `None` if undecidable.
 
 *Formula*: `pointᵀ·(ConicNormFactor(conic)·conic)·point > 0`<br>
 *Proof for non-degenerate conics*:
@@ -3239,7 +3238,7 @@ def is_outside(conic: Conic,
                simplifier: Simplifier = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L121))
+([source](../src/lib/incidence.py#L120))
 
 Tells whether a point is outside a conic.
 
@@ -3260,9 +3259,9 @@ tangents of the conic pass through it.
 Points on the conic are neither [inside](#incidence.is_inside) nor
 outside.
 
-Assumes a real conic and a real point. Takes an optional `simplifier`
-callback that simplifies the sign polynomial before its sign is determined.
-Returns `None` if undecidable.
+Assumes a real conic matrix and real point coordinates. Takes an optional
+`simplifier` callback that simplifies the sign polynomial before its sign is
+determined. Returns `None` if undecidable.
 
 *Formula*: `pointᵀ·(ConicNormFactor(conic)·conic)·point < 0`<br>
 *Proof for non-degenerate conics*:
@@ -3279,7 +3278,7 @@ def polar_conic_contains_point(polar_conic: PolarConic,
                                simplifier: Simplifier = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L158))
+([source](../src/lib/incidence.py#L157))
 
 Checks if a point lies on a conic that is specified in polar form.
 
@@ -3301,7 +3300,7 @@ def is_inside_polar_conic(polar_conic: PolarConic,
                           simplifier: Simplifier = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L176))
+([source](../src/lib/incidence.py#L175))
 
 Tells whether a point is [inside](#incidence.is_inside) a conic that is
 specified in polar form.
@@ -3331,7 +3330,7 @@ def is_outside_polar_conic(polar_conic: PolarConic,
                            simplifier: Simplifier = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L207))
+([source](../src/lib/incidence.py#L206))
 
 Tells whether a point is [outside](#incidence.is_outside) a conic that
 is specified in polar form.
@@ -3360,7 +3359,7 @@ def are_collinear(points: Sequence[Point],
                   simplifier: Simplifier = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L246))
+([source](../src/lib/incidence.py#L245))
 
 Tells whether n points are collinear.
 
@@ -3377,7 +3376,7 @@ def are_concurrent(lines: Sequence[Line],
                    simplifier: Simplifier = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L263))
+([source](../src/lib/incidence.py#L262))
 
 Tells whether n lines are concurrent, i.e. go through the same point.
 
@@ -3398,7 +3397,7 @@ def are_on_same_conic(points: Sequence[Point],
                       simplifier: Simplifier = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L285))
+([source](../src/lib/incidence.py#L284))
 
 Tells whether up to 6 points lie on the same conic section.
 
@@ -3421,7 +3420,7 @@ def are_cocircular(points: Sequence[Point],
                    simplifier: Simplifier = expand) -> bool | None
 ```
 
-([source](../src/lib/incidence.py#L314))
+([source](../src/lib/incidence.py#L313))
 
 Tells whether n points lie on the same circle.
 

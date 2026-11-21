@@ -92,8 +92,8 @@ def is_inside(
 ) -> bool | None:
     """Tells whether a point is inside a conic.
 
-    For non-degenerate conics, a point is inside iff no real tangent of the
-    conic passes through it.
+    For non-degenerate conics, a point is inside iff no real tangent of the conic
+    passes through it.
 
     | conic                                 | inside points                       |
     |---------------------------------------|-------------------------------------|
@@ -103,12 +103,11 @@ def is_inside(
     | crossing lines, finite ∪ ideal line   | points where the conic equation > 0 |
     | point conic, double line, zero matrix | none                                |
 
-    Points on the conic are neither inside nor
-    [outside](#incidence.is_outside).
+    Points on the conic are neither inside nor [outside](#incidence.is_outside).
 
-    Assumes a real conic and a real point. Takes an optional `simplifier`
-    callback that simplifies the sign polynomial before its sign is determined.
-    Returns `None` if undecidable.
+    Assumes a real conic matrix and real point coordinates. Takes an optional
+    `simplifier` callback that simplifies the sign polynomial before its sign is
+    determined. Returns `None` if undecidable.
 
     *Formula*: `pointᵀ·(ConicNormFactor(conic)·conic)·point > 0`<br>
     *Proof for non-degenerate conics*:
@@ -143,9 +142,9 @@ def is_outside(
     Points on the conic are neither [inside](#incidence.is_inside) nor
     outside.
 
-    Assumes a real conic and a real point. Takes an optional `simplifier`
-    callback that simplifies the sign polynomial before its sign is determined.
-    Returns `None` if undecidable.
+    Assumes a real conic matrix and real point coordinates. Takes an optional
+    `simplifier` callback that simplifies the sign polynomial before its sign is
+    determined. Returns `None` if undecidable.
 
     *Formula*: `pointᵀ·(ConicNormFactor(conic)·conic)·point < 0`<br>
     *Proof for non-degenerate conics*:

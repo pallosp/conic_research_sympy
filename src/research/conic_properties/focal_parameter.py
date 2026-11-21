@@ -148,7 +148,7 @@ assert ellipse_formula == hyperbola_formula
 print("The two formulas are identical.\n")
 
 print(
-    "They are positive for real conics, "
+    "They are positive for real ellipses and hyperbolas, "
     "but for imaginary ellipses we have to take the absolute value.\n"
 )
 
