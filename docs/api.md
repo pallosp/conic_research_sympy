@@ -1379,7 +1379,7 @@ Return value by conic type:
 |---------------------------------|---------------------------|
 | circle, imaginary circle        | 0                         |
 | other real ellipse              | (0..1)                    |
-| other imaginary ellipse         | imaginary                 |
+| other imaginary ellipse         | positive imaginary        |
 | parabola                        | 1                         |
 | hyperbola                       | (1..∞), √2 if rectangular |
 | finite point conic              | [0..1) ¹                  |
