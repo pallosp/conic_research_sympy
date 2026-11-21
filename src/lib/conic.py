@@ -194,14 +194,21 @@ def focal_length(conic: Conic) -> Expr:
     [eccentricity](#conic.eccentricity) and `focal_parameter` is the
     [focus-directrix distance](#conic.focal_parameter).
 
-    Special cases:
-     - the radius for circles;
-     - the imaginary [primary radius](#central_conic.primary_radius) for
-       imaginary circles;
-     - complex for other imaginary ellipses: the offset of one of the two
-       complex conjugate vertices from the focus, along the focal axis;
-     - `nan` for conics containing the ideal line;
-     - 0 for all other degenerate conics.
+    Return value by conic type:
+
+    | conic                               | focal length                    |
+    |-------------------------------------|---------------------------------|
+    | circle                              | radius                          |
+    | other ellipse, parabola, hyperbola  | positive real                   |
+    | imaginary circle                    | imaginary radius ¹, `Im > 0` ²  |
+    | other imaginary ellipse             | complex, `Re > 0`, `Im > 0` ²   |
+    | conic containing the ideal line     | `nan`                           |
+    | other degenerate conic              | 0                               |
+
+    ¹ Equals the [primary radius](#central_conic.primary_radius).<br>
+    ² The offset of one of the two complex conjugate vertices from the focus,
+    along the focal axis. The principal square root picks the vertex with the
+    positive imaginary part.
 
     *Formula*:
     [research/conic_properties/focal_length.py](../src/research/conic_properties/focal_length.py)
