@@ -15,8 +15,26 @@ def ellipse(
     r1_angle: Scalar | None = None,
     r1_direction: Direction | None = None,
 ) -> Conic:
-    """Constructs an ellipse from its center, radii, and the either the
+    """Constructs an ellipse from its center, radii, and either the
     direction vector of the first radius or its angle to horizontal.
+
+    If neither `r1_angle` nor `r1_direction` is given, `r1` is horizontal.
+    The signs of the radii don't matter.
+
+    Result by the radii:
+
+    | `r1`      | `r2`      | result                                    |
+    |-----------|-----------|-------------------------------------------|
+    | real, ≠ 0 | real, ≠ 0 | ellipse; circle if `r1² = r2²`            |
+    | real, ≠ 0 | imaginary | hyperbola with focal axis along `r1`      |
+    | imaginary | real, ≠ 0 | hyperbola with focal axis along `r2`      |
+    | imaginary | imaginary | imaginary ellipse                         |
+    | ≠ 0       | 0         | double line through the center along `r1` |
+    | 0         | ≠ 0       | double line through the center along `r2` |
+    | 0         | 0         | zero matrix                               |
+
+    `r1_direction` doesn't have to be a unit vector. If it's the zero vector,
+    the result is the zero matrix.
 
     *Formula*:
     [research/construction/ellipse_from_params.py](../src/research/construction/ellipse_from_params.py)
