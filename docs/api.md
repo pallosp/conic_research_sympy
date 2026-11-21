@@ -1440,10 +1440,6 @@ def focal_length(conic: Conic) -> Expr
 Computes the distance between a conic's focus and the nearest vertex.
 Also known as the periapsis distance.
 
-It equals `focal_parameter * e / (e + 1)`, where `e` is the
-[eccentricity](#conic.eccentricity) and `focal_parameter` is the
-[focus-directrix distance](#conic.focal_parameter).
-
 Return value by conic type:
 
 | conic                               | focal length                    |
@@ -1459,6 +1455,10 @@ Return value by conic type:
 ² The offset of one of the two complex conjugate vertices from the focus,
 along the focal axis. The principal square root picks the vertex with the
 positive imaginary part.
+
+The focal length equals `focal_parameter * e / (e + 1)` for non-circular conics,
+where `e` is the [eccentricity](#conic.eccentricity) and `focal_parameter` is the
+[focus-directrix distance](#conic.focal_parameter).
 
 *Formula*:
 [research/conic_properties/focal_length.py](../src/research/conic_properties/focal_length.py)
