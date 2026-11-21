@@ -221,6 +221,37 @@ def focal_length(conic: Conic) -> Expr:
     return 2 * sqrt(2 * Abs(det)) / (q ** Rational(3, 2) + Abs(q) * sqrt(2 * s))
 
 
+def latus_rectum(conic: Conic) -> Expr:
+    """Computes the length of the chord through a focus, parallel to the directrix.
+
+    Return value by conic type:
+
+    | conic                         | latus rectum                   |
+    |-------------------------------|--------------------------------|
+    | other ellipse, hyperbola      | positive real                  |
+    | other imaginary ellipse       | positive imaginary             |
+    | parabola                      | = 2·focal parameter            |
+    | circle, imaginary circle      | = diameter                     |
+    | point conic, finite line pair | 0                              |
+    | any line ∪ ideal line         | `nan`                          |
+    | zero matrix                   | `nan`                          |
+
+    The semi-latus rectum equals
+    - `r₂² / r₁` for ellipses and imaginary ellipses, where `r₁` and `r₂` are the
+      [primary](#central_conic.primary_radius) and
+      [secondary](#central_conic.secondary_radius) radii
+    - `-r₂² / r₁` for hyperbolas (`r₂` is imaginary)
+    - [focal parameter](#conic.focal_parameter) · [eccentricity](#conic.eccentricity)
+      for non-circular conics
+
+    *Formula*:
+    [research/conic_properties/latus_rectum.py](../src/research/conic_properties/latus_rectum.py)
+    """
+    a, b, c, *_ = conic_coefficients(conic)
+    s = sqrt(((a - c) ** 2 + 4 * b**2).factor())
+    return sqrt(-32 * conic.det() / (a + c - ConicNormFactor(conic) * s) ** 3)
+
+
 def focal_axis(conic: Conic) -> Line:
     """Returns the axis of symmetry going through conic's focus point(s).
 

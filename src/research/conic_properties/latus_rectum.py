@@ -4,13 +4,25 @@
 focal parameter, and from the radii of central conics.
 """
 
-from sympy import Abs, Eq, Symbol, expand, factor, radsimp, symbols
+from sympy import (
+    Abs,
+    Eq,
+    Symbol,
+    Wild,
+    expand,
+    factor,
+    radsimp,
+    sign,
+    sqrt,
+    symbols,
+)
 
 from lib.central_conic import primary_radius, secondary_radius
 from lib.circle import circle_radius
 from lib.conic import eccentricity, focal_parameter
 from lib.conic_direction import ConicNormFactor
 from lib.matrix import conic_matrix
+from lib.parabola import parabola_focal_parameter
 from research.sympy_utils import eq_chain, println_indented
 
 a, b, c, d, e, f = symbols("a:f", real=True)
@@ -70,6 +82,23 @@ println_indented(eq_chain(lr_symbol**2, lr_squared_circle, Symbol("diameter") **
 
 diameter = 2 * circle_radius(conic)
 assert lr_squared_circle == diameter.subs(conic.det(), det_symbol) ** 2
+
+print("For parabolas latus rectum == 2 · focal parameter:\n")
+
+w = Wild("w", real=True)
+lr_squared_parabola = factor(
+    factor(
+        lr_squared.subs(b * b, a * c).subs(ConicNormFactor(conic), -sign(a + c)),
+        deep=True,
+    ).replace(Abs(w) * sign(w), w)
+)
+
+fp_parabola = parabola_focal_parameter(conic).subs(conic.det(), det_symbol)
+
+println_indented(Eq(Symbol("latus rectum"), sqrt(lr_squared_parabola)))
+println_indented(Eq(Symbol("focal param"), fp_parabola))
+
+assert sqrt(lr_squared_parabola) == 2 * fp_parabola
 
 print("Alternative, radius-based formula for central conics:\n")
 

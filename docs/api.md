@@ -74,6 +74,7 @@
   * [eccentricity](#conic.eccentricity)
   * [focal\_parameter](#conic.focal_parameter)
   * [focal\_length](#conic.focal_length)
+  * [latus\_rectum](#conic.latus_rectum)
   * [focal\_axis](#conic.focal_axis)
   * [ideal\_points](#conic.ideal_points)
   * [projective\_conic\_center](#conic.projective_conic_center)
@@ -1463,6 +1464,41 @@ where `e` is the [eccentricity](#conic.eccentricity) and `focal_parameter` is th
 *Formula*:
 [research/conic_properties/focal_length.py](../src/research/conic_properties/focal_length.py)
 
+<a id="conic.latus_rectum"></a>
+
+#### latus\_rectum
+
+```python
+def latus_rectum(conic: Conic) -> Expr
+```
+
+([source](../src/lib/conic.py#L224))
+
+Computes the length of the chord through a focus, parallel to the directrix.
+
+Return value by conic type:
+
+| conic                         | latus rectum                   |
+|-------------------------------|--------------------------------|
+| other ellipse, hyperbola      | positive real                  |
+| other imaginary ellipse       | positive imaginary             |
+| parabola                      | = 2·focal parameter            |
+| circle, imaginary circle      | = diameter                     |
+| point conic, finite line pair | 0                              |
+| any line ∪ ideal line         | `nan`                          |
+| zero matrix                   | `nan`                          |
+
+The semi-latus rectum equals
+- `r₂² / r₁` for ellipses and imaginary ellipses, where `r₁` and `r₂` are the
+  [primary](#central_conic.primary_radius) and
+  [secondary](#central_conic.secondary_radius) radii
+- `-r₂² / r₁` for hyperbolas (`r₂` is imaginary)
+- [focal parameter](#conic.focal_parameter) · [eccentricity](#conic.eccentricity)
+  for non-circular conics
+
+*Formula*:
+[research/conic_properties/latus_rectum.py](../src/research/conic_properties/latus_rectum.py)
+
 <a id="conic.focal_axis"></a>
 
 #### focal\_axis
@@ -1471,7 +1507,7 @@ where `e` is the [eccentricity](#conic.eccentricity) and `focal_parameter` is th
 def focal_axis(conic: Conic) -> Line
 ```
 
-([source](../src/lib/conic.py#L224))
+([source](../src/lib/conic.py#L255))
 
 Returns the axis of symmetry going through conic's focus point(s).
 
@@ -1500,7 +1536,7 @@ def ideal_points(
 ) -> tuple[PointVector | MatrixExpr, PointVector | MatrixExpr]
 ```
 
-([source](../src/lib/conic.py#L246))
+([source](../src/lib/conic.py#L277))
 
 Computes the ideal points on a conic section.
 
@@ -1531,7 +1567,7 @@ radii. Note that `r₂` is imaginary in case of hyperbolas.
 def projective_conic_center(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic.py#L276))
+([source](../src/lib/conic.py#L307))
 
 Computes the generalized projective center of a conic.
 
@@ -1555,7 +1591,7 @@ For other line pair conics and ideal point conics returns `[0, 0, 0]ᵀ`.
 def pole_point(conic: Conic, polar_line: Line) -> PointVector
 ```
 
-([source](../src/lib/conic.py#L294))
+([source](../src/lib/conic.py#L325))
 
 Computes the pole point of a conic with respect to the given polar line.
 
@@ -1575,7 +1611,7 @@ relationships.
 def polar_line(conic: Conic, pole_point: Point) -> Line
 ```
 
-([source](../src/lib/conic.py#L308))
+([source](../src/lib/conic.py#L339))
 
 Computes the polar line of a conic for a given pole point.
 
@@ -1606,7 +1642,7 @@ References:
 def tangent_pair_conic(conic: Conic, point: Point) -> Conic
 ```
 
-([source](../src/lib/conic.py#L334))
+([source](../src/lib/conic.py#L365))
 
 Computes the line pair conic consisting of the two tangent lines of a
 conic through a point.
@@ -1647,7 +1683,7 @@ def tangents_through_point(
         point: Point) -> tuple[Line | MatrixExpr, Line | MatrixExpr]
 ```
 
-([source](../src/lib/conic.py#L368))
+([source](../src/lib/conic.py#L399))
 
 Computes the two tangent lines of a conic through a point.
 

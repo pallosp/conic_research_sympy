@@ -37,6 +37,7 @@ from lib.conic import (
     focal_length,
     focal_parameter,
     ideal_points,
+    latus_rectum,
     polar_line,
     pole_point,
     projective_conic_center,
@@ -60,6 +61,7 @@ from lib.degenerate_conic import (
     line_pair_conic,
     point_conic,
 )
+from lib.distance import point_line_distance
 from lib.ellipse import ellipse
 from lib.incidence import conic_contains_point, is_tangent, line_contains_point
 from lib.intersection import conic_x_line, line_x_line
@@ -335,22 +337,25 @@ class TestFocalParameter:
 
 
 class TestFocalLength:
-    # The focus-directrix distance is (1·3 + 2·4 + 5) / √(3² + 4²) = 16 / 5
     focus = (1, 2)
     directrix = Matrix([3, 4, 5])
+    fp = Rational(16, 5)  # focus-directrix distance: (3·1 + 4·2 + 5) / √(3² + 4²)
 
     def test_ellipse(self):
         conic = conic_from_focus_and_directrix(self.focus, self.directrix, S.Half)
-        assert focal_length(conic) == Rational(16, 15)
-        assert focal_length(conic * -2) == Rational(16, 15)
+        # focal length = focal param · ecc / (ecc + 1)
+        assert focal_length(conic) == self.fp * S.Half / (S.Half + 1)
+        assert focal_length(conic * -2) == self.fp * S.Half / (S.Half + 1)
 
     def test_parabola(self):
         conic = conic_from_focus_and_directrix(self.focus, self.directrix, 1)
-        assert focal_length(conic) == Rational(8, 5)
+        # focal length = focal param · ecc / (ecc + 1)
+        assert focal_length(conic) == self.fp * 1 / (1 + 1)
 
     def test_hyperbola(self):
         conic = conic_from_focus_and_directrix(self.focus, self.directrix, 3)
-        assert focal_length(conic) == Rational(12, 5)
+        # focal length = focal param · ecc / (ecc + 1)
+        assert focal_length(conic) == self.fp * 3 / (3 + 1)
 
     def test_imaginary_ellipse(self):
         ecc = I / 2
@@ -377,6 +382,93 @@ class TestFocalLength:
         assert focal_length(line_pair_conic(X_AXIS, Y_AXIS)) == 0
         assert focal_length(line_pair_conic(X_AXIS, IDEAL_LINE)) == nan
         assert focal_length(double_line_conic(IDEAL_LINE)) == nan
+
+
+class TestLatusRectum:
+    focus = (1, 2)
+    directrix = Matrix([3, 4, 5])
+    fp = Rational(16, 5)  # = (3·1 + 4·2 + 5) / √(3² + 4²)
+
+    def test_ellipse(self):
+        conic = conic_from_focus_and_directrix(self.focus, self.directrix, S.Half)
+        # latus rectum = 2 · focal param · ecc
+        assert latus_rectum(conic) == latus_rectum(conic * -2) == 2 * self.fp * S.Half
+
+    def test_parabola(self):
+        conic = conic_from_focus_and_directrix(self.focus, self.directrix, 1)
+        # latus rectum = 2 · focal param · ecc
+        assert latus_rectum(conic) == latus_rectum(conic * -2) == 2 * self.fp * 1
+
+    def test_hyperbola(self):
+        conic = conic_from_focus_and_directrix(self.focus, self.directrix, 3)
+        # latus rectum = 2 · focal param · ecc
+        assert latus_rectum(conic) == latus_rectum(conic * -2) == 2 * self.fp * 3
+
+    def test_symbolic_conic_from_focus_and_directrix(self):
+        a, b, c, ecc = symbols("a:c, ecc", positive=True)
+        directrix = Matrix([a, b, c])
+        conic = conic_from_focus_and_directrix(ORIGIN, directrix, ecc)
+        expected = 2 * point_line_distance(ORIGIN, directrix) * ecc
+        # The square roots don't simplify; compare the squares instead.
+        assert (latus_rectum(conic) ** 2).factor() == expected**2
+
+    def test_ellipse_from_radii(self):
+        r1 = Symbol("r1", positive=True)
+        r2 = r1 + Symbol("d", positive=True)
+        conic = ellipse((1, 2), r1, r2)
+        assert (latus_rectum(conic) ** 2).factor() == (2 * r1**2 / r2) ** 2
+
+    def test_hyperbola_from_poly(self):
+        a, b = symbols("a b", positive=True)
+        hyperbola = conic_from_poly(x**2 / a**2 - y**2 / b**2 - 1)
+        assert latus_rectum(hyperbola).simplify() == 2 * b**2 / a
+
+    def test_parabola_from_poly(self):
+        p = Symbol("p", positive=True)
+        # Focus (0, p/2), directrix y = -p/2
+        parabola = conic_from_poly(x**2 - 2 * p * y)
+        assert latus_rectum(parabola).simplify() == 2 * p
+
+    def test_imaginary_ellipse(self):
+        r1, r2 = 3 * I, 5 * I
+        conic = ellipse(ORIGIN, r1, r2)
+        assert latus_rectum(conic) == latus_rectum(conic * -2) == 2 * r2**2 / r1
+
+    def test_focal_parameter_times_eccentricity(self):
+        # Exact equality, including the sign
+        ellipse_ = conic_from_poly(x**2 / 25 + y**2 / 9 - 1)
+        hyperbola = conic_from_poly(x**2 / 25 - y**2 / 9 - 1)
+        parabola = conic_from_poly(x**2 - y)
+        imaginary_ellipse = conic_from_poly(x**2 / 25 + y**2 / 9 + 1)
+        for conic in (ellipse_, hyperbola, parabola, imaginary_ellipse):
+            expected = 2 * focal_parameter(conic) * eccentricity(conic)
+            assert latus_rectum(conic) == expected
+
+    def test_circle(self):
+        r = Symbol("r", positive=True)
+        assert latus_rectum(circle((1, 2), r=r)) == 2 * r
+        assert latus_rectum(IMAGINARY_UNIT_CIRCLE) == 2 * I
+
+    def test_point_conic(self):
+        assert latus_rectum(point_conic((1, 2))) == 0
+        assert latus_rectum(point_conic((2, 1, 0))) == 0
+        assert latus_rectum(circle((1, 2), r=0)) == 0
+        assert latus_rectum(shrink_conic_to_zero(ellipse((1, 2), 5, 3))) == 0
+
+    def test_crossing_lines(self):
+        assert latus_rectum(line_pair_conic(X_AXIS, Matrix([1, 2, 3]))) == 0
+
+    def test_parallel_lines(self):
+        lines = line_pair_conic(X_AXIS, horizontal_line(1))
+        assert latus_rectum(lines) == 0
+
+    def test_double_line(self):
+        assert latus_rectum(double_line_conic(Matrix([1, 2, 3]))) == 0
+
+    def test_conic_containing_ideal_line(self):
+        assert latus_rectum(line_pair_conic(X_AXIS, IDEAL_LINE)) == nan
+        assert latus_rectum(double_line_conic(IDEAL_LINE)) == nan
+        assert latus_rectum(ZERO_CONIC) == nan
 
 
 class TestFocalAxis:
