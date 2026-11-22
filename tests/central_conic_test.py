@@ -225,10 +225,8 @@ class TestLinearEccentricity:
             return (
                 linear_eccentricity(conic)
                 .factor(deep=True)
-                # Basic.refine() is unannotated: its assumption is inferred as bool
-                # and it returns Basic (fix upstream).
-                .refine(assumptions)  # pyright: ignore[reportArgumentType]
-                .cancel(r - fx)  # pyright: ignore[reportAttributeAccessIssue]
+                .refine(assumptions)
+                .cancel(r - fx)
             )
 
         # ellipse

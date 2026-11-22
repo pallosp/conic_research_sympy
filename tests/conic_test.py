@@ -1,5 +1,3 @@
-from typing import cast
-
 from sympy import (
     I,
     Matrix,
@@ -259,11 +257,8 @@ class TestEccentricity:
 
     def test_numeric_degenerate_conic(self):
         conic = line_pair_conic(X_AXIS, Matrix([24, 7, 0]))
-        # The eccentricities are Rationals. sorted() doesn't accept Exprs because
-        # SymPy's Boolean doesn't declare __bool__ (fix upstream).
-        ecc1 = cast("Rational", eccentricity(conic))
-        ecc2 = cast("Rational", eccentricity(-conic))
-        assert sorted([ecc1, ecc2]) == [Rational(5, 4), Rational(5, 3)]
+        eccentricities = [eccentricity(conic), eccentricity(-conic)]
+        assert sorted(eccentricities) == [Rational(5, 4), Rational(5, 3)]
 
     def test_symbolic_ellipse(self):
         focus = ORIGIN

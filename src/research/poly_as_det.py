@@ -406,9 +406,7 @@ def normalize_det3(det: Expr) -> Expr:
         ((*s, 1) for s in itertools.product((1, -1), repeat=5)), key=minus_signs
     )
 
-    # SymPy's Boolean doesn't declare __bool__, so comparisons returning it,
-    # such as with -oo for a zero entry, aren't accepted by max() (fix upstream).
-    degrees = [max(polys[i][j].total_degree() for i in range(3)) for j in range(3)]  # type: ignore[type-var]  # pyright: ignore[reportArgumentType]
+    degrees = [max(polys[i][j].total_degree() for i in range(3)) for j in range(3)]
     keys = [[[tuple(-e for e in m) for m in p.monoms()] for p in row] for row in polys]
 
     def sorted_rows(cols: tuple[int, ...]) -> list[int]:
