@@ -77,8 +77,7 @@ def eq_chain(*expressions: EqChainItem) -> Eq | EqChainItem:
         raise ValueError("At least one expression is required")
     if len(expressions) == 1:
         return expressions[0]
-    chain = Eq(eq_chain(*expressions[0:-1]), expressions[-1], evaluate=False)
-    return cast("Eq", chain)
+    return Eq(eq_chain(*expressions[0:-1]), expressions[-1], evaluate=False)
 
 
 def factor_radicals(expr: Expr) -> Expr:

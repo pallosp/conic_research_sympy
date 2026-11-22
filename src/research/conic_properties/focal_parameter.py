@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-from typing import cast
-
 from sympy import Abs, Expr, Symbol, expand, sign, sqrt, symbols
 
 from lib.central_conic import linear_eccentricity, primary_radius
@@ -58,7 +56,7 @@ def _simplify_focal_param(conic: Conic, focal_param: Expr, abs_disc: Expr) -> Ex
     )
     assert disc_factorized.expand() == b * b - a * c
 
-    focal_param = (
+    return (
         focal_param.subs(conic.det(), det)
         .subs(ConicNormFactor(conic), sign(det))
         .subs(Abs(b * b - a * c), abs_disc)
@@ -66,7 +64,6 @@ def _simplify_focal_param(conic: Conic, focal_param: Expr, abs_disc: Expr) -> Ex
         .subs(Abs(det), det * sign(det))
         .simplify()
     )
-    return cast("Expr", focal_param)
 
 
 def hyperbola_focal_param(conic: Conic) -> Expr:

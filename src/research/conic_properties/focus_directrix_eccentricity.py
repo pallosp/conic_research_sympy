@@ -193,7 +193,7 @@ println_indented(Eq(fy, fy_formula))
 
 f_eq = coeff_eq[5]
 println_indented(f_eq)
-f_eq = cast("ExprEq", f_eq.subs({fx: fx_formula, fy: fy_formula}))
+f_eq = f_eq.subs({fx: fx_formula, fy: fy_formula})
 println_indented(f_eq)
 
 print("\nSolutions when there are two directrices:\n")
