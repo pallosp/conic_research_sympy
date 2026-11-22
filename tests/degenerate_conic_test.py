@@ -1,5 +1,3 @@
-from typing import TYPE_CHECKING, cast
-
 import pytest
 from sympy import I, Matrix, MatrixBase, Symbol, symbols
 
@@ -25,9 +23,6 @@ from lib.line import (
 from lib.matrix import conic_matrix, is_nonzero_multiple, is_real_matrix
 from lib.point import ZERO_POINT, point_to_vec3
 from tests.utils import are_projective_sets_equal, is_explicit_matrix
-
-if TYPE_CHECKING:
-    from lib.type_aliases import Line
 
 
 class TestLinePair:
@@ -109,9 +104,7 @@ class TestSplitToLines:
         line_pair = [Matrix([1, 2, 3]), Matrix([4, 5, 6])]
         conic = line_pair_conic(*line_pair)
         substitutions = list(zip(symbolic_conic.flat(), conic.flat(), strict=True))
-        # The lines are explicit, as asserted below. SymPy types MatrixExpr.subs()
-        # as returning Expr (fix upstream).
-        concrete_lines = [cast("Line", line.subs(substitutions)) for line in lines]
+        concrete_lines = [line.subs(substitutions) for line in lines]
         assert is_explicit_matrix(concrete_lines[0])
         assert is_explicit_matrix(concrete_lines[1])
         assert are_projective_sets_equal(concrete_lines, line_pair)
@@ -132,9 +125,7 @@ class TestSplitToLines:
         concrete_lines = [line.subs(substitutions) for line in lines]
         assert is_explicit_matrix(concrete_lines[0])
         assert is_explicit_matrix(concrete_lines[1])
-        # The lines are explicit, as asserted above. SymPy types MatrixExpr.subs()
-        # as returning Expr (fix upstream).
-        assert are_projective_sets_equal(cast("list[Line]", concrete_lines), line_pair)
+        assert are_projective_sets_equal(concrete_lines, line_pair)
 
 
 class TestExtractPoint:

@@ -1,6 +1,6 @@
 import itertools
 from collections.abc import Callable, Sequence
-from typing import Self, cast, overload
+from typing import TYPE_CHECKING, Self, cast, overload
 
 from sympy import (
     Expr,
@@ -235,6 +235,16 @@ class MatrixFunction(MatrixExpr):
     """
 
     eval: Callable[[MatrixBase | MatrixExpr], MatrixBase | None]
+
+    if TYPE_CHECKING:
+
+        def subs(self, *args: object, **kwargs: object) -> MatrixExpr:
+            """Substitutes into the argument and retries the evaluation.
+
+            Returns an `ImmutableMatrix` on success, or the unevaluated function
+            otherwise.
+            """
+            ...
 
     # mypy requires __new__ to return an instance of cls, but like
     # sympy.Function, this evaluates to a different type when possible.

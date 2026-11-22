@@ -346,7 +346,7 @@ def __new__(cls,
             evaluate: bool = True) -> "MatrixBase | Self"
 ```
 
-([source](../src/lib/matrix.py#L241))
+([source](../src/lib/matrix.py#L251))
 
 Evaluates the function if possible, unless `evaluate` is false.
 
@@ -359,7 +359,7 @@ Evaluates the function if possible, unless `evaluate` is false.
 def matrix() -> MatrixBase | MatrixExpr
 ```
 
-([source](../src/lib/matrix.py#L257))
+([source](../src/lib/matrix.py#L267))
 
 The argument of the function.
 
@@ -371,7 +371,7 @@ The argument of the function.
 def skew_matrix(vector3: MatrixBase | MatrixExpr) -> MatrixBase | SkewMatrix
 ```
 
-([source](../src/lib/matrix.py#L303))
+([source](../src/lib/matrix.py#L313))
 
 Creates a skew-symmetric matrix from a 3D column vector.
 
@@ -390,7 +390,7 @@ Returns an explicit matrix for an explicit vector, and an unevaluated
 def pivot_column(matrix: MatrixBase | MatrixExpr) -> MatrixBase | PivotColumn
 ```
 
-([source](../src/lib/matrix.py#L350))
+([source](../src/lib/matrix.py#L360))
 
 Returns the column of a matrix for its first provably nonzero element.
 
@@ -412,7 +412,7 @@ def pivot_column_and_row(
 ) -> tuple[MatrixBase | PivotColumn, MatrixBase | TransposedPivotRow]
 ```
 
-([source](../src/lib/matrix.py#L364))
+([source](../src/lib/matrix.py#L374))
 
 Returns the column and the transposed row of a matrix for its first
 provably nonzero element, i.e. two column vectors.
@@ -431,7 +431,7 @@ def outer_product_root(
         matrix: MatrixBase | MatrixExpr) -> MatrixBase | OuterProductRoot
 ```
 
-([source](../src/lib/matrix.py#L410))
+([source](../src/lib/matrix.py#L420))
 
 Finds a vector `v` such that `v·vᵀ` equals the given symmetric matrix.
 
@@ -453,7 +453,7 @@ to be non-zero.
 def is_real_matrix(matrix: MatrixBase) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L428))
+([source](../src/lib/matrix.py#L438))
 
 Checks if all elements of a matrix are real.
 
@@ -467,7 +467,7 @@ Returns a bool or `None` if undecidable.
 def is_definite_matrix(matrix: MatrixBase) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L436))
+([source](../src/lib/matrix.py#L446))
 
 Checks if a real matrix is either positive or negative definite.
 
@@ -483,7 +483,7 @@ def is_full_rank(matrix: MatrixBase,
                  simplifier: Simplifier = expand) -> bool | None
 ```
 
-([source](../src/lib/matrix.py#L467))
+([source](../src/lib/matrix.py#L477))
 
 Tells whether a matrix has full rank.
 
@@ -1727,7 +1727,7 @@ The zero matrix. Every point satisfies its equation.
 def line_pair_conic(line1: Line, line2: Line) -> Conic
 ```
 
-([source](../src/lib/degenerate_conic.py#L16))
+([source](../src/lib/degenerate_conic.py#L18))
 
 Constructs a degenerate conic consisting of two lines.
 
@@ -1751,7 +1751,7 @@ the two gives the same quadratic form with the symmetric matrix
 def double_line_conic(line: Line) -> Conic
 ```
 
-([source](../src/lib/degenerate_conic.py#L36))
+([source](../src/lib/degenerate_conic.py#L38))
 
 Constructs a degenerate conic consisting of two coincident lines.
 
@@ -1763,7 +1763,7 @@ Constructs a degenerate conic consisting of two coincident lines.
 def point_conic(point: Point) -> Conic
 ```
 
-([source](../src/lib/degenerate_conic.py#L43))
+([source](../src/lib/degenerate_conic.py#L45))
 
 Constructs a conic that degenerates to a single point.
 
@@ -1794,10 +1794,10 @@ point from the resulting conic.
 
 ```python
 def split_to_lines(
-        conic: Conic) -> tuple[Line | MatrixExpr, Line | MatrixExpr]
+        conic: Conic) -> tuple[Line | PivotColumn, Line | TransposedPivotRow]
 ```
 
-([source](../src/lib/degenerate_conic.py#L71))
+([source](../src/lib/degenerate_conic.py#L73))
 
 Splits a degenerate conic into two lines.
 
@@ -1834,10 +1834,10 @@ be their intersection point.
 #### extract\_point
 
 ```python
-def extract_point(degenerate_conic: Conic) -> PointVector | MatrixExpr
+def extract_point(degenerate_conic: Conic) -> PointVector | PivotColumn
 ```
 
-([source](../src/lib/degenerate_conic.py#L109))
+([source](../src/lib/degenerate_conic.py#L111))
 
 Extracts the point from a point conic or the intersection of the
 lines from a line pair conic.
@@ -3600,7 +3600,7 @@ The points must be finite. If any of them is ideal, the result contains
 def line_x_line(line1: Line, line2: Line) -> PointVector
 ```
 
-([source](../src/lib/intersection.py#L7))
+([source](../src/lib/intersection.py#L13))
 
 Computes the intersection of two lines.
 
@@ -3613,11 +3613,11 @@ coincide.
 
 ```python
 def conic_x_line(
-        conic: Conic, line: Line
-) -> tuple[PointVector | MatrixExpr, PointVector | MatrixExpr]
+    conic: Conic, line: Line
+) -> tuple[PointVector | PivotColumn, PointVector | TransposedPivotRow]
 ```
 
-([source](../src/lib/intersection.py#L16))
+([source](../src/lib/intersection.py#L22))
 
 Intersects a conic with a line. Returns two points.
 

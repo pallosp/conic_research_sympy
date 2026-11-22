@@ -1,6 +1,8 @@
-from sympy import ImmutableMatrix, MatrixExpr
+from sympy import ImmutableMatrix
 
 from lib.matrix import (
+    PivotColumn,
+    TransposedPivotRow,
     outer_product_root,
     pivot_column,
     pivot_column_and_row,
@@ -70,7 +72,7 @@ def point_conic(point: Point) -> Conic:
 
 def split_to_lines(
     conic: Conic,
-) -> tuple[Line | MatrixExpr, Line | MatrixExpr]:
+) -> tuple[Line | PivotColumn, Line | TransposedPivotRow]:
     """Splits a degenerate conic into two lines.
 
     Special cases:
@@ -106,7 +108,7 @@ def split_to_lines(
     return pivot_column_and_row(conic + skew_matrix(q))  # pyright: ignore[reportOperatorIssue]
 
 
-def extract_point(degenerate_conic: Conic) -> PointVector | MatrixExpr:
+def extract_point(degenerate_conic: Conic) -> PointVector | PivotColumn:
     """Extracts the point from a point conic or the intersection of the
     lines from a line pair conic.
 

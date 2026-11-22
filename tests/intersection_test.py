@@ -1,5 +1,3 @@
-from typing import TYPE_CHECKING, cast
-
 from sympy import I, Matrix, sqrt, symbols
 
 from lib.circle import UNIT_CIRCLE
@@ -17,9 +15,6 @@ from lib.line import (
 from lib.matrix import conic_matrix, is_nonzero_multiple
 from lib.point import ORIGIN, ZERO_POINT, ideal_point
 from tests.utils import are_projective_sets_equal, is_explicit_matrix
-
-if TYPE_CHECKING:
-    from lib.type_aliases import PointVector
 
 
 class TestLineXLine:
@@ -122,11 +117,8 @@ class TestConicXLine:
         substituted = [p.subs(substitutions) for p in intersections]
         assert is_explicit_matrix(substituted[0])
         assert is_explicit_matrix(substituted[1])
-        # The points are explicit, as asserted above. SymPy types
-        # MatrixExpr.subs() as returning Expr (fix upstream).
         assert are_projective_sets_equal(
-            cast("list[PointVector]", substituted),
-            [Matrix([1, 0, 1]), Matrix([-1, 0, 1])],
+            substituted, [Matrix([1, 0, 1]), Matrix([-1, 0, 1])]
         )
 
     def test_partially_symbolic_conic(self):
