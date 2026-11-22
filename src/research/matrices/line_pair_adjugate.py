@@ -4,8 +4,6 @@
 where `x = l₁ × l₂` is the intersection point of the two lines.
 """
 
-from typing import cast
-
 from sympy import Matrix, MatrixSymbol, Symbol, factor, symbols
 
 from lib.degenerate_conic import line_pair_conic
@@ -31,4 +29,4 @@ center = line1.cross(line2)
 println_indented(eq_chain(x, center))
 println_indented(eq_chain(x * x.T, center * center.T, -Symbol("adj(line pair)")))
 
-assert cast("Matrix", adj).equals(-center * center.T)
+assert adj.equals(-center * center.T)

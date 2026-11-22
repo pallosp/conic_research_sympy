@@ -641,9 +641,7 @@ class TestPolePolar:
         conic = conic_matrix(*symbols("a:f"))
         pole = Matrix(symbols("x:z"))
         polar = polar_line(conic, pole)
-        # pole_point() returns a Matrix here. SymPy declares equals() on
-        # RepMatrix, not MatrixBase (fix upstream).
-        assert cast("Matrix", pole_point(conic, polar)).equals(pole * conic.det())
+        assert pole_point(conic, polar).equals(pole * conic.det())
 
     def test_point_on_polar(self):
         conic = conic_matrix(*symbols("a:f"))

@@ -9,19 +9,11 @@ Notations:
  - T = skew(p)ᵀ·adj(C)·skew(p): the tangent pair conic through p
 """
 
-from typing import cast
-
-from sympy import Eq, I, Matrix, MatrixBase, Symbol, symbols
+from sympy import Eq, I, Matrix, Symbol, symbols
 
 from lib.conic import tangent_pair_conic
 from lib.matrix import conic_matrix, quadratic_form, skew_matrix
 from research.sympy_utils import println_indented
-
-
-def equals(lhs: MatrixBase, rhs: MatrixBase) -> bool | None:
-    # SymPy's stubs lack MatrixBase.equals (fix upstream).
-    return cast("Matrix", lhs).equals(rhs)
-
 
 conic = conic_matrix(*symbols("a:f", real=True))
 point = Matrix(symbols("x:z", real=True))
@@ -36,7 +28,7 @@ u = Matrix(symbols("u:3", real=True))
 v = Matrix(symbols("v:3", real=True))
 q = (u + I * v).cross(u - I * v)
 println_indented(q.expand())
-assert equals(q, -2 * I * u.cross(v))
+assert q.equals(-2 * I * u.cross(v))
 
 print("3. Hence T consists of real lines iff adj(T) = -q·qᵀ is negative")
 print("   semidefinite, and of complex conjugate lines iff it's positive")
@@ -47,17 +39,17 @@ print("   adj(skew(p)) = adj(skew(p)ᵀ) = p·pᵀ:\n")
 
 skew = skew_matrix(point)
 println_indented(skew.adjugate())
-assert equals(skew.adjugate(), point * point.T)
-assert equals(skew.T.adjugate(), point * point.T)
+assert skew.adjugate().equals(point * point.T)
+assert skew.T.adjugate().equals(point * point.T)
 
 print("   and adj(adj(C)) = det(C)·C")
-assert equals(conic.adjugate().adjugate(), conic.det() * conic)
+assert conic.adjugate().adjugate().equals(conic.det() * conic)
 
 print("\n5. Therefore adj(T) = p·pᵀ · det(C)·C · p·pᵀ = det(C)·(pᵀ·C·p)·p·pᵀ\n")
 
 adj = tangent_pair_conic(conic, point).adjugate()
 sign_poly = conic.det() * quadratic_form(conic, point)
-assert equals(adj, sign_poly * point * point.T)
+assert adj.equals(sign_poly * point * point.T)
 println_indented(Eq(Symbol("det(C)·pᵀ·C·p"), sign_poly.factor()))
 
 print("6. Since p·pᵀ is positive semidefinite, for a non-degenerate real conic")

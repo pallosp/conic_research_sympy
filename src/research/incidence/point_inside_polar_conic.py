@@ -14,20 +14,12 @@ point is inside the conic iff det(conic)·pointᵀ·conic·point > 0, and outsid
 iff it's < 0.
 """
 
-from typing import cast
-
-from sympy import Eq, Matrix, MatrixBase, Symbol, symbols
+from sympy import Eq, Matrix, Symbol, symbols
 
 from lib.circle import UNIT_CIRCLE
 from lib.matrix import quadratic_form
 from lib.polar_conic import conic_from_polar_matrix
 from research.sympy_utils import println_indented
-
-
-def equals(lhs: MatrixBase, rhs: MatrixBase) -> bool | None:
-    # SymPy's stubs lack MatrixBase.equals (fix upstream).
-    return cast("Matrix", lhs).equals(rhs)
-
 
 polar = Matrix(3, 3, symbols("a:i", real=True))
 point = Matrix(symbols("x:z", real=True))
@@ -35,7 +27,7 @@ conic = conic_from_polar_matrix(polar)
 
 print("\n1. The conic is the image of the unit circle under the polar matrix, so")
 print("   conic = adj(polar)ᵀ·unit_circle·adj(polar).")
-assert equals(conic, polar.adjugate().T * UNIT_CIRCLE * polar.adjugate())
+assert conic.equals(polar.adjugate().T * UNIT_CIRCLE * polar.adjugate())
 
 print("\n2. Hence pointᵀ·conic·point")
 print("     = (adj(polar)·point)ᵀ·unit_circle·(adj(polar)·point)")
