@@ -15,7 +15,7 @@ def signed_area(*points: FinitePoint) -> Expr:
     *Formula*: <https://en.wikipedia.org/wiki/Shoelace_formula>
     """
     xy = [point_to_xy(p) for p in points]
-    double_area = S.Zero
+    double_area: Expr = S.Zero
     for (x1, y1), (x2, y2) in zip(xy, xy[1:] + xy[:1], strict=True):
         double_area += x1 * y2 - x2 * y1
     return double_area / 2

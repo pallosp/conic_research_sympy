@@ -1,4 +1,5 @@
 import itertools
+from typing import TYPE_CHECKING
 
 from sympy import (
     I,
@@ -47,6 +48,9 @@ from lib.polar_conic import (
     hyperbola_to_polar_matrix,
 )
 from lib.transform import scale, transform_polar_conic, translate
+
+if TYPE_CHECKING:
+    from lib.type_aliases import Point
 
 
 class TestConicContainsPoint:
@@ -121,11 +125,13 @@ class TestIsInsideIsOutsidePolarConic:
         conic = conic_from_polar_matrix(polar_conic)
 
         # Images of points inside the unit circle
-        for point in [(-1, 2, 4), (-1, 4, 9)]:
+        inside_points: list[Point] = [(-1, 2, 4), (-1, 4, 9)]
+        for point in inside_points:
             assert is_inside_polar_conic(polar_conic, point) is True
             assert is_inside(conic, point) is True
 
-        for point in [(0, 0), (5, -5), (1, 1, 0), (2, -1, 0)]:
+        outside_points: list[Point] = [(0, 0), (5, -5), (1, 1, 0), (2, -1, 0)]
+        for point in outside_points:
             assert is_outside_polar_conic(polar_conic, point) is True
             assert is_outside(conic, point) is True
 
@@ -409,10 +415,17 @@ class TestAreOnSameConic:
         assert are_on_same_conic(points) is True
 
     def test_custom_simplifier(self):
-        x, y = symbols("x y")
-        points = [[0, 1], [1, 0], [-1, 0], [0, -1], [sin(x), cos(x)], [sin(y), cos(y)]]
+        x = Symbol("x")
+        points: list[Point] = [
+            (0, 1),
+            (1, 0),
+            (-1, 0),
+            (0, -1),
+            (sin(x), cos(x)),
+            (sin(y), cos(y)),
+        ]
         assert are_on_same_conic(points) is None
-        assert are_on_same_conic(points, simplifier=simplify) is True
+        assert are_on_same_conic(points, simplifier=trigsimp) is True
 
 
 class TestAreCocircular:

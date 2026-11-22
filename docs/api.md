@@ -2331,7 +2331,7 @@ Returns the point's coordinates as a 2D column vector.
 def perpendicular_foot(point: FinitePoint, line: Line) -> Matrix
 ```
 
-([source](../src/lib/point.py#L102))
+([source](../src/lib/point.py#L103))
 
 Computes the foot of the perpendicular through a point to a line.
 

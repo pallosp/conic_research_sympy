@@ -91,7 +91,8 @@ def centroid(*points: FinitePoint) -> Matrix:
     n = len(points)
     if n == 0:
         raise ValueError("At least one point must be provided.")
-    cx, cy = S.Zero, S.Zero
+    cx: Expr = S.Zero
+    cy: Expr = S.Zero
     for p in points:
         x, y = point_to_xy(p)
         cx += x
