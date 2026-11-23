@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sympy import Abs, Eq, Symbol, expand, sqrt, symbols
+from sympy import Abs, Eq, Symbol, sqrt, symbols
 
 from lib.conic import eccentricity, focal_parameter
 from lib.conic_direction import ConicNormFactor
@@ -29,8 +29,9 @@ fl = (
     .subs(conic.det(), det)
     .subs(sqrt(s) - norm_sign * (a + c), q)
     .subs(sqrt(1 / q), sqrt(q) / Abs(q))
+    .expand()
+    .subs(q**2 / Abs(q), Abs(q))
 )
-fl = expand(fl).subs(q**2 / Abs(q), Abs(q))
 
 println_indented(Eq(s, (a - c) ** 2 + 4 * b**2))
 println_indented(Eq(q, sqrt(s) - ConicNormFactor(conic) * (a + c)))

@@ -30,12 +30,14 @@ subexpr_val = sqrt((a - c) ** 2 + 4 * b**2).expand()
 subexpr_var = Symbol("s")
 angle = angle.subs(subexpr_val, subexpr_var)
 
-conic = conic.subs(det, Symbol("det"))
-conic = conic.subs(theta, angle).applyfunc(simplify)
-conic = conic.subs(4 * b**2, 4 * b**2 + subexpr_var**2 - subexpr_val**2).applyfunc(
-    simplify
+conic = (
+    conic.subs(det, Symbol("det"))
+    .subs(theta, angle)
+    .applyfunc(simplify)
+    .subs(4 * b**2, 4 * b**2 + subexpr_var**2 - subexpr_val**2)
+    .applyfunc(simplify)
+    .subs(subexpr_var, subexpr_val)
 )
-conic = conic.subs(subexpr_var, subexpr_val)
 
 # After the rotation the conic should be diagonal.
 assert conic.is_diagonal()

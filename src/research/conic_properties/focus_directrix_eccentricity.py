@@ -252,7 +252,7 @@ f_eq = eq(f_eq.lhs, f_eq.rhs.expand().collect(c * c * L))
 println_indented(f_eq)
 
 println_indented(Eq(a * a + b * b, 1))
-f_eq = f_eq.subs(a * a + b * b, 1)
+f_eq = cast("ExprEq", f_eq.subs(a * a + b * b, 1))
 println_indented(f_eq)
 
 c_solution = solve(f_eq, c)[0]
