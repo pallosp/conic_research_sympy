@@ -52,7 +52,7 @@ repos:
     hooks:
       - id: check_docs_freshness
         name: Ensure docs/api.md is up to date
-        entry: poetry run scripts/check_docs_freshness.sh
+        entry: poetry run python3 scripts/check_docs_freshness.py
         additional_dependencies: []
         language: system
         pass_filenames: false

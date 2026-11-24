@@ -1,6 +1,35 @@
 loaders:
   - type: python
     search_path: [src/lib]
+    # Explicit order; scripts/check_docs_freshness.py verifies it's complete.
+    modules:
+      # Foundations
+      - type_aliases
+      - math
+      - matrix
+      # Points, lines, polygons
+      - point
+      - line
+      - polygon
+      - triangle
+      # Conics
+      - conic
+      - conic_classes
+      - degenerate_conic
+      - conic_direction
+      - central_conic
+      - circle
+      - ellipse
+      - hyperbola
+      - parabola
+      - polar_conic
+      # Relations between objects
+      - distance
+      - incidence
+      - intersection
+      # Transformations
+      - transform
+      - transform_classes
 
 processors:
   - type: filter
