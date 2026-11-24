@@ -180,6 +180,8 @@
   * [hyperbola\_from\_foci\_and\_point](#hyperbola.hyperbola_from_foci_and_point)
   * [asymptote\_focal\_axis\_angle](#hyperbola.asymptote_focal_axis_angle)
   * [asymptote\_conic](#hyperbola.asymptote_conic)
+* [math](#math)
+  * [sqrt\_complex](#math.sqrt_complex)
 * [ellipse](#ellipse)
   * [ellipse](#ellipse.ellipse)
   * [ellipse\_from\_foci\_and\_point](#ellipse.ellipse_from_foci_and_point)
@@ -2352,7 +2354,7 @@ Degenerates to `[nan, nan]ᵀ` when `point`, `line` or both are infinite.
 class ConicNormFactor(DefinedFunction)
 ```
 
-([source](../src/lib/conic_direction.py#L21))
+([source](../src/lib/conic_direction.py#L20))
 
 Computes a normalization factor (±1) for a conic matrix `C`.
 
@@ -2424,7 +2426,7 @@ def __new__(cls,
             evaluate: bool | None = None) -> Expr
 ```
 
-([source](../src/lib/conic_direction.py#L85))
+([source](../src/lib/conic_direction.py#L84))
 
 Creates the factor, simplifying the polynomials with `simplifier`.
 
@@ -2436,7 +2438,7 @@ Creates the factor, simplifying the polynomials with `simplifier`.
 def doit(**hints: object) -> Expr
 ```
 
-([source](../src/lib/conic_direction.py#L122))
+([source](../src/lib/conic_direction.py#L121))
 
 Retries the evaluation, simplifying with the `simplifier` hint.
 
@@ -2448,7 +2450,7 @@ Retries the evaluation, simplifying with the `simplifier` hint.
 def focal_axis_direction(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic_direction.py#L180))
+([source](../src/lib/conic_direction.py#L167))
 
 Returns the ideal point representing the direction of a conic's focal axis.
 
@@ -2488,7 +2490,7 @@ Properties:
 def conjugate_axis_direction(conic: Conic) -> PointVector
 ```
 
-([source](../src/lib/conic_direction.py#L217))
+([source](../src/lib/conic_direction.py#L204))
 
 Returns the ideal point representing the direction of a conic's conjugate axis.
 
@@ -3516,6 +3518,29 @@ the center:
 
 *Research*:
 [research/construction/asymptote_conic.py](../src/research/construction/asymptote_conic.py)
+
+<a id="math"></a>
+
+# math
+
+<a id="math.sqrt_complex"></a>
+
+#### sqrt\_complex
+
+```python
+def sqrt_complex(z: Expr) -> tuple[Expr, Expr]
+```
+
+([source](../src/lib/math.py#L4))
+
+Computes the principal square root of a complex number.
+
+Returns `(re(√z), im(√z))` expressed with `sqrt` and `Piecewise`.
+If the sign of `im(z)` is unknown, `Piecewise` stays unevaluated.
+
+Unlike `sqrt(z).as_real_imag()`, which goes through `atan2(im(z), re(z))`,
+it doesn't become `nan` when `z` is substituted with 0 later.
+See https://github.com/sympy/sympy/issues/29000 for more details.
 
 <a id="ellipse"></a>
 

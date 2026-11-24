@@ -4,15 +4,14 @@ from sympy import (
     Expr,
     I,
     Integer,
-    Piecewise,
     S,
     sign,
-    sqrt,
 )
 from sympy.core.function import DefinedFunction
 from sympy.core.logic import fuzzy_and, fuzzy_or
 from sympy.core.parameters import global_parameters
 
+from lib.math import sqrt_complex
 from lib.matrix import conic_coefficients
 from lib.point import ideal_point
 from lib.type_aliases import Conic, PointVector, Simplifier
@@ -165,18 +164,6 @@ def _degenerate_conic_norm_factor(
     return S.NegativeOne if flip else S.One
 
 
-def _sqrt_complex(z: Expr) -> tuple[Expr, Expr]:
-    """Computes the square root of a complex number.
-
-    Unlike `sympy.sqrt`, it's correct for symbols that are potentially zero.
-    See https://github.com/sympy/sympy/issues/29000 for more details.
-    """
-    x, y = z.as_real_imag()
-    abs_z = sqrt(x * x + y * y)
-    sgn = Piecewise((1, y >= 0), (-1, True))
-    return (sqrt((abs_z + x) / 2), sgn * sqrt((abs_z - x) / 2))
-
-
 def focal_axis_direction(conic: Conic) -> PointVector:
     """Returns the ideal point representing the direction of a conic's focal axis.
 
@@ -210,7 +197,7 @@ def focal_axis_direction(conic: Conic) -> PointVector:
     """
     a, b, c, *_ = conic_coefficients(conic)
     norm_sign = ConicNormFactor(conic)
-    x, y = _sqrt_complex(norm_sign * (a - c + 2 * I * b))
+    x, y = sqrt_complex(norm_sign * (a - c + 2 * I * b))
     return ideal_point(x, y)
 
 
@@ -234,5 +221,5 @@ def conjugate_axis_direction(conic: Conic) -> PointVector:
     """
     a, b, c, *_ = conic_coefficients(conic)
     norm_sign = ConicNormFactor(conic)
-    x, y = _sqrt_complex(norm_sign * (a - c + 2 * I * b))
+    x, y = sqrt_complex(norm_sign * (a - c + 2 * I * b))
     return ideal_point(-y, x)
