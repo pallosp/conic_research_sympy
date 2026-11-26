@@ -1,7 +1,8 @@
 from textwrap import indent as indent_multiline
 from typing import TYPE_CHECKING, TypeAlias, cast
 
-from sympy import Basic, Eq, Equality, Expr, MatrixBase, pretty
+from sympy import Basic, Eq, Equality, Expr, MatrixBase
+from sympy.printing.pretty.pretty import PrettyPrinter
 
 from lib.type_aliases import Scalar
 
@@ -80,9 +81,20 @@ def eq_chain(*expressions: EqChainItem) -> Eq | EqChainItem:
     return Eq(eq_chain(*expressions[0:-1]), expressions[-1], evaluate=False)
 
 
+class _ResearchPrettyPrinter(PrettyPrinter):
+    """Pretty printer with a longer implication arrow."""
+
+    def _print_Implies(self, e: Basic, altchar: str | None = None) -> object:  # noqa: N802
+        return super()._print_Implies(e, altchar or " ─→ ")
+
+
+def _pretty(expr: object) -> str:
+    return _ResearchPrettyPrinter().doprint(expr)
+
+
 def print_indented(expr: object, *, indent: int = 2) -> None:
-    print(indent_multiline(pretty(expr), " " * indent))
+    print(indent_multiline(_pretty(expr), " " * indent))
 
 
 def println_indented(expr: object, *, indent: int = 2) -> None:
-    print(indent_multiline(pretty(expr), " " * indent) + "\n")
+    print(indent_multiline(_pretty(expr), " " * indent) + "\n")
