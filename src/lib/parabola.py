@@ -7,27 +7,33 @@ from lib.type_aliases import Conic, Line, PointVector
 
 
 def _parabola_directrix_from_adjugate(parabola_adjugate: MatrixBase) -> Line:
-    """Computes the directrix of a parabola represented as the adjugate of a
-    conic matrix. See [parabola_directrix](#parabola.parabola_directrix) for the
-    details.
+    """Computes the directrix of a parabola represented as the adjugate of a conic
+    matrix. See [parabola_directrix](#parabola.parabola_directrix) for the details.
     """
     a, _, c, d, e, f = conic_coefficients(parabola_adjugate)
     if f.is_zero is False:
-        raise ValueError("Not a parabola (or a degenerate conic with one ideal point)")
+        raise ValueError("Central conics are not supported")
     return Matrix([d, e, (a + c) / -2])
 
 
 def parabola_directrix(parabola: Conic) -> Line:
-    """Computes the directrix of a parabola represented as a conic matrix.
+    """Computes the directrix of a parabola.
 
-    Special cases for other conic types:
-    - Returns `[0, 0, 0]ᵀ` for coincident line pairs.
-    - Returns the ideal line for
-      - non-coincident parallel line pairs;
-      - conics consisting of one finite and one ideal line;
-      - ideal point conics.
-    - Raises `ValueError` if the conic provably has 0 or 2 ideal points.
-    - Returns an unspecified 3D column vector in all other cases.
+    Result by conic type:
+
+    | conic                                            | result                       |
+    |--------------------------------------------------|------------------------------|
+    | parabola                                         | directrix                    |
+    | [central conic](#conic_classes.is_central_conic) | `ValueError` (best effort) ¹ |
+    | non-coincident parallel lines                    | ideal line                   |
+    | finite ∪ ideal line                              | ideal line                   |
+    | ideal point conic                                | ideal line                   |
+    | coincident lines                                 | `[0, 0, 0]ᵀ`                 |
+    | zero matrix                                      | `[0, 0, 0]ᵀ`                 |
+
+    ¹ Central conics have two directrices. The formula would yield neither,
+    only a line with no geometric meaning. To avoid returning it, the function
+    raises an error whenever SymPy can prove that the conic is central.
 
     *Formula*:
     [research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)
@@ -41,19 +47,27 @@ def _parabola_focus_from_adjugate(parabola_adjugate: MatrixBase) -> PointVector:
     """
     a, _, c, d, e, f = conic_coefficients(parabola_adjugate)
     if f.is_zero is False:
-        raise ValueError("Not a parabola (or a degenerate conic with one ideal point)")
+        raise ValueError("Central conics are not supported")
     return parabola_adjugate * Matrix([d, e, -(a + c) / 2])
 
 
 def parabola_focus(parabola: Conic) -> PointVector:
-    """Computes the focus of a parabola represented as a conic matrix.
+    """Computes the focus of a parabola.
 
-    Special cases for other conic types:
-    - Returns `[0, 0, 0]ᵀ` for
-      - degenerate conics with one ideal point;
-      - conics containing the ideal line.
-    - Raises `ValueError` if the conic provably has 0 or 2 ideal points.
-    - Returns an unspecified 3D column vector in all other cases.
+    For ellipses and hyperbolas, use
+    [central_conic_foci](#central_conic.central_conic_foci) instead.
+
+    Result by conic type:
+
+    | conic                                            | result                       |
+    |--------------------------------------------------|------------------------------|
+    | parabola                                         | focus                        |
+    | [central conic](#conic_classes.is_central_conic) | `ValueError` (best effort) ¹ |
+    | degenerate non-central conic                     | `[0, 0, 0]ᵀ`                 |
+
+    ¹ Central conics have two foci. The formula would yield neither, only a
+    point with no geometric meaning. To avoid returning it, the function raises
+    an error whenever SymPy can prove that the conic is central.
 
     *Formula*:
     [research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)
@@ -94,20 +108,27 @@ def parabola_direction(parabola: Conic) -> PointVector:
 
 
 def parabola_axis(parabola: Conic) -> Line:
-    """Computes the parabola's focal axis line.
+    """Computes a parabola's focal axis line.
 
     It's the polar line corresponding to the ideal point on the directrix.
 
-    Special cases for other conic types:
-    - Returns `[0, 0, 0]ᵀ` for
-      - degenerate conics with one ideal point;
-      - conics containing the ideal line.
-    - Raises `ValueError` if the conic provably has 0 or 2 ideal points.
-    - Returns an unspecified 3D column vector in all other cases.
+    For ellipses and hyperbolas, use [focal_axis](#conic.focal_axis) instead.
+
+    Result by conic type:
+
+    | conic                                            | result                       |
+    |--------------------------------------------------|------------------------------|
+    | parabola                                         | focal axis                   |
+    | [central conic](#conic_classes.is_central_conic) | `ValueError` (best effort) ¹ |
+    | degenerate non-central conic                     | `[0, 0, 0]ᵀ`                 |
+
+    ¹ The formula would yield a line with no geometric meaning instead of the
+    focal axis. To avoid returning it, the function raises an error whenever
+    SymPy can prove that the conic is central.
     """
     x, y, block_det = parabola.row(0).cross(parabola.row(1)).flat()
     if block_det.is_zero is False:
-        raise ValueError("Not a parabola (or a degenerate conic with one ideal point)")
+        raise ValueError("Central conics are not supported")
     return parabola * Matrix([-y, x, 0])
 
 

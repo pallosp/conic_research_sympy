@@ -3,7 +3,7 @@ from sympy import Matrix, factor, gcd, symbols
 
 from lib.circle import UNIT_CIRCLE
 from lib.conic import conic_from_focus_and_directrix, polar_line
-from lib.degenerate_conic import line_pair_conic, point_conic
+from lib.degenerate_conic import double_line_conic, line_pair_conic, point_conic
 from lib.distance import point_line_distance, point_point_distance
 from lib.incidence import line_contains_point
 from lib.line import IDEAL_LINE, are_perpendicular, line_normal
@@ -37,11 +37,13 @@ class TestParabolaFocusAndDirectrix:
         assert is_nonzero_multiple(parabola_directrix(line_pair), IDEAL_LINE)
 
     def test_numeric_double_line(self):
-        line1 = Matrix([1, 2, 3])
-        line2 = Matrix([1, 2, 3])
-        line_pair = line_pair_conic(line1, line2)
-        assert parabola_focus(line_pair).is_zero_matrix
-        assert parabola_directrix(line_pair).is_zero_matrix
+        finite_line_pair = double_line_conic(Matrix([1, 2, 3]))
+        assert parabola_focus(finite_line_pair).is_zero_matrix
+        assert parabola_directrix(finite_line_pair).is_zero_matrix
+
+        ideal_line_pair = double_line_conic(IDEAL_LINE)
+        assert parabola_focus(ideal_line_pair).is_zero_matrix
+        assert parabola_directrix(ideal_line_pair).is_zero_matrix
 
     def test_numeric_double_ideal_line(self):
         line_pair = line_pair_conic(IDEAL_LINE, IDEAL_LINE)
@@ -70,9 +72,9 @@ class TestParabolaFocusAndDirectrix:
         directrix = Matrix([3, 4, 5])
         eccentricity = 6
         hyperbola = conic_from_focus_and_directrix(focus, directrix, eccentricity)
-        with pytest.raises(ValueError, match="Not a parabola"):
+        with pytest.raises(ValueError, match="Central conics are not supported"):
             parabola_focus(hyperbola)
-        with pytest.raises(ValueError, match="Not a parabola"):
+        with pytest.raises(ValueError, match="Central conics are not supported"):
             parabola_directrix(hyperbola)
 
     def test_pole_polar_relationship(self):
@@ -124,7 +126,7 @@ class TestParabolaAxis:
         assert are_perpendicular(axis, parabola_directrix(parabola))
 
     def test_not_a_parabola(self):
-        with pytest.raises(ValueError, match="Not a parabola"):
+        with pytest.raises(ValueError, match="Central conics are not supported"):
             parabola_axis(UNIT_CIRCLE)
 
     def test_double_finite_line(self):

@@ -2737,18 +2737,25 @@ the center:
 def parabola_directrix(parabola: Conic) -> Line
 ```
 
-([source](../src/lib/parabola.py#L20))
+([source](../src/lib/parabola.py#L19))
 
-Computes the directrix of a parabola represented as a conic matrix.
+Computes the directrix of a parabola.
 
-Special cases for other conic types:
-- Returns `[0, 0, 0]ᵀ` for coincident line pairs.
-- Returns the ideal line for
-  - non-coincident parallel line pairs;
-  - conics consisting of one finite and one ideal line;
-  - ideal point conics.
-- Raises `ValueError` if the conic provably has 0 or 2 ideal points.
-- Returns an unspecified 3D column vector in all other cases.
+Result by conic type:
+
+| conic                                            | result                       |
+|--------------------------------------------------|------------------------------|
+| parabola                                         | directrix                    |
+| [central conic](#conic_classes.is_central_conic) | `ValueError` (best effort) ¹ |
+| non-coincident parallel lines                    | ideal line                   |
+| finite ∪ ideal line                              | ideal line                   |
+| ideal point conic                                | ideal line                   |
+| coincident lines                                 | `[0, 0, 0]ᵀ`                 |
+| zero matrix                                      | `[0, 0, 0]ᵀ`                 |
+
+¹ Central conics have two directrices. The formula would yield neither,
+only a line with no geometric meaning. To avoid returning it, the function
+raises an error whenever SymPy can prove that the conic is central.
 
 *Formula*:
 [research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)
@@ -2761,16 +2768,24 @@ Special cases for other conic types:
 def parabola_focus(parabola: Conic) -> PointVector
 ```
 
-([source](../src/lib/parabola.py#L48))
+([source](../src/lib/parabola.py#L54))
 
-Computes the focus of a parabola represented as a conic matrix.
+Computes the focus of a parabola.
 
-Special cases for other conic types:
-- Returns `[0, 0, 0]ᵀ` for
-  - degenerate conics with one ideal point;
-  - conics containing the ideal line.
-- Raises `ValueError` if the conic provably has 0 or 2 ideal points.
-- Returns an unspecified 3D column vector in all other cases.
+For ellipses and hyperbolas, use
+[central_conic_foci](#central_conic.central_conic_foci) instead.
+
+Result by conic type:
+
+| conic                                            | result                       |
+|--------------------------------------------------|------------------------------|
+| parabola                                         | focus                        |
+| [central conic](#conic_classes.is_central_conic) | `ValueError` (best effort) ¹ |
+| degenerate non-central conic                     | `[0, 0, 0]ᵀ`                 |
+
+¹ Central conics have two foci. The formula would yield neither, only a
+point with no geometric meaning. To avoid returning it, the function raises
+an error whenever SymPy can prove that the conic is central.
 
 *Formula*:
 [research/conic_properties/focus_directrix_eccentricity.py](../src/research/conic_properties/focus_directrix_eccentricity.py)
@@ -2783,7 +2798,7 @@ Special cases for other conic types:
 def parabola_vertex(parabola: Conic) -> Matrix
 ```
 
-([source](../src/lib/parabola.py#L64))
+([source](../src/lib/parabola.py#L78))
 
 Computes the parabola's vertex.
 
@@ -2800,7 +2815,7 @@ Returns the point's coordinates as a 2D column vector.
 def parabola_direction(parabola: Conic) -> PointVector
 ```
 
-([source](../src/lib/parabola.py#L79))
+([source](../src/lib/parabola.py#L93))
 
 Computes the direction of a parabola modulo 2π.
 
@@ -2820,18 +2835,25 @@ coincides with both the ideal point lying on the parabola and its
 def parabola_axis(parabola: Conic) -> Line
 ```
 
-([source](../src/lib/parabola.py#L96))
+([source](../src/lib/parabola.py#L110))
 
-Computes the parabola's focal axis line.
+Computes a parabola's focal axis line.
 
 It's the polar line corresponding to the ideal point on the directrix.
 
-Special cases for other conic types:
-- Returns `[0, 0, 0]ᵀ` for
-  - degenerate conics with one ideal point;
-  - conics containing the ideal line.
-- Raises `ValueError` if the conic provably has 0 or 2 ideal points.
-- Returns an unspecified 3D column vector in all other cases.
+For ellipses and hyperbolas, use [focal_axis](#conic.focal_axis) instead.
+
+Result by conic type:
+
+| conic                                            | result                       |
+|--------------------------------------------------|------------------------------|
+| parabola                                         | focal axis                   |
+| [central conic](#conic_classes.is_central_conic) | `ValueError` (best effort) ¹ |
+| degenerate non-central conic                     | `[0, 0, 0]ᵀ`                 |
+
+¹ The formula would yield a line with no geometric meaning instead of the
+focal axis. To avoid returning it, the function raises an error whenever
+SymPy can prove that the conic is central.
 
 <a id="parabola.parabola_focal_parameter"></a>
 
@@ -2841,7 +2863,7 @@ Special cases for other conic types:
 def parabola_focal_parameter(parabola: Conic) -> Expr
 ```
 
-([source](../src/lib/parabola.py#L114))
+([source](../src/lib/parabola.py#L135))
 
 Computes the parabola's focus-directrix distance.
 
@@ -2856,7 +2878,7 @@ Computes the parabola's focus-directrix distance.
 def parabola_focal_length(parabola: Conic) -> Expr
 ```
 
-([source](../src/lib/parabola.py#L124))
+([source](../src/lib/parabola.py#L145))
 
 Computes the parabola's focal length, i.e. the distance between its focus
 and vertex. Also known as the periapsis distance.
