@@ -1,7 +1,7 @@
 from textwrap import indent as indent_multiline
 from typing import TYPE_CHECKING, TypeAlias, cast
 
-from sympy import Basic, Eq, Equality, Expr, MatrixBase, Pow, pretty
+from sympy import Basic, Eq, Equality, Expr, MatrixBase, pretty
 
 from lib.type_aliases import Scalar
 
@@ -78,15 +78,6 @@ def eq_chain(*expressions: EqChainItem) -> Eq | EqChainItem:
     if len(expressions) == 1:
         return expressions[0]
     return Eq(eq_chain(*expressions[0:-1]), expressions[-1], evaluate=False)
-
-
-def factor_radicals(expr: Expr) -> Expr:
-    """Factors all `Pow` and `sqrt` subexpressions inside `expr`.
-
-    Note that there is a simpler alternative that factors all subexpressions:
-    `expr.factor(deep=True)`
-    """
-    return expr.subs({p: Pow(p.base.factor(), p.exp) for p in expr.atoms(Pow)})
 
 
 def print_indented(expr: object, *, indent: int = 2) -> None:

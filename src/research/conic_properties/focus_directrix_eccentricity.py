@@ -3,10 +3,11 @@
 from typing import cast
 
 from sympy import (
+    Abs,
     Eq,
+    Implies,
     Matrix,
     Piecewise,
-    Q,
     S,
     Symbol,
     atan2,
@@ -29,7 +30,6 @@ from research.sympy_utils import (
     div_eq,
     eq,
     eq_chain,
-    factor_radicals,
     mul_eq,
     print_indented,
     println_indented,
@@ -183,52 +183,52 @@ print(HORIZONTAL_LINE)
 
 print("Directrix equation:\n")
 
-println_indented(coeff_eq[3])
 fx_formula = solve(coeff_eq[3], fx)[0]
-println_indented(Eq(fx, fx_formula))
+println_indented(Implies(coeff_eq[3], Eq(fx, fx_formula)))
 
-println_indented(coeff_eq[4])
 fy_formula = solve(coeff_eq[4], fy)[0]
-println_indented(Eq(fy, fy_formula))
+println_indented(Implies(coeff_eq[4], Eq(fy, fy_formula)))
 
 f_eq = coeff_eq[5]
-println_indented(f_eq)
-f_eq = f_eq.subs({fx: fx_formula, fy: fy_formula})
-println_indented(f_eq)
+f_eq_substitutions = {fx: fx_formula, fy: fy_formula}
+println_indented(eq_chain(f_eq, f_eq.rhs.subs(f_eq_substitutions)))
+f_eq = f_eq.subs(f_eq_substitutions)
 
 print("\nSolutions when there are two directrices:\n")
 
 directrix_c_values = solve(f_eq, c)
 assert len(directrix_c_values) == 2
 
-for det_assumption in Q.positive, Q.negative:
-    print(f"\n  when det{'>0' if det_assumption == Q.positive else '<0'}\n")
-    for index, c_solution in enumerate(directrix_c_values):
-        c_simplified = (
-            c_solution.subs(a * a, aa_eq.rhs)
-            .subs(b * b, bb_eq.rhs)
-            .subs(a * b, ab_eq.rhs)
-            .subs(ecc, sqrt(ecc_square_eq.rhs))
-            .subs(L, lambda_eq.rhs)
-            .simplify()
-            .refine(det_assumption(det))
-            .factor()
-            .collect(F)
-            .subs(A + C, min_eigen + max_eigen)
-            .simplify()
-        )
-        c_simplified = (
-            factor_radicals(c_simplified)
-            .subs(max_eigen * min_eigen, eigenvalue_prod_eq_abc.rhs)
-            .subs(max_eigen - min_eigen, eigenvalue_diff_eq_abc.rhs)
-        )
-        c_simplified = (
-            factor_radicals(c_simplified)
-            .subs(conic_abc.det(), det)
-            .subs(((A - C) ** 2).expand(), (A - C) ** 2)
-            .refine(det_assumption(det))
-        )
-        println_indented(Eq(symbols(f"c{index + 1}"), c_simplified))
+eigen_diff = Symbol("max_eigen-min_eigen", nonnegative=True)
+
+for index, c_solution in enumerate(directrix_c_values):
+    c_simplified = (
+        c_solution.subs(a * a, aa_eq.rhs)
+        .subs(b * b, bb_eq.rhs)
+        .subs(a * b, ab_eq.rhs)
+        .subs(ecc, sqrt(ecc_square_eq.rhs))
+        .subs(L, lambda_eq.rhs)
+        .factor(deep=True)
+        .simplify()
+        .subs(max_eigen * min_eigen, A * C - B * B)
+        .subs(max_eigen, A + C - min_eigen)
+        .subs(Abs(det), sign(det) * det)
+        .factor(deep=True)
+        .subs(conic_abc.det(), det)
+        .subs(min_eigen, (A + C + min_eigen - max_eigen) / 2)
+        .factor(deep=True)
+        .subs(det * sign(det), Abs(det))
+        .subs(max_eigen - min_eigen, eigen_diff)
+        .subs(eigen_diff, max_eigen - min_eigen)
+        .factor()
+        .subs(max_eigen, max_eigen_abc)
+        .subs(min_eigen, min_eigen_abc)
+        .collect(sign(det))
+        .collect(sqrt(max_eigen_abc - min_eigen_abc))
+        .subs(((A - C) ** 2).expand(), (A - C) ** 2)
+    )
+
+    println_indented(Eq(symbols(f"c{index + 1}"), c_simplified))
 
 print(HORIZONTAL_LINE)
 
