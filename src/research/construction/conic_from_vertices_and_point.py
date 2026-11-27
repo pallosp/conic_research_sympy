@@ -78,7 +78,7 @@ def difference_of_squares(expr: Expr) -> Expr:
     return cast("Expr", expr.replace(lambda e: isinstance(e, Mul), rewrite))
 
 
-def conic_formula(center: FinitePoint, *, double_line: bool = False) -> MatAdd:
+def conic_formula(center: FinitePoint, *, double_line: bool = False) -> Expr:
     """Derives the conic with vertices at `center ± v` through `p` as an
     unevaluated sum of two matrices.
 
@@ -138,9 +138,7 @@ def conic_formula(center: FinitePoint, *, double_line: bool = False) -> MatAdd:
     scale = cancel(conic[0] / conic_from_formula[0])
     assert (conic - scale * conic_from_formula).applyfunc(cancel) == ZERO_CONIC
 
-    # subs() is typed as returning Basic; it keeps the MatAdd (not an upstream
-    # issue).
-    return cast("MatAdd", formula)
+    return formula
 
 
 print("\nConic with vertices at center ± v through a point (r = |v|):\n")
