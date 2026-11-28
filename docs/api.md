@@ -2329,7 +2329,7 @@ Return value by conic type:
    imaginary).
 
 *Related research*:
-[research/conic_properties/relationships/linear_eccentricity_vs_radii.py](../src/research/conic_properties/relationships/linear_eccentricity_vs_radii.py)
+[research/conic_properties/linear_eccentricity.py](../src/research/conic_properties/linear_eccentricity.py)
 
 <a id="central_conic.center_to_focus_vector"></a>
 

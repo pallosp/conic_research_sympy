@@ -233,7 +233,7 @@ def linear_eccentricity(conic: Conic) -> Expr:
        imaginary).
 
     *Related research*:
-    [research/conic_properties/relationships/linear_eccentricity_vs_radii.py](../src/research/conic_properties/relationships/linear_eccentricity_vs_radii.py)
+    [research/conic_properties/linear_eccentricity.py](../src/research/conic_properties/linear_eccentricity.py)
     """
     a, b, c, *_ = conic_coefficients(conic)
     eigenvalue_diff = sqrt((a - c) ** 2 + 4 * b**2)
