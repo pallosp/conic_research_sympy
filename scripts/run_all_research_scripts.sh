@@ -3,10 +3,9 @@ set -euo pipefail
 
 cd "$(dirname "$0")/../src/research"
 
-for script in */*.py; do
+find * -mindepth 1 -name '*.py' | sort | while read -r script; do
   echo
-  printf "\033[1mRunning $script...\033[0m"
-  echo
+  printf "\033[1mRunning %s...\033[0m\n" "$script"
   ./"$script"
 done
 

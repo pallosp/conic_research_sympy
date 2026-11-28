@@ -2307,20 +2307,29 @@ Computes the linear eccentricity of a conic section.
 The linear eccentricity is the distance between the center and a focus
 point.
 
-Special cases:
- - zero for circles and imaginary circles;
- - a real number for imaginary ellipses, since they still have real center
-   and foci;
- - infinity for parabolas;
- - `nan` for parallel and coincident line pairs;
- - `nan` for conics containing the ideal line;
- - zero for all other degenerate conics.
+Return value by conic type:
 
-*Formula*: `√|r₁²-r₂²|` where `r₁` and `r₂` denote the primary and secondary
-radii of the conic (i.e., the semi-axis lengths in the case of an ellipse).
+| conic                                                       | value           |
+|-------------------------------------------------------------|-----------------|
+| circle, imaginary circle                                    | 0               |
+| other real/imaginary ellipse, hyperbola                     | positive real ¹ |
+| parabola                                                    | `zoo`           |
+| degenerate [central conic](#conic_classes.is_central_conic) | 0               |
+| other degenerate conic                                      | `nan`           |
+
+¹ Real for imaginary ellipses too, as their center and foci are real.
+
+*Formula*:
+- `linear_eccentricity = √(r₁²-r₂²)` where `r₁` and `r₂` denote the
+   [primary](#central_conic.primary_radius) and
+   [secondary](#central_conic.secondary_radius) radii of the conic
+   (i.e., the semi-axis lengths in the case of an ellipse).
+- `linear_eccentricity = |r₁·eccentricity|` (the absolute value is necessary
+   for imaginary ellipses, where both `r₁` and `eccentricity` are positive
+   imaginary).
 
 *Related research*:
-[research/conic_properties/linear_eccentricity_radii_relationship.py](../src/research/conic_properties/linear_eccentricity_radii_relationship.py)
+[research/conic_properties/relationships/linear_eccentricity_vs_radii.py](../src/research/conic_properties/relationships/linear_eccentricity_vs_radii.py)
 
 <a id="central_conic.center_to_focus_vector"></a>
 
@@ -2330,7 +2339,7 @@ radii of the conic (i.e., the semi-axis lengths in the case of an ellipse).
 def center_to_focus_vector(conic: Conic) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L234))
+([source](../src/lib/central_conic.py#L243))
 
 Returns the 2D vector from a conic's center to one of its foci.
 
@@ -2357,7 +2366,7 @@ Result by conic type:
 def central_conic_foci(conic: Conic) -> tuple[Matrix, Matrix]
 ```
 
-([source](../src/lib/central_conic.py#L260))
+([source](../src/lib/central_conic.py#L269))
 
 Computes the focus points of a central conic.
 
@@ -2371,7 +2380,7 @@ Returns a pair of 2D vectors.
 def center_to_vertex_vector(conic: Conic) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L270))
+([source](../src/lib/central_conic.py#L279))
 
 Vector from the center of a conic to one of its vertices.
 
@@ -2401,7 +2410,7 @@ Result by conic type:
 def central_conic_vertices(conic: Conic) -> tuple[Matrix, Matrix]
 ```
 
-([source](../src/lib/central_conic.py#L295))
+([source](../src/lib/central_conic.py#L304))
 
 Computes the vertices of a central conic.
 
@@ -2429,7 +2438,7 @@ Result by conic type:
 def center_to_covertex_vector(conic: Conic) -> Matrix
 ```
 
-([source](../src/lib/central_conic.py#L319))
+([source](../src/lib/central_conic.py#L328))
 
 Vector from the center of a conic to one of its covertices.
 
@@ -2459,7 +2468,7 @@ Result by conic type:
 def shrink_conic_to_zero(conic: Conic) -> Conic
 ```
 
-([source](../src/lib/central_conic.py#L344))
+([source](../src/lib/central_conic.py#L353))
 
 Scales a conic section from its center with a factor of zero.
 

@@ -211,20 +211,29 @@ def linear_eccentricity(conic: Conic) -> Expr:
     The linear eccentricity is the distance between the center and a focus
     point.
 
-    Special cases:
-     - zero for circles and imaginary circles;
-     - a real number for imaginary ellipses, since they still have real center
-       and foci;
-     - infinity for parabolas;
-     - `nan` for parallel and coincident line pairs;
-     - `nan` for conics containing the ideal line;
-     - zero for all other degenerate conics.
+    Return value by conic type:
 
-    *Formula*: `√|r₁²-r₂²|` where `r₁` and `r₂` denote the primary and secondary
-    radii of the conic (i.e., the semi-axis lengths in the case of an ellipse).
+    | conic                                                       | value           |
+    |-------------------------------------------------------------|-----------------|
+    | circle, imaginary circle                                    | 0               |
+    | other real/imaginary ellipse, hyperbola                     | positive real ¹ |
+    | parabola                                                    | `zoo`           |
+    | degenerate [central conic](#conic_classes.is_central_conic) | 0               |
+    | other degenerate conic                                      | `nan`           |
+
+    ¹ Real for imaginary ellipses too, as their center and foci are real.
+
+    *Formula*:
+    - `linear_eccentricity = √(r₁²-r₂²)` where `r₁` and `r₂` denote the
+       [primary](#central_conic.primary_radius) and
+       [secondary](#central_conic.secondary_radius) radii of the conic
+       (i.e., the semi-axis lengths in the case of an ellipse).
+    - `linear_eccentricity = |r₁·eccentricity|` (the absolute value is necessary
+       for imaginary ellipses, where both `r₁` and `eccentricity` are positive
+       imaginary).
 
     *Related research*:
-    [research/conic_properties/linear_eccentricity_radii_relationship.py](../src/research/conic_properties/linear_eccentricity_radii_relationship.py)
+    [research/conic_properties/relationships/linear_eccentricity_vs_radii.py](../src/research/conic_properties/relationships/linear_eccentricity_vs_radii.py)
     """
     a, b, c, *_ = conic_coefficients(conic)
     eigenvalue_diff = sqrt((a - c) ** 2 + 4 * b**2)
