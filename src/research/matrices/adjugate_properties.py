@@ -5,9 +5,8 @@ from typing import cast
 from sympy import Expr, Ge, MatMul, Symbol, factor, gcd, symbols
 
 from lib.matrix import conic_matrix
-from research.sympy_utils import eq_chain, println_indented
-
-HORIZONTAL_LINE = "-" * 80
+from research.equations import eq_chain
+from research.pretty_print import HORIZONTAL_LINE, println_indented
 
 print(HORIZONTAL_LINE)
 

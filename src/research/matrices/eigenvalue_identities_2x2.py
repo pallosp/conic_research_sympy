@@ -2,7 +2,7 @@
 
 from sympy import Eq, Matrix, simplify, symbols
 
-from research.sympy_utils import println_indented
+from research.pretty_print import println_indented
 
 a, b, c = symbols("a:c", real=True)
 min_eigen, max_eigen = symbols("min_eigen max_eigen", real=True)

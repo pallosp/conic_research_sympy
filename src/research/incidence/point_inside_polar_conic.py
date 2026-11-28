@@ -19,7 +19,7 @@ from sympy import Eq, Matrix, Symbol, symbols
 from lib.circle import UNIT_CIRCLE
 from lib.matrix import quadratic_form
 from lib.polar_conic import conic_from_polar_matrix
-from research.sympy_utils import println_indented
+from research.pretty_print import println_indented
 
 polar = Matrix(3, 3, symbols("a:i", real=True))
 point = Matrix(symbols("x:z", real=True))

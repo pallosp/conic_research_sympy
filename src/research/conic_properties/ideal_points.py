@@ -31,9 +31,8 @@ from lib.matrix import conic_coefficients, conic_matrix, is_nonzero_multiple
 from lib.point import ideal_point
 from lib.transform import rotate, transform_point
 from lib.type_aliases import Conic
-from research.sympy_utils import eq_chain, println_indented
-
-HORIZONTAL_LINE = "-" * 80
+from research.equations import eq_chain
+from research.pretty_print import HORIZONTAL_LINE, println_indented
 
 
 def normalize(point: MatrixBase) -> MatrixBase:

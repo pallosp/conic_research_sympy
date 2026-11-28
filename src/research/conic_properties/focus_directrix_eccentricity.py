@@ -24,20 +24,17 @@ from sympy import (
 
 from lib.conic import conic_from_focus_and_directrix, projective_conic_center
 from lib.matrix import conic_matrix
-from research.sympy_utils import (
+from research.equations import (
     ExprEq,
     add_eq,
     div_eq,
     eq,
     eq_chain,
     mul_eq,
-    print_indented,
-    println_indented,
     sub_eq,
     swap_eq,
 )
-
-HORIZONTAL_LINE = "-" * 88
+from research.pretty_print import HORIZONTAL_LINE, print_indented, println_indented
 
 fx, fy, a, b, c, ecc, L = symbols("x y a b c e lambda", real=True)
 

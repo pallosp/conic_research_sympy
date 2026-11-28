@@ -4,7 +4,7 @@ from sympy import Eq, MatAdd, MatMul, Matrix, Symbol, gcd, symbols
 
 from lib.distance import point_line_distance, point_point_distance
 from lib.matrix import conic_coefficients
-from research.sympy_utils import println_indented
+from research.pretty_print import println_indented
 
 print("\nConic equation from focus, directrix and eccentricity:\n")
 

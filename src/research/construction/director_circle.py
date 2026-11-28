@@ -5,7 +5,7 @@ from sympy import Symbol, simplify, sqrt, symbols
 from lib.central_conic import conic_center, primary_radius, secondary_radius
 from lib.circle import circle
 from lib.matrix import conic_coefficients, conic_matrix
-from research.sympy_utils import println_indented
+from research.pretty_print import println_indented
 
 conic = conic_matrix(*symbols("a:f"))
 

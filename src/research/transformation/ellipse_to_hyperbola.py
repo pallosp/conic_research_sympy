@@ -17,7 +17,7 @@ from lib.transform import (
     transform_conic,
     transform_point,
 )
-from research.sympy_utils import println_indented
+from research.pretty_print import println_indented
 
 print(
     "\nHomography that maps an ellipse to a hyperbola, preserving the (xᵢ, yᵢ) "

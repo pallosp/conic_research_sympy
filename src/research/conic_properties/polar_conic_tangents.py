@@ -4,7 +4,7 @@ from sympy import Matrix, Symbol, cos, expand, gcd, sin, symbols
 
 from lib.conic import polar_line
 from lib.polar_conic import conic_from_polar_matrix, point_at_angle
-from research.sympy_utils import println_indented
+from research.pretty_print import println_indented
 
 polar_matrix = Matrix(3, 3, symbols("a:i"))
 angle = Symbol("alpha")

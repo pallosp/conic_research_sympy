@@ -3,7 +3,7 @@
 from sympy import Symbol, expand, factor, symbols
 
 from lib.matrix import conic_matrix
-from research.sympy_utils import println_indented
+from research.pretty_print import println_indented
 
 # Circle from center point c=(cx, cy) and a finite point p=(px, py)
 # Equation: (x-cx)² + (y-cy)² = r², where r² = (px-cx)² + (py-cy)²

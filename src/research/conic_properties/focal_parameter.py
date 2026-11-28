@@ -9,9 +9,7 @@ from lib.distance import point_line_distance
 from lib.matrix import conic_matrix
 from lib.parabola import parabola_directrix, parabola_focus
 from lib.type_aliases import Conic
-from research.sympy_utils import println_indented
-
-HORIZONTAL_LINE = "-" * 80
+from research.pretty_print import HORIZONTAL_LINE, println_indented
 
 print("\nParabola focal parameter (focus-directrix distance):\n")
 

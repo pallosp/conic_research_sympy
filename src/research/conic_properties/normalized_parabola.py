@@ -13,9 +13,8 @@ from sympy import Abs, Le, MatMul, Matrix, MatrixSymbol, Symbol, sign, symbols
 
 from lib.conic import conic_from_focus_and_directrix
 from lib.matrix import quadratic_form
-from research.sympy_utils import eq_chain, println_indented
-
-HORIZONTAL_LINE = "-" * 80
+from research.equations import eq_chain
+from research.pretty_print import HORIZONTAL_LINE, println_indented
 
 print(
     "\nLemma: the upper left 2×2 block of a normalized parabola's matrix is\n"

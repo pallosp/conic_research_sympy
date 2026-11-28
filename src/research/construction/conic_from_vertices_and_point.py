@@ -43,7 +43,7 @@ from lib.line import line_between, line_through_point
 from lib.point import ORIGIN, point_to_xy
 from lib.transform import reflect_to_line, transform_point
 from lib.type_aliases import FinitePoint
-from research.sympy_utils import println_indented
+from research.pretty_print import println_indented
 
 vx, vy, cx, cy, x, y = symbols("vx vy cx cy x y")
 r = Symbol("r", positive=True)  # |v|

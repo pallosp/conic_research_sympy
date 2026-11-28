@@ -3,7 +3,8 @@
 from sympy import Abs, Symbol, sqrt, symbols
 
 from lib.matrix import conic_matrix
-from research.sympy_utils import eq_chain, println_indented
+from research.equations import eq_chain
+from research.pretty_print import println_indented
 
 a, b, c, d, e, f = symbols("a:f", real=True)
 circle = conic_matrix(a, b, c, d, e, f)

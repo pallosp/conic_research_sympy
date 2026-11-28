@@ -7,7 +7,8 @@ from sympy import Abs, Eq, Expr, Symbol, symbols
 from lib.conic import conic_from_poly
 from lib.distance import point_point_distance
 from lib.type_aliases import Conic
-from research.sympy_utils import ExprEq, eq, mul_eq, println_indented, sub_eq
+from research.equations import ExprEq, eq, mul_eq, sub_eq
+from research.pretty_print import println_indented
 
 cx, cy = symbols("cx cy", real=True)  # center
 focus = symbols("fx fy")

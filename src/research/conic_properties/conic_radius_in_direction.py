@@ -20,9 +20,7 @@ from lib.distance import point_point_distance
 from lib.intersection import conic_x_line
 from lib.line import line_through_point
 from lib.matrix import PivotColumn, conic_matrix
-from research.sympy_utils import println_indented
-
-HORIZONTAL_LINE = "=" * 80
+from research.pretty_print import HORIZONTAL_LINE, println_indented
 
 ################################################################################
 

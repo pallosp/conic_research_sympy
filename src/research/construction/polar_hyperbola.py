@@ -3,7 +3,7 @@
 from sympy import I, cos, factor, simplify, sin, symbols
 
 from lib.transform import homography_from_samples
-from research.sympy_utils import println_indented
+from research.pretty_print import println_indented
 
 print()
 print(

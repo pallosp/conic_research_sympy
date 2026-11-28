@@ -7,7 +7,8 @@ where `x = l₁ × l₂` is the intersection point of the two lines.
 from sympy import Matrix, MatrixSymbol, Symbol, factor, symbols
 
 from lib.degenerate_conic import line_pair_conic
-from research.sympy_utils import eq_chain, println_indented
+from research.equations import eq_chain
+from research.pretty_print import println_indented
 
 line1 = Matrix(symbols("a:c"))
 line2 = Matrix(symbols("d:f"))

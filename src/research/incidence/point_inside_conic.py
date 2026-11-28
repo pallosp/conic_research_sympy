@@ -13,7 +13,7 @@ from sympy import Eq, I, Matrix, Symbol, symbols
 
 from lib.conic import tangent_pair_conic
 from lib.matrix import conic_matrix, quadratic_form, skew_matrix
-from research.sympy_utils import println_indented
+from research.pretty_print import println_indented
 
 conic = conic_matrix(*symbols("a:f", real=True))
 point = Matrix(symbols("x:z", real=True))

@@ -5,7 +5,7 @@ from sympy import Eq, Symbol, simplify, solve, sqrt, symbols
 from lib.central_conic import conic_center
 from lib.matrix import conic_matrix
 from lib.transform import rotate, transform_conic, translate
-from research.sympy_utils import println_indented
+from research.pretty_print import println_indented
 
 # Bring the conic to the standard form by translating its center to the origin
 # and rotating it to align with the axes.

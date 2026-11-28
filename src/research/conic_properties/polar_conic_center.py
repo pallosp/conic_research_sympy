@@ -4,7 +4,7 @@ from sympy import MatMul, Matrix, factor, gcd, symbols
 
 from lib.conic import projective_conic_center
 from lib.polar_conic import conic_from_polar_matrix
-from research.sympy_utils import println_indented
+from research.pretty_print import println_indented
 
 polar_matrix = Matrix(3, 3, symbols("a:i"))
 

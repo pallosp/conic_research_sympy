@@ -12,7 +12,7 @@ from sympy import (
 
 from lib.polar_conic import point_at_angle
 from lib.transform import rotate
-from research.sympy_utils import println_indented
+from research.pretty_print import println_indented
 
 polar_conic = Matrix(3, 3, symbols("a:i"))
 

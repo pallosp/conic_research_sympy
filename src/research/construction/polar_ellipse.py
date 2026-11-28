@@ -25,7 +25,8 @@ from lib.ellipse import ellipse
 from lib.matrix import conic_matrix
 from lib.polar_conic import conic_from_polar_matrix, curvature_sign_at_angle
 from lib.transform import homography_from_samples
-from research.sympy_utils import eq_chain, println_indented
+from research.equations import eq_chain
+from research.pretty_print import println_indented
 
 # ---------------------------------------------------------------------------
 # First approach: start from the endpoint of the horizontal diameter

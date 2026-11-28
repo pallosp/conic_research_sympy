@@ -5,7 +5,7 @@ from sympy import Matrix, Symbol, gcd, simplify, symbols
 from lib.central_conic import conic_center
 from lib.matrix import conic_matrix
 from lib.transform import scale, transform_conic
-from research.sympy_utils import println_indented
+from research.pretty_print import println_indented
 
 print("\nScaling a conic from its center by a factor of λ\n")
 

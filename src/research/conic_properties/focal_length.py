@@ -6,7 +6,7 @@ from lib.conic import eccentricity, focal_parameter
 from lib.conic_direction import ConicNormFactor
 from lib.matrix import conic_matrix
 from lib.parabola import parabola_focal_length
-from research.sympy_utils import println_indented
+from research.pretty_print import println_indented
 
 a, b, c, d, e, f = symbols("a:f", real=True)
 conic = conic_matrix(a, b, c, d, e, f)

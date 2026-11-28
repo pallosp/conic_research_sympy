@@ -19,7 +19,8 @@ from sympy import (
 from lib.central_conic import primary_radius, secondary_radius
 from lib.conic_direction import ConicNormFactor
 from lib.matrix import conic_matrix
-from research.sympy_utils import eq_chain, println_indented
+from research.equations import eq_chain
+from research.pretty_print import println_indented
 
 print("\nAngle between the focal axis and an asymptote of a hyperbola\n")
 
